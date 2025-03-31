@@ -24,7 +24,7 @@ find "$ANDROID_PATH" -type f -name "AndroidManifest.xml" -exec sed -i '' "s/$OLD
 find "$ANDROID_PATH" -type f -name "AndroidManifest.xml" -exec sed -i '' "s/android:label=\".*\"/android:label=\"$NEW_APP_NAME\"/g" {} +
 
 # build.gradle
-sed -i '' "s/applicationId \".*\"/applicationId \"$NEW_PROJECT_ID\"/g" "$ANDROID_PATH/build.gradle"
+sed -i '' "s/^\([[:space:]]*applicationId[[:space:]]*=[[:space:]]*\)\".*\"/\1\"$NEW_PROJECT_ID\"/g" "$ANDROID_PATH/build.gradle"
 sed -i '' "s/namespace = \".*\"/namespace = \"$NEW_PROJECT_ID\"/" "$ANDROID_PATH/build.gradle"
 
 # strings.xml

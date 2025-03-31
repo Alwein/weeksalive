@@ -1,0 +1,21 @@
+{
+    "version": "0.0.0",
+    "configurations": [
+        {
+            "name": "Debug app",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+           
+        },
+        {
+            "name": "Run app",
+            "request": "launch",
+            "flutterMode": "profile",
+            "type": "dart",
+            "program": "lib/main.dart",
+            
+        },
+    ],
+  "compounds": []
+}
