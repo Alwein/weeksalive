@@ -1,0 +1,7 @@
+# sh ./scripts/generate_launcher_icons.sh
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets_generation/icon/ic_launcher.png"
+  adaptive_icon_background: "assets_generation/icon/ic_background.png"
+  adaptive_icon_foreground: "assets_generation/icon/ic_foreground.png"

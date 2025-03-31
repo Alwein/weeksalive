@@ -1,0 +1,18 @@
+# sh ./scripts/generate_splash_screens.sh
+flutter_native_splash:
+  image: "assets_generation/splash_screen/ic_foreground_light.png"
+  branding: "assets_generation/splash_screen/ic_splash_light.png"
+  color: "#FFFFFF"
+
+  image_dark: "assets_generation/splash_screen/ic_foreground_dark.png"
+  branding_dark: "assets_generation/splash_screen/ic_splash_dark.png"
+  color_dark: "#000000"
+
+  android_12:
+    image: "assets_generation/splash_screen/ic_light_android12.png"
+    color: "#FFFFFF"
+    icon_background_color: "#FFFFFF"
+
+    image_dark: "assets_generation/splash_screen/ic_dark_android12.png"
+    color_dark: "#000000"
+    icon_background_color_dark: "#000000"
