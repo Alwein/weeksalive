@@ -22,5 +22,27 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
-  #
+  assets:
+    - env/
+    - assets/
+    - assets/images/
+    - assets/videos/
+    - assets/translations/
+    - assets/fonts/
+    - assets/tuto/
+    - assets/onboarding/
+# fonts:
+#     - family: PlayfairDisplay
+#       fonts:
+#         - asset: assets/fonts/PlayfairDisplay-Regular.ttf
+#         - asset: assets/fonts/PlayfairDisplay-Italic.ttf
+#         - asset: assets/fonts/PlayfairDisplay-Bold.ttf
+#         - asset: assets/fonts/PlayfairDisplay-BoldItalic.ttf
+#         - asset: assets/fonts/PlayfairDisplay-Black.ttf
+#         - asset: assets/fonts/PlayfairDisplay-BlackItalic.ttf
+#         - asset: assets/fonts/PlayfairDisplay-ExtraBold.ttf
+#         - asset: assets/fonts/PlayfairDisplay-ExtraBoldItalic.ttf
+#         - asset: assets/fonts/PlayfairDisplay-Medium.ttf
+#         - asset: assets/fonts/PlayfairDisplay-MediumItalic.ttf
+#         - asset: assets/fonts/PlayfairDisplay-SemiBold.ttf
+#         - asset: assets/fonts/PlayfairDisplay-SemiBoldItalic.ttf
