@@ -24,6 +24,14 @@ dependencies:
   # i18n
   easy_localization: ^3.0.7+1
 
+  # .env
+  flutter_dotenv: ^5.2.1
+  purchases_flutter: ^8.7.0
+  shared_preferences: ^2.5.3
+  bloc: ^9.0.0
+  logger: ^2.5.0
+  get_it: ^8.0.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
