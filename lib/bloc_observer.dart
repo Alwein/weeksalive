@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print
 import 'package:bloc/bloc.dart';
-import 'package:flutter_fast_template/utils/logger.dart';
+import 'package:flutter_fast_template/core/utils/logger.dart';
 
 class AppBlocObserver extends BlocObserver {
   AppBlocObserver();

@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_fast_template/app_purchase_config.dart';
 import 'package:flutter_fast_template/bloc_observer.dart';
-import 'package:flutter_fast_template/locator.dart';
+import 'package:flutter_fast_template/core/dependency_injection/locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';

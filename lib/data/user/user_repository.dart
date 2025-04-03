@@ -1,0 +1,57 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_fast_template/data/crashlytics/crashlytics_repository.dart';
+import 'package:flutter_fast_template/data/services/firestore_user_queries.dart';
+import 'package:flutter_fast_template/data/user/update_user_config_request.dart';
+import 'package:flutter_fast_template/domain/user/user.dart';
+
+class UserRepository {
+  final FirestoreUserQueries _firestoreUserQueries;
+  final CrashlyticsRepository _crashlyticsRepository;
+
+  UserRepository({
+    required FirestoreUserQueries firestoreUserQueries,
+    required CrashlyticsRepository crashlyticsRepository,
+  })  : _firestoreUserQueries = firestoreUserQueries,
+        _crashlyticsRepository = crashlyticsRepository;
+
+  Future<User> createUser(String userId) async {
+    try {
+      await _firestoreUserQueries.setUserDocument(
+        userId: userId,
+        data: {
+          'id': userId,
+          'createdAt': FieldValue.serverTimestamp(),
+        },
+      );
+
+      return User(id: userId, premiumPlan: null, createdAt: DateTime.now());
+    } catch (e, s) {
+      _crashlyticsRepository.recordError(e, s);
+      rethrow;
+    }
+  }
+
+  Future<void> updateUserConfig(String userId, UpdateUserConfigRequest userConfig) async {
+    try {
+      await _firestoreUserQueries.updateUserConfig(
+        userId: userId,
+        data: userConfig.toJson(),
+      );
+    } catch (e, s) {
+      _crashlyticsRepository.recordError(e, s);
+      rethrow;
+    }
+  }
+
+  Stream<User?> streamUser(String userId) {
+    try {
+      return _firestoreUserQueries.userDocument(userId).map((doc) {
+        if (doc == null) return null;
+        return User.fromDocument(doc);
+      });
+    } catch (e, s) {
+      _crashlyticsRepository.recordError(e, s);
+      rethrow;
+    }
+  }
+}

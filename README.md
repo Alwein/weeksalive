@@ -14,9 +14,15 @@ Run `sh ./scripts/generate_launcher_icons.sh`
 Run `sh ./scripts/generate_splash_screens.sh`
 
 ### Init firebase
-NEXT: Implémenter la logique de base 
-- main
-- init app
-- Login anonimously
-- Get user in bootsrap bloc
-- Initial tests
+// TODO: initialize app
+Make sur to enable firestore & firebase auth
+
+### Init firebase remote config
+add string variable `min_app_version_ios` set to "1.0.0"
+add string variable `min_app_version_android` set to "1.0.0"
+
+### App Links
+After registering your app on the play store and app store, you need to update the links in the code
+- open `lib/core/texts/app_links.dart`
+Replace androidAppStoreUrl with the link to your app on the play store
+Replace iosAppStoreUrl with the link to your app on the app store
