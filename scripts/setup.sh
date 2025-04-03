@@ -57,6 +57,9 @@ find "$IOS_PATH" -name "project.pbxproj" -exec sed -i '' "s/PRODUCT_BUNDLE_IDENT
 # 4. Update global project name
 find . -type f -not -path './.git/*' -exec sed -i '' "s/$OLD_PROJECT_NAME/$NEW_PROJECT_NAME/g" {} +
 
+# 4.bis Replace "Flutter Fast Template" by new app name
+find . -type f -not -path './.git/*' -exec sed -i '' "s/Flutter Fast Template/$NEW_APP_NAME/g" {} +
+
 # Rename project directory if needed
 cd ..
 mv "$OLD_PROJECT_NAME" "$NEW_PROJECT_NAME"

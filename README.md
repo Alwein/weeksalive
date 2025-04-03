@@ -21,6 +21,9 @@ Make sur to enable firestore & firebase auth
 add string variable `min_app_version_ios` set to "1.0.0"
 add string variable `min_app_version_android` set to "1.0.0"
 
+### Deploy firestore rules
+run `firebase deploy --only firestore:rules`
+
 ### App Links
 After registering your app on the play store and app store, you need to update the links in the code
 - open `lib/core/texts/app_links.dart`

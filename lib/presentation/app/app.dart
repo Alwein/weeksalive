@@ -12,8 +12,6 @@ import 'package:flutter_fast_template/presentation/splash/splas_page.dart';
 import 'package:flutter_fast_template/presentation/user/user_bloc_wrapper.dart';
 import 'package:jiffy/jiffy.dart';
 
-// TODO: Ajouter les règles de sécurité pour user
-
 class App extends StatefulWidget {
   const App({super.key});
 
@@ -33,7 +31,7 @@ class _AppState extends State<App> {
     return AppBlocProvidersWrapper(
       builder: (context) {
         return MaterialApp(
-          title: 'Flutter App', // TODO: Ajouter ça dans le script
+          title: 'Flutter Fast Template',
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,

@@ -1,0 +1,33 @@
+// firebase deploy --only firestore:rules
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 'users'
+    match /users/{userId} {
+      allow create: if request.auth != null
+                    && request.auth.uid == userId
+                    && request.resource.data.keys().hasOnly(['id', 'createdAt'])
+                    && request.resource.data.id == userId
+                    && request.resource.data.createdAt == request.time;
+
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      
+      allow update: if request.auth != null
+                    && request.auth.uid == userId
+                    && isValidUserUpdate(resource.data, request.resource.data);
+    }
+    
+    
+    function isValidUserUpdate(oldData, newData) {
+      let modifiedKeys = newData.diff(oldData).affectedKeys();
+
+      return modifiedKeys.hasOnly(['appVersion', 'currencySymbol', 'locale', 'lastConnectionDate', 'timeZone'])
+        && (newData.appVersion is string || newData.appVersion == null)
+        && (newData.currencySymbol is string || newData.currencySymbol == null)
+        && (newData.locale is string || newData.locale == null)
+        && (newData.lastConnectionDate == request.time || newData.lastConnectionDate == null)
+        && (newData.timeZone is string || newData.timeZone == null);
+    }
+  }
+}
