@@ -21,12 +21,6 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    Jiffy.setLocale(Localizations.localeOf(context).languageCode);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return AppBlocProvidersWrapper(
       builder: (context) {
@@ -37,6 +31,10 @@ class _AppState extends State<App> {
           locale: context.locale,
           navigatorObservers: [FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance)],
           themeMode: ThemeMode.system,
+          builder: (context, child) {
+            Jiffy.setLocale(Localizations.localeOf(context).languageCode);
+            return child!;
+          },
           theme: ThemeData(
             brightness: Brightness.light,
           ),

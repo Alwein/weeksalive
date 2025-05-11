@@ -1,4 +1,4 @@
-# flutter_fast_template
+# cntdwn
 
 ## Getting Started
 ### 1. Setup the project
@@ -14,15 +14,18 @@ Run `sh ./scripts/generate_launcher_icons.sh`
 Run `sh ./scripts/generate_splash_screens.sh`
 
 ### Init firebase
-// TODO: initialize app
+Run `dart pub global activate flutterfire_cli`
+Run `export PATH="$PATH":"$HOME/.pub-cache/bin"`
+Run `flutterfire configure`
 Make sur to enable firestore & firebase auth
+
+### Deploy firestore rules
+run `firebase init`
+run `firebase deploy --only firestore:rules`
 
 ### Init firebase remote config
 add string variable `min_app_version_ios` set to "1.0.0"
 add string variable `min_app_version_android` set to "1.0.0"
-
-### Deploy firestore rules
-run `firebase deploy --only firestore:rules`
 
 ### App Links
 After registering your app on the play store and app store, you need to update the links in the code
