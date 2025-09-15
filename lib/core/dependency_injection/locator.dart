@@ -1,3 +1,4 @@
+import 'package:flutter_fast_template/data/analytics/analytics_repository.dart';
 import 'package:flutter_fast_template/data/app_open_count/app_open_count_repository.dart';
 import 'package:flutter_fast_template/data/auth/auth_repository.dart';
 import 'package:flutter_fast_template/data/crashlytics/crashlytics_repository.dart';

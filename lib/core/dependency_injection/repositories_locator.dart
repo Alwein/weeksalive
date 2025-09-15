@@ -9,6 +9,7 @@ class RepositoriesLocator {
     _registerConfigurationRepository(sharedPreferences);
     _registerAppOpenCountRepository(sharedPreferences);
     _registerOnboardingRepository(sharedPreferences);
+    _registerAnalyticsRepository();
   }
 
   static void _registerCrashlyticsRepository() {
@@ -53,5 +54,9 @@ class RepositoriesLocator {
 
   static void _registerOnboardingRepository(SharedPreferences sharedPreferences) {
     GetIt.I.registerLazySingleton<OnboardingRepository>(() => OnboardingRepository(preferences: sharedPreferences));
+  }
+
+  static void _registerAnalyticsRepository() {
+    GetIt.I.registerLazySingleton<AnalyticsRepository>(() => AnalyticsRepository());
   }
 }
