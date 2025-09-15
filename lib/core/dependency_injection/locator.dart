@@ -9,6 +9,7 @@ import 'package:flutter_fast_template/data/user/user_repository.dart';
 import 'package:flutter_fast_template/presentation/app/bloc/app_bloc.dart';
 import 'package:flutter_fast_template/presentation/auth/bloc/auth_bloc.dart';
 import 'package:flutter_fast_template/presentation/onboarding/wrapper/bloc/onboarding_wrapper_bloc.dart';
+import 'package:flutter_fast_template/presentation/user/bloc/user_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
