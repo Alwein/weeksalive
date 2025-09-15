@@ -54,29 +54,46 @@ find "$IOS_PATH" -name "project.pbxproj" -exec sed -i '' "s/PRODUCT_BUNDLE_IDENT
 /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier \"$NEW_PROJECT_ID\"" "$IOS_PATH/Runner/Info.plist"
 
 
-# 4. Update global project name
-find . -type f -not -path './.git/*' -exec sed -i '' "s/$OLD_PROJECT_NAME/$NEW_PROJECT_NAME/g" {} +
+# 4. Update global project name in all files (before renaming directory)
+echo "🔄 Replacing project name references..."
 
-# 4.bis Replace "Flutter Fast Template" by new app name
-find . -type f -not -path './.git/*' -exec sed -i '' "s/Flutter Fast Template/$NEW_APP_NAME/g" {} +
+# Replace flutter_fast_template in all Dart files and other text files
+find . -type f \( -name "*.dart" -o -name "*.yaml" -o -name "*.yml" -o -name "*.json" -o -name "*.md" -o -name "*.txt" -o -name "*.xml" -o -name "*.plist" -o -name "*.kt" -o -name "*.swift" \) -not -path './.git/*' -exec sed -i '' "s/$OLD_PROJECT_NAME/$NEW_PROJECT_NAME/g" {} +
 
-# Rename project directory if needed
+# Replace "Flutter Fast Template" by new app name
+find . -type f \( -name "*.dart" -o -name "*.yaml" -o -name "*.yml" -o -name "*.json" -o -name "*.md" -o -name "*.txt" -o -name "*.xml" -o -name "*.plist" -o -name "*.kt" -o -name "*.swift" \) -not -path './.git/*' -exec sed -i '' "s/Flutter Fast Template/$NEW_APP_NAME/g" {} +
+
+# Additional specific replacements for Dart imports
+echo "📦 Updating Dart package imports..."
+find . -name "*.dart" -not -path './.git/*' -exec sed -i '' "s/package:$OLD_PROJECT_NAME/package:$NEW_PROJECT_NAME/g" {} +
+
+# 5. Rename project directory if needed
+echo "📁 Renaming project directory..."
 cd ..
 mv "$OLD_PROJECT_NAME" "$NEW_PROJECT_NAME"
 cd "$NEW_PROJECT_NAME"
 
-# 5. Update README.md
-sed -i '' "s/$OLD_PROJECT_NAME/$NEW_PROJECT_NAME/g" README.md
+# 6. Final verification and cleanup
+echo "🔍 Final verification of replacements..."
 
-# 6. Clean up git history and reinitialize
+# Double-check that all flutter_fast_template references are replaced
+REMAINING_REFERENCES=$(grep -r "flutter_fast_template" . --exclude-dir=.git --exclude="setup.sh" 2>/dev/null | wc -l)
+if [ "$REMAINING_REFERENCES" -gt 0 ]; then
+    echo "⚠️  Warning: $REMAINING_REFERENCES references to 'flutter_fast_template' still found"
+    echo "   This might be expected in some configuration files"
+fi
+
+# 7. Clean up git history and reinitialize
 rm -rf .git
 git init
 git add .
 git commit -m "🎉 Initial commit - from template"
 
-# 7. Clean up and get dependencies
+# 8. Clean up and get dependencies
+echo "🧹 Cleaning and getting dependencies..."
 flutter clean
 flutter pub get
 
 # Done
 echo "✅ Project setup completed! 🚀"
+echo "📱 Your new project '$NEW_PROJECT_NAME' is ready to use!"
