@@ -60,6 +60,7 @@ class Texts {
     int? maxLines,
     TextOverflow? overflow,
     bool? softWrap,
+    Color? color,
   }) {
     return _StyledText(
       text: text,
@@ -68,6 +69,7 @@ class Texts {
       maxLines: maxLines,
       overflow: overflow,
       softWrap: softWrap,
+      color: color,
     );
   }
 }
@@ -80,6 +82,7 @@ class _StyledText extends StatelessWidget {
     this.maxLines,
     this.overflow,
     this.softWrap,
+    this.color,
   });
 
   final String text;
@@ -88,12 +91,13 @@ class _StyledText extends StatelessWidget {
   final int? maxLines;
   final TextOverflow? overflow;
   final bool? softWrap;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: style.copyWith(color: AppColors.textColor(context)),
+      style: style.copyWith(color: color ?? AppColors.textColor(context)),
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,

@@ -6,7 +6,7 @@ publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.5.3
+  sdk: ^3.9.2
 
 dependencies:
   flutter:
@@ -22,7 +22,7 @@ dependencies:
   # firebase_messaging: "15.2.2"
 
   # RevenueCat
-  purchases_flutter: ^8.7.0
+  purchases_flutter: ^9.6.1
 
   # i18n
   easy_localization: ^3.0.7+1
