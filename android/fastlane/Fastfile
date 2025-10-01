@@ -1,0 +1,34 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+
+default_platform(:android)
+
+platform :android do
+  desc "Runs all the tests"
+  lane :test do
+    gradle(task: "test")
+  end
+
+  desc "Submit a new Beta Build to Crashlytics Beta"
+  lane :beta do
+    gradle(task: "clean assembleRelease")
+    crashlytics
+  end
+
+  desc "Build and Deploy a new version to Google Play"
+  lane :deploy do
+    gradle(task: "clean bundleRelease")
+    upload_aab
+  end
+
+  desc "Upload an AAB to Google Play without modifying the store listing"
+  lane :upload_aab do
+    upload_to_play_store(
+      track: "production", # Modifier ici si besoin (internal, alpha, beta, production)
+      aab: "../build/app/outputs/bundle/release/app-release.aab",
+      skip_upload_metadata: true,   # Ne pas uploader la description, titre, etc.
+      skip_upload_images: true,     # Ne pas toucher aux images et icônes
+      skip_upload_screenshots: true # Ne pas modifier les screenshots
+    )
+  end
+end

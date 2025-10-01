@@ -1,0 +1,113 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+    decoded_key = `echo "#{ENV['ASC_KEY_CONTENT_B64']}" | base64 -d`
+    
+    app_store_connect_api_key(
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_content: decoded_key,
+      in_house: false
+    )
+
+    increment_build_number(xcodeproj: "Runner.xcodeproj")
+
+    build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
+    upload_to_testflight
+  end
+
+
+  desc "Upload TestFlight (attend processing) + soumission App Store avec mêmes notes"
+  lane :release_store do |options|
+    decoded_key = `echo "#{ENV['ASC_KEY_CONTENT_B64']}" | base64 -d`
+    
+    app_store_connect_api_key(
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_content: decoded_key,
+      in_house: false
+    )
+
+    increment_build_number(xcodeproj: "Runner.xcodeproj")
+
+    build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
+
+    upload_to_testflight(
+      changelog: "Bug fixes and improvements.",
+      skip_waiting_for_build_processing: false
+    )
+
+    deliver(
+      submit_for_review: true,
+      automatic_release: true,
+      force: true,
+      skip_screenshots: true,
+      skip_metadata: false,
+      skip_binary_upload: false,
+      precheck_include_in_app_purchases: false,
+      release_notes: {
+        'en-US' => "Bug fixes and improvements.",     # Anglais (États-Unis)
+        'de-DE' => "Bug fixes and improvements.",     # Allemand
+        'ar-SA' => "Bug fixes and improvements.",     # Arabe
+        'zh-Hans' => "Bug fixes and improvements.",   # Chinois (simplifié)
+        'zh-Hant' => "Bug fixes and improvements.",   # Chinois (traditionnel)
+        'ko' => "Bug fixes and improvements.",        # Coréen
+        'da' => "Bug fixes and improvements.",        # Danois
+        'es-ES' => "Bug fixes and improvements.",     # Espagnol (Espagne)
+        'fi' => "Bug fixes and improvements.",        # Finnois
+        'fr-FR' => "Bug fixes and improvements.",     # Français
+        'el' => "Bug fixes and improvements.",        # Grec
+        'he' => "Bug fixes and improvements.",        # Hébreu
+        'hi' => "Bug fixes and improvements.",        # Hindi
+        'id' => "Bug fixes and improvements.",        # Indonésien
+        'it' => "Bug fixes and improvements.",        # Italien
+        'ja' => "Bug fixes and improvements.",        # Japonais
+        'nl-NL' => "Bug fixes and improvements.",     # Néerlandais
+        'no' => "Bug fixes and improvements.",        # Norvégien
+        'pl' => "Bug fixes and improvements.",        # Polonais
+        'pt-PT' => "Bug fixes and improvements.",     # Portugais (Portugal)
+        'ro' => "Bug fixes and improvements.",        # Roumain
+        'ru' => "Bug fixes and improvements.",        # Russe
+        'sv' => "Bug fixes and improvements.",        # Suédois
+        'cs' => "Bug fixes and improvements.",        # Tchèque
+        'th' => "Bug fixes and improvements.",        # Thaï
+        'tr' => "Bug fixes and improvements.",        # Turc
+        'uk' => "Bug fixes and improvements.",        # Ukrainien
+        'vi' => "Bug fixes and improvements."         # Vietnamien
+      },
+      submission_information: {
+        export_compliance_platform: "ios",
+        add_id_info_uses_idfa: false,
+        content_rights_contains_third_party_content: false,
+        content_rights_has_rights: true
+      },
+      app_review_information: {
+        first_name: ENV["FIRST_NAME"],
+        last_name: ENV["LAST_NAME"],
+        phone_number: ENV["PHONE_NUMBER"],
+        email_address: ENV["EMAIL_ADDRESS"],
+        demo_user: ENV["DEMO_USER"],
+        demo_password: ENV["DEMO_PASSWORD"],
+        notes: ENV["NOTES"]
+      }
+    )
+  end
+end
+
