@@ -38,7 +38,7 @@ class PrimaryButton extends StatelessWidget {
         shape: WidgetStateProperty.all(
           const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(200))),
         ),
-        overlayColor: WidgetStateProperty.all(Colors.white.withOpacity(0.1)),
+        overlayColor: WidgetStateProperty.all(Colors.white.withValues(alpha: 0.1)),
       ),
       onPressed: onPressed,
       child: Padding(

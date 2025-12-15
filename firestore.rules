@@ -29,5 +29,19 @@ service cloud.firestore {
         && (newData.lastConnectionDate == request.time || newData.lastConnectionDate == null)
         && (newData.timeZone is string || newData.timeZone == null);
     }
+
+    // 'feedbacks'
+    match /feedbacks/{feedbackId} {
+      allow create: if request.auth != null && isValidFeedback(request.resource.data, request.auth.uid);
+    }
+
+    function isValidFeedback(data, userId) {
+      return data.keys().hasOnly(['userId', 'positive', 'suggestions', 'createdAt'])
+        && data.userId == userId
+        && (data.positive is bool || data.positive == null)
+        && (data.suggestions is string || data.suggestions == null)
+        && (data.suggestions == null || data.suggestions.size() <= 1024)
+        && data.createdAt == request.time;
+    }
   }
 }

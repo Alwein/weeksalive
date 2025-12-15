@@ -45,7 +45,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
           return Scaffold(
             backgroundColor: AppColors.getBackgroundColor(context),
             floatingActionButton: PrimaryButton(
-              backgroundColor: AppColors.content,
+              backgroundColor: AppColors.content(context),
               textColor: Colors.white,
               text: switch (state.currentPage) {
                 OnboardingPageIndex.third => Strings.done,

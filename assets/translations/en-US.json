@@ -3,5 +3,11 @@
   "force_update_subtitle": "Please update app from the store to continue",
   "force_update_button": "Open store",
   "next": "next",
-  "done": "done"
+  "done": "done",
+  "inAppFeedbackTitle": "What could we improve?",
+  "inAppFeedbackSubtitle": "Any ideas? I read all suggestions.",
+  "inAppFeedbackHint": "Your suggestions...",
+  "inAppFeedbackConfirmationTitle": "Thanks for your feedback!",
+  "quickActionFeedbackTitle": "🕵 Something wrong?",
+  "quickActionFeedbackSubtitle": "Please leave a feedback before deleting the app."
 }

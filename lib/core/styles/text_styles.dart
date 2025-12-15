@@ -27,17 +27,17 @@ class TextStyles {
   }
 
   static TextStyle primaryRegular = GoogleFonts.splineSans().copyWith(
-    fontSize: FontSizes.normal,
+    fontSize: FontSizes.regular,
     fontWeight: FontWeight.normal,
   );
 
   static TextStyle primaryMedium = GoogleFonts.splineSans().copyWith(
-    fontSize: FontSizes.normal,
+    fontSize: FontSizes.regular,
     fontWeight: FontWeight.w600,
   );
 
   static TextStyle primaryBold = GoogleFonts.splineSans().copyWith(
-    fontSize: FontSizes.normal,
+    fontSize: FontSizes.regular,
     fontWeight: FontWeight.bold,
   );
 
@@ -96,6 +96,16 @@ class TextStyles {
     fontSize: FontSizes.medium,
     fontWeight: FontWeight.w800,
   );
+
+  static TextStyle primaryRegularMedium = const TextStyle(
+    fontSize: FontSizes.regular,
+    fontWeight: FontWeight.w600,
+  );
+
+  static TextStyle primaryXSRegular = const TextStyle(
+    fontSize: FontSizes.xs,
+    fontWeight: FontWeight.w400,
+  );
 }
 
 class FontSizes {
@@ -106,7 +116,7 @@ class FontSizes {
   static const double semi = 20;
   static const double large = 18;
   static const double medium = 16;
-  static const double normal = 14;
+  static const double regular = 14;
   static const double xs = 12;
   static const double small = 11;
   static const double extraSmall = 10;

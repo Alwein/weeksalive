@@ -2,11 +2,14 @@ class Dimens {
   static const double flatAppBarHeight = 59;
   static const double bottomNavigationBarItemHeight = 21;
 
+  static const double radiusXs = 4;
   static const double radiusS = 8;
   static const double radiusBase = 16;
   static const double radiusL = 24;
+  static const double radiusXl = 32;
 
   static const double iconSizeBase = 16;
+  static const double iconSizeS = 20;
   static const double iconSizeM = 24;
   static const double iconSizeL = 32;
   static const double iconSizeHuge = 64;
