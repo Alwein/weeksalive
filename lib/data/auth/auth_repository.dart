@@ -1,28 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_fast_template/data/crashlytics/crashlytics_repository.dart';
-import 'package:flutter_fast_template/data/user/user_repository.dart';
 
 class AuthRepository {
   final CrashlyticsRepository _crashlyticsRepository;
   final FirebaseAuth _firebaseAuth;
-  final UserRepository _userRepository;
 
   AuthRepository({
     required CrashlyticsRepository crashlyticsRepository,
-    required UserRepository userRepository,
     FirebaseAuth? firebaseAuth,
-  })  : _crashlyticsRepository = crashlyticsRepository,
-        _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-        _userRepository = userRepository;
+  }) : _crashlyticsRepository = crashlyticsRepository,
+       _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
   Stream<User?> authStateChanges() => _firebaseAuth.authStateChanges();
 
   Future<void> signInAnonymously() async {
     try {
-      final result = await _firebaseAuth.signInAnonymously();
-      if (result.user != null) {
-        await _userRepository.createUser(result.user!.uid);
-      }
+      await _firebaseAuth.signInAnonymously();
     } catch (e, s) {
       _crashlyticsRepository.recordError(e, s);
       rethrow;

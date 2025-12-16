@@ -17,14 +17,16 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     required UserRepository userRepository,
     required ConfigurationRepository configurationRepository,
     required AnalyticsRepository analyticsRepository,
-  })  : _userRepository = userRepository,
-        _configurationRepository = configurationRepository,
-        _analyticsRepository = analyticsRepository,
-        super(const UserState()) {
-    on<UserEvent>((event, emit) => event.map(
-          initialize: (event) => _onInitialize(event, emit),
-          userChanged: (event) => _onUserChanged(event, emit),
-        ));
+  }) : _userRepository = userRepository,
+       _configurationRepository = configurationRepository,
+       _analyticsRepository = analyticsRepository,
+       super(const UserState()) {
+    on<UserEvent>(
+      (event, emit) => event.map(
+        initialize: (event) => _onInitialize(event, emit),
+        userChanged: (event) => _onUserChanged(event, emit),
+      ),
+    );
   }
 
   final UserRepository _userRepository;
@@ -35,6 +37,15 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   FutureOr<void> _onInitialize(_Initialize event, Emitter<UserState> emit) async {
     emit(state.copyWith(status: const UserStatus.loading()));
+
+    User? user;
+    try {
+      user = await _userRepository.getUser(event.userId);
+    } catch (_) {
+      emit(state.copyWith(status: const UserStatus.error()));
+      return;
+    }
+    user ??= await _userRepository.createUser(event.userId);
 
     _userSubscription = _userRepository.streamUser(event.userId).listen((user) {
       add(UserEvent.userChanged(user));

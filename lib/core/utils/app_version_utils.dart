@@ -1,6 +1,6 @@
 class AppVersionUtils {
   static bool shouldForceUpdate(String? currentVersion, String? minVersion) {
-    if (currentVersion == null || minVersion == null) {
+    if (currentVersion == null || minVersion == null || currentVersion.isEmpty || minVersion.isEmpty) {
       return false;
     }
 

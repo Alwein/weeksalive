@@ -25,4 +25,9 @@ class FirestoreUserQueries {
   }) async {
     await userRef(userId).update(data);
   }
+
+  Future<Map<String, dynamic>?> getUserFromId(String userId) async {
+    final snapshot = await userRef(userId).get();
+    return snapshot.data();
+  }
 }

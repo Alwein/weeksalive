@@ -36,7 +36,6 @@ class RepositoriesLocator {
   static void _registerAuthRepository() {
     GetIt.I.registerLazySingleton<AuthRepository>(
       () => AuthRepository(
-        userRepository: Locator.get<UserRepository>(),
         crashlyticsRepository: Locator.get<CrashlyticsRepository>(),
       ),
     );

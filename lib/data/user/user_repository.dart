@@ -11,8 +11,8 @@ class UserRepository {
   UserRepository({
     required FirestoreUserQueries firestoreUserQueries,
     required CrashlyticsRepository crashlyticsRepository,
-  })  : _firestoreUserQueries = firestoreUserQueries,
-        _crashlyticsRepository = crashlyticsRepository;
+  }) : _firestoreUserQueries = firestoreUserQueries,
+       _crashlyticsRepository = crashlyticsRepository;
 
   Future<User> createUser(String userId) async {
     try {
@@ -27,6 +27,17 @@ class UserRepository {
       return User(id: userId, premiumPlan: null, createdAt: DateTime.now());
     } catch (e, s) {
       _crashlyticsRepository.recordError(e, s);
+      rethrow;
+    }
+  }
+
+  Future<User?> getUser(String userId) async {
+    try {
+      final doc = await _firestoreUserQueries.getUserFromId(userId);
+      if (doc == null) return null;
+      return User.fromDocument(doc);
+    } catch (e, s) {
+      _crashlyticsRepository.recordError(e, s, reason: 'Failed to get user document');
       rethrow;
     }
   }
