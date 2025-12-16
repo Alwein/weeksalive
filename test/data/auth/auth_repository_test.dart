@@ -19,7 +19,6 @@ void main() {
     authRepository = AuthRepository(
       crashlyticsRepository: crashlyticsRepository,
       firebaseAuth: firebaseAuth,
-      userRepository: userRepository,
     );
   });
 
