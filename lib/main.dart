@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_fast_template/initialization.dart';
-import 'package:flutter_fast_template/presentation/app/app.dart';
+import 'package:weeksalive/initialization.dart';
+import 'package:weeksalive/presentation/app/app.dart';
 
 void main() async {
   await initializeApp();

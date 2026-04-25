@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter_fast_template/data/analytics/analytics_repository.dart';
-import 'package:flutter_fast_template/data/device/configuration_repository.dart';
-import 'package:flutter_fast_template/data/user/update_user_config_request.dart';
-import 'package:flutter_fast_template/data/user/user_repository.dart';
-import 'package:flutter_fast_template/domain/user/user.dart';
+import 'package:weeksalive/data/analytics/analytics_repository.dart';
+import 'package:weeksalive/data/device/configuration_repository.dart';
+import 'package:weeksalive/data/user/update_user_config_request.dart';
+import 'package:weeksalive/data/user/user_repository.dart';
+import 'package:weeksalive/domain/user/user.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user_bloc.freezed.dart';

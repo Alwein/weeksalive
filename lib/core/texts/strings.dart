@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 
 class Strings {
-  static String get appName => "Flutter Fast Template";
+  static String get appName => "WeeksAlive";
 
   // force update page
   static String get forceUpdateTitle => tr('force_update_title');

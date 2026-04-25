@@ -1,5 +1,5 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter_fast_template/core/utils/logger.dart';
+import 'package:weeksalive/core/utils/logger.dart';
 
 abstract class CrashlyticsRepository {
   Future<void> recordError(

@@ -4,9 +4,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_fast_template/app_purchase_config.dart';
-import 'package:flutter_fast_template/bloc_observer.dart';
-import 'package:flutter_fast_template/core/dependency_injection/locator.dart';
+import 'package:weeksalive/app_purchase_config.dart';
+import 'package:weeksalive/bloc_observer.dart';
+import 'package:weeksalive/core/dependency_injection/locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';

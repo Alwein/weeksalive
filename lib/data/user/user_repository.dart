@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_fast_template/data/crashlytics/crashlytics_repository.dart';
-import 'package:flutter_fast_template/data/services/firestore_user_queries.dart';
-import 'package:flutter_fast_template/data/user/update_user_config_request.dart';
-import 'package:flutter_fast_template/domain/user/user.dart';
+import 'package:weeksalive/data/crashlytics/crashlytics_repository.dart';
+import 'package:weeksalive/data/services/firestore_user_queries.dart';
+import 'package:weeksalive/data/user/update_user_config_request.dart';
+import 'package:weeksalive/domain/user/user.dart';
 
 class UserRepository {
   final FirestoreUserQueries _firestoreUserQueries;

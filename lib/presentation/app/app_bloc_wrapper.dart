@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_fast_template/core/dependency_injection/locator.dart';
-import 'package:flutter_fast_template/presentation/app/bloc/app_bloc.dart';
-import 'package:flutter_fast_template/presentation/auth/bloc/auth_bloc.dart';
+import 'package:weeksalive/core/dependency_injection/locator.dart';
+import 'package:weeksalive/presentation/app/bloc/app_bloc.dart';
+import 'package:weeksalive/presentation/auth/bloc/auth_bloc.dart';
 
 class AppBlocProvidersWrapper extends StatelessWidget {
   const AppBlocProvidersWrapper({super.key, required this.builder});

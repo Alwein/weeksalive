@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_fast_template/core/styles/app_colors.dart';
-import 'package:flutter_fast_template/core/styles/margins.dart';
-import 'package:flutter_fast_template/core/texts/app_links.dart';
-import 'package:flutter_fast_template/core/texts/strings.dart';
-import 'package:flutter_fast_template/presentation/widgets/primary_appbar.dart';
-import 'package:flutter_fast_template/presentation/widgets/primary_button.dart';
-import 'package:flutter_fast_template/presentation/widgets/texts.dart';
+import 'package:weeksalive/core/styles/app_colors.dart';
+import 'package:weeksalive/core/styles/margins.dart';
+import 'package:weeksalive/core/texts/app_links.dart';
+import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/presentation/widgets/primary_appbar.dart';
+import 'package:weeksalive/presentation/widgets/primary_button.dart';
+import 'package:weeksalive/presentation/widgets/texts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ForceUpdatePage extends StatelessWidget {

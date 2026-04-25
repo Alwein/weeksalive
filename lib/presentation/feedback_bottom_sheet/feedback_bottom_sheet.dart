@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fast_template/core/dependency_injection/locator.dart';
-import 'package:flutter_fast_template/core/styles/app_colors.dart';
-import 'package:flutter_fast_template/core/styles/dimens.dart';
-import 'package:flutter_fast_template/core/styles/margins.dart';
-import 'package:flutter_fast_template/core/styles/text_styles.dart';
-import 'package:flutter_fast_template/core/texts/strings.dart';
-import 'package:flutter_fast_template/data/feedback/create_feedback_request.dart';
-import 'package:flutter_fast_template/data/feedback/feedback_repository.dart';
-import 'package:flutter_fast_template/presentation/auth/bloc/auth_bloc.dart';
-import 'package:flutter_fast_template/presentation/widgets/custom_text_field.dart';
-import 'package:flutter_fast_template/presentation/widgets/form_title.dart';
-import 'package:flutter_fast_template/presentation/widgets/primary_button.dart';
-import 'package:flutter_fast_template/presentation/widgets/show_custom_bottom_sheet.dart';
+import 'package:weeksalive/core/dependency_injection/locator.dart';
+import 'package:weeksalive/core/styles/app_colors.dart';
+import 'package:weeksalive/core/styles/dimens.dart';
+import 'package:weeksalive/core/styles/margins.dart';
+import 'package:weeksalive/core/styles/text_styles.dart';
+import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/data/feedback/create_feedback_request.dart';
+import 'package:weeksalive/data/feedback/feedback_repository.dart';
+import 'package:weeksalive/presentation/auth/bloc/auth_bloc.dart';
+import 'package:weeksalive/presentation/widgets/custom_text_field.dart';
+import 'package:weeksalive/presentation/widgets/form_title.dart';
+import 'package:weeksalive/presentation/widgets/primary_button.dart';
+import 'package:weeksalive/presentation/widgets/show_custom_bottom_sheet.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
 
 class FeedbackBottomSheet extends StatefulWidget {

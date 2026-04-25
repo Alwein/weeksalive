@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_fast_template/core/dependency_injection/locator.dart';
-import 'package:flutter_fast_template/presentation/onboarding/onboarding_page.dart';
-import 'package:flutter_fast_template/presentation/onboarding/wrapper/bloc/onboarding_wrapper_bloc.dart';
+import 'package:weeksalive/core/dependency_injection/locator.dart';
+import 'package:weeksalive/presentation/onboarding/onboarding_page.dart';
+import 'package:weeksalive/presentation/onboarding/wrapper/bloc/onboarding_wrapper_bloc.dart';
 
 class OnboardingWrapper extends StatefulWidget {
   const OnboardingWrapper({super.key, required this.child});

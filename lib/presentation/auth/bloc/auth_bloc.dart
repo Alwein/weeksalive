@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_fast_template/data/auth/auth_repository.dart';
+import 'package:weeksalive/data/auth/auth_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'auth_bloc.freezed.dart';

@@ -1,7 +1,7 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_fast_template/data/crashlytics/crashlytics_repository.dart';
-import 'package:flutter_fast_template/domain/remote_config/remote_config.dart';
+import 'package:weeksalive/data/crashlytics/crashlytics_repository.dart';
+import 'package:weeksalive/domain/remote_config/remote_config.dart';
 
 class RemoteConfigRepository {
   RemoteConfigRepository({

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fast_template/core/styles/app_colors.dart';
-import 'package:flutter_fast_template/core/styles/margins.dart';
-import 'package:flutter_fast_template/core/styles/text_styles.dart';
+import 'package:weeksalive/core/styles/app_colors.dart';
+import 'package:weeksalive/core/styles/margins.dart';
+import 'package:weeksalive/core/styles/text_styles.dart';
 
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({

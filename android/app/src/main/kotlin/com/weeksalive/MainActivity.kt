@@ -1,4 +1,4 @@
-package com.example.flutter_fast_template
+package com.weeksalive
 
 import io.flutter.embedding.android.FlutterActivity
 

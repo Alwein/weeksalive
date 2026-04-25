@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_fast_template/data/crashlytics/crashlytics_repository.dart';
-import 'package:flutter_fast_template/data/feedback/create_feedback_request.dart';
+import 'package:weeksalive/data/crashlytics/crashlytics_repository.dart';
+import 'package:weeksalive/data/feedback/create_feedback_request.dart';
 
 class FeedbackRepository {
   FeedbackRepository({

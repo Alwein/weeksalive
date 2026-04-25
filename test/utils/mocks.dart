@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'package:flutter_fast_template/data/app_open_count/app_open_count_repository.dart';
-import 'package:flutter_fast_template/data/auth/auth_repository.dart';
-import 'package:flutter_fast_template/data/crashlytics/crashlytics_repository.dart';
-import 'package:flutter_fast_template/data/device/configuration_repository.dart';
-import 'package:flutter_fast_template/data/remote_config/remote_config_repository.dart';
-import 'package:flutter_fast_template/data/services/firestore_user_queries.dart';
-import 'package:flutter_fast_template/data/user/user_repository.dart';
-import 'package:flutter_fast_template/domain/remote_config/remote_config.dart';
-import 'package:flutter_fast_template/domain/user/user.dart';
+import 'package:weeksalive/data/app_open_count/app_open_count_repository.dart';
+import 'package:weeksalive/data/auth/auth_repository.dart';
+import 'package:weeksalive/data/crashlytics/crashlytics_repository.dart';
+import 'package:weeksalive/data/device/configuration_repository.dart';
+import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
+import 'package:weeksalive/data/services/firestore_user_queries.dart';
+import 'package:weeksalive/data/user/user_repository.dart';
+import 'package:weeksalive/domain/remote_config/remote_config.dart';
+import 'package:weeksalive/domain/user/user.dart';
 import 'package:mocktail/mocktail.dart';
 
 class FakeFirebaseUser extends Fake implements auth.User {

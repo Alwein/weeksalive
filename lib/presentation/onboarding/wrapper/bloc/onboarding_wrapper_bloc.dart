@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_fast_template/data/onboarding/onboarding_repository.dart';
+import 'package:weeksalive/data/onboarding/onboarding_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'onboarding_wrapper_bloc.freezed.dart';

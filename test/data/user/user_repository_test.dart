@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_fast_template/data/user/user_repository.dart';
-import 'package:flutter_fast_template/domain/user/user.dart';
+import 'package:weeksalive/data/user/user_repository.dart';
+import 'package:weeksalive/domain/user/user.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

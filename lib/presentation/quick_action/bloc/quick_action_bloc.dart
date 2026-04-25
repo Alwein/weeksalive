@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_fast_template/core/texts/strings.dart';
+import 'package:weeksalive/core/texts/strings.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:quick_actions/quick_actions.dart';
 

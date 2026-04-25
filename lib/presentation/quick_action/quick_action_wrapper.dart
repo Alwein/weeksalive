@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_fast_template/presentation/feedback_bottom_sheet/feedback_bottom_sheet.dart';
-import 'package:flutter_fast_template/presentation/quick_action/bloc/quick_action_bloc.dart';
+import 'package:weeksalive/presentation/feedback_bottom_sheet/feedback_bottom_sheet.dart';
+import 'package:weeksalive/presentation/quick_action/bloc/quick_action_bloc.dart';
 
 class QuickActionWrapper extends StatelessWidget {
   const QuickActionWrapper({super.key, required this.child});

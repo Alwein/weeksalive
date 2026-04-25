@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fast_template/core/styles/app_colors.dart';
-import 'package:flutter_fast_template/core/styles/dimens.dart';
-import 'package:flutter_fast_template/core/styles/margins.dart';
+import 'package:weeksalive/core/styles/app_colors.dart';
+import 'package:weeksalive/core/styles/dimens.dart';
+import 'package:weeksalive/core/styles/margins.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
 
 Future<T?> showCustomBottomSheet<T>(

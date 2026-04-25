@@ -2,15 +2,15 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_fast_template/core/styles/app_colors.dart';
-import 'package:flutter_fast_template/core/styles/margins.dart';
-import 'package:flutter_fast_template/core/texts/strings.dart';
-import 'package:flutter_fast_template/presentation/onboarding/bloc/onboarding_bloc.dart';
-import 'package:flutter_fast_template/presentation/onboarding/widgets/onboarding_step_1.dart';
-import 'package:flutter_fast_template/presentation/onboarding/widgets/onboarding_step_2.dart';
-import 'package:flutter_fast_template/presentation/onboarding/widgets/onboarding_step_3.dart';
-import 'package:flutter_fast_template/presentation/widgets/primary_button.dart';
-import 'package:flutter_fast_template/presentation/widgets/texts.dart';
+import 'package:weeksalive/core/styles/app_colors.dart';
+import 'package:weeksalive/core/styles/margins.dart';
+import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/presentation/onboarding/bloc/onboarding_bloc.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/onboarding_step_1.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/onboarding_step_2.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/onboarding_step_3.dart';
+import 'package:weeksalive/presentation/widgets/primary_button.dart';
+import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});

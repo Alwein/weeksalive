@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fast_template/core/styles/app_colors.dart';
-import 'package:flutter_fast_template/core/texts/strings.dart';
-import 'package:flutter_fast_template/presentation/widgets/texts.dart';
+import 'package:weeksalive/core/styles/app_colors.dart';
+import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
   const PrimaryAppBar({super.key});

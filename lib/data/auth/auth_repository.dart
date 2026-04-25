@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_fast_template/data/crashlytics/crashlytics_repository.dart';
+import 'package:weeksalive/data/crashlytics/crashlytics_repository.dart';
 
 class AuthRepository {
   final CrashlyticsRepository _crashlyticsRepository;

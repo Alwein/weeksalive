@@ -3,15 +3,15 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_fast_template/presentation/app/app_bloc_wrapper.dart';
-import 'package:flutter_fast_template/presentation/app/bloc/app_bloc.dart';
-import 'package:flutter_fast_template/presentation/auth/bloc/auth_bloc.dart';
-import 'package:flutter_fast_template/presentation/force_update/force_update_page.dart';
-import 'package:flutter_fast_template/presentation/home/home_page.dart';
-import 'package:flutter_fast_template/presentation/onboarding/wrapper/onboarding_wrapper.dart';
-import 'package:flutter_fast_template/presentation/splash/splas_page.dart';
-import 'package:flutter_fast_template/presentation/user/user_bloc_wrapper.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:weeksalive/presentation/app/app_bloc_wrapper.dart';
+import 'package:weeksalive/presentation/app/bloc/app_bloc.dart';
+import 'package:weeksalive/presentation/auth/bloc/auth_bloc.dart';
+import 'package:weeksalive/presentation/force_update/force_update_page.dart';
+import 'package:weeksalive/presentation/home/home_page.dart';
+import 'package:weeksalive/presentation/onboarding/wrapper/onboarding_wrapper.dart';
+import 'package:weeksalive/presentation/splash/splas_page.dart';
+import 'package:weeksalive/presentation/user/user_bloc_wrapper.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -26,7 +26,7 @@ class _AppState extends State<App> {
     return AppBlocProvidersWrapper(
       builder: (context) {
         return MaterialApp(
-          title: 'Flutter Fast Template',
+          title: 'WeeksAlive',
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,
