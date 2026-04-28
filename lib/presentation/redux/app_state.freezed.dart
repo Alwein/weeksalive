@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$AppState {
   RemoteConfigState get remoteConfigState => throw _privateConstructorUsedError;
+  UserState get userState => throw _privateConstructorUsedError;
 
   /// Create a copy of AppState
   /// with the given fields replaced by the non-null parameter values.
@@ -31,9 +32,10 @@ abstract class $AppStateCopyWith<$Res> {
   factory $AppStateCopyWith(AppState value, $Res Function(AppState) then) =
       _$AppStateCopyWithImpl<$Res, AppState>;
   @useResult
-  $Res call({RemoteConfigState remoteConfigState});
+  $Res call({RemoteConfigState remoteConfigState, UserState userState});
 
   $RemoteConfigStateCopyWith<$Res> get remoteConfigState;
+  $UserStateCopyWith<$Res> get userState;
 }
 
 /// @nodoc
@@ -50,13 +52,17 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? remoteConfigState = null}) {
+  $Res call({Object? remoteConfigState = null, Object? userState = null}) {
     return _then(
       _value.copyWith(
             remoteConfigState: null == remoteConfigState
                 ? _value.remoteConfigState
                 : remoteConfigState // ignore: cast_nullable_to_non_nullable
                       as RemoteConfigState,
+            userState: null == userState
+                ? _value.userState
+                : userState // ignore: cast_nullable_to_non_nullable
+                      as UserState,
           )
           as $Val,
     );
@@ -71,6 +77,16 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
       return _then(_value.copyWith(remoteConfigState: value) as $Val);
     });
   }
+
+  /// Create a copy of AppState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $UserStateCopyWith<$Res> get userState {
+    return $UserStateCopyWith<$Res>(_value.userState, (value) {
+      return _then(_value.copyWith(userState: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -82,10 +98,12 @@ abstract class _$$AppStateImplCopyWith<$Res>
   ) = __$$AppStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({RemoteConfigState remoteConfigState});
+  $Res call({RemoteConfigState remoteConfigState, UserState userState});
 
   @override
   $RemoteConfigStateCopyWith<$Res> get remoteConfigState;
+  @override
+  $UserStateCopyWith<$Res> get userState;
 }
 
 /// @nodoc
@@ -101,13 +119,17 @@ class __$$AppStateImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? remoteConfigState = null}) {
+  $Res call({Object? remoteConfigState = null, Object? userState = null}) {
     return _then(
       _$AppStateImpl(
         remoteConfigState: null == remoteConfigState
             ? _value.remoteConfigState
             : remoteConfigState // ignore: cast_nullable_to_non_nullable
                   as RemoteConfigState,
+        userState: null == userState
+            ? _value.userState
+            : userState // ignore: cast_nullable_to_non_nullable
+                  as UserState,
       ),
     );
   }
@@ -116,14 +138,19 @@ class __$$AppStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$AppStateImpl implements _AppState {
-  const _$AppStateImpl({required this.remoteConfigState});
+  const _$AppStateImpl({
+    required this.remoteConfigState,
+    required this.userState,
+  });
 
   @override
   final RemoteConfigState remoteConfigState;
+  @override
+  final UserState userState;
 
   @override
   String toString() {
-    return 'AppState(remoteConfigState: $remoteConfigState)';
+    return 'AppState(remoteConfigState: $remoteConfigState, userState: $userState)';
   }
 
   @override
@@ -132,11 +159,13 @@ class _$AppStateImpl implements _AppState {
         (other.runtimeType == runtimeType &&
             other is _$AppStateImpl &&
             (identical(other.remoteConfigState, remoteConfigState) ||
-                other.remoteConfigState == remoteConfigState));
+                other.remoteConfigState == remoteConfigState) &&
+            (identical(other.userState, userState) ||
+                other.userState == userState));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, remoteConfigState);
+  int get hashCode => Object.hash(runtimeType, remoteConfigState, userState);
 
   /// Create a copy of AppState
   /// with the given fields replaced by the non-null parameter values.
@@ -150,10 +179,13 @@ class _$AppStateImpl implements _AppState {
 abstract class _AppState implements AppState {
   const factory _AppState({
     required final RemoteConfigState remoteConfigState,
+    required final UserState userState,
   }) = _$AppStateImpl;
 
   @override
   RemoteConfigState get remoteConfigState;
+  @override
+  UserState get userState;
 
   /// Create a copy of AppState
   /// with the given fields replaced by the non-null parameter values.
