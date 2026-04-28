@@ -3,45 +3,31 @@ import 'package:weeksalive/presentation/redux/app_state.dart';
 
 // ignore_for_file: avoid_print
 
-class StateIs<T> extends Matcher {
-  final dynamic Function(AppState) property;
-  final Function(T)? moreExpectations;
+TypeMatcher<AppState> stateWith<V>(V Function(AppState) extract, dynamic matcher) {
+  final wrapped = wrapMatcher(matcher);
+  return isA<AppState>().having(extract, wrapped.describe(StringDescription()).toString(), wrapped);
+}
 
-  StateIs(this.property, [this.moreExpectations]);
-
-  @override
-  bool matches(Object? item, Map<dynamic, dynamic> matchState) {
-    if (item == null || item is! AppState) return false;
-    final subState = property(item);
-    if (subState is T) {
-      if (moreExpectations != null) moreExpectations!(subState);
-      return true;
-    }
-    return false;
+extension TypeMatcherX<T> on TypeMatcher<T> {
+  TypeMatcher<T> where<V>(V Function(T) fn, dynamic matcher) {
+    final wrapped = wrapMatcher(matcher);
+    return having(fn, wrapped.describe(StringDescription()).toString(), wrapped);
   }
-
-  @override
-  Description describe(Description description) => description.add("state isn't");
 }
 
 class StateMatch extends Matcher {
   final bool Function(AppState) statePredicate;
-  final Function(AppState)? moreExpectations;
 
-  StateMatch(this.statePredicate, [this.moreExpectations]);
+  const StateMatch(this.statePredicate);
 
   @override
   bool matches(Object? item, Map<dynamic, dynamic> matchState) {
     if (item == null || item is! AppState) return false;
-    if (statePredicate(item)) {
-      if (moreExpectations != null) moreExpectations!(item);
-      return true;
-    }
-    return false;
+    return statePredicate(item);
   }
 
   @override
-  Description describe(Description description) => description.add("state doesn't match");
+  Description describe(Description description) => description.add("AppState doesn't match predicate");
 }
 
 class DebugMatcher extends Matcher {

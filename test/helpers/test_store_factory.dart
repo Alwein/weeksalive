@@ -14,6 +14,6 @@ class TestStoreFactory {
     return StoreFactory(
       remoteConfigRepository: remoteConfigRepository,
       userRepository: userRepository,
-    ).createStore();
+    ).createStore(initialState: initialState);
   }
 }

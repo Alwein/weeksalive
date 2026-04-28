@@ -15,10 +15,10 @@ class StoreFactory {
     required this.userRepository,
   });
 
-  Store<AppState> createStore() {
+  Store<AppState> createStore({AppState? initialState}) {
     return Store<AppState>(
       appReducer,
-      initialState: AppState.initial(),
+      initialState: initialState ?? AppState.initial(),
       middleware: [
         BootstrapMiddleware().call,
         UserMiddleware(userRepository: userRepository).call,

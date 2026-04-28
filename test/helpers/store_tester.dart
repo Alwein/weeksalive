@@ -12,22 +12,20 @@ class StoreTester {
   /////////////////////////////
   // - When
 
-  void whenDispatchingAction(dynamic Function() when) {
-    setUp(() => _whenFunction = () async => await givenStore.dispatch(when()));
+  void whenDispatching(dynamic Function() action) {
+    _whenFunction = () async => await givenStore.dispatch(action());
   }
 
-  void whenDispatchingActions(List<dynamic> actions) {
-    setUp(() {
-      _whenFunction = () async {
-        for (final action in actions) {
-          await givenStore.dispatch(action);
-        }
-      };
-    });
+  void whenDispatchingAll(List<dynamic Function()> actions) {
+    _whenFunction = () async {
+      for (final action in actions) {
+        await givenStore.dispatch(action());
+      }
+    };
   }
 
-  void when(Function() when) {
-    setUp(() => _whenFunction = when);
+  void when(Function() fn) {
+    _whenFunction = fn;
   }
 
   /////////////////////////////
@@ -36,32 +34,35 @@ class StoreTester {
   Future<void> thenExpectChangingStatesThroughOrder(List<Matcher> matchers) async {
     expect(givenStore.onChange, emitsInOrder(matchers.map((matcher) => emitsThrough(matcher))));
     await _whenFunction();
+    givenStore.teardown();
   }
 
   Future<void> thenExpectAtSomePoint(Matcher matcher) async {
-    Future.delayed(const Duration(milliseconds: 50), () => givenStore.teardown());
     expect(givenStore.onChange, emitsAtLeastOnce(matcher));
     await _whenFunction();
+    givenStore.teardown();
   }
 
   Future<void> thenExpectNever(Matcher matcher) async {
-    Future.delayed(const Duration(milliseconds: 50), () => givenStore.teardown());
     expect(givenStore.onChange, neverEmits(matcher));
     await _whenFunction();
+    givenStore.teardown();
   }
 
   Future<void> thenExpectNothing() async {
-    Future.delayed(const Duration(milliseconds: 50), () => givenStore.teardown());
     await _whenFunction();
+    givenStore.teardown();
   }
 
   Future<void> thenDebugStates(dynamic Function(AppState) info) async {
     expect(givenStore.onChange, emitsThrough(DebugMatcher(info)));
     await _whenFunction();
+    givenStore.teardown();
   }
 
   Future<void> then(Function() expect) async {
     await _whenFunction();
     expect();
+    givenStore.teardown();
   }
 }

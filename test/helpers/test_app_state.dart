@@ -6,10 +6,9 @@ import 'test_store_factory.dart';
 AppState initialAppState() => AppState.initial();
 
 extension AppStateDSL on AppState {
-  // find better name for foo
-  Store<AppState> store([Function(TestStoreFactory)? foo]) {
+  Store<AppState> store([Function(TestStoreFactory)? configure]) {
     final factory = TestStoreFactory();
-    if (foo != null) foo(factory);
+    if (configure != null) configure(factory);
     return factory.initializeReduxStore(this);
   }
 }
