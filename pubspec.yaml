@@ -18,6 +18,10 @@ dependencies:
   firebase_crashlytics: "5.0.5"
   firebase_remote_config: "6.1.2"
 
+  # redux
+  redux: "5.0.0"
+  flutter_redux: "0.10.0"
+
   # RevenueCat
   purchases_flutter: ^9.6.1
 

@@ -12,7 +12,8 @@ part of 'remote_config.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$AppRemoteConfig {
@@ -28,8 +29,9 @@ mixin _$AppRemoteConfig {
 /// @nodoc
 abstract class $AppRemoteConfigCopyWith<$Res> {
   factory $AppRemoteConfigCopyWith(
-          AppRemoteConfig value, $Res Function(AppRemoteConfig) then) =
-      _$AppRemoteConfigCopyWithImpl<$Res, AppRemoteConfig>;
+    AppRemoteConfig value,
+    $Res Function(AppRemoteConfig) then,
+  ) = _$AppRemoteConfigCopyWithImpl<$Res, AppRemoteConfig>;
   @useResult
   $Res call({String minAppVersion});
 }
@@ -48,24 +50,26 @@ class _$AppRemoteConfigCopyWithImpl<$Res, $Val extends AppRemoteConfig>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? minAppVersion = null,
-  }) {
-    return _then(_value.copyWith(
-      minAppVersion: null == minAppVersion
-          ? _value.minAppVersion
-          : minAppVersion // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  $Res call({Object? minAppVersion = null}) {
+    return _then(
+      _value.copyWith(
+            minAppVersion: null == minAppVersion
+                ? _value.minAppVersion
+                : minAppVersion // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$AppRemoteConfigImplCopyWith<$Res>
     implements $AppRemoteConfigCopyWith<$Res> {
-  factory _$$AppRemoteConfigImplCopyWith(_$AppRemoteConfigImpl value,
-          $Res Function(_$AppRemoteConfigImpl) then) =
-      __$$AppRemoteConfigImplCopyWithImpl<$Res>;
+  factory _$$AppRemoteConfigImplCopyWith(
+    _$AppRemoteConfigImpl value,
+    $Res Function(_$AppRemoteConfigImpl) then,
+  ) = __$$AppRemoteConfigImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String minAppVersion});
@@ -76,22 +80,23 @@ class __$$AppRemoteConfigImplCopyWithImpl<$Res>
     extends _$AppRemoteConfigCopyWithImpl<$Res, _$AppRemoteConfigImpl>
     implements _$$AppRemoteConfigImplCopyWith<$Res> {
   __$$AppRemoteConfigImplCopyWithImpl(
-      _$AppRemoteConfigImpl _value, $Res Function(_$AppRemoteConfigImpl) _then)
-      : super(_value, _then);
+    _$AppRemoteConfigImpl _value,
+    $Res Function(_$AppRemoteConfigImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of AppRemoteConfig
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? minAppVersion = null,
-  }) {
-    return _then(_$AppRemoteConfigImpl(
-      minAppVersion: null == minAppVersion
-          ? _value.minAppVersion
-          : minAppVersion // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? minAppVersion = null}) {
+    return _then(
+      _$AppRemoteConfigImpl(
+        minAppVersion: null == minAppVersion
+            ? _value.minAppVersion
+            : minAppVersion // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -128,7 +133,9 @@ class _$AppRemoteConfigImpl implements _AppRemoteConfig {
   @pragma('vm:prefer-inline')
   _$$AppRemoteConfigImplCopyWith<_$AppRemoteConfigImpl> get copyWith =>
       __$$AppRemoteConfigImplCopyWithImpl<_$AppRemoteConfigImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _AppRemoteConfig implements AppRemoteConfig {

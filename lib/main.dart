@@ -4,14 +4,14 @@ import 'package:weeksalive/initialization.dart';
 import 'package:weeksalive/presentation/app/app.dart';
 
 void main() async {
-  await initializeApp();
+  final store = await initializeApp();
 
   runApp(
     EasyLocalization(
       supportedLocales: supportedLocales,
       fallbackLocale: const Locale('en', 'US'),
       path: 'assets/translations',
-      child: const App(),
+      child: App(store: store),
     ),
   );
 }

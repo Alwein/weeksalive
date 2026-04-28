@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "294733907297",
+    "project_id": "weeksalive",
+    "storage_bucket": "weeksalive.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:294733907297:android:f5d891abfd37e702c5b120",
+        "android_client_info": {
+          "package_name": "com.weeksalive"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlIdxK2hpS1cOZ6e0JSpnUPSrFkJ68jQU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

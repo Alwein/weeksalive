@@ -23,15 +23,9 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for android - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for iOS - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -53,4 +47,22 @@ class DefaultFirebaseOptions {
         );
     }
   }
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyCjqHHNJUBL_m81N-Ulupsyy96as14M25A',
+    appId: '1:294733907297:ios:72e145691b7303acc5b120',
+    messagingSenderId: '294733907297',
+    projectId: 'weeksalive',
+    storageBucket: 'weeksalive.firebasestorage.app',
+    iosBundleId: 'com.weeksalive',
+  );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyDlIdxK2hpS1cOZ6e0JSpnUPSrFkJ68jQU',
+    appId: '1:294733907297:android:f5d891abfd37e702c5b120',
+    messagingSenderId: '294733907297',
+    projectId: 'weeksalive',
+    storageBucket: 'weeksalive.firebasestorage.app',
+  );
+
 }
