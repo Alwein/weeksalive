@@ -11,8 +11,10 @@ import '../../../mocks.dart';
 
 void main() {
   group('user state', () {
-    final storeTester = StoreTester();
+    late StoreTester storeTester;
     final repository = MockUserRepository();
+
+    setUp(() => storeTester = StoreTester());
 
     test('userState should be typed correctly', () {
       expect(const UserState.loading(), isA<UserStateLoading>());
@@ -24,13 +26,15 @@ void main() {
       test('should load then succeed when user is not found', () {
         // Given
         when(() => repository.getUser()).thenAnswer((_) async => null);
-        storeTester.givenStore = initialAppState().store((factory) => {factory.userRepository = repository});
+        storeTester.givenStore(initialAppState(), configure: (f) {
+          f.userRepository = repository;
+        });
 
         // When
         storeTester.whenDispatching(() => BootstrapAction());
 
         // Then
-        storeTester.thenExpectChangingStatesThroughOrder([
+        storeTester.thenExpectStatesInOrder([
           stateWith((s) => s.userState, isA<UserStateLoading>()),
           stateWith((s) => s.userState, isA<UserStateSuccess>().where((s) => s.user, isNull)),
         ]);
@@ -39,13 +43,15 @@ void main() {
       test('should load then succeed when user is found', () {
         // Given
         when(() => repository.getUser()).thenAnswer((_) async => userFixture());
-        storeTester.givenStore = initialAppState().store((factory) => {factory.userRepository = repository});
+        storeTester.givenStore(initialAppState(), configure: (f) {
+          f.userRepository = repository;
+        });
 
         // When
         storeTester.whenDispatching(() => BootstrapAction());
 
         // Then
-        storeTester.thenExpectChangingStatesThroughOrder([
+        storeTester.thenExpectStatesInOrder([
           stateWith((s) => s.userState, isA<UserStateLoading>()),
           stateWith((s) => s.userState, isA<UserStateSuccess>().where((s) => s.user, userFixture())),
         ]);
