@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class TextStyles {
-  static TextStyle appTitle = GoogleFonts.splineSans().copyWith(
+  static TextStyle appTitle = const TextStyle(
+    fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.xl,
     fontWeight: FontWeight.w600,
   );
 
-  static TextStyle primaryXxlBold = GoogleFonts.splineSans().copyWith(
+  static TextStyle primaryXxlBold = const TextStyle(
+    fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.xxxl,
     fontWeight: FontWeight.normal,
     height: 0,
@@ -19,90 +20,108 @@ class TextStyles {
       fontSize = FontSizes.xxl;
     }
 
-    return GoogleFonts.splineSans().copyWith(
+    return TextStyle(
+      fontFamily: "SpaceGrotesk",
       fontSize: fontSize,
       fontWeight: FontWeight.normal,
       height: 0,
     );
   }
 
-  static TextStyle primaryRegular = GoogleFonts.splineSans().copyWith(
+  static TextStyle primaryRegular = const TextStyle(
+    fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.regular,
     fontWeight: FontWeight.normal,
   );
 
-  static TextStyle primaryMedium = GoogleFonts.splineSans().copyWith(
+  static TextStyle primaryMedium = const TextStyle(
+    fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.regular,
     fontWeight: FontWeight.w600,
   );
 
-  static TextStyle primaryBold = GoogleFonts.splineSans().copyWith(
+  static TextStyle primaryBold = const TextStyle(
+    fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.regular,
     fontWeight: FontWeight.bold,
   );
 
-  static TextStyle primaryMediumBlack = GoogleFonts.splineSans().copyWith(
+  static TextStyle primaryMediumBlack = const TextStyle(
+    fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.medium,
     fontWeight: FontWeight.bold,
   );
 
-  static TextStyle primaryMediumNormal = GoogleFonts.splineSans().copyWith(
+  static TextStyle primaryMediumNormal = const TextStyle(
+    fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.medium,
     fontWeight: FontWeight.normal,
   );
 
-  static TextStyle primaryHugeBold = GoogleFonts.splineSans().copyWith(
+  static TextStyle primaryHugeBold = const TextStyle(
+    fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.huge,
     fontWeight: FontWeight.bold,
   );
 
-  static TextStyle primaryHuge = GoogleFonts.splineSans().copyWith(
+  static TextStyle primaryHuge = const TextStyle(
+    fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.huge,
     fontWeight: FontWeight.normal,
   );
 
-  static TextStyle primaryXlBold = GoogleFonts.splineSans().copyWith(
+  static TextStyle primaryXlBold = const TextStyle(
+    fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.xl,
     fontWeight: FontWeight.bold,
   );
 
-  static TextStyle primaryLargeMedium = GoogleFonts.splineSans().copyWith(
+  static TextStyle primaryLargeMedium = const TextStyle(
+    fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.large,
     fontWeight: FontWeight.w600,
     height: 0,
   );
 
-  static TextStyle primaryLarge = GoogleFonts.splineSans().copyWith(
+  static TextStyle primaryLarge = const TextStyle(
+    fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.large,
     fontWeight: FontWeight.normal,
     height: 0,
   );
 
-  static TextStyle primaryXsRegular = GoogleFonts.splineSans().copyWith(
+  static TextStyle primaryXsRegular = const TextStyle(
+    fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.xs,
     fontWeight: FontWeight.normal,
   );
-  static TextStyle primaryXsMedium = GoogleFonts.splineSans().copyWith(
+
+  static TextStyle primaryXsMedium = const TextStyle(
+    fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.xs,
     fontWeight: FontWeight.w600,
   );
 
-  static TextStyle mediumBold = GoogleFonts.splineSans().copyWith(
+  static TextStyle mediumBold = const TextStyle(
+    fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.medium,
     fontWeight: FontWeight.w800,
   );
 
-  static TextStyle primaryMediumMedium = GoogleFonts.splineSans().copyWith(
+  static TextStyle primaryMediumMedium = const TextStyle(
+    fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.medium,
     fontWeight: FontWeight.w800,
   );
 
   static TextStyle primaryRegularMedium = const TextStyle(
+    fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.regular,
     fontWeight: FontWeight.w600,
   );
 
   static TextStyle primaryXSRegular = const TextStyle(
+    fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.xs,
     fontWeight: FontWeight.w400,
   );
