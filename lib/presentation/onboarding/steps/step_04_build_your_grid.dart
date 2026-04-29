@@ -1,22 +1,66 @@
 import 'package:flutter/widgets.dart';
+import 'package:weeksalive/core/styles/app_colors.dart';
+import 'package:weeksalive/core/styles/margins.dart';
+import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/onboarding_illustration_placeholder.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/onboarding_step_layout.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/parallax_lottie.dart';
+import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step04BuildYourGrid extends OnboardingStep {
   const Step04BuildYourGrid();
 
   @override
-  String primaryLabel(BuildContext context) => 'I\u2019m ready';
+  String primaryLabel(BuildContext context) => Strings.iAmReady;
 
   @override
   Widget buildContent(BuildContext context) {
-    return const OnboardingStepLayout(
-      title: 'Let\u2019s build your own grid.',
-      subtitle:
-          'Your grid is unique. It starts the day you were born, and it belongs to no one else.',
-      illustration:
-          OnboardingIllustrationPlaceholder(name: 'Mascot standing with form in his hands'),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Center(
+              child: ParallaxLottie(
+                assetPath: "assets/animations/outline_grid.json",
+                colorFilter: ColorFilter.mode(
+                  AppColors.content(context),
+                  BlendMode.srcIn,
+                ),
+              ),
+            ),
+          ),
+          Center(
+            child: SingleChildScrollView(
+              child: OnboardingStaggeredColumn(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Texts.xlBold(Strings.onboarding04Title),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: Margins.spacingM),
+                      const SmallDivider(),
+                      const SizedBox(height: Margins.spacingM),
+                      Texts.primaryMediumSoft(
+                        context,
+                        Strings.onboarding04Subtitle,
+                      ),
+                      const SizedBox(height: Margins.spacingM),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

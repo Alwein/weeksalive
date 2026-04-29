@@ -28,4 +28,14 @@ class Strings {
   static String get onboarding02Title2 => "Until it doesn\u2019t.";
   static String get onboarding02Subtitle =>
       "Most of us move through weeks without really feeling them. Until we look back and wonder where the years went.";
+
+  static String get onboarding03Title => "Your life is made of weeks.";
+  static String get onboarding03Subtitle => "Birthdays, heartbreaks.\nTuesdays. Every one is here.";
+  static String get onboarding03Footer => "Every dot is a week you lived, or a week still ahead of you.";
+
+  static String get iAmReady => "I\u2019m ready";
+
+  static String get onboarding04Title => "Let's build your own grid.";
+  static String get onboarding04Subtitle =>
+      "Your grid is unique.\nIt starts the day you were born,and it belongs to no one else.";
 }

@@ -9,7 +9,7 @@ class SmallDivider extends StatelessWidget {
     return Container(
       height: 1,
       width: 50,
-      color: AppColors.strokeColor,
+      color: AppColors.strokeColor(context),
     );
   }
 }

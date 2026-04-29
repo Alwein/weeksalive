@@ -38,6 +38,7 @@ class TextStyles {
     fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.medium,
     fontWeight: FontWeight.w500,
+    height: 1.6,
   );
 
   static TextStyle primaryBold = const TextStyle(

@@ -142,7 +142,10 @@ class _CustomBottomSheetContentState extends State<_CustomBottomSheetContent> wi
                                             color: AppColors.bgSoft(context),
                                             shape: BoxShape.circle,
                                           ),
-                                          child: const Icon(MingCuteIcons.mgc_close_line, color: AppColors.strokeColor),
+                                          child: Icon(
+                                            MingCuteIcons.mgc_close_line,
+                                            color: AppColors.strokeColor(context),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -180,7 +183,7 @@ class _Handle extends StatelessWidget {
       width: 40,
       height: 4,
       decoration: BoxDecoration(
-        color: AppColors.strokeColor,
+        color: AppColors.strokeColor(context),
         borderRadius: BorderRadius.circular(Dimens.radiusS),
       ),
     );
