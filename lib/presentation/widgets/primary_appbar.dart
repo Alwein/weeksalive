@@ -10,7 +10,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       centerTitle: true,
-      title: Texts.appTitle(Strings.appName),
+      title: Texts.xlBold(Strings.appName),
       backgroundColor: AppColors.bg(context),
       surfaceTintColor: Colors.transparent,
     );

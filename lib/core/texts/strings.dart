@@ -22,5 +22,10 @@ class Strings {
   static String get quickActionFeedbackSubtitle => tr('quickActionFeedbackSubtitle');
 
   // onboarding
-  static String get onboarding01Subtitle => tr('onboarding01Subtitle');
+  static String get onboarding01Subtitle => "A gentle reminder that\nyour time is precious";
+
+  static String get onboarding02Title1 => "Life feels long.";
+  static String get onboarding02Title2 => "Until it doesn\u2019t.";
+  static String get onboarding02Subtitle =>
+      "Most of us move through weeks without really feeling them. Until we look back and wonder where the years went.";
 }

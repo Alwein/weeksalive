@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:uuid/uuid.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
+import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
@@ -101,14 +102,15 @@ class _OnboardingPageState extends State<OnboardingPage> {
             },
             child: Scaffold(
               backgroundColor: AppColors.bg(context),
-              appBar: _OnboardingAppBar(
-                controller: _controller,
-                hideBack: step.hideBackButton,
-              ),
+
               body: SafeArea(
-                top: false,
+                top: true,
                 child: Column(
                   children: [
+                    _OnboardingAppBar(
+                      controller: _controller,
+                      hideBack: _controller.isFirst,
+                    ),
                     Expanded(
                       child: PageView.builder(
                         controller: _controller.pageController,
@@ -136,32 +138,41 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 }
 
-class _OnboardingAppBar extends StatelessWidget implements PreferredSizeWidget {
+class _OnboardingAppBar extends StatelessWidget {
   const _OnboardingAppBar({required this.controller, required this.hideBack});
 
   final OnboardingFormController controller;
   final bool hideBack;
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 4);
-
-  @override
   Widget build(BuildContext context) {
-    return AppBar(
-      leading: (hideBack || controller.isFirst)
-          ? const SizedBox.shrink()
-          : IconButton(
+    final bool hideBackButton = hideBack || controller.isFirst;
+    return Padding(
+      padding: EdgeInsets.only(
+        left: hideBackButton ? Margins.spacingM : Margins.spacingS,
+        right: Margins.spacingM,
+        top: Margins.spacingS,
+        bottom: Margins.spacingS,
+      ),
+      child: Row(
+        children: [
+          AnimatedCrossFade(
+            duration: AnimationDurations.short,
+            firstChild: const SizedBox(height: 48.0), // IconButton height is 48.0
+            secondChild: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: controller.goPrevious,
             ),
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(4),
-        child: OnboardingProgressBar(
-          currentIndex: controller.currentIndex,
-          totalSteps: controller.totalSteps,
-        ),
+            crossFadeState: hideBackButton ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+            sizeCurve: Curves.easeOut,
+          ),
+          Expanded(
+            child: OnboardingProgressBar(
+              currentIndex: controller.currentIndex,
+              totalSteps: controller.totalSteps,
+            ),
+          ),
+        ],
       ),
     );
   }

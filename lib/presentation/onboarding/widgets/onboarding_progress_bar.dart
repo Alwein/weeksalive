@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 
 class OnboardingProgressBar extends StatelessWidget {
@@ -22,7 +23,9 @@ class OnboardingProgressBar extends StatelessWidget {
         return LinearProgressIndicator(
           value: value,
           minHeight: 4,
-          backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+          backgroundColor: AppColors.bgSoft(context),
+          color: AppColors.content(context),
+          borderRadius: BorderRadius.circular(Dimens.radiusS),
         );
       },
     );

@@ -3,7 +3,7 @@ import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 
 class Texts {
-  static Widget appTitle(
+  static Widget xlBold(
     String text, {
     TextAlign? textAlign,
     int? maxLines,
@@ -12,7 +12,26 @@ class Texts {
   }) {
     return _StyledText(
       text: text,
-      style: TextStyles.appTitle,
+      style: TextStyles.xlBold,
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
+      softWrap: softWrap,
+    );
+  }
+
+  static Widget xlBoldSoft(
+    BuildContext context,
+    String text, {
+    TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
+    bool? softWrap,
+  }) {
+    return _StyledText(
+      text: text,
+      style: TextStyles.xlBold,
+      color: AppColors.contentSoft(context),
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,

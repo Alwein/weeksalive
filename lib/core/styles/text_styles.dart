@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TextStyles {
-  static TextStyle appTitle = const TextStyle(
+  static TextStyle xlBold = const TextStyle(
     fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.xl,
     fontWeight: FontWeight.bold,
