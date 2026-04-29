@@ -18,4 +18,8 @@ class UserRepository {
   Future<void> setUser(User user) async {
     await _preferences.setString(_userKey, jsonEncode(user.toJson()));
   }
+
+  Future<void> clearUser() async {
+    await _preferences.remove(_userKey);
+  }
 }

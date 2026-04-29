@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:redux/redux.dart';
-import 'package:weeksalive/presentation/home/home_page.dart';
+import 'package:weeksalive/presentation/bootstrap/bootstrap_page.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 
 class App extends StatefulWidget {
@@ -41,7 +41,7 @@ class _AppState extends State<App> {
         darkTheme: ThemeData(
           brightness: Brightness.dark,
         ),
-        home: const MyHomePage(title: "title"),
+        home: const BootstrapPage(),
       ),
     );
   }

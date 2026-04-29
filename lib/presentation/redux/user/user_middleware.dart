@@ -17,5 +17,15 @@ class UserMiddleware extends MiddlewareClass<AppState> {
       final user = await userRepository.getUser();
       store.dispatch(UserLoadedAction(user));
     }
+
+    if (action is SetUserAction) {
+      await userRepository.setUser(action.user);
+      store.dispatch(UserLoadedAction(action.user));
+    }
+
+    if (action is ClearUserAction) {
+      await userRepository.clearUser();
+      store.dispatch(const UserLoadedAction(null));
+    }
   }
 }

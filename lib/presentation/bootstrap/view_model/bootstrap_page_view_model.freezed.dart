@@ -17,7 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$BootstrapPageViewModel {
-  bool get showOnboarding => throw _privateConstructorUsedError;
+  BootstrapPageRedirect get redirect => throw _privateConstructorUsedError;
 
   /// Create a copy of BootstrapPageViewModel
   /// with the given fields replaced by the non-null parameter values.
@@ -33,7 +33,7 @@ abstract class $BootstrapPageViewModelCopyWith<$Res> {
     $Res Function(BootstrapPageViewModel) then,
   ) = _$BootstrapPageViewModelCopyWithImpl<$Res, BootstrapPageViewModel>;
   @useResult
-  $Res call({bool showOnboarding});
+  $Res call({BootstrapPageRedirect redirect});
 }
 
 /// @nodoc
@@ -53,13 +53,13 @@ class _$BootstrapPageViewModelCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? showOnboarding = null}) {
+  $Res call({Object? redirect = null}) {
     return _then(
       _value.copyWith(
-            showOnboarding: null == showOnboarding
-                ? _value.showOnboarding
-                : showOnboarding // ignore: cast_nullable_to_non_nullable
-                      as bool,
+            redirect: null == redirect
+                ? _value.redirect
+                : redirect // ignore: cast_nullable_to_non_nullable
+                      as BootstrapPageRedirect,
           )
           as $Val,
     );
@@ -75,7 +75,7 @@ abstract class _$$BootstrapPageViewModelImplCopyWith<$Res>
   ) = __$$BootstrapPageViewModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool showOnboarding});
+  $Res call({BootstrapPageRedirect redirect});
 }
 
 /// @nodoc
@@ -92,13 +92,13 @@ class __$$BootstrapPageViewModelImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? showOnboarding = null}) {
+  $Res call({Object? redirect = null}) {
     return _then(
       _$BootstrapPageViewModelImpl(
-        showOnboarding: null == showOnboarding
-            ? _value.showOnboarding
-            : showOnboarding // ignore: cast_nullable_to_non_nullable
-                  as bool,
+        redirect: null == redirect
+            ? _value.redirect
+            : redirect // ignore: cast_nullable_to_non_nullable
+                  as BootstrapPageRedirect,
       ),
     );
   }
@@ -107,14 +107,14 @@ class __$$BootstrapPageViewModelImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$BootstrapPageViewModelImpl implements _BootstrapPageViewModel {
-  const _$BootstrapPageViewModelImpl({required this.showOnboarding});
+  const _$BootstrapPageViewModelImpl({required this.redirect});
 
   @override
-  final bool showOnboarding;
+  final BootstrapPageRedirect redirect;
 
   @override
   String toString() {
-    return 'BootstrapPageViewModel._(showOnboarding: $showOnboarding)';
+    return 'BootstrapPageViewModel._(redirect: $redirect)';
   }
 
   @override
@@ -122,12 +122,12 @@ class _$BootstrapPageViewModelImpl implements _BootstrapPageViewModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$BootstrapPageViewModelImpl &&
-            (identical(other.showOnboarding, showOnboarding) ||
-                other.showOnboarding == showOnboarding));
+            (identical(other.redirect, redirect) ||
+                other.redirect == redirect));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, showOnboarding);
+  int get hashCode => Object.hash(runtimeType, redirect);
 
   /// Create a copy of BootstrapPageViewModel
   /// with the given fields replaced by the non-null parameter values.
@@ -143,11 +143,12 @@ class _$BootstrapPageViewModelImpl implements _BootstrapPageViewModel {
 }
 
 abstract class _BootstrapPageViewModel implements BootstrapPageViewModel {
-  const factory _BootstrapPageViewModel({required final bool showOnboarding}) =
-      _$BootstrapPageViewModelImpl;
+  const factory _BootstrapPageViewModel({
+    required final BootstrapPageRedirect redirect,
+  }) = _$BootstrapPageViewModelImpl;
 
   @override
-  bool get showOnboarding;
+  BootstrapPageRedirect get redirect;
 
   /// Create a copy of BootstrapPageViewModel
   /// with the given fields replaced by the non-null parameter values.
