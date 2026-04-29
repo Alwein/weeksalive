@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
-import 'package:ming_cute_icons/ming_cute_icons.dart';
 
 Future<T?> showCustomBottomSheet<T>(
   BuildContext context,
@@ -116,7 +116,7 @@ class _CustomBottomSheetContentState extends State<_CustomBottomSheetContent> wi
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(Dimens.radiusXl),
                   child: Container(
-                    color: AppColors.dialogBackgroundColor(context),
+                    color: AppColors.bg(context),
                     child: AnimatedPadding(
                       duration: AnimationDurations.veryShort,
                       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -142,7 +142,7 @@ class _CustomBottomSheetContentState extends State<_CustomBottomSheetContent> wi
                                             color: AppColors.bgSoft(context),
                                             shape: BoxShape.circle,
                                           ),
-                                          child: Icon(MingCuteIcons.mgc_close_line, color: AppColors.strokeColor),
+                                          child: const Icon(MingCuteIcons.mgc_close_line, color: AppColors.strokeColor),
                                         ),
                                       ),
                                     ),

@@ -4,7 +4,7 @@ class TextStyles {
   static TextStyle appTitle = const TextStyle(
     fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.xl,
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.bold,
   );
 
   static TextStyle primaryXxlBold = const TextStyle(
@@ -34,10 +34,10 @@ class TextStyles {
     fontWeight: FontWeight.normal,
   );
 
-  static TextStyle primaryMedium = const TextStyle(
+  static TextStyle primaryMediumMedium = const TextStyle(
     fontFamily: "SpaceGrotesk",
-    fontSize: FontSizes.regular,
-    fontWeight: FontWeight.w600,
+    fontSize: FontSizes.medium,
+    fontWeight: FontWeight.w500,
   );
 
   static TextStyle primaryBold = const TextStyle(
@@ -79,7 +79,7 @@ class TextStyles {
   static TextStyle primaryLargeMedium = const TextStyle(
     fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.large,
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w500,
     height: 0,
   );
 
@@ -99,7 +99,7 @@ class TextStyles {
   static TextStyle primaryXsMedium = const TextStyle(
     fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.xs,
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w500,
   );
 
   static TextStyle mediumBold = const TextStyle(
@@ -108,22 +108,16 @@ class TextStyles {
     fontWeight: FontWeight.w800,
   );
 
-  static TextStyle primaryMediumMedium = const TextStyle(
-    fontFamily: "SpaceGrotesk",
-    fontSize: FontSizes.medium,
-    fontWeight: FontWeight.w800,
-  );
-
   static TextStyle primaryRegularMedium = const TextStyle(
     fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.regular,
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w500,
   );
 
   static TextStyle primaryXSRegular = const TextStyle(
     fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.xs,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.normal,
   );
 }
 

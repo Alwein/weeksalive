@@ -30,8 +30,8 @@ class PrimaryButton extends StatelessWidget {
         textStyle: WidgetStateProperty.all(TextStyles.mediumBold),
         backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
           return states.contains(WidgetState.disabled)
-              ? AppColors.contentDisabled
-              : backgroundColor ?? AppColors.contentColor(context);
+              ? AppColors.content(context).withValues(alpha: 0.5)
+              : backgroundColor ?? AppColors.content(context);
         }),
         surfaceTintColor: WidgetStateProperty.all(Colors.transparent),
         alignment: Alignment.center,
@@ -47,9 +47,9 @@ class PrimaryButton extends StatelessWidget {
           crossAxisAlignment: WrapCrossAlignment.center,
           spacing: Margins.spacingS,
           children: [
-            if (icon != null && !iconRight) Icon(icon, color: textColor ?? AppColors.invertedTextColor(context)),
-            Text(text, style: TextStyles.mediumBold.copyWith(color: textColor ?? AppColors.invertedTextColor(context))),
-            if (icon != null && iconRight) Icon(icon, color: textColor ?? AppColors.invertedTextColor(context)),
+            if (icon != null && !iconRight) Icon(icon, color: textColor ?? AppColors.contentMuted(context)),
+            Text(text, style: TextStyles.mediumBold.copyWith(color: textColor ?? AppColors.contentMuted(context))),
+            if (icon != null && iconRight) Icon(icon, color: textColor ?? AppColors.contentMuted(context)),
           ],
         ),
       ),

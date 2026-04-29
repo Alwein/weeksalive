@@ -11,6 +11,7 @@ class Strings {
   // common
   static String get next => tr('next');
   static String get done => tr('done');
+  static String get continueString => tr('continue');
 
   // In app feedback
   static String get inAppFeedbackTitle => tr('inAppFeedbackTitle');
@@ -19,4 +20,7 @@ class Strings {
   static String get inAppFeedbackConfirmationTitle => tr('inAppFeedbackConfirmationTitle');
   static String get quickActionFeedbackTitle => tr('quickActionFeedbackTitle');
   static String get quickActionFeedbackSubtitle => tr('quickActionFeedbackSubtitle');
+
+  // onboarding
+  static String get onboarding01Subtitle => tr('onboarding01Subtitle');
 }

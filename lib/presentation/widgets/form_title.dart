@@ -21,7 +21,7 @@ class FormTitle extends StatelessWidget {
             Icon(
               icon,
               size: Dimens.iconSizeS,
-              color: AppColors.textColor(context),
+              color: AppColors.content(context),
             ),
             const SizedBox(width: Margins.spacingS),
           ],
@@ -29,7 +29,7 @@ class FormTitle extends StatelessWidget {
             child: Text(
               text,
               textAlign: textAlign,
-              style: TextStyles.primaryBold.copyWith(color: AppColors.textColor(context)),
+              style: TextStyles.primaryBold.copyWith(color: AppColors.content(context)),
             ),
           ),
         ],

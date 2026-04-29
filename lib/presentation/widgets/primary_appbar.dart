@@ -11,7 +11,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       centerTitle: true,
       title: Texts.appTitle(Strings.appName),
-      backgroundColor: AppColors.getBackgroundColor(context),
+      backgroundColor: AppColors.bg(context),
       surfaceTintColor: Colors.transparent,
     );
   }

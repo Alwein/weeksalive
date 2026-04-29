@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:uuid/uuid.dart';
+import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
@@ -99,6 +100,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               }
             },
             child: Scaffold(
+              backgroundColor: AppColors.bg(context),
               appBar: _OnboardingAppBar(
                 controller: _controller,
                 hideBack: step.hideBackButton,
@@ -184,11 +186,11 @@ class _Footer extends StatelessWidget {
     final canContinue = step.canContinue(controller);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        Margins.spacingM,
-        Margins.spacingS,
-        Margins.spacingM,
-        Margins.spacingM,
+      padding: const EdgeInsets.only(
+        left: Margins.spacingM,
+        right: Margins.spacingM,
+        bottom: Margins.spacingS,
+        top: Margins.spacingS,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

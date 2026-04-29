@@ -1,20 +1,40 @@
 import 'package:flutter/widgets.dart';
+import 'package:weeksalive/core/styles/margins.dart';
+import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/onboarding_illustration_placeholder.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/onboarding_step_layout.dart';
+import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step01Welcome extends OnboardingStep {
   const Step01Welcome();
 
   @override
-  String primaryLabel(BuildContext context) => 'Continue';
+  String primaryLabel(BuildContext context) => Strings.continueString;
 
   @override
   Widget buildContent(BuildContext context) {
-    return const OnboardingStepLayout(
-      title: 'WeeksAlive',
-      subtitle: 'A gentle reminder that your time is precious',
-      illustration: OnboardingIllustrationPlaceholder(name: 'App logo'),
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              "assets/images/weeksalive_logo.webp",
+              width: 96,
+              height: 96,
+            ),
+            const SizedBox(height: Margins.spacingXl),
+            Texts.appTitle(Strings.appName),
+            const SizedBox(height: Margins.spacingM),
+            Texts.primaryMediumSoft(
+              context,
+              Strings.onboarding01Subtitle,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

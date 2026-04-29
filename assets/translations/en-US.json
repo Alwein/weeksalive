@@ -9,5 +9,8 @@
   "inAppFeedbackHint": "Your suggestions...",
   "inAppFeedbackConfirmationTitle": "Thanks for your feedback!",
   "quickActionFeedbackTitle": "🕵 Something wrong?",
-  "quickActionFeedbackSubtitle": "Please leave a feedback before deleting the app."
+  "quickActionFeedbackSubtitle": "Please leave a feedback before deleting the app.",
+
+  "continue": "Continue",
+  "onboarding01Subtitle": "A gentle reminder that\nyour time is precious"
 }

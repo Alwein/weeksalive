@@ -29,7 +29,26 @@ class Texts {
   }) {
     return _StyledText(
       text: text,
-      style: TextStyles.primaryMedium,
+      style: TextStyles.primaryMediumMedium,
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
+      softWrap: softWrap,
+    );
+  }
+
+  static Widget primaryMediumSoft(
+    BuildContext context,
+    String text, {
+    TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
+    bool? softWrap,
+  }) {
+    return _StyledText(
+      text: text,
+      style: TextStyles.primaryMediumMedium,
+      color: AppColors.contentSoft(context),
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,
@@ -97,7 +116,7 @@ class _StyledText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: style.copyWith(color: color ?? AppColors.textColor(context)),
+      style: style.copyWith(color: color ?? AppColors.content(context)),
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,
