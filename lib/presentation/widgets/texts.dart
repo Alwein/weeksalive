@@ -20,6 +20,23 @@ class Texts {
     );
   }
 
+  static Widget hugeBold(
+    String text, {
+    TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
+    bool? softWrap,
+  }) {
+    return _StyledText(
+      text: text,
+      style: TextStyles.hugeBold,
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
+      softWrap: softWrap,
+    );
+  }
+
   static Widget xlBoldSoft(
     BuildContext context,
     String text, {

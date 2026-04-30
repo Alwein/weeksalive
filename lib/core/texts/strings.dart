@@ -12,6 +12,7 @@ class Strings {
   static String get next => tr('next');
   static String get done => tr('done');
   static String get continueString => tr('continue');
+  static String get edit => "Edit";
 
   // In app feedback
   static String get inAppFeedbackTitle => tr('inAppFeedbackTitle');
@@ -38,4 +39,7 @@ class Strings {
   static String get onboarding04Title => "Let's build your own grid.";
   static String get onboarding04Subtitle =>
       "Your grid is unique.\nIt starts the day you were born,and it belongs to no one else.";
+
+  static String get onboarding05Title => "How should we call you?";
+  static String get onboarding05Hint => "Nickname";
 }

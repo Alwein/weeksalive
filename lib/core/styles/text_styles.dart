@@ -7,6 +7,12 @@ class TextStyles {
     fontWeight: FontWeight.bold,
   );
 
+  static TextStyle hugeBold = const TextStyle(
+    fontFamily: "SpaceGrotesk",
+    fontSize: FontSizes.huge,
+    fontWeight: FontWeight.bold,
+  );
+
   static TextStyle primaryXxlBold = const TextStyle(
     fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.xxxl,

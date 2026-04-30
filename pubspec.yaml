@@ -76,6 +76,10 @@ flutter:
     - assets/onboarding/
 
   fonts:
+    - family: ShadowsIntoLight
+      fonts:
+        - asset: assets/fonts/ShadowsIntoLight-Regular.ttf
+          weight: 400
     - family: SpaceGrotesk
       fonts:
         - asset: assets/fonts/SpaceGrotesk-Light.ttf
