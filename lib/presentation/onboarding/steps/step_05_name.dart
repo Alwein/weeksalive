@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
+import 'package:rive/rive.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
@@ -34,10 +34,21 @@ class _Step05NameContent extends StatefulWidget {
 
 class _Step05NameContentState extends State<_Step05NameContent> {
   final FocusNode _nameFocusNode = FocusNode();
+  late final FileLoader _fileLoader;
+
+  @override
+  void initState() {
+    super.initState();
+    _fileLoader = FileLoader.fromAsset(
+      "assets/animations/outline_standing.riv",
+      riveFactory: Factory.flutter,
+    );
+  }
 
   @override
   void dispose() {
     _nameFocusNode.dispose();
+    _fileLoader.dispose();
     super.dispose();
   }
 
@@ -77,7 +88,17 @@ class _Step05NameContentState extends State<_Step05NameContent> {
                                 AppColors.content(context),
                                 BlendMode.srcIn,
                               ),
-                              child: Lottie.asset("assets/animations/outline_standing.json"),
+                              child: RiveWidgetBuilder(
+                                fileLoader: _fileLoader,
+                                builder: (context, state) => switch (state) {
+                                  RiveLoading() => const SizedBox.expand(),
+                                  RiveFailed() => const SizedBox.shrink(),
+                                  RiveLoaded(:final controller) => RiveWidget(
+                                    controller: controller,
+                                    fit: Fit.contain,
+                                  ),
+                                },
+                              ),
                             ),
                           ),
                         ),

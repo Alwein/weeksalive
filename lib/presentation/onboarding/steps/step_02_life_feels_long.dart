@@ -5,7 +5,7 @@ import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/parallax_lottie.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step02LifeFeelsLong extends OnboardingStep {
@@ -24,11 +24,13 @@ class Step02LifeFeelsLong extends OnboardingStep {
         children: [
           Expanded(
             child: Center(
-              child: ParallaxLottie(
-                assetPath: "assets/animations/outline_floating.json",
+              child: ColorFiltered(
                 colorFilter: ColorFilter.mode(
                   AppColors.content(context),
                   BlendMode.srcIn,
+                ),
+                child: const ParallaxRive(
+                  assetPath: "assets/animations/outline_floating.riv",
                 ),
               ),
             ),
