@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
@@ -22,16 +21,10 @@ class Step02LifeFeelsLong extends OnboardingStep {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
+          const Expanded(
             child: Center(
-              child: ColorFiltered(
-                colorFilter: ColorFilter.mode(
-                  AppColors.content(context),
-                  BlendMode.srcIn,
-                ),
-                child: const ParallaxRive(
-                  assetPath: "assets/animations/outline_floating.riv",
-                ),
+              child: ParallaxRive(
+                assetPath: "assets/animations/outline_floating.riv",
               ),
             ),
           ),

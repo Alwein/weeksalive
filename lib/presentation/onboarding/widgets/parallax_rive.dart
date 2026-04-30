@@ -80,9 +80,9 @@ class _ParallaxRiveState extends State<ParallaxRive> with SingleTickerProviderSt
             RiveLoading() => const SizedBox.expand(),
             RiveFailed() => const SizedBox.shrink(),
             RiveLoaded(:final controller) => RiveWidget(
-                controller: controller,
-                fit: widget.fit,
-              ),
+              controller: controller,
+              fit: widget.fit,
+            ),
           },
         ),
       ),

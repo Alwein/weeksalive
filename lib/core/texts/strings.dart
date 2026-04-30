@@ -42,4 +42,7 @@ class Strings {
 
   static String get onboarding05Title => "How should we call you?";
   static String get onboarding05Hint => "Nickname";
+
+  static String get onboarding06Title => "When did your story begin?";
+  static String get onboarding06Subtitle => "We\u2019ll build your personal life grid from this moment.";
 }

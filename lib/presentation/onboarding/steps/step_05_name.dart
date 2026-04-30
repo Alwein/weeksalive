@@ -83,22 +83,16 @@ class _Step05NameContentState extends State<_Step05NameContent> {
                           child: SizedBox(
                             width: mascotSize,
                             height: mascotSize,
-                            child: ColorFiltered(
-                              colorFilter: ColorFilter.mode(
-                                AppColors.content(context),
-                                BlendMode.srcIn,
-                              ),
-                              child: RiveWidgetBuilder(
-                                fileLoader: _fileLoader,
-                                builder: (context, state) => switch (state) {
-                                  RiveLoading() => const SizedBox.expand(),
-                                  RiveFailed() => const SizedBox.shrink(),
-                                  RiveLoaded(:final controller) => RiveWidget(
-                                    controller: controller,
-                                    fit: Fit.contain,
-                                  ),
-                                },
-                              ),
+                            child: RiveWidgetBuilder(
+                              fileLoader: _fileLoader,
+                              builder: (context, state) => switch (state) {
+                                RiveLoading() => const SizedBox.expand(),
+                                RiveFailed() => const SizedBox.shrink(),
+                                RiveLoaded(:final controller) => RiveWidget(
+                                  controller: controller,
+                                  fit: Fit.contain,
+                                ),
+                              },
                             ),
                           ),
                         ),
