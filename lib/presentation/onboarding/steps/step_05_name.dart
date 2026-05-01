@@ -33,8 +33,7 @@ class _Step05NameContent extends StatefulWidget {
   State<_Step05NameContent> createState() => _Step05NameContentState();
 }
 
-class _Step05NameContentState extends State<_Step05NameContent>
-    with RiveThemeMixin<_Step05NameContent> {
+class _Step05NameContentState extends State<_Step05NameContent> with RiveThemeMixin<_Step05NameContent> {
   final FocusNode _nameFocusNode = FocusNode();
   late final FileLoader _fileLoader;
 
@@ -52,7 +51,7 @@ class _Step05NameContentState extends State<_Step05NameContent>
     _nameFocusNode.unfocus();
     _nameFocusNode.dispose();
     _fileLoader.dispose();
-    super.dispose(); // calls RiveThemeMixin.dispose → _vmi?.dispose()
+    super.dispose();
   }
 
   @override
@@ -65,6 +64,8 @@ class _Step05NameContentState extends State<_Step05NameContent>
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Texts.hugeBold(Strings.onboarding05Title),
+          const SizedBox(height: Margins.spacingL),
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
@@ -112,32 +113,6 @@ class _Step05NameContentState extends State<_Step05NameContent>
                             onChanged: controller.setName,
                           ),
                         ),
-                        Positioned(
-                          bottom: -Margins.spacingM,
-                          left: 0,
-                          right: 0,
-                          child: Center(
-                            child: AnimatedBuilder(
-                              animation: _nameFocusNode,
-                              builder: (context, _) {
-                                return AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 180),
-                                  transitionBuilder: (child, animation) => FadeTransition(
-                                    opacity: animation,
-                                    child: ScaleTransition(scale: animation, child: child),
-                                  ),
-                                  child: _nameFocusNode.hasFocus
-                                      ? const SizedBox.shrink()
-                                      : SecondaryButton(
-                                          text: Strings.edit,
-                                          onPressed: () => _nameFocusNode.requestFocus(),
-                                          icon: MingCuteIcons.mgc_pencil_line,
-                                        ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -150,8 +125,30 @@ class _Step05NameContentState extends State<_Step05NameContent>
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Texts.hugeBold(Strings.onboarding05Title),
-                const SizedBox(height: Margins.spacingM),
+                Center(
+                  child: AnimatedBuilder(
+                    animation: _nameFocusNode,
+                    builder: (context, _) {
+                      return AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 180),
+                        transitionBuilder: (child, animation) => FadeTransition(
+                          opacity: animation,
+                          child: ScaleTransition(scale: animation, child: child),
+                        ),
+                        child: _nameFocusNode.hasFocus
+                            ? const SizedBox.shrink()
+                            : Padding(
+                                padding: const EdgeInsets.only(bottom: Margins.spacingM),
+                                child: SecondaryButton(
+                                  text: Strings.editName,
+                                  onPressed: () => _nameFocusNode.requestFocus(),
+                                  icon: MingCuteIcons.mgc_pencil_line,
+                                ),
+                              ),
+                      );
+                    },
+                  ),
+                ),
               ],
             ),
           ),
