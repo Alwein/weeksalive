@@ -31,7 +31,7 @@ class AppColors {
   static Color widgetContentSoftBright() => const Color(0xFFCCCCCC);
 
   static Color strokeColor(BuildContext context) =>
-      context.isDarkMode ? const Color(0xFF272727) : const Color(0xFFD8D8D8);
+      context.isDarkMode ? const Color(0xFF1F1F1F) : const Color(0xFFE5E5E5);
 
   // Inf Colorormation
   static const redWarning = Color(0xFFFF5C5C);

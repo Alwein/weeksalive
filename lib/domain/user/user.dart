@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:weeksalive/core/texts/strings.dart';
 
 part 'user.freezed.dart';
 
 enum Gender {
   male,
   female,
-  other,
+  other;
+
+  String get titleCase => switch (this) {
+    male => Strings.man,
+    female => Strings.woman,
+    other => Strings.other,
+  };
 }
 
 @freezed

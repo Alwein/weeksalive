@@ -36,6 +36,9 @@ class _Step05NameContentState extends State<_Step05NameContent> {
   final FocusNode _nameFocusNode = FocusNode();
   late final FileLoader _fileLoader;
 
+  ViewModelInstance? _vmi;
+  Brightness? _lastBrightness;
+
   @override
   void initState() {
     super.initState();
@@ -46,10 +49,37 @@ class _Step05NameContentState extends State<_Step05NameContent> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final brightness = Theme.of(context).brightness;
+    if (_lastBrightness != brightness) {
+      _lastBrightness = brightness;
+      _applyTheme(brightness);
+    }
+  }
+
+  @override
   void dispose() {
+    _nameFocusNode.unfocus();
     _nameFocusNode.dispose();
+    _vmi?.dispose();
     _fileLoader.dispose();
     super.dispose();
+  }
+
+  void _onRiveLoaded(RiveWidgetController riveController) {
+    _vmi = riveController.dataBind(DataBind.auto());
+    if (_lastBrightness != null) {
+      _applyTheme(_lastBrightness!);
+    }
+  }
+
+  void _applyTheme(Brightness brightness) {
+    final vmi = _vmi;
+    if (vmi == null) return;
+    final isDark = brightness == Brightness.dark;
+    final color = isDark ? AppColors.content(context) : AppColors.contentSoft(context);
+    vmi.color('theme')?.value = color;
   }
 
   @override
@@ -85,6 +115,7 @@ class _Step05NameContentState extends State<_Step05NameContent> {
                             height: mascotSize,
                             child: RiveWidgetBuilder(
                               fileLoader: _fileLoader,
+                              onLoaded: (state) => _onRiveLoaded(state.controller),
                               builder: (context, state) => switch (state) {
                                 RiveLoading() => const SizedBox.expand(),
                                 RiveFailed() => const SizedBox.shrink(),

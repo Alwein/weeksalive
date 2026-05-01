@@ -45,9 +45,10 @@ class SecondaryButton extends StatelessWidget {
           crossAxisAlignment: WrapCrossAlignment.center,
           spacing: Margins.spacingS,
           children: [
-            if (icon != null && !iconRight) Icon(icon, color: textColor ?? AppColors.content(context)),
-            Text(text, style: TextStyles.mediumBold.copyWith(color: textColor ?? AppColors.content(context))),
-            if (icon != null && iconRight) Icon(icon, color: textColor ?? AppColors.content(context)),
+            if (icon != null && !iconRight)
+              Icon(icon, color: textColor ?? AppColors.contentSoftOnSoft(context), size: 24),
+            Text(text, style: TextStyles.mediumBold.copyWith(color: textColor ?? AppColors.contentSoftOnSoft(context))),
+            if (icon != null && iconRight) Icon(icon, color: textColor ?? AppColors.contentSoftOnSoft(context)),
           ],
         ),
       ),

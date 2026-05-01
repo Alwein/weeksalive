@@ -41,7 +41,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
     super.dispose();
   }
 
+  void _dismissKeyboard() => FocusScope.of(context).unfocus();
+
   Future<void> _handlePrimary(OnboardingStep step) async {
+    _dismissKeyboard();
     final override = step.onPrimary;
     if (override != null) {
       await override(context, _controller);
@@ -61,6 +64,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   Future<void> _handleSecondary(OnboardingStep step) async {
+    _dismissKeyboard();
     final override = step.onSecondary;
     if (override != null) {
       await override(context, _controller);
@@ -97,6 +101,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             canPop: _controller.isFirst,
             onPopInvokedWithResult: (didPop, _) {
               if (!didPop && !_controller.isFirst) {
+                _dismissKeyboard();
                 _controller.goPrevious();
               }
             },
@@ -161,7 +166,10 @@ class _OnboardingAppBar extends StatelessWidget {
             firstChild: const SizedBox(height: 48.0), // IconButton height is 48.0
             secondChild: IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: controller.goPrevious,
+              onPressed: () {
+                FocusScope.of(context).unfocus();
+                controller.goPrevious();
+              },
             ),
             crossFadeState: hideBackButton ? CrossFadeState.showFirst : CrossFadeState.showSecond,
             sizeCurve: Curves.easeOut,
