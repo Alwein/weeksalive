@@ -47,7 +47,7 @@ class _Step06DateOfBirthContentState extends State<_Step06DateOfBirthContent>
   @override
   void dispose() {
     _fileLoader.dispose();
-    super.dispose(); // calls RiveThemeMixin.dispose → _vmi?.dispose()
+    super.dispose();
   }
 
   @override
