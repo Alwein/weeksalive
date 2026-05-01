@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:rive/rive.dart';
 import 'package:sensors_plus/sensors_plus.dart';
-import 'package:weeksalive/core/styles/app_colors.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/rive_theme_mixin.dart';
 
 class ParallaxRive extends StatefulWidget {
   final String assetPath;
@@ -28,13 +28,11 @@ class ParallaxRive extends StatefulWidget {
   State<ParallaxRive> createState() => _ParallaxRiveState();
 }
 
-class _ParallaxRiveState extends State<ParallaxRive> with SingleTickerProviderStateMixin {
+class _ParallaxRiveState extends State<ParallaxRive>
+    with SingleTickerProviderStateMixin, RiveThemeMixin<ParallaxRive> {
   late final Ticker _ticker;
   StreamSubscription<AccelerometerEvent>? _subscription;
   late final FileLoader _fileLoader;
-
-  ViewModelInstance? _vmi;
-  Brightness? _lastBrightness;
 
   Offset _target = Offset.zero;
   Offset _current = Offset.zero;
@@ -53,38 +51,11 @@ class _ParallaxRiveState extends State<ParallaxRive> with SingleTickerProviderSt
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final brightness = Theme.of(context).brightness;
-    if (_lastBrightness != brightness) {
-      _lastBrightness = brightness;
-      _applyTheme(brightness);
-    }
-  }
-
-  @override
   void dispose() {
     _ticker.dispose();
     _subscription?.cancel();
-    _vmi?.dispose();
     _fileLoader.dispose();
-    super.dispose();
-  }
-
-  void _onRiveLoaded(RiveWidgetController riveController) {
-    _vmi = riveController.dataBind(DataBind.auto());
-    if (_lastBrightness != null) {
-      _applyTheme(_lastBrightness!);
-    }
-  }
-
-  void _applyTheme(Brightness brightness) {
-    final vmi = _vmi;
-    if (vmi == null) return;
-
-    final isDark = brightness == Brightness.dark;
-    final color = isDark ? AppColors.content(context) : AppColors.content(context);
-    vmi.color('theme')?.value = color;
+    super.dispose(); // calls RiveThemeMixin.dispose → _vmi?.dispose()
   }
 
   void _onAccelerometer(AccelerometerEvent event) {
@@ -107,7 +78,7 @@ class _ParallaxRiveState extends State<ParallaxRive> with SingleTickerProviderSt
         offset: _current,
         child: RiveWidgetBuilder(
           fileLoader: _fileLoader,
-          onLoaded: (state) => _onRiveLoaded(state.controller),
+          onLoaded: (state) => onRiveLoaded(state.controller),
           builder: (context, state) => switch (state) {
             RiveLoading() => const SizedBox.expand(),
             RiveFailed() => const SizedBox.shrink(),

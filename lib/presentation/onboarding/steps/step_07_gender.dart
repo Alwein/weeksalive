@@ -8,6 +8,7 @@ import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/rive_theme_mixin.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step07Gender extends OnboardingStep {
@@ -30,10 +31,9 @@ class _Step07GenderContent extends StatefulWidget {
   State<_Step07GenderContent> createState() => _Step07GenderContentState();
 }
 
-class _Step07GenderContentState extends State<_Step07GenderContent> {
+class _Step07GenderContentState extends State<_Step07GenderContent>
+    with RiveThemeMixin<_Step07GenderContent> {
   late final FileLoader _fileLoader;
-  ViewModelInstance? _vmi;
-  Brightness? _lastBrightness;
 
   @override
   void initState() {
@@ -50,43 +50,17 @@ class _Step07GenderContentState extends State<_Step07GenderContent> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final brightness = Theme.of(context).brightness;
-    if (_lastBrightness != brightness) {
-      _lastBrightness = brightness;
-      _applyTheme(brightness);
-    }
-  }
-
-  @override
   void dispose() {
-    _vmi?.dispose();
     _fileLoader.dispose();
-    super.dispose();
-  }
-
-  void _onRiveLoaded(RiveWidgetController riveController) {
-    _vmi = riveController.dataBind(DataBind.auto());
-    if (_lastBrightness != null) {
-      _applyTheme(_lastBrightness!);
-    }
-  }
-
-  void _applyTheme(Brightness brightness) {
-    final vmi = _vmi;
-    if (vmi == null) return;
-    final isDark = brightness == Brightness.dark;
-    final color = isDark ? AppColors.content(context) : AppColors.contentSoft(context);
-    vmi.color('theme')?.value = color;
+    super.dispose(); // calls RiveThemeMixin.dispose → _vmi?.dispose()
   }
 
   void _applyGender(Gender? gender) {
-    final vmi = _vmi;
-    if (vmi == null) return;
+    final currentVmi = vmi;
+    if (currentVmi == null) return;
 
-    final sexeVisible = vmi.boolean('scotchSexeVisible');
-    final busteVisible = vmi.boolean('scotchBusteVisible');
+    final sexeVisible = currentVmi.boolean('scotchSexeVisible');
+    final busteVisible = currentVmi.boolean('scotchBusteVisible');
 
     switch (gender) {
       case Gender.male:
@@ -115,7 +89,7 @@ class _Step07GenderContentState extends State<_Step07GenderContent> {
             child: Center(
               child: RiveWidgetBuilder(
                 fileLoader: _fileLoader,
-                onLoaded: (state) => _onRiveLoaded(state.controller),
+                onLoaded: (state) => onRiveLoaded(state.controller),
                 builder: (context, state) => switch (state) {
                   RiveLoading() => const SizedBox.expand(),
                   RiveFailed() => const SizedBox.shrink(),

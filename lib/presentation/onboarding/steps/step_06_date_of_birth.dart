@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
@@ -9,6 +8,7 @@ import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/rive_theme_mixin.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step06DateOfBirth extends OnboardingStep {
@@ -31,11 +31,9 @@ class _Step06DateOfBirthContent extends StatefulWidget {
   State<_Step06DateOfBirthContent> createState() => _Step06DateOfBirthContentState();
 }
 
-class _Step06DateOfBirthContentState extends State<_Step06DateOfBirthContent> {
+class _Step06DateOfBirthContentState extends State<_Step06DateOfBirthContent>
+    with RiveThemeMixin<_Step06DateOfBirthContent> {
   late final FileLoader _fileLoader;
-
-  ViewModelInstance? _vmi;
-  Brightness? _lastBrightness;
 
   @override
   void initState() {
@@ -47,35 +45,9 @@ class _Step06DateOfBirthContentState extends State<_Step06DateOfBirthContent> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final brightness = Theme.of(context).brightness;
-    if (_lastBrightness != brightness) {
-      _lastBrightness = brightness;
-      _applyTheme(brightness);
-    }
-  }
-
-  @override
   void dispose() {
-    _vmi?.dispose();
     _fileLoader.dispose();
-    super.dispose();
-  }
-
-  void _onRiveLoaded(RiveWidgetController riveController) {
-    _vmi = riveController.dataBind(DataBind.auto());
-    if (_lastBrightness != null) {
-      _applyTheme(_lastBrightness!);
-    }
-  }
-
-  void _applyTheme(Brightness brightness) {
-    final vmi = _vmi;
-    if (vmi == null) return;
-    final isDark = brightness == Brightness.dark;
-    final color = isDark ? AppColors.content(context) : AppColors.contentSoft(context);
-    vmi.color('theme')?.value = color;
+    super.dispose(); // calls RiveThemeMixin.dispose → _vmi?.dispose()
   }
 
   @override
@@ -93,7 +65,7 @@ class _Step06DateOfBirthContentState extends State<_Step06DateOfBirthContent> {
             child: Center(
               child: RiveWidgetBuilder(
                 fileLoader: _fileLoader,
-                onLoaded: (state) => _onRiveLoaded(state.controller),
+                onLoaded: (state) => onRiveLoaded(state.controller),
                 builder: (context, state) => switch (state) {
                   RiveLoading() => const SizedBox.expand(),
                   RiveFailed() => const SizedBox.shrink(),
