@@ -13,7 +13,6 @@ class OnboardingFormController extends ChangeNotifier {
   int _currentIndex = 0;
   int get currentIndex => _currentIndex;
 
-  // Values captured along the onboarding flow.
   String? _name;
   String? get name => _name;
 
@@ -26,13 +25,23 @@ class OnboardingFormController extends ChangeNotifier {
   int _lifespan = 90;
   int get lifespan => _lifespan;
 
+  int get currentAge {
+    final dob = _dateOfBirth;
+    if (dob == null) return 0;
+    final now = DateTime.now();
+    int age = now.year - dob.year;
+    if (now.month < dob.month || (now.month == dob.month && now.day < dob.day)) {
+      age--;
+    }
+    return age.clamp(0, 130);
+  }
+
   NotificationSlot? _notificationSlot;
   NotificationSlot? get notificationSlot => _notificationSlot;
 
   TimeOfDay? _customNotificationTime;
   TimeOfDay? get customNotificationTime => _customNotificationTime;
 
-  // Resolved notification time, derived from slot + custom value.
   TimeOfDay? get notificationTime {
     return switch (_notificationSlot) {
       NotificationSlot.morning => const TimeOfDay(hour: 8, minute: 0),
@@ -42,8 +51,6 @@ class OnboardingFormController extends ChangeNotifier {
       null => null,
     };
   }
-
-  // ----- Setters -----
 
   void setName(String value) {
     final trimmed = value.trim();
@@ -82,8 +89,6 @@ class OnboardingFormController extends ChangeNotifier {
     notifyListeners();
   }
 
-  // ----- Navigation -----
-
   bool get isFirst => _currentIndex == 0;
   bool get isLast => _currentIndex >= totalSteps - 1;
 
@@ -112,16 +117,12 @@ class OnboardingFormController extends ChangeNotifier {
     );
   }
 
-  // Called by the PageView's onPageChanged.
   void onPageChanged(int index) {
     if (_currentIndex == index) return;
     _currentIndex = index;
     notifyListeners();
   }
 
-  // ----- Final user build -----
-
-  /// Returns null if required fields are missing.
   User? buildUser({required String id, required DateTime createdAt}) {
     final name = _name;
     final dateOfBirth = _dateOfBirth;

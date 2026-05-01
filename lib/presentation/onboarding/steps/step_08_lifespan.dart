@@ -23,11 +23,8 @@ base class _LifespanScrubController extends RiveWidgetController {
 
   int _lastFrame = 0;
 
-  /// -1 = playing backward, 0 = idle/stopped, +1 = playing forward.
   int _rotateDirection = 0;
 
-  /// True once the user has interacted, so we don't apply sky before
-  /// the first touch (avoids overriding the initial artboard appearance).
   bool _skyActivated = false;
 
   _LifespanScrubController(super.file) {
@@ -37,16 +34,12 @@ base class _LifespanScrubController extends RiveWidgetController {
     _applyScrollFrame(0);
   }
 
-  /// Moves the "scroll" animation to [frame] (0–[_totalFrames]) and triggers
-  /// a full rotate_sky play in the direction of movement.
   void scrubTo(int frame, {bool skipSky = false}) {
     final clamped = frame.clamp(0, _totalFrames);
-    final newDir = clamped.compareTo(_lastFrame); // -1, 0, +1
+    final newDir = clamped.compareTo(_lastFrame);
     _lastFrame = clamped;
 
     if (newDir != 0 && newDir != _rotateDirection && !skipSky) {
-      // Direction changed (or first activation): restart from the
-      // appropriate end so the animation always plays in full.
       _rotateDirection = newDir;
       _skyActivated = true;
       final sky = _rotateSkyAnim;
@@ -70,37 +63,29 @@ base class _LifespanScrubController extends RiveWidgetController {
   bool advance(double elapsedSeconds) {
     super.advance(elapsedSeconds);
 
-    // Idle loops passively in the background.
     final idle = _idleAnim;
     if (idle != null) {
       if (!idle.advance(elapsedSeconds)) idle.time = 0;
       idle.apply();
     }
 
-    // rotate_sky plays at its natural speed in the triggered direction.
-    // When it reaches the end (forward) or beginning (backward) it stops
-    // automatically and direction returns to 0.
     final sky = _rotateSkyAnim;
     if (sky != null && _skyActivated) {
       if (_rotateDirection > 0) {
         if (!sky.advance(elapsedSeconds)) {
-          // Reached the end: one full play is done.
           sky.time = sky.duration;
           _rotateDirection = 0;
         }
       } else if (_rotateDirection < 0) {
         sky.time = (sky.time - elapsedSeconds).clamp(0.0, sky.duration);
         if (sky.time <= 0) {
-          // Reached the beginning: one full reverse play is done.
           _rotateDirection = 0;
         }
       }
-      // Always re-apply to hold the current position (prevents idle
-      // from overwriting sky properties when the animation is frozen).
+
       sky.apply();
     }
 
-    // scroll is always re-applied last so it is never overwritten.
     _scrollAnim?.apply();
 
     return true;
@@ -164,7 +149,7 @@ class _Step08LifespanContentState extends State<_Step08LifespanContent> with Riv
 
   @override
   Widget build(BuildContext context) {
-    final controller = OnboardingScope.of(context);
+    final OnboardingFormController controller = OnboardingScope.of(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
@@ -200,6 +185,7 @@ class _Step08LifespanContentState extends State<_Step08LifespanContent> with Riv
                   const SizedBox(height: Margins.spacingM),
                   _LifespanSlider(
                     value: controller.lifespan,
+                    min: controller.currentAge,
                     onChanged: (v) {
                       controller.setLifespan(v);
                       _onSliderChanged(v);
@@ -229,32 +215,34 @@ class _Step08LifespanContentState extends State<_Step08LifespanContent> with Riv
 }
 
 class _LifespanSlider extends StatelessWidget {
-  const _LifespanSlider({required this.value, required this.onChanged});
+  const _LifespanSlider({required this.value, required this.min, required this.onChanged});
 
   final int value;
+  final int min;
   final ValueChanged<int> onChanged;
 
-  static const int _min = 0;
   static const int _max = 130;
 
   @override
   Widget build(BuildContext context) {
+    final effectiveMin = min.clamp(0, _max - 1);
+    final effectiveValue = value.clamp(effectiveMin, _max);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
             Expanded(child: Texts.primaryMedium(Strings.onboarding08LifespanLabel)),
-            Texts.primaryMedium('${value.clamp(_min, _max)} years'),
+            Texts.primaryMedium('$effectiveValue years'),
           ],
         ),
         const SizedBox(height: Margins.spacingM),
         Slider(
           padding: EdgeInsets.zero,
-          min: _min.toDouble(),
+          min: effectiveMin.toDouble(),
           max: _max.toDouble(),
-          divisions: _max - _min,
-          value: value.toDouble().clamp(_min.toDouble(), _max.toDouble()),
+          divisions: _max - effectiveMin,
+          value: effectiveValue.toDouble(),
           onChanged: (v) => onChanged(v.round()),
           thumbColor: AppColors.content(context),
           activeColor: AppColors.content(context),
