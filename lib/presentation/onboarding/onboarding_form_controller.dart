@@ -23,7 +23,7 @@ class OnboardingFormController extends ChangeNotifier {
   Gender? _gender;
   Gender? get gender => _gender;
 
-  int _lifespan = 85;
+  int _lifespan = 90;
   int get lifespan => _lifespan;
 
   NotificationSlot? _notificationSlot;

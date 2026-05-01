@@ -53,4 +53,10 @@ class Strings {
   static String get man => "Man";
   static String get woman => "Woman";
   static String get other => "Other";
+
+  static String get onboarding08Title => "What is your projected lifespan?";
+  static String get onboarding08Subtitle => "This is only an estimate, you can change it anytime.";
+  static String get onboarding08LifespanLabel => "PROJECTED LIFESPAN";
+  static String get onboarding08ShowGrid => "Show me my grid";
+  static String get onboarding08EstimateLifespan => "Feel lost? Answer 5 questions to estimate it";
 }

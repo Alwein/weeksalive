@@ -132,7 +132,7 @@ class _DateOfBirthPicker extends StatefulWidget {
 }
 
 class _DateOfBirthPickerState extends State<_DateOfBirthPicker> {
-  static final DateTime _initialDate = DateTime(1995);
+  static final DateTime _initialDate = DateTime(2000);
   static final DateTime _firstDate = DateTime(1900);
   static final DateTime _lastDate = DateTime.now();
 

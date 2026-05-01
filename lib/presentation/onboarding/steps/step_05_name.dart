@@ -8,7 +8,6 @@ import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/arched_name_input.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/rive_theme_mixin.dart';
 import 'package:weeksalive/presentation/widgets/secondary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
@@ -65,11 +64,11 @@ class _Step05NameContentState extends State<_Step05NameContent> with RiveThemeMi
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Texts.hugeBold(Strings.onboarding05Title),
-          const SizedBox(height: Margins.spacingL),
+          const SizedBox(height: Margins.spacingS),
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                const archedNameHeight = 10.0;
+                const archedNameHeight = 0.0;
                 final mascotSize = (constraints.maxHeight - archedNameHeight).clamp(
                   0.0,
                   constraints.maxWidth,
@@ -83,7 +82,7 @@ class _Step05NameContentState extends State<_Step05NameContent> with RiveThemeMi
                       alignment: Alignment.topCenter,
                       children: [
                         Positioned(
-                          top: archedNameHeight,
+                          top: archedNameHeight + Margins.spacingBase,
                           child: SizedBox(
                             width: mascotSize,
                             height: mascotSize,
@@ -121,35 +120,27 @@ class _Step05NameContentState extends State<_Step05NameContent> with RiveThemeMi
             ),
           ),
           Center(
-            child: OnboardingStaggeredColumn(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Center(
-                  child: AnimatedBuilder(
-                    animation: _nameFocusNode,
-                    builder: (context, _) {
-                      return AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 180),
-                        transitionBuilder: (child, animation) => FadeTransition(
-                          opacity: animation,
-                          child: ScaleTransition(scale: animation, child: child),
-                        ),
-                        child: _nameFocusNode.hasFocus
-                            ? const SizedBox.shrink()
-                            : Padding(
-                                padding: const EdgeInsets.only(bottom: Margins.spacingM),
-                                child: SecondaryButton(
-                                  text: Strings.editName,
-                                  onPressed: () => _nameFocusNode.requestFocus(),
-                                  icon: MingCuteIcons.mgc_pencil_line,
-                                ),
-                              ),
-                      );
-                    },
+            child: AnimatedBuilder(
+              animation: _nameFocusNode,
+              builder: (context, _) {
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 180),
+                  transitionBuilder: (child, animation) => FadeTransition(
+                    opacity: animation,
+                    child: ScaleTransition(scale: animation, child: child),
                   ),
-                ),
-              ],
+                  child: _nameFocusNode.hasFocus
+                      ? const SizedBox.shrink()
+                      : Padding(
+                          padding: const EdgeInsets.only(bottom: Margins.spacingM),
+                          child: SecondaryButton(
+                            text: Strings.editName,
+                            onPressed: () => _nameFocusNode.requestFocus(),
+                            icon: MingCuteIcons.mgc_pencil_line,
+                          ),
+                        ),
+                );
+              },
             ),
           ),
         ],
