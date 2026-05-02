@@ -88,4 +88,25 @@ class Strings {
   static String get lastYearWeeksLabel => "LAST YEAR";
   static String get onboarding13Caption1 => "Week you remember";
   static String get onboarding13Caption2 => "Week that faded";
+
+  static String get onboarding14Title => "Your best memories weren\u2019t planned.";
+  static String get onboarding14Subtitle => "They happened in ordinary weeks, when you were not even paying attention.";
+  static String get onboarding14Item1 => "The conversation that went way too deep";
+  static String get onboarding14Item2 => "That moment everyone started laughing at once";
+  static String get onboarding14Item3 => "When you felt exactly where you belonged";
+  static String get onboarding14Footer =>
+      "Notice them. Savor them. Let them count.\nYou never know the value of a moment until it becomes a memory.";
+
+  static String get onboarding15Title1 => "Some weeks feel like years.";
+  static String get onboarding15Title2 => "Others vanish like days.";
+  static String get onboarding15Caption1 => "WEEK THAT STAYED";
+  static String get onboarding15Caption1Value1 => "Present";
+  static String get onboarding15Caption1Value2 => "Connected";
+  static String get onboarding15Caption1Value3 => "Alive";
+  static String get onboarding15Caption2 => "WEEK THAT FADED";
+  static String get onboarding15Caption2Value1 => "Autopilot";
+  static String get onboarding15Caption2Value2 => "Distracted";
+  static String get onboarding15Caption2Value3 => "Rushed";
+  static String get onboarding15Footer =>
+      "The difference between them isn't luck. It's awareness - the simple act of deciding to show up.";
 }

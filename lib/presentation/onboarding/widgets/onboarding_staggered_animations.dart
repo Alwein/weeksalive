@@ -15,6 +15,7 @@ class OnboardingStaggeredColumn extends StatefulWidget {
     this.duration = AnimationDurations.long,
     this.delay = AnimationDurations.medium,
     this.verticalOffset = 20.0,
+    this.spacing = 0.0,
   });
 
   final List<Widget> children;
@@ -27,6 +28,7 @@ class OnboardingStaggeredColumn extends StatefulWidget {
   final Duration duration;
   final Duration delay;
   final double verticalOffset;
+  final double spacing;
 
   @override
   State<OnboardingStaggeredColumn> createState() => _OnboardingStaggeredColumnState();
@@ -64,6 +66,7 @@ class _OnboardingStaggeredColumnState extends State<OnboardingStaggeredColumn> {
 
     return AnimationLimiter(
       child: Column(
+        spacing: widget.spacing,
         crossAxisAlignment: widget.crossAxisAlignment,
         mainAxisAlignment: widget.mainAxisAlignment,
         mainAxisSize: widget.mainAxisSize,
