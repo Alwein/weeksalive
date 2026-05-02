@@ -1,21 +1,67 @@
 import 'package:flutter/widgets.dart';
+import 'package:weeksalive/core/styles/margins.dart';
+import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/onboarding_illustration_placeholder.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/onboarding_step_layout.dart';
+import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
+import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step11LovedOne extends OnboardingStep {
   const Step11LovedOne();
 
   @override
-  String primaryLabel(BuildContext context) => 'Continue';
+  String primaryLabel(BuildContext context) => Strings.continueString;
 
   @override
   Widget buildContent(BuildContext context) {
-    return const OnboardingStepLayout(
-      title: 'Think about someone you love.',
-      subtitle:
-          'If you see them twice a year, and you\u2019re both in good health, you might have around [X] more visits together in your lifetime.',
-      illustration: OnboardingIllustrationPlaceholder(name: 'Mascot hug'),
+    final controller = OnboardingScope.of(context);
+    final visits = controller.remainingVisits;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Expanded(
+            child: Center(
+              child: ParallaxRive(
+                maxOffset: 0,
+                assetPath: "assets/animations/outline_love.riv",
+              ),
+            ),
+          ),
+          const SizedBox(height: Margins.spacingM),
+          Center(
+            child: SingleChildScrollView(
+              child: OnboardingStaggeredColumn(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Texts.xlBold(Strings.onboarding11Title1),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: Margins.spacingM),
+                      const SmallDivider(),
+                      const SizedBox(height: Margins.spacingM),
+                      Texts.primaryMediumSoft(
+                        context,
+                        Strings.onboarding11Subtitle(visits),
+                      ),
+                      const SizedBox(height: Margins.spacingM),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

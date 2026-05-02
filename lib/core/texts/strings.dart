@@ -70,4 +70,13 @@ class Strings {
   static String get onboarding10Title1 => "This isn't about counting time down.";
   static String get onboarding10Title2 => "It's about making each week count.";
   static String get onboarding10Subtitle => "WeeksAlive is about awareness,\nintention, and living with purpose.";
+
+  static String get onboarding11Title1 => "Think about someone you love.";
+  static String onboarding11Subtitle(int visits) =>
+      "If you see them twice a year, and you're both in good health, you might have around $visits more visits together in your lifetime.";
+
+  static String onboarding12Title(int visits) => "What $visits visits looks like in your grid.";
+  static String get visitsAheadLabel => "VISITS AHEAD";
+  static String get onboarding12Subtitle =>
+      "This ins’t meant to feel heavy. It’s meant to make those visits feel like what they are... Precious.";
 }

@@ -22,7 +22,7 @@ class OnboardingFormController extends ChangeNotifier {
   Gender? _gender;
   Gender? get gender => _gender;
 
-  int _lifespan = 90;
+  int _lifespan = 85;
   int get lifespan => _lifespan;
 
   int get currentAge {
@@ -42,6 +42,10 @@ class OnboardingFormController extends ChangeNotifier {
     final now = DateTime.now();
     final diff = now.difference(dob);
     return diff.inDays ~/ 7;
+  }
+
+  int get remainingVisits {
+    return (_lifespan - currentAge) * 2;
   }
 
   NotificationSlot? _notificationSlot;

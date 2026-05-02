@@ -109,7 +109,7 @@ class _GridIllustrationState extends State<_GridIllustration> {
       shaderCallback: (rect) => LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        stops: const [0.0, 0.0, 0.85, 1.0],
+        stops: const [0.0, 0.0, 0.90, 1.0],
         colors: [bgColor, Colors.transparent, Colors.transparent, bgColor],
       ).createShader(rect),
       blendMode: BlendMode.dstOut,

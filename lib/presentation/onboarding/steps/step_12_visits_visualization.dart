@@ -1,22 +1,182 @@
-import 'package:flutter/widgets.dart';
+import 'dart:math';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_advanced_haptic/flutter_advanced_haptic.dart';
+import 'package:weeksalive/core/styles/app_colors.dart';
+import 'package:weeksalive/core/styles/margins.dart';
+import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/onboarding_illustration_placeholder.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/onboarding_step_layout.dart';
+import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
+import 'package:weeksalive/presentation/onboarding/steps/step_09_grid_reveal.dart';
+import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step12VisitsVisualization extends OnboardingStep {
   const Step12VisitsVisualization();
 
   @override
-  String primaryLabel(BuildContext context) => 'Continue';
+  String primaryLabel(BuildContext context) => Strings.continueString;
 
   @override
   Widget buildContent(BuildContext context) {
-    return const OnboardingStepLayout(
-      title: 'What [X] visits looks like in your grid.',
-      subtitle:
-          'This isn\u2019t meant to feel heavy. It\u2019s meant to make those visits feel like what they are \u2014 precious.',
-      illustration:
-          OnboardingIllustrationPlaceholder(name: 'Grid with dots highlights'),
+    final controller = OnboardingScope.of(context);
+    final visits = controller.remainingVisits;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Texts.xlBold(Strings.onboarding12Title(visits)),
+          Expanded(
+            child: _GridIllustration(
+              totalWeeks: controller.lifespan * 52,
+              livedWeeks: controller.currentAge + controller.currentAgeInWeeks,
+              remainingVisits: visits,
+            ),
+          ),
+          Texts.primaryMediumSoft(
+            context,
+            Strings.onboarding12Subtitle,
+          ),
+          const SizedBox(height: Margins.spacingBase),
+        ],
+      ),
+    );
+  }
+}
+
+class _GridIllustration extends StatefulWidget {
+  const _GridIllustration({required this.totalWeeks, required this.livedWeeks, required this.remainingVisits});
+  final int totalWeeks;
+  final int livedWeeks;
+  final int remainingVisits;
+
+  @override
+  State<_GridIllustration> createState() => _GridIllustrationState();
+}
+
+class _GridIllustrationState extends State<_GridIllustration> with SingleTickerProviderStateMixin {
+  static const _kColumns = 52;
+  static const _kDotSpacing = 2.0;
+  static const _kHighlightColor = Color(0xFFFF54A7);
+  static const _kAnimationDurationMs = 5000;
+  static const _kAnimationDuration = Duration(milliseconds: _kAnimationDurationMs);
+
+  late final AnimationController _controller;
+  late final List<int> _highlightedDots;
+  late final FlutterHaptic _haptic;
+
+  @override
+  void initState() {
+    super.initState();
+    _highlightedDots = _computeHighlightedDots();
+    _controller = AnimationController(vsync: this, duration: _kAnimationDuration)..forward();
+    _haptic = FlutterHaptic.instance;
+    _haptic.playPattern(
+      HapticPattern.custom(
+        pattern: List.generate((_kAnimationDurationMs / 50).toInt(), (index) => 50),
+        defaultIntensity: 0.3,
+      ),
+    );
+  }
+
+  List<int> _computeHighlightedDots() {
+    final rng = Random(42);
+    final firstRemainingRow = (widget.livedWeeks / _kColumns).ceil();
+    final totalRows = (widget.totalWeeks / _kColumns).ceil();
+    final dots = <int>[];
+
+    for (var row = firstRemainingRow; row < totalRows; row++) {
+      final rowStart = row * _kColumns;
+      final rowEnd = (rowStart + _kColumns).clamp(0, widget.totalWeeks);
+      final available = rowEnd - rowStart;
+      if (available <= 0) continue;
+
+      final positions = List<int>.generate(available, (i) => rowStart + i)..shuffle(rng);
+      final picks = positions.take(2);
+      for (final p in picks) {
+        if (p >= widget.livedWeeks) dots.add(p);
+      }
+    }
+    return dots;
+  }
+
+  @override
+  void dispose() {
+    _haptic.cancel();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final activeColor = AppColors.content(context);
+    final inactiveColor = AppColors.strokeColor(context);
+    final bgColor = AppColors.bg(context);
+
+    return ShaderMask(
+      shaderCallback: (rect) => LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        stops: const [0.0, 0.0, 0.90, 1.0],
+        colors: [bgColor, Colors.transparent, Colors.transparent, bgColor],
+      ).createShader(rect),
+      blendMode: BlendMode.dstOut,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final exactHeight = WeekGridPainter.computeHeight(
+            availableWidth: constraints.maxWidth,
+            totalWeeks: widget.totalWeeks,
+            columns: _kColumns,
+            dotSpacing: _kDotSpacing,
+          );
+          return SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: Margins.spacingBase),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
+                  child: Texts.primaryMediumCounter(
+                    context,
+                    Strings.visitsAheadLabel,
+                    widget.remainingVisits.toString(),
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  height: exactHeight,
+                  child: AnimatedBuilder(
+                    animation: _controller,
+                    builder: (context, _) => CustomPaint(
+                      painter: WeekGridPainter(
+                        columns: _kColumns,
+                        totalWeeks: widget.totalWeeks,
+                        livedWeeks: widget.livedWeeks,
+                        dotSpacing: _kDotSpacing,
+                        activeColor: activeColor,
+                        inactiveColor: inactiveColor,
+                        padding: const EdgeInsets.only(
+                          left: Margins.spacingL,
+                          right: Margins.spacingL,
+                          top: Margins.spacingS,
+                        ),
+                        revealProgress: 1.0,
+                        highlightedDots: _highlightedDots,
+                        highlightColor: _kHighlightColor,
+                        highlightRevealProgress: _controller.value,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
