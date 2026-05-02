@@ -22,6 +22,10 @@ class Strings {
   static String get quickActionFeedbackTitle => tr('quickActionFeedbackTitle');
   static String get quickActionFeedbackSubtitle => tr('quickActionFeedbackSubtitle');
 
+  // Life grid
+  static String get progressLabel => "PROGRESS";
+  static String get weekLabel => "WEEK";
+
   // onboarding
   static String get onboarding01Subtitle => "A gentle reminder that\nyour time is precious";
 
@@ -59,4 +63,7 @@ class Strings {
   static String get onboarding08LifespanLabel => "PROJECTED LIFESPAN";
   static String get onboarding08ShowGrid => "Show me my grid";
   static String get onboarding08EstimateLifespan => "Feel lost? Answer 5 questions to estimate it";
+
+  static String onboarding09Title(String name) => "$name's life in weeks.";
+  static String get onboarding09Subtitle => "Every dot is a week you lived, or a week still ahead of you.";
 }

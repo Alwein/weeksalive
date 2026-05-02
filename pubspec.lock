@@ -366,6 +366,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_advanced_haptic:
+    dependency: "direct main"
+    description:
+      name: flutter_advanced_haptic
+      sha256: "7d9ca8ab574e43e811464f3c3c4cc81fca825343fb8a67f63b465bbda9c3b872"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   flutter_dotenv:
     dependency: "direct main"
     description:

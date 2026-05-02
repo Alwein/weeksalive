@@ -36,6 +36,14 @@ class OnboardingFormController extends ChangeNotifier {
     return age.clamp(0, 130);
   }
 
+  int get currentAgeInWeeks {
+    final dob = _dateOfBirth;
+    if (dob == null) return 0;
+    final now = DateTime.now();
+    final diff = now.difference(dob);
+    return diff.inDays ~/ 7;
+  }
+
   NotificationSlot? _notificationSlot;
   NotificationSlot? get notificationSlot => _notificationSlot;
 

@@ -129,6 +129,53 @@ class Texts {
       color: color,
     );
   }
+
+  static Widget primaryMediumCounter(
+    BuildContext context,
+    String type,
+    String value, {
+    TextAlign? textAlign,
+  }) {
+    return _TypeValueText(
+      context: context,
+      type: type,
+      value: value,
+      textAlign: textAlign,
+    );
+  }
+}
+
+class _TypeValueText extends StatelessWidget {
+  const _TypeValueText({
+    required this.context,
+    required this.type,
+    required this.value,
+    this.textAlign,
+  });
+
+  final BuildContext context;
+  final String type;
+  final String value;
+  final TextAlign? textAlign;
+
+  @override
+  Widget build(BuildContext ctx) {
+    return RichText(
+      textAlign: textAlign ?? TextAlign.start,
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: '$type ',
+            style: TextStyles.primaryRegularMedium.copyWith(color: AppColors.contentSoft(context)),
+          ),
+          TextSpan(
+            text: value,
+            style: TextStyles.primaryRegularMedium.copyWith(color: AppColors.content(context)),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _StyledText extends StatelessWidget {
