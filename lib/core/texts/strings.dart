@@ -66,4 +66,8 @@ class Strings {
 
   static String onboarding09Title(String name) => "$name's life in weeks.";
   static String get onboarding09Subtitle => "Every dot is a week you lived, or a week still ahead of you.";
+
+  static String get onboarding10Title1 => "This isn't about counting time down.";
+  static String get onboarding10Title2 => "It's about making each week count.";
+  static String get onboarding10Subtitle => "WeeksAlive is about awareness,\nintention, and living with purpose.";
 }

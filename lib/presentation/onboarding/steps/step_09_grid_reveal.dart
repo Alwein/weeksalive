@@ -54,6 +54,7 @@ class _GridIllustrationState extends State<_GridIllustration> with SingleTickerP
   static const _kAnimationDuration = Duration(milliseconds: _animationDurationMs);
 
   late final AnimationController _controller;
+  late final FlutterHaptic _haptic;
 
   @override
   void initState() {
@@ -61,8 +62,8 @@ class _GridIllustrationState extends State<_GridIllustration> with SingleTickerP
     _controller = AnimationController(vsync: this, duration: _kAnimationDuration)..forward();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final haptic = FlutterHaptic.instance;
-      haptic.vibrate(
+      _haptic = FlutterHaptic.instance;
+      _haptic.vibrate(
         intensity: 0.3,
         duration: _animationDurationMs,
       );
@@ -71,6 +72,7 @@ class _GridIllustrationState extends State<_GridIllustration> with SingleTickerP
 
   @override
   void dispose() {
+    _haptic.cancel();
     _controller.dispose();
     super.dispose();
   }
