@@ -56,6 +56,40 @@ class Texts {
     );
   }
 
+  static Widget primaryMediumBold(
+    String text, {
+    TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
+    bool? softWrap,
+  }) {
+    return _StyledText(
+      text: text,
+      style: TextStyles.primaryMediumBold,
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
+      softWrap: softWrap,
+    );
+  }
+
+  static Widget primaryBold(
+    String text, {
+    TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
+    bool? softWrap,
+  }) {
+    return _StyledText(
+      text: text,
+      style: TextStyles.primaryBold,
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
+      softWrap: softWrap,
+    );
+  }
+
   static Widget primaryMedium(
     String text, {
     TextAlign? textAlign,

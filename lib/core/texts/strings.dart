@@ -25,6 +25,7 @@ class Strings {
   // Life grid
   static String get progressLabel => "PROGRESS";
   static String get weekLabel => "WEEK";
+  static String get weeksLabel => "WEEKS";
 
   // onboarding
   static String get onboarding01Subtitle => "A gentle reminder that\nyour time is precious";
@@ -79,4 +80,12 @@ class Strings {
   static String get visitsAheadLabel => "VISITS AHEAD";
   static String get onboarding12Subtitle =>
       "This ins’t meant to feel heavy. It’s meant to make those visits feel like what they are... Precious.";
+
+  static String get onboarding13Title => "Think about last year.";
+  static String get onboarding13Subtitle => "How many weeks can you actually name?";
+  static String get onboarding13Footer => "Most don\u2019t stand out because nothing made them worth noticing.";
+  static String get onboarding13Footer2 => "This one doesn\u2019t have to fade.";
+  static String get lastYearWeeksLabel => "LAST YEAR";
+  static String get onboarding13Caption1 => "Week you remember";
+  static String get onboarding13Caption2 => "Week that faded";
 }

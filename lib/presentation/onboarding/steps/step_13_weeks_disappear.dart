@@ -1,27 +1,173 @@
-import 'package:flutter/widgets.dart';
+import 'dart:math';
+
+import 'package:flutter/material.dart';
+import 'package:weeksalive/core/styles/app_colors.dart';
+import 'package:weeksalive/core/styles/margins.dart';
+import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/onboarding_illustration_placeholder.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/onboarding_step_layout.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
+import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step13WeeksDisappear extends OnboardingStep {
   const Step13WeeksDisappear();
 
   @override
-  String primaryLabel(BuildContext context) => 'Continue';
+  String primaryLabel(BuildContext context) => Strings.continueString;
 
   @override
   Widget buildContent(BuildContext context) {
-    return const OnboardingStepLayout(
-      title: 'Most weeks disappear.',
-      subtitle:
-          'Think about last year. How many weeks can you actually name?',
-      illustration: OnboardingIllustrationPlaceholder(
-        name: 'Small grid with some squares highlighted',
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: Margins.spacingBase),
+          Texts.xlBold(Strings.onboarding13Title),
+          const SizedBox(height: Margins.spacingBase),
+          Texts.primaryMediumSoft(context, Strings.onboarding13Subtitle),
+          const SizedBox(height: Margins.spacingM),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Texts.primaryMediumCounter(context, Strings.lastYearWeeksLabel, '52 ${Strings.weeksLabel}'),
+                const SizedBox(height: Margins.spacingBase),
+                Flexible(child: _YearWeeksIllustration()),
+                const SizedBox(height: Margins.spacingBase),
+                _Caption(),
+              ],
+            ),
+          ),
+          const SizedBox(height: Margins.spacingM),
+          const SmallDivider(),
+          const SizedBox(height: Margins.spacingM),
+          Texts.primaryMediumBold(Strings.onboarding13Footer),
+          const SizedBox(height: Margins.spacingS),
+          Texts.primaryMediumSoft(context, Strings.onboarding13Footer2),
+          const SizedBox(height: Margins.spacingM),
+        ],
       ),
-      body: Text(
-        'Most don\u2019t stand out because nothing made them worth noticing.',
-      ),
-      footer: Text('This one doesn\u2019t have to fade.'),
     );
   }
+}
+
+class _YearWeeksIllustration extends StatefulWidget {
+  @override
+  State<_YearWeeksIllustration> createState() => _YearWeeksIllustrationState();
+}
+
+class _YearWeeksIllustrationState extends State<_YearWeeksIllustration> with TickerProviderStateMixin {
+  static const _kTotal = 52;
+  static const _kKept = 8;
+  static const _kFadeDuration = Duration(seconds: 2);
+  static const _kTotalDuration = Duration(seconds: 8);
+
+  late final List<AnimationController> _controllers;
+
+  /// Indices that will fade out (44 out of 52), in fade-out order.
+  late final List<int> _fadingIndices;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final rng = Random(7);
+    final allIndices = List<int>.generate(_kTotal, (i) => i)..shuffle(rng);
+    _fadingIndices = allIndices.sublist(0, _kTotal - _kKept);
+
+    // Spread start times evenly across the total duration minus the fade duration.
+    final spreadMs = _kTotalDuration.inMilliseconds - _kFadeDuration.inMilliseconds;
+    final count = _fadingIndices.length;
+
+    _controllers = List.generate(count, (i) {
+      final delayMs = count > 1 ? (spreadMs * i / (count - 1)).round() : 0;
+      final ctrl = AnimationController(vsync: this, duration: _kFadeDuration);
+      Future.delayed(Duration(milliseconds: delayMs), () {
+        if (mounted) ctrl.forward();
+      });
+      return ctrl;
+    });
+  }
+
+  @override
+  void dispose() {
+    for (final c in _controllers) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final activeColor = AppColors.content(context);
+    final softColor = AppColors.strokeColor(context);
+
+    // Map each grid index to its fade controller (if it fades), or null.
+    final controllerByIndex = <int, AnimationController>{};
+    for (var i = 0; i < _fadingIndices.length; i++) {
+      controllerByIndex[_fadingIndices[i]] = _controllers[i];
+    }
+
+    return GridView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 13,
+        childAspectRatio: 1.0,
+        mainAxisSpacing: Margins.spacingXs,
+        crossAxisSpacing: Margins.spacingXs,
+      ),
+      itemCount: _kTotal,
+      itemBuilder: (context, index) {
+        final ctrl = controllerByIndex[index];
+        if (ctrl == null) {
+          return Container(
+            decoration: BoxDecoration(
+              color: activeColor,
+              borderRadius: BorderRadius.circular(360),
+            ),
+          );
+        }
+        return AnimatedBuilder(
+          animation: ctrl,
+          builder: (context, _) {
+            final color = Color.lerp(activeColor, softColor, ctrl.value)!;
+            return Container(
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(360),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _Caption extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        _circle(AppColors.content(context)),
+        const SizedBox(width: Margins.spacingS),
+        Flexible(child: Texts.primaryMediumSoft(context, Strings.onboarding13Caption1)),
+        const SizedBox(width: Margins.spacingM),
+        _circle(AppColors.strokeColor(context)),
+        const SizedBox(width: Margins.spacingS),
+        Flexible(child: Texts.primaryMediumSoft(context, Strings.onboarding13Caption2)),
+      ],
+    );
+  }
+
+  Widget _circle(Color color) => Container(
+    width: 16,
+    height: 16,
+    decoration: BoxDecoration(
+      color: color,
+      borderRadius: BorderRadius.circular(360),
+    ),
+  );
 }
