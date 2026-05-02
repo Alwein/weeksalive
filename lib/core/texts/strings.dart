@@ -109,4 +109,9 @@ class Strings {
   static String get onboarding15Caption2Value3 => "Rushed";
   static String get onboarding15Footer =>
       "The difference between them isn't luck. It's awareness - the simple act of deciding to show up.";
+
+  static String get onboarding16Title1 => "Awareness is beautiful.";
+  static String get onboarding16Title2 => "But it fades without a ritual.";
+  static String get onboarding16Subtitle =>
+      "That's why we built something to help you stay present, not just today, but every week of your life.";
 }
