@@ -17,6 +17,7 @@ class Strings {
   // weeksalive
 
   static String get dayLabel => "DAY";
+  static String get yearLabel => "YEAR";
   static String get archivedLabel => "ARCHIVED";
 
   static String get feelingSectionTitle => "Average feeling";
@@ -153,4 +154,9 @@ class Strings {
   static String get onboarding18Title => "One minute.\nEvery day.";
   static String get onboarding18Subtitle =>
       "A quick check-in to notice how you\u2019re really living before the day slips away.";
+
+  static String get onboarding19Title => "Watch your grid come alive.";
+  static String get onboarding19Subtitle =>
+      "Every day you check in. Over time, you won't just see time passing. You'll see a life being lived.";
+  static String get onboarding19Footer => "A day noticed is a day that stays.";
 }

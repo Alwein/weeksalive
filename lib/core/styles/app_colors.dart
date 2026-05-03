@@ -35,6 +35,7 @@ class AppColors {
   static const redWarning = Color(0xFFFF5C5C);
   static const greenSuccess = Color(0xFF43C59E);
   static const blueInfo = Color(0xFF007AFF);
+  static const highlightColor = Color(0xFFFF7E2E);
 }
 
 extension on BuildContext {
