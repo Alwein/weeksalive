@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:rive/rive.dart';
+import 'package:weeksalive/core/l10n/date_picker_date_order.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
@@ -158,7 +159,7 @@ class _DateOfBirthPickerState extends State<_DateOfBirthPicker> {
       height: 150,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.strokeColor(context),
+        color: AppColors.bgSoft(context),
         borderRadius: BorderRadius.circular(Dimens.radiusBase),
       ),
       child: CupertinoDatePicker(
@@ -166,6 +167,7 @@ class _DateOfBirthPickerState extends State<_DateOfBirthPicker> {
         initialDateTime: _selected,
         minimumDate: _firstDate,
         maximumDate: _lastDate,
+        dateOrder: datePickerDateOrderForLocale(Localizations.localeOf(context)),
         onDateTimeChanged: (date) {
           _selected = date;
           widget.onChanged(date);

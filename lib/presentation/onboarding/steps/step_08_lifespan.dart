@@ -246,7 +246,7 @@ class _LifespanSlider extends StatelessWidget {
           onChanged: (v) => onChanged(v.round()),
           thumbColor: AppColors.content(context),
           activeColor: AppColors.content(context),
-          inactiveColor: AppColors.strokeColor(context),
+          inactiveColor: AppColors.bgSoft(context),
         ),
       ],
     );

@@ -31,8 +31,7 @@ class _Step07GenderContent extends StatefulWidget {
   State<_Step07GenderContent> createState() => _Step07GenderContentState();
 }
 
-class _Step07GenderContentState extends State<_Step07GenderContent>
-    with RiveThemeMixin<_Step07GenderContent> {
+class _Step07GenderContentState extends State<_Step07GenderContent> with RiveThemeMixin<_Step07GenderContent> {
   late final FileLoader _fileLoader;
 
   @override
@@ -161,7 +160,7 @@ class _GenderChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = selected ? AppColors.content(context) : AppColors.strokeColor(context);
+    final bgColor = selected ? AppColors.content(context) : AppColors.bgSoft(context);
     final fgColor = selected ? AppColors.contentMuted(context) : AppColors.contentSoftOnSoft(context);
 
     return GestureDetector(

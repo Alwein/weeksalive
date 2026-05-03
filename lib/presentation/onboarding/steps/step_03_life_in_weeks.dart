@@ -102,7 +102,7 @@ class _GridIllustrationState extends State<_GridIllustration> {
   @override
   Widget build(BuildContext context) {
     final activeColor = AppColors.content(context);
-    final inactiveColor = AppColors.strokeColor(context);
+    final inactiveColor = AppColors.bgSoft(context);
     final bgColor = AppColors.bg(context);
 
     return ShaderMask(

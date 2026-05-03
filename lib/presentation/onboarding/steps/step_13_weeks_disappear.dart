@@ -101,7 +101,7 @@ class _YearWeeksIllustrationState extends State<_YearWeeksIllustration> with Tic
   @override
   Widget build(BuildContext context) {
     final activeColor = AppColors.content(context);
-    final softColor = AppColors.strokeColor(context);
+    final softColor = AppColors.bgSoft(context);
 
     // Map each grid index to its fade controller (if it fades), or null.
     final controllerByIndex = <int, AnimationController>{};
@@ -151,13 +151,26 @@ class _Caption extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _circle(AppColors.content(context)),
-        const SizedBox(width: Margins.spacingS),
-        Flexible(child: Texts.primaryMediumSoft(context, Strings.onboarding13Caption1)),
-        const SizedBox(width: Margins.spacingM),
-        _circle(AppColors.strokeColor(context)),
-        const SizedBox(width: Margins.spacingS),
-        Flexible(child: Texts.primaryMediumSoft(context, Strings.onboarding13Caption2)),
+        Flexible(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              _circle(AppColors.content(context)),
+              const SizedBox(width: Margins.spacingS),
+              Flexible(child: Texts.primaryMediumSoft(context, Strings.onboarding13Caption1)),
+            ],
+          ),
+        ),
+        Flexible(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              _circle(AppColors.bgSoft(context)),
+              const SizedBox(width: Margins.spacingS),
+              Flexible(child: Texts.primaryMediumSoft(context, Strings.onboarding13Caption2)),
+            ],
+          ),
+        ),
       ],
     );
   }

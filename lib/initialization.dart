@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:redux/redux.dart';
 import 'package:weeksalive/app_purchase_config.dart';
@@ -21,6 +22,8 @@ Future<Store<AppState>> initializeApp() async {
   await AppPurchaseConfig.initializeFromEnv(dotenv);
 
   await EasyLocalization.ensureInitialized();
+
+  await initializeDateFormatting();
 
   final remoteConfig = await _remoteConfig();
 

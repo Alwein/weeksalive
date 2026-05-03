@@ -29,7 +29,7 @@ class SecondaryButton extends StatelessWidget {
         foregroundColor: WidgetStateProperty.all(Colors.transparent),
         textStyle: WidgetStateProperty.all(TextStyles.mediumBold),
         backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-          return backgroundColor ?? AppColors.strokeColor(context);
+          return backgroundColor ?? AppColors.bgSoft(context);
         }),
         surfaceTintColor: WidgetStateProperty.all(Colors.transparent),
         alignment: Alignment.center,
