@@ -7,7 +7,6 @@ import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step19GridAlive extends OnboardingStep {
@@ -20,19 +19,21 @@ class Step19GridAlive extends OnboardingStep {
   Widget buildContent(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
-      child: SingleChildScrollView(
-        child: OnboardingStaggeredColumn(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: Margins.spacingM,
-          children: [
-            Texts.xlBold(Strings.onboarding19Title),
-            Texts.primaryMediumSoft(context, Strings.onboarding19Subtitle),
-            const _YearGridIllustration(filledCount: 126),
-            const SmallDivider(),
-            Texts.primaryMediumSoft(context, Strings.onboarding19Footer),
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Texts.xlBold(Strings.onboarding19Title),
+          const SizedBox(height: Margins.spacingM),
+          Texts.primaryMediumSoft(context, Strings.onboarding19Subtitle),
+          const Expanded(
+            child: _YearGridIllustration(filledCount: 126),
+          ),
+          const SmallDivider(),
+          const SizedBox(height: Margins.spacingBase),
+          Texts.primaryMediumSoft(context, Strings.onboarding19Footer),
+          const SizedBox(height: Margins.spacingBase),
+        ],
       ),
     );
   }
@@ -52,7 +53,7 @@ class _YearGridIllustrationState extends State<_YearGridIllustration> with Singl
   static const _kDotSpacing = 4.0;
   static const _kAnimationDurationMs = 5000;
   static const _kAnimationDuration = Duration(milliseconds: _kAnimationDurationMs);
-  static const _kDelayBeforeAnimation = Duration(seconds: 1);
+  static const _kDelayBeforeAnimation = Duration(milliseconds: 500);
 
   late final AnimationController _controller;
   late final List<Color> _fillColors;
@@ -104,59 +105,75 @@ class _YearGridIllustrationState extends State<_YearGridIllustration> with Singl
   @override
   Widget build(BuildContext context) {
     final strokeColor = AppColors.strokeColor(context);
+    final bgColor = AppColors.bg(context);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Texts.primaryMediumCounter(
-                context,
-                Strings.yearLabel,
-                (DateTime.now().year + 1).toString(),
-              ),
-              Texts.primaryMediumCounter(
-                context,
-                Strings.dayLabel,
-                widget.filledCount.toString(),
-              ),
-              Texts.primaryMediumCounter(
-                context,
-                Strings.progressLabel,
-                '${((widget.filledCount / _kTotalDays) * 100).toStringAsFixed(0)}%',
-              ),
-            ],
-          ),
-          const SizedBox(height: Margins.spacingS),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final w = constraints.maxWidth;
-              final h = _computeHeight(w);
-              return SizedBox(
-                width: w,
-                height: h,
-                child: AnimatedBuilder(
-                  animation: _controller,
-                  builder: (context, _) => CustomPaint(
-                    painter: _YearLifeGridPainter(
-                      columns: _kColumns,
-                      totalDays: _kTotalDays,
-                      filledCount: widget.filledCount,
-                      highlightGridIndex: _highlightGridIndex,
-                      dotSpacing: _kDotSpacing,
-                      fillColors: _fillColors,
-                      emptyStrokeColor: strokeColor,
-                      highlightColor: AppColors.highlightColor,
-                      revealProgress: _controller.value,
+    return ShaderMask(
+      shaderCallback: (rect) => LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        stops: const [0.0, 0.0, 0.90, 1.0],
+        colors: [bgColor, Colors.transparent, Colors.transparent, bgColor],
+      ).createShader(rect),
+      blendMode: BlendMode.dstOut,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final w = constraints.maxWidth;
+            final h = _computeHeight(w);
+            return SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: Margins.spacingBase),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Texts.primaryMediumCounter(
+                        context,
+                        Strings.yearLabel,
+                        (DateTime.now().year + 1).toString(),
+                      ),
+                      Texts.primaryMediumCounter(
+                        context,
+                        Strings.dayLabel,
+                        widget.filledCount.toString(),
+                      ),
+                      Texts.primaryMediumCounter(
+                        context,
+                        Strings.progressLabel,
+                        '${((widget.filledCount / _kTotalDays) * 100).toStringAsFixed(0)}%',
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: Margins.spacingS),
+                  SizedBox(
+                    width: w,
+                    height: h,
+                    child: AnimatedBuilder(
+                      animation: _controller,
+                      builder: (context, _) => CustomPaint(
+                        painter: _YearLifeGridPainter(
+                          columns: _kColumns,
+                          totalDays: _kTotalDays,
+                          filledCount: widget.filledCount,
+                          highlightGridIndex: _highlightGridIndex,
+                          dotSpacing: _kDotSpacing,
+                          fillColors: _fillColors,
+                          emptyStrokeColor: strokeColor,
+                          highlightColor: AppColors.highlightColor,
+                          revealProgress: _controller.value,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
-          ),
-        ],
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
