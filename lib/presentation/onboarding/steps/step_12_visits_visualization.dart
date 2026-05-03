@@ -7,8 +7,8 @@ import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
-import 'package:weeksalive/presentation/onboarding/steps/step_09_grid_reveal.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
+import 'package:weeksalive/presentation/widgets/week_grid_painter.dart';
 
 class Step12VisitsVisualization extends OnboardingStep {
   const Step12VisitsVisualization();
@@ -20,6 +20,7 @@ class Step12VisitsVisualization extends OnboardingStep {
   Widget buildContent(BuildContext context) {
     final controller = OnboardingScope.of(context);
     final visits = controller.remainingVisits;
+    final grid = controller.lifeWeekGrid;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
@@ -30,8 +31,8 @@ class Step12VisitsVisualization extends OnboardingStep {
           Texts.xlBold(Strings.onboarding12Title(visits)),
           Expanded(
             child: _GridIllustration(
-              totalWeeks: controller.lifespan * 52,
-              livedWeeks: controller.currentAge + controller.currentAgeInWeeks,
+              totalWeeks: grid.totalWeeks,
+              livedWeeks: grid.livedWeeks,
               remainingVisits: visits,
             ),
           ),

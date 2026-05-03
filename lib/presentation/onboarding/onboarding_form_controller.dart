@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
+import 'package:weeksalive/domain/life_week_grid.dart';
 import 'package:weeksalive/domain/user/user.dart';
 
 enum NotificationSlot { morning, afternoon, evening, custom }
@@ -47,6 +48,13 @@ class OnboardingFormController extends ChangeNotifier {
   int get remainingVisits {
     return (_lifespan - currentAge) * 2;
   }
+
+  /// Weeks in the onboarding grid from birth to projected end of life, and weeks lived so far.
+  LifeWeekGrid get lifeWeekGrid => LifeWeekGrid.fromProfile(
+        dateOfBirth: _dateOfBirth,
+        projectedLifespanYears: _lifespan,
+        at: DateTime.now(),
+      );
 
   NotificationSlot? _notificationSlot;
   NotificationSlot? get notificationSlot => _notificationSlot;
