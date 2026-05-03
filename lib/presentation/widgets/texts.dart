@@ -164,6 +164,25 @@ class Texts {
     );
   }
 
+  static Widget primaryRegularSoftOnSoft(
+    BuildContext context,
+    String text, {
+    TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
+    bool? softWrap,
+  }) {
+    return _StyledText(
+      text: text,
+      style: TextStyles.primaryRegular,
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
+      softWrap: softWrap,
+      color: AppColors.contentSoftOnSoft(context),
+    );
+  }
+
   static Widget primaryXsMedium(
     String text, {
     TextAlign? textAlign,

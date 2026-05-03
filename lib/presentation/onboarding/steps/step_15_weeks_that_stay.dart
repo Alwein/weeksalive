@@ -44,7 +44,7 @@ class _Illustration extends StatelessWidget {
       children: [
         const SizedBox(height: Margins.spacingM),
         Row(
-          spacing: Margins.spacingM,
+          spacing: Margins.spacingBase,
           children: [
             Expanded(
               child: _Card(
@@ -68,7 +68,7 @@ class _Illustration extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: Margins.spacingM),
+        const SizedBox(height: Margins.spacingBase),
         const _GradientIllustration(),
         const SizedBox(height: Margins.spacingM),
       ],
@@ -109,7 +109,7 @@ class _Card extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Texts.primaryRegularSoft(context, title, textAlign: TextAlign.center),
+              Text(title, style: TextStyles.primaryRegular.copyWith(color: foregroundColor)),
               Text("•  $value1", style: TextStyles.primaryMediumMedium.copyWith(color: foregroundColor)),
               Text("•  $value2", style: TextStyles.primaryMediumMedium.copyWith(color: foregroundColor)),
               Text("•  $value3", style: TextStyles.primaryMediumMedium.copyWith(color: foregroundColor)),
