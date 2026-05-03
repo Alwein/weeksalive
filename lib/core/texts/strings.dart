@@ -14,6 +14,37 @@ class Strings {
   static String get continueString => tr('continue');
   static String get editName => "Edit name";
 
+  // weeksalive
+
+  static String get dayLabel => "DAY";
+  static String get archivedLabel => "ARCHIVED";
+
+  static String get feelingSectionTitle => "Average feeling";
+  static String get feelingSectionValueRough => "ROUGH";
+  static String get feelingSectionValueLow => "LOW";
+  static String get feelingSectionValueOkay => "OKAY";
+  static String get feelingSectionValueGood => "GOOD";
+  static String get feelingSectionValueGreat => "GREAT";
+  static String get meaningSectionTitle => "Meaning score";
+  static String get meaningSectionValueNone => "NONE";
+  static String get meaningSectionValueLittle => "LITTLE";
+  static String get meaningSectionValueSome => "SOME";
+  static String get meaningSectionValueMuch => "MUCH";
+  static String get meaningSectionValueDeep => "DEEP";
+  static String get newExperienceSectionTitle => "New experiences";
+  static String get newExperienceSectionValueYes => "YES";
+  static String get newExperienceSectionValueNo => "NO";
+  static String get livingIntentionsSectionTitle => "Living your intention";
+  static String get livingIntentionsSectionValueExplore => "EXPLORE";
+  static String get livingIntentionsSectionValueConnect => "CONNECT";
+  static String get livingIntentionsSectionValueRest => "REST";
+  static String get livingIntentionsSectionValueGive => "GIVE";
+  static String get livingIntentionsSectionValueLearn => "LEARN";
+  static String get livingIntentionsSectionValueCreate => "CREATE";
+  static String get livingIntentionsSectionValueTakeCare => "TAKE CARE";
+  static String get livingIntentionsSectionValueObserve => "OBSERVE";
+  static String get livingIntentionsSectionValueBePresent => "BE PRESENT";
+
   // In app feedback
   static String get inAppFeedbackTitle => tr('inAppFeedbackTitle');
   static String get inAppFeedbackSubtitle => tr('inAppFeedbackSubtitle');
@@ -118,4 +149,8 @@ class Strings {
   static String get onboarding17Title => "Make living a real daily habit.";
   static String get onboarding17Title2 => "Build a streak, one day at a time.";
   static String get onboarding17Subtitle => "Small ritual. Big difference.";
+
+  static String get onboarding18Title => "One minute.\nEvery day.";
+  static String get onboarding18Subtitle =>
+      "A quick check-in to notice how you\u2019re really living before the day slips away.";
 }

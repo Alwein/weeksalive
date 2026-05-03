@@ -6,6 +6,7 @@ import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
+import 'package:weeksalive/presentation/widgets/circle.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step13WeeksDisappear extends OnboardingStep {
@@ -175,12 +176,8 @@ class _Caption extends StatelessWidget {
     );
   }
 
-  Widget _circle(Color color) => Container(
-    width: 16,
-    height: 16,
-    decoration: BoxDecoration(
-      color: color,
-      borderRadius: BorderRadius.circular(360),
-    ),
+  Widget _circle(Color color) => Circle(
+    size: 16,
+    color: color,
   );
 }

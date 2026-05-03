@@ -1,6 +1,18 @@
 import 'package:flutter/material.dart';
 
 class TextStyles {
+  static TextStyle primaryLargeBold = const TextStyle(
+    fontFamily: "SpaceGrotesk",
+    fontSize: FontSizes.large,
+    fontWeight: FontWeight.bold,
+  );
+
+  static TextStyle primaryRegularBold = const TextStyle(
+    fontFamily: "SpaceGrotesk",
+    fontSize: FontSizes.regular,
+    fontWeight: FontWeight.bold,
+  );
+
   static TextStyle primaryMediumBold = const TextStyle(
     fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.medium,
@@ -113,6 +125,12 @@ class TextStyles {
     fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.xs,
     fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle primaryXsBold = const TextStyle(
+    fontFamily: "SpaceGrotesk",
+    fontSize: FontSizes.xs,
+    fontWeight: FontWeight.bold,
   );
 
   static TextStyle mediumBold = const TextStyle(

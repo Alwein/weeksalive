@@ -5,6 +5,7 @@ import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
+import 'package:weeksalive/presentation/widgets/circle.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step14BestMemories extends OnboardingStep {
@@ -56,12 +57,8 @@ class _BulletedLine extends StatelessWidget {
     );
   }
 
-  Widget _circle(BuildContext context) => Container(
-    width: 16,
-    height: 16,
-    decoration: BoxDecoration(
-      color: AppColors.content(context),
-      borderRadius: BorderRadius.circular(360),
-    ),
+  Widget _circle(BuildContext context) => Circle(
+    size: 16,
+    color: AppColors.content(context),
   );
 }

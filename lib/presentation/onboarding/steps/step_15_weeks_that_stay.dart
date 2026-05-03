@@ -7,6 +7,7 @@ import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
+import 'package:weeksalive/presentation/widgets/circle.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step15WeeksThatStay extends OnboardingStep {
@@ -148,12 +149,8 @@ class _GradientIllustration extends StatelessWidget {
     );
   }
 
-  Widget _circle(Color color) => Container(
-    width: 42,
-    height: 42,
-    decoration: BoxDecoration(
-      color: color,
-      borderRadius: BorderRadius.circular(360),
-    ),
+  Widget _circle(Color color) => Circle(
+    size: 42,
+    color: color,
   );
 }

@@ -49,12 +49,20 @@ class OnboardingFormController extends ChangeNotifier {
     return (_lifespan - currentAge) * 2;
   }
 
+  int get totalDaysLived {
+    final dob = _dateOfBirth;
+    if (dob == null) return 0;
+    final now = DateTime.now();
+    final diff = now.difference(dob);
+    return diff.inDays;
+  }
+
   /// Weeks in the onboarding grid from birth to projected end of life, and weeks lived so far.
   LifeWeekGrid get lifeWeekGrid => LifeWeekGrid.fromProfile(
-        dateOfBirth: _dateOfBirth,
-        projectedLifespanYears: _lifespan,
-        at: DateTime.now(),
-      );
+    dateOfBirth: _dateOfBirth,
+    projectedLifespanYears: _lifespan,
+    at: DateTime.now(),
+  );
 
   NotificationSlot? _notificationSlot;
   NotificationSlot? get notificationSlot => _notificationSlot;

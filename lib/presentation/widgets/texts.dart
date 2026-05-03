@@ -37,6 +37,23 @@ class Texts {
     );
   }
 
+  static Widget primaryLargeBold(
+    String text, {
+    TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
+    bool? softWrap,
+  }) {
+    return _StyledText(
+      text: text,
+      style: TextStyles.primaryLargeBold,
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
+      softWrap: softWrap,
+    );
+  }
+
   static Widget xlBoldSoft(
     BuildContext context,
     String text, {
@@ -202,17 +219,38 @@ class Texts {
     );
   }
 
+  static Widget primaryXsBold(
+    String text, {
+    TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
+    bool? softWrap,
+    Color? color,
+  }) {
+    return _StyledText(
+      text: text,
+      style: TextStyles.primaryXsBold,
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
+      softWrap: softWrap,
+      color: color,
+    );
+  }
+
   static Widget primaryMediumCounter(
     BuildContext context,
     String type,
-    String value, {
+    String? value, {
     TextAlign? textAlign,
+    Color? softColor,
   }) {
     return _TypeValueText(
       context: context,
       type: type,
       value: value,
       textAlign: textAlign,
+      softColor: softColor,
     );
   }
 }
@@ -223,12 +261,14 @@ class _TypeValueText extends StatelessWidget {
     required this.type,
     required this.value,
     this.textAlign,
+    this.softColor,
   });
 
   final BuildContext context;
   final String type;
-  final String value;
+  final String? value;
   final TextAlign? textAlign;
+  final Color? softColor;
 
   @override
   Widget build(BuildContext ctx) {
@@ -238,12 +278,13 @@ class _TypeValueText extends StatelessWidget {
         children: [
           TextSpan(
             text: '$type ',
-            style: TextStyles.primaryRegularMedium.copyWith(color: AppColors.contentSoft(context)),
+            style: TextStyles.primaryRegularMedium.copyWith(color: softColor ?? AppColors.contentSoft(context)),
           ),
-          TextSpan(
-            text: value,
-            style: TextStyles.primaryRegularMedium.copyWith(color: AppColors.content(context)),
-          ),
+          if (value != null)
+            TextSpan(
+              text: value,
+              style: TextStyles.primaryRegularMedium.copyWith(color: AppColors.content(context)),
+            ),
         ],
       ),
     );
