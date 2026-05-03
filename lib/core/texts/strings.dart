@@ -43,7 +43,7 @@ class Strings {
 
   static String get onboarding04Title => "Let's build your own grid.";
   static String get onboarding04Subtitle =>
-      "Your grid is unique.\nIt starts the day you were born,and it belongs to no one else.";
+      "Your grid is unique.\nIt starts the day you were born, and it belongs to no one else.";
 
   static String get onboarding05Title => "Type your name or a nickname.";
   static String get onboarding05Hint => "Nickname";
@@ -79,7 +79,7 @@ class Strings {
   static String onboarding12Title(int visits) => "What $visits visits looks like in your grid.";
   static String get visitsAheadLabel => "VISITS AHEAD";
   static String get onboarding12Subtitle =>
-      "This ins’t meant to feel heavy. It’s meant to make those visits feel like what they are... Precious.";
+      "This isn’t meant to feel heavy. It’s meant to make those visits feel like what they are... Precious.";
 
   static String get onboarding13Title => "Think about last year.";
   static String get onboarding13Subtitle => "How many weeks can you actually name?";
@@ -114,4 +114,8 @@ class Strings {
   static String get onboarding16Title2 => "But it fades without a ritual.";
   static String get onboarding16Subtitle =>
       "That's why we built something to help you stay present, not just today, but every week of your life.";
+
+  static String get onboarding17Title => "Make living a real daily habit.";
+  static String get onboarding17Title2 => "Build a streak, one day at a time.";
+  static String get onboarding17Subtitle => "Small ritual. Big difference.";
 }
