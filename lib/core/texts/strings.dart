@@ -165,4 +165,12 @@ class Strings {
   static String get onboarding20CheckIn => "CHECK IN";
   static String get onboardingNotificationTitle => "WeeksAlive";
   static String get onboardingNotificationSubtitle => "Time for your daily check-in.";
+
+  static String get onboarding21Title => "Your life, always in sight.";
+  static String get onboarding21Subtitle =>
+      "Add your grid to your Home Screen, your Lock Screen, or your walls \u2014 a beautiful, constant reminder to live on purpose.";
+
+  static String get onboarding22Title1 => "Your data is yours.";
+  static String get onboarding22Subtitle =>
+      "It never leaves your device. No ads. No tracking. No data release. Works 100% offline.";
 }

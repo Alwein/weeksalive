@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
@@ -12,6 +13,8 @@ import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
+import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step20NotificationTime extends OnboardingStep {
@@ -22,7 +25,7 @@ class Step20NotificationTime extends OnboardingStep {
 
   @override
   Future<void> Function(BuildContext, OnboardingFormController)? get onPrimary => (context, controller) async {
-    // TODO: request notification permission here.
+    StoreProvider.of<AppState>(context, listen: false).dispatch(const RequestNotificationPermissionAction());
     await controller.goNext();
   };
 

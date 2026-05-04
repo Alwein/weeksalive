@@ -1,0 +1,3 @@
+class RequestNotificationPermissionAction {
+  const RequestNotificationPermissionAction();
+}
