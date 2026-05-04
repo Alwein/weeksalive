@@ -26,8 +26,8 @@ class Step19GridAlive extends OnboardingStep {
           Texts.xlBold(Strings.onboarding19Title),
           const SizedBox(height: Margins.spacingM),
           Texts.primaryMediumSoft(context, Strings.onboarding19Subtitle),
-          const Expanded(
-            child: _YearGridIllustration(filledCount: 126),
+          Expanded(
+            child: _YearGridIllustration(filledCount: 126, isDarkMode: context.isDarkMode),
           ),
           const SmallDivider(),
           const SizedBox(height: Margins.spacingBase),
@@ -40,8 +40,9 @@ class Step19GridAlive extends OnboardingStep {
 }
 
 class _YearGridIllustration extends StatefulWidget {
-  const _YearGridIllustration({required this.filledCount});
+  const _YearGridIllustration({required this.filledCount, required this.isDarkMode});
   final int filledCount;
+  final bool isDarkMode;
 
   @override
   State<_YearGridIllustration> createState() => _YearGridIllustrationState();
@@ -65,7 +66,7 @@ class _YearGridIllustrationState extends State<_YearGridIllustration> with Singl
   void initState() {
     super.initState();
     final rng = Random(42);
-    _fillColors = List.generate(widget.filledCount, (_) => _randomIntensityColor(rng));
+    _fillColors = List.generate(widget.filledCount, (_) => _randomIntensityColor(rng, widget.isDarkMode));
     _highlightGridIndex = widget.filledCount - 1;
     _controller = AnimationController(vsync: this, duration: _kAnimationDuration);
     _haptic = FlutterHaptic.instance;
@@ -79,15 +80,22 @@ class _YearGridIllustrationState extends State<_YearGridIllustration> with Singl
     });
   }
 
-  static Color _randomIntensityColor(Random rng) {
-    const options = <Color>[
+  static Color _randomIntensityColor(Random rng, bool isDark) {
+    const optionsLight = <Color>[
       Color(0xFFF1F1F1),
       Color(0xFFA2A2A2),
       Color(0xFF717171),
       Color(0xFF404040),
       Color(0xFF0A0A0A),
     ];
-    return options[rng.nextInt(options.length)];
+    const optionsDark = <Color>[
+      Color(0xFF181818),
+      Color(0xFF313131),
+      Color(0xFF646464),
+      Color(0xFFB7B7B7),
+      Color(0xFFF1F1F1),
+    ];
+    return (isDark ? optionsDark : optionsLight)[rng.nextInt(optionsLight.length)];
   }
 
   @override
@@ -250,4 +258,8 @@ class _YearLifeGridPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _YearLifeGridPainter old) =>
       old.revealProgress != revealProgress || old.emptyStrokeColor != emptyStrokeColor || old.fillColors != fillColors;
+}
+
+extension on BuildContext {
+  bool get isDarkMode => Theme.of(this).brightness == Brightness.dark;
 }

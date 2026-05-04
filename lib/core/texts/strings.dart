@@ -177,4 +177,12 @@ class Strings {
   static String get onboarding23Title => "One small favor?";
   static String get onboarding23Subtitle =>
       "If you allow tracking on the next screen, it simply tells us which ad brought you here.\n\nNothing personal, no data sold, ever. That one signal helps us find more people who need this app and keeps us building it for you.";
+
+  static String get onboarding25Title1 => "You have";
+  static String get onboarding25Title2 => "exactly one life.";
+  static String get onboarding25Title3 => "Every week,";
+  static String get onboarding25Title4 => "a new chance.";
+  static String get onboarding25Title5 => "To feel more.";
+  static String get onboarding25Title6 => "To love more.";
+  static String get onboarding25Footer => "This is that chance.";
 }

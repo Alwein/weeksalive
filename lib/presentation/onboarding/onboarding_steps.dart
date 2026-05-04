@@ -22,7 +22,6 @@ import 'package:weeksalive/presentation/onboarding/steps/step_20_notification_ti
 import 'package:weeksalive/presentation/onboarding/steps/step_21_widget.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_22_privacy.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_23_attribution.dart';
-import 'package:weeksalive/presentation/onboarding/steps/step_24_rating.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_25_final.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_26_paywall.dart';
 
@@ -50,7 +49,7 @@ const List<OnboardingStep> kOnboardingSteps = <OnboardingStep>[
   Step21Widget(),
   Step22Privacy(),
   Step23Attribution(),
-  Step24Rating(),
+  // Step24Rating(),
   Step25Final(),
   Step26Paywall(),
 ];
