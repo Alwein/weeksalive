@@ -173,4 +173,8 @@ class Strings {
   static String get onboarding22Title1 => "Your data is yours.";
   static String get onboarding22Subtitle =>
       "It never leaves your device. No ads. No tracking. No data release. Works 100% offline.";
+
+  static String get onboarding23Title => "One small favor?";
+  static String get onboarding23Subtitle =>
+      "If you allow tracking on the next screen, it simply tells us which ad brought you here.\n\nNothing personal, no data sold, ever. That one signal helps us find more people who need this app and keeps us building it for you.";
 }
