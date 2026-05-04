@@ -159,4 +159,10 @@ class Strings {
   static String get onboarding19Subtitle =>
       "Every day you check in. Over time, you won't just see time passing. You'll see a life being lived.";
   static String get onboarding19Footer => "A day noticed is a day that stays.";
+
+  static String get onboarding20Title => "What time of the day is best for you to check in?";
+  static String get onboarding20Subtitle => "WeeksAlive will send you a notification to complete today's entry.";
+  static String get onboarding20CheckIn => "CHECK IN";
+  static String get onboardingNotificationTitle => "WeeksAlive";
+  static String get onboardingNotificationSubtitle => "Time for your daily check-in.";
 }

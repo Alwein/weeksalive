@@ -245,7 +245,7 @@ class _LivingIntentionsSection extends StatelessWidget {
 }
 
 class _Section extends StatelessWidget {
-  const _Section({super.key, required this.index, required this.title, required this.value});
+  const _Section({required this.index, required this.title, required this.value});
   final String index;
   final String title;
   final Widget value;

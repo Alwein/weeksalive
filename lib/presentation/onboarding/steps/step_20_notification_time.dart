@@ -1,76 +1,307 @@
+import 'dart:math';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ming_cute_icons/ming_cute_icons.dart';
+import 'package:weeksalive/core/styles/app_colors.dart';
+import 'package:weeksalive/core/styles/dimens.dart';
+import 'package:weeksalive/core/styles/margins.dart';
+import 'package:weeksalive/core/styles/text_styles.dart';
+import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/onboarding_illustration_placeholder.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/onboarding_step_layout.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
+import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step20NotificationTime extends OnboardingStep {
   const Step20NotificationTime();
 
   @override
-  String primaryLabel(BuildContext context) => 'Continue';
+  String primaryLabel(BuildContext context) => Strings.continueString;
 
   @override
-  bool canContinue(OnboardingFormController controller) =>
-      controller.notificationTime != null;
-
-  /// Triggers notification permission request + goNext.
-  /// Hook up your permission plugin in the real implementation.
-  @override
-  Future<void> Function(BuildContext, OnboardingFormController)?
-  get onPrimary => (context, controller) async {
-        // TODO: request notification permission here.
-        await controller.goNext();
-      };
+  Future<void> Function(BuildContext, OnboardingFormController)? get onPrimary => (context, controller) async {
+    // TODO: request notification permission here.
+    await controller.goNext();
+  };
 
   @override
   Widget buildContent(BuildContext context) {
-    final controller = OnboardingScope.of(context);
-    return OnboardingStepLayout(
-      title: 'What time of the day is best for you to check in?',
-      subtitle:
-          'WeeksAlive will send you a notification to complete today\u2019s entry.',
-      illustration: const OnboardingIllustrationPlaceholder(
-        name: 'Notification example',
-      ),
-      input: Wrap(
-        spacing: 8,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          for (final slot in NotificationSlot.values)
-            ChoiceChip(
-              label: Text(_label(slot)),
-              selected: controller.notificationSlot == slot,
-              onSelected: (_) async {
-                if (slot == NotificationSlot.custom) {
-                  final picked = await showTimePicker(
-                    context: context,
-                    initialTime: controller.customNotificationTime ??
-                        TimeOfDay.now(),
-                  );
-                  if (picked != null) {
-                    controller.setCustomNotificationTime(picked);
-                  }
-                } else {
-                  controller.setNotificationSlot(slot);
-                }
-              },
-            ),
+          const SizedBox(height: Margins.spacingM),
+          const SizedBox(height: Margins.spacingM),
+          const _NotificationAnimation(),
+          const SizedBox(height: Margins.spacingM),
+          const SizedBox(height: Margins.spacingM),
+          Texts.xlBold(Strings.onboarding20Title),
+          const SizedBox(height: Margins.spacingM),
+          const Expanded(child: _NotificationTimeSelector()),
+          const SizedBox(height: Margins.spacingM),
+          const SmallDivider(),
+          const SizedBox(height: Margins.spacingBase),
+          Texts.primaryMediumSoft(context, Strings.onboarding20Subtitle),
+          const SizedBox(height: Margins.spacingBase),
         ],
       ),
     );
   }
+}
 
-  String _label(NotificationSlot slot) {
-    switch (slot) {
-      case NotificationSlot.morning:
-        return '8 AM';
-      case NotificationSlot.afternoon:
-        return '2:30 PM';
-      case NotificationSlot.evening:
-        return '9 PM';
-      case NotificationSlot.custom:
-        return 'Custom';
+class _NotificationTimeSelector extends StatelessWidget {
+  const _NotificationTimeSelector();
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = OnboardingScope.of(context);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _NotificationSlotCard(
+          slot: controller.slot1,
+          onToggle: controller.toggleSlot1,
+          onTimeChanged: controller.setSlot1Time,
+        ),
+        const SizedBox(height: Margins.spacingS),
+        _NotificationSlotCard(
+          slot: controller.slot2,
+          onToggle: controller.toggleSlot2,
+          onTimeChanged: controller.setSlot2Time,
+        ),
+      ],
+    );
+  }
+}
+
+class _NotificationSlotCard extends StatelessWidget {
+  const _NotificationSlotCard({
+    required this.slot,
+    required this.onToggle,
+    required this.onTimeChanged,
+  });
+
+  final NotificationSlotState slot;
+  final ValueChanged<bool> onToggle;
+  final ValueChanged<TimeOfDay> onTimeChanged;
+
+  String _formatTime(TimeOfDay time) {
+    final h = time.hour.toString().padLeft(2, '0');
+    final m = time.minute.toString().padLeft(2, '0');
+    return '$h:$m';
+  }
+
+  Future<void> _pickTime(BuildContext context) async {
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: slot.time,
+      builder: (context, child) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+        child: child!,
+      ),
+    );
+    if (picked != null) {
+      onTimeChanged(picked);
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _pickTime(context),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: Margins.spacingBase,
+          vertical: Margins.spacingBase,
+        ),
+        decoration: BoxDecoration(
+          color: AppColors.bgSoft(context),
+          borderRadius: BorderRadius.circular(Dimens.radiusBase),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    Strings.onboarding20CheckIn,
+                    style: TextStyles.primaryXsBold.copyWith(
+                      color: AppColors.contentSoftOnSoft(context),
+                    ),
+                  ),
+                  const SizedBox(height: Margins.spacingXs),
+                  Row(
+                    children: [
+                      Text(
+                        _formatTime(slot.time),
+                        style: TextStyles.primaryLargeBold.copyWith(
+                          color: AppColors.content(context),
+                        ),
+                      ),
+                      const SizedBox(width: Margins.spacingS),
+                      Icon(
+                        MingCuteIcons.mgc_pencil_line,
+                        size: Dimens.iconSizeBase,
+                        color: AppColors.contentSoft(context),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            CupertinoSwitch(
+              value: slot.enabled,
+              onChanged: onToggle,
+              activeTrackColor: AppColors.content(context),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _NotificationAnimation extends StatelessWidget {
+  const _NotificationAnimation();
+
+  @override
+  Widget build(BuildContext context) {
+    return const SlidingNotification();
+  }
+}
+
+class SlidingNotification extends StatefulWidget {
+  const SlidingNotification({super.key});
+  @override
+  State<SlidingNotification> createState() => _SlidingNotificationState();
+}
+
+class _SlidingNotificationState extends State<SlidingNotification> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _notificationOpacityAnimation;
+  late Animation<Offset> _notificationSlideAnimation;
+  late CurvedAnimation _curve;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
+    _curve = CurvedAnimation(parent: _animationController, curve: Curves.easeOutBack);
+    _notificationOpacityAnimation = Tween(begin: 0.0, end: 1.0).animate(_curve);
+    _notificationSlideAnimation = Tween(begin: const Offset(0, -1), end: const Offset(0, 0)).animate(_curve);
+    _playAnimation();
+  }
+
+  Future<void> _playAnimation() async {
+    if (!mounted) return;
+    // empty screen
+    await Future.delayed(const Duration(milliseconds: 700));
+    // make notification appear
+    if (mounted) {
+      _animationController.forward();
+    }
+    // display notification for 2 seconds
+    await Future.delayed(const Duration(seconds: 5), () {});
+    // short delay before notification disappear
+    await Future.delayed(const Duration(milliseconds: 500));
+    // make notification disappear
+    if (mounted) {
+      _animationController.reverse();
+    }
+    // short delay before notification reappear
+    await Future.delayed(const Duration(milliseconds: 1000));
+    _playAnimation();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: AnimatedBuilder(
+        animation: _animationController,
+        builder: (context, child) {
+          return FadeTransition(
+            opacity: _notificationOpacityAnimation,
+            child: SlideTransition(
+              position: _notificationSlideAnimation,
+              child: Transform.rotate(
+                angle: (_notificationOpacityAnimation.value) * -((2 * pi) / 360 * 5),
+                child: const OnboardingFakeNotification(),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+}
+
+class OnboardingFakeNotification extends StatelessWidget {
+  const OnboardingFakeNotification({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(Margins.spacingS),
+      decoration: BoxDecoration(
+        color: Colors.grey.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: [
+          Hero(
+            tag: "onboarding_logo",
+            child: Image.asset(
+              "assets/images/weeksalive_logo.webp",
+              width: 60,
+              height: 60,
+            ),
+          ),
+          const SizedBox(width: Margins.spacingBase),
+          const Expanded(
+            child: _NotificationText(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _NotificationText extends StatelessWidget {
+  const _NotificationText();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          Strings.onboardingNotificationTitle,
+          style: const TextStyle(
+            fontSize: FontSizes.medium,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          Strings.onboardingNotificationSubtitle,
+          style: const TextStyle(
+            fontSize: FontSizes.regular,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
   }
 }

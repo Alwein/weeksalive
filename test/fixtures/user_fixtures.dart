@@ -7,7 +7,7 @@ User userFixture({
   DateTime? dateOfBirth,
   Gender gender = Gender.female,
   int lifespan = 90,
-  TimeOfDay notificationTime = const TimeOfDay(hour: 9, minute: 0),
+  List<TimeOfDay> notificationTimes = const [TimeOfDay(hour: 9, minute: 0)],
   DateTime? createdAt,
 }) {
   return User(
@@ -16,7 +16,7 @@ User userFixture({
     dateOfBirth: dateOfBirth ?? DateTime(1990, 6, 15),
     gender: gender,
     lifespan: lifespan,
-    notificationTime: notificationTime,
+    notificationTimes: notificationTimes,
     createdAt: createdAt ?? DateTime(2024, 1, 1),
   );
 }

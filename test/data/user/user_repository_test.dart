@@ -13,7 +13,7 @@ void main() {
     dateOfBirth: DateTime(1990, 6, 15),
     gender: Gender.female,
     lifespan: 90,
-    notificationTime: const TimeOfDay(hour: 9, minute: 0),
+    notificationTimes: const [TimeOfDay(hour: 9, minute: 0)],
     createdAt: DateTime(2024, 1, 1),
   );
 
@@ -40,7 +40,7 @@ void main() {
       expect(user.lifespan, testUser.lifespan);
       expect(user.dateOfBirth, testUser.dateOfBirth);
       expect(user.createdAt, testUser.createdAt);
-      expect(user.notificationTime, testUser.notificationTime);
+      expect(user.notificationTimes, testUser.notificationTimes);
     });
 
     test('setUser overwrites a previously stored user', () async {

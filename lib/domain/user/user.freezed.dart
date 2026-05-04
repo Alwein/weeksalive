@@ -22,7 +22,7 @@ mixin _$User {
   DateTime get dateOfBirth => throw _privateConstructorUsedError;
   Gender get gender => throw _privateConstructorUsedError;
   int get lifespan => throw _privateConstructorUsedError;
-  TimeOfDay get notificationTime => throw _privateConstructorUsedError;
+  List<TimeOfDay> get notificationTimes => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
 
   /// Create a copy of User
@@ -42,7 +42,7 @@ abstract class $UserCopyWith<$Res> {
     DateTime dateOfBirth,
     Gender gender,
     int lifespan,
-    TimeOfDay notificationTime,
+    List<TimeOfDay> notificationTimes,
     DateTime createdAt,
   });
 }
@@ -67,7 +67,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? dateOfBirth = null,
     Object? gender = null,
     Object? lifespan = null,
-    Object? notificationTime = null,
+    Object? notificationTimes = null,
     Object? createdAt = null,
   }) {
     return _then(
@@ -92,10 +92,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
                 ? _value.lifespan
                 : lifespan // ignore: cast_nullable_to_non_nullable
                       as int,
-            notificationTime: null == notificationTime
-                ? _value.notificationTime
-                : notificationTime // ignore: cast_nullable_to_non_nullable
-                      as TimeOfDay,
+            notificationTimes: null == notificationTimes
+                ? _value.notificationTimes
+                : notificationTimes // ignore: cast_nullable_to_non_nullable
+                      as List<TimeOfDay>,
             createdAt: null == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
@@ -120,7 +120,7 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
     DateTime dateOfBirth,
     Gender gender,
     int lifespan,
-    TimeOfDay notificationTime,
+    List<TimeOfDay> notificationTimes,
     DateTime createdAt,
   });
 }
@@ -142,7 +142,7 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? dateOfBirth = null,
     Object? gender = null,
     Object? lifespan = null,
-    Object? notificationTime = null,
+    Object? notificationTimes = null,
     Object? createdAt = null,
   }) {
     return _then(
@@ -167,10 +167,10 @@ class __$$UserImplCopyWithImpl<$Res>
             ? _value.lifespan
             : lifespan // ignore: cast_nullable_to_non_nullable
                   as int,
-        notificationTime: null == notificationTime
-            ? _value.notificationTime
-            : notificationTime // ignore: cast_nullable_to_non_nullable
-                  as TimeOfDay,
+        notificationTimes: null == notificationTimes
+            ? _value._notificationTimes
+            : notificationTimes // ignore: cast_nullable_to_non_nullable
+                  as List<TimeOfDay>,
         createdAt: null == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
@@ -189,9 +189,9 @@ class _$UserImpl implements _User {
     required this.dateOfBirth,
     required this.gender,
     required this.lifespan,
-    required this.notificationTime,
+    required final List<TimeOfDay> notificationTimes,
     required this.createdAt,
-  });
+  }) : _notificationTimes = notificationTimes;
 
   @override
   final String id;
@@ -203,14 +203,21 @@ class _$UserImpl implements _User {
   final Gender gender;
   @override
   final int lifespan;
+  final List<TimeOfDay> _notificationTimes;
   @override
-  final TimeOfDay notificationTime;
+  List<TimeOfDay> get notificationTimes {
+    if (_notificationTimes is EqualUnmodifiableListView)
+      return _notificationTimes;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_notificationTimes);
+  }
+
   @override
   final DateTime createdAt;
 
   @override
   String toString() {
-    return 'User(id: $id, name: $name, dateOfBirth: $dateOfBirth, gender: $gender, lifespan: $lifespan, notificationTime: $notificationTime, createdAt: $createdAt)';
+    return 'User(id: $id, name: $name, dateOfBirth: $dateOfBirth, gender: $gender, lifespan: $lifespan, notificationTimes: $notificationTimes, createdAt: $createdAt)';
   }
 
   @override
@@ -225,8 +232,10 @@ class _$UserImpl implements _User {
             (identical(other.gender, gender) || other.gender == gender) &&
             (identical(other.lifespan, lifespan) ||
                 other.lifespan == lifespan) &&
-            (identical(other.notificationTime, notificationTime) ||
-                other.notificationTime == notificationTime) &&
+            const DeepCollectionEquality().equals(
+              other._notificationTimes,
+              _notificationTimes,
+            ) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt));
   }
@@ -239,7 +248,7 @@ class _$UserImpl implements _User {
     dateOfBirth,
     gender,
     lifespan,
-    notificationTime,
+    const DeepCollectionEquality().hash(_notificationTimes),
     createdAt,
   );
 
@@ -259,7 +268,7 @@ abstract class _User implements User {
     required final DateTime dateOfBirth,
     required final Gender gender,
     required final int lifespan,
-    required final TimeOfDay notificationTime,
+    required final List<TimeOfDay> notificationTimes,
     required final DateTime createdAt,
   }) = _$UserImpl;
 
@@ -274,7 +283,7 @@ abstract class _User implements User {
   @override
   int get lifespan;
   @override
-  TimeOfDay get notificationTime;
+  List<TimeOfDay> get notificationTimes;
   @override
   DateTime get createdAt;
 

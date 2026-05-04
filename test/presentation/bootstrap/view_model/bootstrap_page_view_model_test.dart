@@ -41,7 +41,7 @@ void main() {
         dateOfBirth: DateTime(1990, 1, 1),
         gender: Gender.male,
         lifespan: 90,
-        notificationTime: const TimeOfDay(hour: 9, minute: 0),
+        notificationTimes: const [TimeOfDay(hour: 9, minute: 0)],
         createdAt: DateTime(2024, 1, 1),
       );
       final viewModel = buildViewModel(userState: UserState.success(user));

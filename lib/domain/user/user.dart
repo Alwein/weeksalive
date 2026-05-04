@@ -24,7 +24,7 @@ class User with _$User {
     required DateTime dateOfBirth,
     required Gender gender,
     required int lifespan,
-    required TimeOfDay notificationTime,
+    required List<TimeOfDay> notificationTimes,
     required DateTime createdAt,
   }) = _User;
 }
@@ -36,23 +36,35 @@ extension UserExtension on User {
     'dateOfBirth': dateOfBirth.toIso8601String(),
     'gender': gender.name,
     'lifespan': lifespan,
-    'notificationTime': {
-      'hour': notificationTime.hour,
-      'minute': notificationTime.minute,
-    },
+    'notificationTimes': notificationTimes
+        .map((t) => {'hour': t.hour, 'minute': t.minute})
+        .toList(),
     'createdAt': createdAt.toIso8601String(),
   };
 
-  static User fromJson(Map<String, dynamic> json) => User(
-    id: json['id'] as String,
-    name: json['name'] as String,
-    dateOfBirth: DateTime.parse(json['dateOfBirth'] as String),
-    gender: Gender.values.byName(json['gender'] as String),
-    lifespan: json['lifespan'] as int,
-    notificationTime: TimeOfDay(
-      hour: (json['notificationTime'] as Map<String, dynamic>)['hour'] as int,
-      minute: (json['notificationTime'] as Map<String, dynamic>)['minute'] as int,
-    ),
-    createdAt: DateTime.parse(json['createdAt'] as String),
-  );
+  static User fromJson(Map<String, dynamic> json) {
+    List<TimeOfDay> times;
+    if (json.containsKey('notificationTimes')) {
+      times = (json['notificationTimes'] as List<dynamic>)
+          .map((e) => TimeOfDay(
+                hour: (e as Map<String, dynamic>)['hour'] as int,
+                minute: e['minute'] as int,
+              ))
+          .toList();
+    } else {
+      // Legacy migration: single notificationTime field
+      final t = json['notificationTime'] as Map<String, dynamic>;
+      times = [TimeOfDay(hour: t['hour'] as int, minute: t['minute'] as int)];
+    }
+
+    return User(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      dateOfBirth: DateTime.parse(json['dateOfBirth'] as String),
+      gender: Gender.values.byName(json['gender'] as String),
+      lifespan: json['lifespan'] as int,
+      notificationTimes: times,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+    );
+  }
 }
