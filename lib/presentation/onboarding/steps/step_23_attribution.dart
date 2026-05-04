@@ -1,7 +1,9 @@
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:flutter/widgets.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
+import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
@@ -12,6 +14,13 @@ class Step23Attribution extends OnboardingStep {
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;
+
+  @override
+  Future<void> Function(BuildContext, OnboardingFormController)? get onPrimary =>
+      (context, controller) async {
+        await AppTrackingTransparency.requestTrackingAuthorization();
+        await controller.goNext();
+      };
 
   @override
   Widget buildContent(BuildContext context) {
