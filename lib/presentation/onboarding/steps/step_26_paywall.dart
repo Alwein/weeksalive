@@ -33,23 +33,16 @@ class __PaywallDisplayerState extends State<_PaywallDisplayer> {
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.of(context).push(PaywallPage.route()).then((value) {
-        if (mounted) {
-          _next(context);
-        }
-      });
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showPaywall());
   }
 
-  void _next(BuildContext context) {
-    final controller = OnboardingScope.of(context);
-    controller.goNext();
+  Future<void> _showPaywall() async {
+    await Navigator.of(context).push<bool>(PaywallPage.route());
+    if (mounted) _next();
   }
+
+  void _next() => OnboardingScope.of(context).goNext();
 
   @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
+  Widget build(BuildContext context) => const SizedBox.expand();
 }
