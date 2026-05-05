@@ -9,8 +9,14 @@ class PurchaseRepository {
   String get _entitlementId => dotenv.env['REVENUE_CAT_ENTITLEMENT_ID'] ?? 'WeeksAlive Pro';
 
   Future<Offering?> fetchCurrentOffering() async {
-    final offerings = await Purchases.getOfferings();
-    return offerings.current;
+    try {
+      final offerings = await Purchases.getOfferings();
+      return offerings.current;
+    } catch (e, st) {
+      print('error: $e');
+      print('stackTrace: $st');
+      rethrow;
+    }
   }
 
   Future<CustomerInfo> purchasePackage(Package package) async {

@@ -185,4 +185,43 @@ class Strings {
   static String get onboarding25Title5 => "To feel more.";
   static String get onboarding25Title6 => "To love more.";
   static String get onboarding25Footer => "This is that chance.";
+
+  // paywall
+  static String paywallTitle(int trialWeeks) => 'Try WeeksAlive free for $trialWeeks weeks.';
+  static String get paywallCtaWithTrial => 'Start free trial';
+  static String paywallCtaWithWeeks(int trialWeeks) => 'Start my $trialWeeks-week free trial';
+
+  static String get paywallTimelineStep1Label => 'Download the app';
+  static String get paywallTimelineStep1Sublabel => 'You chose to see your life differently.';
+  static String get paywallTimelineStep2Label => 'Today — Free trial starts';
+  static String get paywallTimelineStep2Sublabel => 'Get full access. Start shaping your grid.';
+  static String paywallTimelineStep3Label(String reminderWeek) => '$reminderWeek — Feel your first wins';
+  static String get paywallTimelineStep3Sublabel => "Your first week is already on the grid. You'll remember this one.";
+  static String paywallTimelineStep4Label(int trialWeeks) => 'Week $trialWeeks — End of trial period';
+  static String paywallTimelineStep4Sublabel(String endDate) =>
+      "Watch your grid growing. Cancel anytime before $endDate and you won't be charged.";
+
+  static String paywallPriceSubtitle(int trialWeeks, String pricePerYear) =>
+      '$trialWeeks weeks free, then $pricePerYear / year';
+  static String paywallPricePerWeek(String pricePerWeek) => 'Only $pricePerWeek / week';
+
+  static String get paywallFooterDisclaimer => 'Cancel anytime. Billed via App Store.';
+  static String get paywallFooterTerms => 'Terms';
+  static String get paywallFooterPrivacy => 'Privacy';
+  static String get paywallFooterRestore => 'Restore';
+  static String get paywallFooterSkip => 'Skip';
+
+  // paywall errors
+  static String get paywallErrorNetwork =>
+      "We couldn't reach the App Store. Please check your connection and try again.";
+  static String get paywallErrorNotAllowed =>
+      "This purchase isn't allowed on your account.";
+  static String get paywallErrorAlreadyOwned =>
+      "You already have an active subscription. Tap Restore to get access.";
+  static String get paywallErrorGeneric =>
+      "Something went wrong with your purchase. Please try again.";
+  static String get paywallErrorRestoreNotFound =>
+      "No active subscription found for this Apple ID.";
+  static String get paywallErrorRestoreGeneric =>
+      "We couldn't restore your purchase. Please try again.";
 }

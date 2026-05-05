@@ -28,6 +28,7 @@ import 'package:weeksalive/presentation/onboarding/steps/step_26_paywall.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_27_paywall.dart';
 
 const List<OnboardingStep> kOnboardingSteps = <OnboardingStep>[
+  Step26Paywall(),
   Step01Welcome(),
   Step02LifeFeelsLong(),
   Step03LifeInWeeks(),

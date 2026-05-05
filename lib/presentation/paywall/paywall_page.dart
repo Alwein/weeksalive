@@ -1,50 +1,36 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:purchases_flutter/purchases_flutter.dart' hide Store;
-import 'package:redux/redux.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/app_links.dart';
+import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
+import 'package:weeksalive/presentation/paywall/paywall_view_model.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_actions.dart';
-import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
-
-const _fallbackTrialDays = 14;
-const _pricePerYear = r'$49.99';
-const _pricePerWeek = r'$0.96';
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Public entry-point
-// ─────────────────────────────────────────────────────────────────────────────
 
 class PaywallPage extends StatelessWidget {
   const PaywallPage({super.key});
 
-  static Route<bool> route() =>
-      MaterialPageRoute<bool>(builder: (_) => const PaywallPage());
+  static Route<bool> route() => MaterialPageRoute<bool>(builder: (_) => const PaywallPage());
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, _ViewModel>(
-      converter: (store) => _ViewModel.fromStore(store),
+    return StoreConnector<AppState, PaywallViewModel>(
+      converter: (store) => PaywallViewModel.create(store),
       onInit: (store) => store.dispatch(const FetchOfferingAction()),
       distinct: true,
       builder: (context, vm) {
-        final trialDays =
-            _trialDaysFromOffering(vm.offering) ?? _fallbackTrialDays;
-        final trialWeeks = (trialDays / 7).round().clamp(1, 99);
-
         return _PaywallView(
-          trialWeeks: trialWeeks,
+          trialWeeks: vm.trialWeeks,
+          trialEndDate: vm.trialEndDate,
+          pricePerYear: vm.pricePerYear,
+          pricePerWeek: vm.pricePerWeek,
           isLoading: vm.isLoading,
           errorMessage: vm.errorMessage,
-          onStartTrial: vm.annualPackage != null
-              ? () => vm.onPurchase(context, vm.annualPackage!)
-              : null,
+          onStartTrial: vm.annualPackage != null ? () => vm.onPurchase(context, vm.annualPackage!) : null,
           onRestore: () => vm.onRestore(context),
           onDismiss: () => Navigator.of(context).pop(false),
           isPro: vm.isPro,
@@ -52,67 +38,14 @@ class PaywallPage extends StatelessWidget {
       },
     );
   }
-
-  int? _trialDaysFromOffering(Offering? offering) {
-    if (offering == null) return null;
-    final raw = offering.metadata['trial_days'];
-    if (raw is int) return raw;
-    if (raw is double) return raw.toInt();
-    if (raw is String) return int.tryParse(raw);
-    return null;
-  }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// ViewModel
-// ─────────────────────────────────────────────────────────────────────────────
-
-class _ViewModel {
-  final Offering? offering;
-  final Package? annualPackage;
-  final bool isLoading;
-  final bool isPro;
-  final String? errorMessage;
-  final void Function(BuildContext, Package) onPurchase;
-  final void Function(BuildContext) onRestore;
-
-  const _ViewModel({
-    required this.offering,
-    required this.annualPackage,
-    required this.isLoading,
-    required this.isPro,
-    required this.errorMessage,
-    required this.onPurchase,
-    required this.onRestore,
-  });
-
-  static _ViewModel fromStore(Store<AppState> store) {
-    final ps = store.state.purchaseState;
-    final offering = ps.offering;
-
-    return _ViewModel(
-      offering: offering,
-      annualPackage: offering?.annual,
-      isLoading: ps.isLoading,
-      isPro: ps.isPro,
-      errorMessage: ps.maybeMap(error: (e) => e.message, orElse: () => null),
-      onPurchase: (context, pkg) {
-        store.dispatch(PurchasePackageAction(pkg));
-      },
-      onRestore: (context) {
-        store.dispatch(const RestorePurchasesAction());
-      },
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// View — reacts to isPro via StoreConnector rebuild
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _PaywallView extends StatefulWidget {
   const _PaywallView({
     required this.trialWeeks,
+    required this.trialEndDate,
+    required this.pricePerYear,
+    required this.pricePerWeek,
     required this.isLoading,
     required this.isPro,
     required this.errorMessage,
@@ -121,7 +54,10 @@ class _PaywallView extends StatefulWidget {
     required this.onDismiss,
   });
 
-  final int trialWeeks;
+  final int? trialWeeks;
+  final String? trialEndDate;
+  final String? pricePerYear;
+  final String? pricePerWeek;
   final bool isLoading;
   final bool isPro;
   final String? errorMessage;
@@ -137,7 +73,7 @@ class _PaywallViewState extends State<_PaywallView> {
   @override
   void didUpdateWidget(_PaywallView old) {
     super.didUpdateWidget(old);
-    // Once the purchase succeeds, close the paywall automatically.
+
     if (widget.isPro && !old.isPro) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) Navigator.of(context).pop(true);
@@ -160,9 +96,12 @@ class _PaywallViewState extends State<_PaywallView> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: Margins.spacingM),
-                  Texts.xlBold('Try WeeksAlive free for ${widget.trialWeeks} weeks.'),
-                  const SizedBox(height: Margins.spacingL),
-                  _TrialTimeline(trialWeeks: widget.trialWeeks),
+                  if (widget.trialWeeks != null) ...[
+                    Texts.xlBold(Strings.paywallTitle(widget.trialWeeks!)),
+                    const SizedBox(height: Margins.spacingL),
+                    _TrialTimeline(trialWeeks: widget.trialWeeks!, trialEndDate: widget.trialEndDate),
+                  ] else
+                    const SizedBox(height: Margins.spacingL),
                   const SizedBox(height: 160),
                 ],
               ),
@@ -179,26 +118,26 @@ class _PaywallViewState extends State<_PaywallView> {
                     const SmallDivider(width: double.infinity),
                     const SizedBox(height: Margins.spacingBase),
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: Margins.spacingM),
+                      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
                       child: Column(
                         children: [
                           if (widget.errorMessage != null)
                             Padding(
-                              padding: const EdgeInsets.only(
-                                  bottom: Margins.spacingBase),
+                              padding: const EdgeInsets.only(bottom: Margins.spacingBase),
                               child: Text(
                                 widget.errorMessage!,
-                                style: TextStyles.primaryXsRegular
-                                    .copyWith(color: Colors.red),
+                                style: TextStyles.primaryXsRegular.copyWith(color: Colors.red),
                                 textAlign: TextAlign.center,
                               ),
                             ),
-                          _PriceBlock(
-                            trialWeeks: widget.trialWeeks,
-                            pricePerYear: _pricePerYear,
-                            pricePerWeek: _pricePerWeek,
-                          ),
+                          if (widget.pricePerYear != null && widget.pricePerWeek != null && widget.trialWeeks != null)
+                            _PriceBlock(
+                              trialWeeks: widget.trialWeeks!,
+                              pricePerYear: widget.pricePerYear!,
+                              pricePerWeek: widget.pricePerWeek!,
+                            )
+                          else if (widget.isLoading)
+                            const _PriceBlockSkeleton(),
                           const SizedBox(height: Margins.spacingBase),
                           _CtaButton(
                             trialWeeks: widget.trialWeeks,
@@ -225,45 +164,38 @@ class _PaywallViewState extends State<_PaywallView> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Trial Timeline
-// ─────────────────────────────────────────────────────────────────────────────
-
 class _TrialTimeline extends StatelessWidget {
-  const _TrialTimeline({required this.trialWeeks});
+  const _TrialTimeline({required this.trialWeeks, required this.trialEndDate});
   final int trialWeeks;
+  final String? trialEndDate;
 
   @override
   Widget build(BuildContext context) {
-    final reminderWeek =
-        trialWeeks <= 2 ? 'Week 1' : 'Week ${(trialWeeks / 2).ceil()}';
-    final endDate = DateFormat('MMM d').format(
-      DateTime.now().add(Duration(days: trialWeeks * 7)),
-    );
+    final reminderWeek = trialWeeks <= 2 ? 'Week 1' : 'Week ${(trialWeeks / 2).ceil()}';
 
     final steps = [
-      const _TimelineItem(
+      _TimelineItem(
         isActive: false,
         isDone: true,
-        label: 'Download the app',
-        sublabel: 'You chose to see your life differently.',
+        label: Strings.paywallTimelineStep1Label,
+        sublabel: Strings.paywallTimelineStep1Sublabel,
       ),
-      const _TimelineItem(
+      _TimelineItem(
         isActive: true,
-        label: 'Today — Free trial starts',
-        sublabel: 'Get full access. Start shaping your grid.',
+        label: Strings.paywallTimelineStep2Label,
+        sublabel: Strings.paywallTimelineStep2Sublabel,
       ),
       _TimelineItem(
         isActive: false,
-        label: '$reminderWeek — Feel your first wins',
-        sublabel:
-            "Your first week is already on the grid. You'll remember this one.",
+        label: Strings.paywallTimelineStep3Label(reminderWeek),
+        sublabel: Strings.paywallTimelineStep3Sublabel,
       ),
       _TimelineItem(
         isActive: false,
-        label: 'Week $trialWeeks — End of trial period',
-        sublabel:
-            "Watch your grid growing. Cancel anytime before $endDate and you won't be charged.",
+        label: Strings.paywallTimelineStep4Label(trialWeeks),
+        sublabel: trialEndDate != null
+            ? Strings.paywallTimelineStep4Sublabel(trialEndDate!)
+            : Strings.paywallTimelineStep3Sublabel,
         isLast: true,
       ),
     ];
@@ -330,9 +262,7 @@ class _TimelineRow extends StatelessWidget {
       );
     }
 
-    final labelColor = item.isDone
-        ? AppColors.contentSoft(context)
-        : AppColors.content(context);
+    final labelColor = item.isDone ? AppColors.contentSoft(context) : AppColors.content(context);
 
     return IntrinsicHeight(
       child: Row(
@@ -359,8 +289,7 @@ class _TimelineRow extends StatelessWidget {
           const SizedBox(width: Margins.spacingBase),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(
-                  bottom: item.isLast ? 0 : Margins.spacingL),
+              padding: EdgeInsets.only(bottom: item.isLast ? 0 : Margins.spacingL),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -368,16 +297,14 @@ class _TimelineRow extends StatelessWidget {
                     item.label,
                     style: TextStyles.primaryMediumBlack.copyWith(
                       color: labelColor,
-                      decoration:
-                          item.isDone ? TextDecoration.lineThrough : null,
+                      decoration: item.isDone ? TextDecoration.lineThrough : null,
                       decorationColor: labelColor,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     item.sublabel,
-                    style: TextStyles.primaryRegular
-                        .copyWith(color: AppColors.contentSoft(context)),
+                    style: TextStyles.primaryRegular.copyWith(color: AppColors.contentSoft(context)),
                   ),
                 ],
               ),
@@ -388,10 +315,6 @@ class _TimelineRow extends StatelessWidget {
     );
   }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Price block
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _PriceBlock extends StatelessWidget {
   const _PriceBlock({
@@ -409,16 +332,14 @@ class _PriceBlock extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          '$trialWeeks weeks free, then $pricePerYear / year',
-          style: TextStyles.primaryRegular
-              .copyWith(color: AppColors.contentSoft(context)),
+          Strings.paywallPriceSubtitle(trialWeeks, pricePerYear),
+          style: TextStyles.primaryRegular.copyWith(color: AppColors.contentSoft(context)),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: Margins.spacingXs),
         Text(
-          'Only $pricePerWeek / week',
-          style: TextStyles.primaryMediumBlack
-              .copyWith(color: AppColors.content(context)),
+          Strings.paywallPricePerWeek(pricePerWeek),
+          style: TextStyles.primaryMediumBlack.copyWith(color: AppColors.content(context)),
           textAlign: TextAlign.center,
         ),
       ],
@@ -426,17 +347,13 @@ class _PriceBlock extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// CTA button
-// ─────────────────────────────────────────────────────────────────────────────
-
 class _CtaButton extends StatelessWidget {
   const _CtaButton({
     required this.trialWeeks,
     required this.isLoading,
     required this.onTap,
   });
-  final int trialWeeks;
+  final int? trialWeeks;
   final bool isLoading;
   final VoidCallback? onTap;
 
@@ -448,9 +365,7 @@ class _CtaButton extends StatelessWidget {
       child: Container(
         height: 56,
         decoration: BoxDecoration(
-          color: enabled
-              ? AppColors.content(context)
-              : AppColors.contentSoft(context),
+          color: enabled ? AppColors.content(context) : AppColors.contentSoft(context),
           borderRadius: BorderRadius.circular(200),
         ),
         alignment: Alignment.center,
@@ -464,18 +379,40 @@ class _CtaButton extends StatelessWidget {
                 ),
               )
             : Text(
-                'Start my $trialWeeks-week free trial',
-                style: TextStyles.mediumBold
-                    .copyWith(color: AppColors.bg(context)),
+                trialWeeks != null
+                    ? Strings.paywallCtaWithWeeks(trialWeeks!)
+                    : Strings.paywallCtaWithTrial,
+                style: TextStyles.mediumBold.copyWith(color: AppColors.bg(context)),
               ),
       ),
     );
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Footer
-// ─────────────────────────────────────────────────────────────────────────────
+class _PriceBlockSkeleton extends StatelessWidget {
+  const _PriceBlockSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    final color = AppColors.strokeColor(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          height: 14,
+          width: 200,
+          decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
+        ),
+        const SizedBox(height: Margins.spacingXs),
+        Container(
+          height: 16,
+          width: 120,
+          decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
+        ),
+      ],
+    );
+  }
+}
 
 class _Footer extends StatelessWidget {
   const _Footer({required this.onRestore, required this.onDismiss});
@@ -487,23 +424,21 @@ class _Footer extends StatelessWidget {
     return Column(
       children: [
         Text(
-          'Cancel anytime. Billed via App Store.',
-          style: TextStyles.primaryXsRegular
-              .copyWith(color: AppColors.contentSoft(context)),
+          Strings.paywallFooterDisclaimer,
+          style: TextStyles.primaryXsRegular.copyWith(color: AppColors.contentSoft(context)),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: Margins.spacingXs),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _FooterLink(label: 'Terms', onTap: () => _open(AppLinks.terms)),
+            _FooterLink(label: Strings.paywallFooterTerms, onTap: () => _open(AppLinks.terms)),
             _dot(context),
-            _FooterLink(
-                label: 'Privacy', onTap: () => _open(AppLinks.privacy)),
+            _FooterLink(label: Strings.paywallFooterPrivacy, onTap: () => _open(AppLinks.privacy)),
             _dot(context),
-            _FooterLink(label: 'Restore', onTap: onRestore),
+            _FooterLink(label: Strings.paywallFooterRestore, onTap: onRestore),
             _dot(context),
-            _FooterLink(label: 'Skip', onTap: onDismiss),
+            _FooterLink(label: Strings.paywallFooterSkip, onTap: onDismiss),
           ],
         ),
       ],
@@ -511,17 +446,14 @@ class _Footer extends StatelessWidget {
   }
 
   Widget _dot(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6),
-        child: Text(
-          '·',
-          style: TextStyles.primaryXsRegular
-              .copyWith(color: AppColors.contentSoftOnSoft(context)),
-        ),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 6),
+    child: Text(
+      '·',
+      style: TextStyles.primaryXsRegular.copyWith(color: AppColors.contentSoftOnSoft(context)),
+    ),
+  );
 
-  void _open(String url) {
-    // Wire url_launcher here when ready.
-  }
+  void _open(String url) {}
 }
 
 class _FooterLink extends StatelessWidget {

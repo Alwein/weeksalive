@@ -21,7 +21,7 @@ mixin _$PurchaseState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function(Offering? offering) loading,
-    required TResult Function(Offering? offering, bool isPro) idle,
+    required TResult Function(Offering? offering, bool isPro) success,
     required TResult Function(String message, Offering? offering, bool isPro)
     error,
   }) => throw _privateConstructorUsedError;
@@ -29,14 +29,14 @@ mixin _$PurchaseState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function(Offering? offering)? loading,
-    TResult? Function(Offering? offering, bool isPro)? idle,
+    TResult? Function(Offering? offering, bool isPro)? success,
     TResult? Function(String message, Offering? offering, bool isPro)? error,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(Offering? offering)? loading,
-    TResult Function(Offering? offering, bool isPro)? idle,
+    TResult Function(Offering? offering, bool isPro)? success,
     TResult Function(String message, Offering? offering, bool isPro)? error,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
@@ -44,21 +44,21 @@ mixin _$PurchaseState {
   TResult map<TResult extends Object?>({
     required TResult Function(PurchaseStateInitial value) initial,
     required TResult Function(PurchaseStateLoading value) loading,
-    required TResult Function(PurchaseStateIdle value) idle,
+    required TResult Function(PurchaseStateSuccess value) success,
     required TResult Function(PurchaseStateError value) error,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(PurchaseStateInitial value)? initial,
     TResult? Function(PurchaseStateLoading value)? loading,
-    TResult? Function(PurchaseStateIdle value)? idle,
+    TResult? Function(PurchaseStateSuccess value)? success,
     TResult? Function(PurchaseStateError value)? error,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(PurchaseStateInitial value)? initial,
     TResult Function(PurchaseStateLoading value)? loading,
-    TResult Function(PurchaseStateIdle value)? idle,
+    TResult Function(PurchaseStateSuccess value)? success,
     TResult Function(PurchaseStateError value)? error,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
@@ -132,7 +132,7 @@ class _$PurchaseStateInitialImpl implements PurchaseStateInitial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function(Offering? offering) loading,
-    required TResult Function(Offering? offering, bool isPro) idle,
+    required TResult Function(Offering? offering, bool isPro) success,
     required TResult Function(String message, Offering? offering, bool isPro)
     error,
   }) {
@@ -144,7 +144,7 @@ class _$PurchaseStateInitialImpl implements PurchaseStateInitial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function(Offering? offering)? loading,
-    TResult? Function(Offering? offering, bool isPro)? idle,
+    TResult? Function(Offering? offering, bool isPro)? success,
     TResult? Function(String message, Offering? offering, bool isPro)? error,
   }) {
     return initial?.call();
@@ -155,7 +155,7 @@ class _$PurchaseStateInitialImpl implements PurchaseStateInitial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(Offering? offering)? loading,
-    TResult Function(Offering? offering, bool isPro)? idle,
+    TResult Function(Offering? offering, bool isPro)? success,
     TResult Function(String message, Offering? offering, bool isPro)? error,
     required TResult orElse(),
   }) {
@@ -170,7 +170,7 @@ class _$PurchaseStateInitialImpl implements PurchaseStateInitial {
   TResult map<TResult extends Object?>({
     required TResult Function(PurchaseStateInitial value) initial,
     required TResult Function(PurchaseStateLoading value) loading,
-    required TResult Function(PurchaseStateIdle value) idle,
+    required TResult Function(PurchaseStateSuccess value) success,
     required TResult Function(PurchaseStateError value) error,
   }) {
     return initial(this);
@@ -181,7 +181,7 @@ class _$PurchaseStateInitialImpl implements PurchaseStateInitial {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(PurchaseStateInitial value)? initial,
     TResult? Function(PurchaseStateLoading value)? loading,
-    TResult? Function(PurchaseStateIdle value)? idle,
+    TResult? Function(PurchaseStateSuccess value)? success,
     TResult? Function(PurchaseStateError value)? error,
   }) {
     return initial?.call(this);
@@ -192,7 +192,7 @@ class _$PurchaseStateInitialImpl implements PurchaseStateInitial {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(PurchaseStateInitial value)? initial,
     TResult Function(PurchaseStateLoading value)? loading,
-    TResult Function(PurchaseStateIdle value)? idle,
+    TResult Function(PurchaseStateSuccess value)? success,
     TResult Function(PurchaseStateError value)? error,
     required TResult orElse(),
   }) {
@@ -284,7 +284,7 @@ class _$PurchaseStateLoadingImpl implements PurchaseStateLoading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function(Offering? offering) loading,
-    required TResult Function(Offering? offering, bool isPro) idle,
+    required TResult Function(Offering? offering, bool isPro) success,
     required TResult Function(String message, Offering? offering, bool isPro)
     error,
   }) {
@@ -296,7 +296,7 @@ class _$PurchaseStateLoadingImpl implements PurchaseStateLoading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function(Offering? offering)? loading,
-    TResult? Function(Offering? offering, bool isPro)? idle,
+    TResult? Function(Offering? offering, bool isPro)? success,
     TResult? Function(String message, Offering? offering, bool isPro)? error,
   }) {
     return loading?.call(offering);
@@ -307,7 +307,7 @@ class _$PurchaseStateLoadingImpl implements PurchaseStateLoading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(Offering? offering)? loading,
-    TResult Function(Offering? offering, bool isPro)? idle,
+    TResult Function(Offering? offering, bool isPro)? success,
     TResult Function(String message, Offering? offering, bool isPro)? error,
     required TResult orElse(),
   }) {
@@ -322,7 +322,7 @@ class _$PurchaseStateLoadingImpl implements PurchaseStateLoading {
   TResult map<TResult extends Object?>({
     required TResult Function(PurchaseStateInitial value) initial,
     required TResult Function(PurchaseStateLoading value) loading,
-    required TResult Function(PurchaseStateIdle value) idle,
+    required TResult Function(PurchaseStateSuccess value) success,
     required TResult Function(PurchaseStateError value) error,
   }) {
     return loading(this);
@@ -333,7 +333,7 @@ class _$PurchaseStateLoadingImpl implements PurchaseStateLoading {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(PurchaseStateInitial value)? initial,
     TResult? Function(PurchaseStateLoading value)? loading,
-    TResult? Function(PurchaseStateIdle value)? idle,
+    TResult? Function(PurchaseStateSuccess value)? success,
     TResult? Function(PurchaseStateError value)? error,
   }) {
     return loading?.call(this);
@@ -344,7 +344,7 @@ class _$PurchaseStateLoadingImpl implements PurchaseStateLoading {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(PurchaseStateInitial value)? initial,
     TResult Function(PurchaseStateLoading value)? loading,
-    TResult Function(PurchaseStateIdle value)? idle,
+    TResult Function(PurchaseStateSuccess value)? success,
     TResult Function(PurchaseStateError value)? error,
     required TResult orElse(),
   }) {
@@ -369,22 +369,22 @@ abstract class PurchaseStateLoading implements PurchaseState {
 }
 
 /// @nodoc
-abstract class _$$PurchaseStateIdleImplCopyWith<$Res> {
-  factory _$$PurchaseStateIdleImplCopyWith(
-    _$PurchaseStateIdleImpl value,
-    $Res Function(_$PurchaseStateIdleImpl) then,
-  ) = __$$PurchaseStateIdleImplCopyWithImpl<$Res>;
+abstract class _$$PurchaseStateSuccessImplCopyWith<$Res> {
+  factory _$$PurchaseStateSuccessImplCopyWith(
+    _$PurchaseStateSuccessImpl value,
+    $Res Function(_$PurchaseStateSuccessImpl) then,
+  ) = __$$PurchaseStateSuccessImplCopyWithImpl<$Res>;
   @useResult
   $Res call({Offering? offering, bool isPro});
 }
 
 /// @nodoc
-class __$$PurchaseStateIdleImplCopyWithImpl<$Res>
-    extends _$PurchaseStateCopyWithImpl<$Res, _$PurchaseStateIdleImpl>
-    implements _$$PurchaseStateIdleImplCopyWith<$Res> {
-  __$$PurchaseStateIdleImplCopyWithImpl(
-    _$PurchaseStateIdleImpl _value,
-    $Res Function(_$PurchaseStateIdleImpl) _then,
+class __$$PurchaseStateSuccessImplCopyWithImpl<$Res>
+    extends _$PurchaseStateCopyWithImpl<$Res, _$PurchaseStateSuccessImpl>
+    implements _$$PurchaseStateSuccessImplCopyWith<$Res> {
+  __$$PurchaseStateSuccessImplCopyWithImpl(
+    _$PurchaseStateSuccessImpl _value,
+    $Res Function(_$PurchaseStateSuccessImpl) _then,
   ) : super(_value, _then);
 
   /// Create a copy of PurchaseState
@@ -393,7 +393,7 @@ class __$$PurchaseStateIdleImplCopyWithImpl<$Res>
   @override
   $Res call({Object? offering = freezed, Object? isPro = null}) {
     return _then(
-      _$PurchaseStateIdleImpl(
+      _$PurchaseStateSuccessImpl(
         offering: freezed == offering
             ? _value.offering
             : offering // ignore: cast_nullable_to_non_nullable
@@ -409,8 +409,11 @@ class __$$PurchaseStateIdleImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$PurchaseStateIdleImpl implements PurchaseStateIdle {
-  const _$PurchaseStateIdleImpl({required this.offering, required this.isPro});
+class _$PurchaseStateSuccessImpl implements PurchaseStateSuccess {
+  const _$PurchaseStateSuccessImpl({
+    required this.offering,
+    required this.isPro,
+  });
 
   @override
   final Offering? offering;
@@ -419,14 +422,14 @@ class _$PurchaseStateIdleImpl implements PurchaseStateIdle {
 
   @override
   String toString() {
-    return 'PurchaseState.idle(offering: $offering, isPro: $isPro)';
+    return 'PurchaseState.success(offering: $offering, isPro: $isPro)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$PurchaseStateIdleImpl &&
+            other is _$PurchaseStateSuccessImpl &&
             (identical(other.offering, offering) ||
                 other.offering == offering) &&
             (identical(other.isPro, isPro) || other.isPro == isPro));
@@ -440,8 +443,9 @@ class _$PurchaseStateIdleImpl implements PurchaseStateIdle {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$PurchaseStateIdleImplCopyWith<_$PurchaseStateIdleImpl> get copyWith =>
-      __$$PurchaseStateIdleImplCopyWithImpl<_$PurchaseStateIdleImpl>(
+  _$$PurchaseStateSuccessImplCopyWith<_$PurchaseStateSuccessImpl>
+  get copyWith =>
+      __$$PurchaseStateSuccessImplCopyWithImpl<_$PurchaseStateSuccessImpl>(
         this,
         _$identity,
       );
@@ -451,11 +455,11 @@ class _$PurchaseStateIdleImpl implements PurchaseStateIdle {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function(Offering? offering) loading,
-    required TResult Function(Offering? offering, bool isPro) idle,
+    required TResult Function(Offering? offering, bool isPro) success,
     required TResult Function(String message, Offering? offering, bool isPro)
     error,
   }) {
-    return idle(offering, isPro);
+    return success(offering, isPro);
   }
 
   @override
@@ -463,10 +467,10 @@ class _$PurchaseStateIdleImpl implements PurchaseStateIdle {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function(Offering? offering)? loading,
-    TResult? Function(Offering? offering, bool isPro)? idle,
+    TResult? Function(Offering? offering, bool isPro)? success,
     TResult? Function(String message, Offering? offering, bool isPro)? error,
   }) {
-    return idle?.call(offering, isPro);
+    return success?.call(offering, isPro);
   }
 
   @override
@@ -474,12 +478,12 @@ class _$PurchaseStateIdleImpl implements PurchaseStateIdle {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(Offering? offering)? loading,
-    TResult Function(Offering? offering, bool isPro)? idle,
+    TResult Function(Offering? offering, bool isPro)? success,
     TResult Function(String message, Offering? offering, bool isPro)? error,
     required TResult orElse(),
   }) {
-    if (idle != null) {
-      return idle(offering, isPro);
+    if (success != null) {
+      return success(offering, isPro);
     }
     return orElse();
   }
@@ -489,10 +493,10 @@ class _$PurchaseStateIdleImpl implements PurchaseStateIdle {
   TResult map<TResult extends Object?>({
     required TResult Function(PurchaseStateInitial value) initial,
     required TResult Function(PurchaseStateLoading value) loading,
-    required TResult Function(PurchaseStateIdle value) idle,
+    required TResult Function(PurchaseStateSuccess value) success,
     required TResult Function(PurchaseStateError value) error,
   }) {
-    return idle(this);
+    return success(this);
   }
 
   @override
@@ -500,10 +504,10 @@ class _$PurchaseStateIdleImpl implements PurchaseStateIdle {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(PurchaseStateInitial value)? initial,
     TResult? Function(PurchaseStateLoading value)? loading,
-    TResult? Function(PurchaseStateIdle value)? idle,
+    TResult? Function(PurchaseStateSuccess value)? success,
     TResult? Function(PurchaseStateError value)? error,
   }) {
-    return idle?.call(this);
+    return success?.call(this);
   }
 
   @override
@@ -511,22 +515,22 @@ class _$PurchaseStateIdleImpl implements PurchaseStateIdle {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(PurchaseStateInitial value)? initial,
     TResult Function(PurchaseStateLoading value)? loading,
-    TResult Function(PurchaseStateIdle value)? idle,
+    TResult Function(PurchaseStateSuccess value)? success,
     TResult Function(PurchaseStateError value)? error,
     required TResult orElse(),
   }) {
-    if (idle != null) {
-      return idle(this);
+    if (success != null) {
+      return success(this);
     }
     return orElse();
   }
 }
 
-abstract class PurchaseStateIdle implements PurchaseState {
-  const factory PurchaseStateIdle({
+abstract class PurchaseStateSuccess implements PurchaseState {
+  const factory PurchaseStateSuccess({
     required final Offering? offering,
     required final bool isPro,
-  }) = _$PurchaseStateIdleImpl;
+  }) = _$PurchaseStateSuccessImpl;
 
   Offering? get offering;
   bool get isPro;
@@ -534,8 +538,8 @@ abstract class PurchaseStateIdle implements PurchaseState {
   /// Create a copy of PurchaseState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$PurchaseStateIdleImplCopyWith<_$PurchaseStateIdleImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$PurchaseStateSuccessImplCopyWith<_$PurchaseStateSuccessImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -636,7 +640,7 @@ class _$PurchaseStateErrorImpl implements PurchaseStateError {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function(Offering? offering) loading,
-    required TResult Function(Offering? offering, bool isPro) idle,
+    required TResult Function(Offering? offering, bool isPro) success,
     required TResult Function(String message, Offering? offering, bool isPro)
     error,
   }) {
@@ -648,7 +652,7 @@ class _$PurchaseStateErrorImpl implements PurchaseStateError {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function(Offering? offering)? loading,
-    TResult? Function(Offering? offering, bool isPro)? idle,
+    TResult? Function(Offering? offering, bool isPro)? success,
     TResult? Function(String message, Offering? offering, bool isPro)? error,
   }) {
     return error?.call(message, offering, isPro);
@@ -659,7 +663,7 @@ class _$PurchaseStateErrorImpl implements PurchaseStateError {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(Offering? offering)? loading,
-    TResult Function(Offering? offering, bool isPro)? idle,
+    TResult Function(Offering? offering, bool isPro)? success,
     TResult Function(String message, Offering? offering, bool isPro)? error,
     required TResult orElse(),
   }) {
@@ -674,7 +678,7 @@ class _$PurchaseStateErrorImpl implements PurchaseStateError {
   TResult map<TResult extends Object?>({
     required TResult Function(PurchaseStateInitial value) initial,
     required TResult Function(PurchaseStateLoading value) loading,
-    required TResult Function(PurchaseStateIdle value) idle,
+    required TResult Function(PurchaseStateSuccess value) success,
     required TResult Function(PurchaseStateError value) error,
   }) {
     return error(this);
@@ -685,7 +689,7 @@ class _$PurchaseStateErrorImpl implements PurchaseStateError {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(PurchaseStateInitial value)? initial,
     TResult? Function(PurchaseStateLoading value)? loading,
-    TResult? Function(PurchaseStateIdle value)? idle,
+    TResult? Function(PurchaseStateSuccess value)? success,
     TResult? Function(PurchaseStateError value)? error,
   }) {
     return error?.call(this);
@@ -696,7 +700,7 @@ class _$PurchaseStateErrorImpl implements PurchaseStateError {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(PurchaseStateInitial value)? initial,
     TResult Function(PurchaseStateLoading value)? loading,
-    TResult Function(PurchaseStateIdle value)? idle,
+    TResult Function(PurchaseStateSuccess value)? success,
     TResult Function(PurchaseStateError value)? error,
     required TResult orElse(),
   }) {

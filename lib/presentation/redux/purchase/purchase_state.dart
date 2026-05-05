@@ -9,10 +9,10 @@ class PurchaseState with _$PurchaseState {
 
   const factory PurchaseState.loading({Offering? offering}) = PurchaseStateLoading;
 
-  const factory PurchaseState.idle({
+  const factory PurchaseState.success({
     required Offering? offering,
     required bool isPro,
-  }) = PurchaseStateIdle;
+  }) = PurchaseStateSuccess;
 
   const factory PurchaseState.error({
     required String message,
@@ -23,14 +23,14 @@ class PurchaseState with _$PurchaseState {
 
 extension PurchaseStateX on PurchaseState {
   bool get isPro => maybeMap(
-    idle: (s) => s.isPro,
+    success: (s) => s.isPro,
     error: (s) => s.isPro,
     orElse: () => false,
   );
 
   Offering? get offering => maybeMap(
     loading: (s) => s.offering,
-    idle: (s) => s.offering,
+    success: (s) => s.offering,
     error: (s) => s.offering,
     orElse: () => null,
   );

@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
@@ -25,15 +26,15 @@ void main() {
     test('each variant is typed correctly', () {
       expect(const PurchaseState.initial(), isA<PurchaseStateInitial>());
       expect(const PurchaseState.loading(), isA<PurchaseStateLoading>());
-      expect(const PurchaseState.idle(offering: null, isPro: false), isA<PurchaseStateIdle>());
+      expect(const PurchaseState.success(offering: null, isPro: false), isA<PurchaseStateSuccess>());
       expect(const PurchaseState.error(message: 'err', isPro: false), isA<PurchaseStateError>());
     });
 
     test('isPro extension returns false unless idle/error with isPro:true', () {
       expect(const PurchaseState.initial().isPro, isFalse);
       expect(const PurchaseState.loading().isPro, isFalse);
-      expect(const PurchaseState.idle(offering: null, isPro: false).isPro, isFalse);
-      expect(const PurchaseState.idle(offering: null, isPro: true).isPro, isTrue);
+      expect(const PurchaseState.success(offering: null, isPro: false).isPro, isFalse);
+      expect(const PurchaseState.success(offering: null, isPro: true).isPro, isTrue);
       expect(const PurchaseState.error(message: 'e', isPro: false).isPro, isFalse);
       expect(const PurchaseState.error(message: 'e', isPro: true).isPro, isTrue);
     });
@@ -41,14 +42,14 @@ void main() {
     test('isLoading extension returns true only for loading variant', () {
       expect(const PurchaseState.initial().isLoading, isFalse);
       expect(const PurchaseState.loading().isLoading, isTrue);
-      expect(const PurchaseState.idle(offering: null, isPro: false).isLoading, isFalse);
+      expect(const PurchaseState.success(offering: null, isPro: false).isLoading, isFalse);
     });
 
     test('offering extension propagates through all stateful variants', () {
       final offering = offeringFixture();
       expect(const PurchaseState.initial().offering, isNull);
       expect(PurchaseState.loading(offering: offering).offering, offering);
-      expect(PurchaseState.idle(offering: offering, isPro: false).offering, offering);
+      expect(PurchaseState.success(offering: offering, isPro: false).offering, offering);
       expect(PurchaseState.error(message: 'e', offering: offering, isPro: false).offering, offering);
     });
   });
@@ -76,7 +77,7 @@ void main() {
       storeTester.thenExpectStatesInOrder([
         stateWith(
           (s) => s.purchaseState,
-          isA<PurchaseStateIdle>().where((s) => s.isPro, isFalse).where((s) => s.offering, isNull),
+          isA<PurchaseStateSuccess>().where((s) => s.isPro, isFalse).where((s) => s.offering, isNull),
         ),
       ]);
     });
@@ -97,7 +98,7 @@ void main() {
       storeTester.whenDispatching(() => BootstrapAction());
 
       storeTester.thenExpectStatesInOrder([
-        stateWith((s) => s.purchaseState, isA<PurchaseStateIdle>().where((s) => s.isPro, isTrue)),
+        stateWith((s) => s.purchaseState, isA<PurchaseStateSuccess>().where((s) => s.isPro, isTrue)),
       ]);
     });
 
@@ -119,7 +120,7 @@ void main() {
       storeTester.thenExpectStatesInOrder([
         stateWith(
           (s) => s.purchaseState,
-          isA<PurchaseStateIdle>()
+          isA<PurchaseStateSuccess>()
               .where((s) => s.offering?.identifier, 'trial_14d')
               .where((s) => s.offering?.metadata['trial_days'], 14),
         ),
@@ -141,7 +142,7 @@ void main() {
       storeTester.whenDispatching(() => BootstrapAction());
 
       storeTester.thenExpectStatesInOrder([
-        stateWith((s) => s.purchaseState, isA<PurchaseStateIdle>().where((s) => s.offering, isNull)),
+        stateWith((s) => s.purchaseState, isA<PurchaseStateSuccess>().where((s) => s.offering, isNull)),
       ]);
     });
   });
@@ -171,7 +172,7 @@ void main() {
         stateWith((s) => s.purchaseState, isA<PurchaseStateLoading>()),
         stateWith(
           (s) => s.purchaseState,
-          isA<PurchaseStateIdle>()
+          isA<PurchaseStateSuccess>()
               .where((s) => s.offering?.identifier, 'trial_30d')
               .where((s) => s.offering?.metadata['trial_days'], 30),
         ),
@@ -202,7 +203,7 @@ void main() {
 
       storeTester.thenExpectStatesInOrder([
         stateWith((s) => s.purchaseState, isA<PurchaseStateLoading>()),
-        stateWith((s) => s.purchaseState, isA<PurchaseStateIdle>().where((s) => s.isPro, isTrue)),
+        stateWith((s) => s.purchaseState, isA<PurchaseStateSuccess>().where((s) => s.isPro, isTrue)),
       ]);
     });
 
@@ -225,7 +226,7 @@ void main() {
       ]);
     });
 
-    test('does not emit error state when purchase is cancelled by user', () {
+    test('does not emit error state when purchase is cancelled by user (PurchasesErrorCode)', () {
       when(() => repository.purchasePackage(any())).thenThrow(PurchasesErrorCode.purchaseCancelledError);
 
       storeTester.givenStore(
@@ -240,6 +241,56 @@ void main() {
       storeTester.thenExpectNever(
         stateWith((s) => s.purchaseState, isA<PurchaseStateError>()),
       );
+    });
+
+    test('does not emit error state when purchase is cancelled via PlatformException', () {
+      when(() => repository.purchasePackage(any())).thenThrow(
+        PlatformException(
+          code: '1',
+          message: 'Purchase was cancelled.',
+          details: {
+            'userCancelled': true,
+            'readableErrorCode': 'PURCHASE_CANCELLED',
+          },
+        ),
+      );
+
+      storeTester.givenStore(
+        initialAppState(),
+        configure: (f) {
+          f.purchaseRepository = repository;
+        },
+      );
+
+      storeTester.whenDispatching(() => PurchasePackageAction(package));
+
+      storeTester.thenExpectNever(
+        stateWith((s) => s.purchaseState, isA<PurchaseStateError>()),
+      );
+    });
+
+    test('transitions back to success after cancellation via PlatformException', () {
+      when(() => repository.purchasePackage(any())).thenThrow(
+        PlatformException(
+          code: '1',
+          message: 'Purchase was cancelled.',
+          details: {'userCancelled': true, 'readableErrorCode': 'PURCHASE_CANCELLED'},
+        ),
+      );
+
+      storeTester.givenStore(
+        initialAppState(),
+        configure: (f) {
+          f.purchaseRepository = repository;
+        },
+      );
+
+      storeTester.whenDispatching(() => PurchasePackageAction(package));
+
+      storeTester.thenExpectStatesInOrder([
+        stateWith((s) => s.purchaseState, isA<PurchaseStateLoading>()),
+        stateWith((s) => s.purchaseState, isA<PurchaseStateSuccess>()),
+      ]);
     });
   });
 
@@ -265,7 +316,7 @@ void main() {
 
       storeTester.thenExpectStatesInOrder([
         stateWith((s) => s.purchaseState, isA<PurchaseStateLoading>()),
-        stateWith((s) => s.purchaseState, isA<PurchaseStateIdle>().where((s) => s.isPro, isTrue)),
+        stateWith((s) => s.purchaseState, isA<PurchaseStateSuccess>().where((s) => s.isPro, isTrue)),
       ]);
     });
 
@@ -284,7 +335,7 @@ void main() {
 
       storeTester.thenExpectStatesInOrder([
         stateWith((s) => s.purchaseState, isA<PurchaseStateLoading>()),
-        stateWith((s) => s.purchaseState, isA<PurchaseStateIdle>().where((s) => s.isPro, isFalse)),
+        stateWith((s) => s.purchaseState, isA<PurchaseStateSuccess>().where((s) => s.isPro, isFalse)),
       ]);
     });
 
@@ -333,7 +384,7 @@ void main() {
       storeTester.thenExpectStatesInOrder([
         stateWith(
           (s) => s.purchaseState,
-          isA<PurchaseStateIdle>().where((s) => s.isPro, isFalse).where((s) => s.offering, offering),
+          isA<PurchaseStateSuccess>().where((s) => s.isPro, isFalse).where((s) => s.offering, offering),
         ),
       ]);
     });

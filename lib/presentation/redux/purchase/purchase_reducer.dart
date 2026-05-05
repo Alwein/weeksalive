@@ -11,11 +11,11 @@ PurchaseState purchaseReducer(PurchaseState state, dynamic action) {
   }
 
   if (action is OfferingLoadedAction) {
-    return PurchaseState.idle(offering: action.offering, isPro: state.isPro);
+    return PurchaseState.success(offering: action.offering, isPro: state.isPro);
   }
 
   if (action is PurchaseSucceededAction) {
-    return PurchaseState.idle(offering: state.offering, isPro: action.isPro);
+    return PurchaseState.success(offering: state.offering, isPro: action.isPro);
   }
 
   if (action is PurchaseErrorAction) {
@@ -27,7 +27,7 @@ PurchaseState purchaseReducer(PurchaseState state, dynamic action) {
   }
 
   if (action is ClearPurchaseErrorAction) {
-    return PurchaseState.idle(offering: state.offering, isPro: state.isPro);
+    return PurchaseState.success(offering: state.offering, isPro: state.isPro);
   }
 
   return state;
