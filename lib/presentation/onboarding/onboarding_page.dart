@@ -9,6 +9,7 @@ import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.da
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_steps.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_26_paywall.dart';
+import 'package:weeksalive/presentation/onboarding/steps/step_27_paywall.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_progress_bar.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_actions.dart';
@@ -57,7 +58,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     }
 
     final nextIndex = _controller.currentIndex + 1;
-    if (nextIndex < widget.steps.length && widget.steps[nextIndex] is Step26Paywall) {
+    if (nextIndex < widget.steps.length && widget.steps[nextIndex] is Step27OnboardingDone) {
       _submit();
     }
     await _controller.goNext();

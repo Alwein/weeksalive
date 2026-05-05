@@ -8,7 +8,7 @@ class AppColors {
 
   static Color contentSoft(BuildContext context) => context.isDarkMode ? contentDarkSoft : contentLightSoft;
   static const contentDarkSoft = Color(0xFF8E8E8E);
-  static const contentLightSoft = Color(0xFFADADAD);
+  static const contentLightSoft = Color(0xFF949494);
 
   static Color contentSoftOnSoft(BuildContext context) =>
       context.isDarkMode ? contentDarkSoftOnSoft : contentLightSoftOnSoft;
