@@ -9,19 +9,12 @@ import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 class PaywallViewModel {
   final Package? annualPackage;
 
-  /// Number of trial weeks extracted from the offering metadata. Null if the
-  /// offering has not been fetched yet or does not advertise a trial.
   final int? trialWeeks;
 
-  /// Localised price string from the store (e.g. "$49.99"). Null when the
-  /// offering is not yet available.
   final String? pricePerYear;
 
-  /// Localised per-week price string derived from the annual price. Null when
-  /// the offering is not yet available.
   final String? pricePerWeek;
 
-  /// Formatted end-of-trial date (e.g. "Jun 3"). Null when trialWeeks is null.
   final String? trialEndDate;
 
   final bool isLoading;

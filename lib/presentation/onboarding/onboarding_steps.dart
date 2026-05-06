@@ -25,10 +25,8 @@ import 'package:weeksalive/presentation/onboarding/steps/step_23_attribution.dar
 import 'package:weeksalive/presentation/onboarding/steps/step_24_rating.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_25_final.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_26_paywall.dart';
-import 'package:weeksalive/presentation/onboarding/steps/step_27_paywall.dart';
 
 const List<OnboardingStep> kOnboardingSteps = <OnboardingStep>[
-  Step26Paywall(),
   Step01Welcome(),
   Step02LifeFeelsLong(),
   Step03LifeInWeeks(),
@@ -55,5 +53,5 @@ const List<OnboardingStep> kOnboardingSteps = <OnboardingStep>[
   Step24Rating(),
   Step25Final(),
   Step26Paywall(),
-  Step27OnboardingDone(),
+  // Step27OnboardingDone(),
 ];

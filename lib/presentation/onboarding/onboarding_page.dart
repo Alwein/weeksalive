@@ -9,7 +9,6 @@ import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.da
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_steps.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_26_paywall.dart';
-import 'package:weeksalive/presentation/onboarding/steps/step_27_paywall.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_progress_bar.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_actions.dart';
@@ -58,7 +57,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     }
 
     final nextIndex = _controller.currentIndex + 1;
-    if (nextIndex < widget.steps.length && widget.steps[nextIndex] is Step27OnboardingDone) {
+    if (nextIndex < widget.steps.length && widget.steps[nextIndex] is Step26Paywall) {
       _submit();
     }
     await _controller.goNext();
@@ -72,10 +71,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
     }
   }
 
-  /// Submits the onboarding by dispatching [SetUserAction]. Persistence and
-  /// onboarding-done flagging are handled by Redux middlewares
-  /// (`UserMiddleware`, `OnboardingMiddleware`). Once the user state flips to
-  /// `UserStateSuccess(user)`, `BootstrapPage` automatically redirects home.
   void _submit() {
     final user = _controller.buildUser(
       id: const Uuid().v4(),
@@ -96,7 +91,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
         animation: _controller,
         builder: (context, _) {
           final step = widget.steps[_controller.currentIndex];
-          final isPaywall = step is Step26Paywall;
 
           return PopScope(
             canPop: _controller.isFirst,
@@ -126,13 +120,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         itemBuilder: (context, index) => widget.steps[index].buildContent(context),
                       ),
                     ),
-                    if (!isPaywall)
-                      _Footer(
-                        step: step,
-                        controller: _controller,
-                        onPrimary: () => _handlePrimary(step),
-                        onSecondary: () => _handleSecondary(step),
-                      ),
+                    _Footer(
+                      step: step,
+                      controller: _controller,
+                      onPrimary: () => _handlePrimary(step),
+                      onSecondary: () => _handleSecondary(step),
+                    ),
                   ],
                 ),
               ),

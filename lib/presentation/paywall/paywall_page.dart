@@ -11,6 +11,7 @@ import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_actions.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
+// TODO: Relire ce code AI swap
 class PaywallPage extends StatelessWidget {
   const PaywallPage({super.key});
 
@@ -379,9 +380,7 @@ class _CtaButton extends StatelessWidget {
                 ),
               )
             : Text(
-                trialWeeks != null
-                    ? Strings.paywallCtaWithWeeks(trialWeeks!)
-                    : Strings.paywallCtaWithTrial,
+                trialWeeks != null ? Strings.paywallCtaWithWeeks(trialWeeks!) : Strings.paywallCtaWithTrial,
                 style: TextStyles.mediumBold.copyWith(color: AppColors.bg(context)),
               ),
       ),

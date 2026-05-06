@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
-import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/paywall/paywall_page.dart';
+import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 
 class Step26Paywall extends OnboardingStep {
   const Step26Paywall();
 
   @override
-  bool get hideBackButton => true;
-
-  @override
-  String primaryLabel(BuildContext context) => '';
-
-  @override
-  Future<void> Function(BuildContext, OnboardingFormController)? get onPrimary => null;
+  String primaryLabel(BuildContext context) => Strings.continueString;
 
   @override
   Widget buildContent(BuildContext context) {
@@ -37,11 +34,16 @@ class __PaywallDisplayerState extends State<_PaywallDisplayer> {
   }
 
   Future<void> _showPaywall() async {
-    await Navigator.of(context).push<bool>(PaywallPage.route());
-    if (mounted) _next();
+    final isPro = StoreProvider.of<AppState>(context).state.purchaseState.isPro;
+    if (!isPro) {
+      await Navigator.of(context).push<bool>(PaywallPage.route());
+    }
+    Future.delayed(const Duration(milliseconds: 300), () => _next());
   }
 
-  void _next() => OnboardingScope.of(context).goNext();
+  void _next() {
+    if (mounted) OnboardingScope.of(context).goNext();
+  }
 
   @override
   Widget build(BuildContext context) => const SizedBox.expand();
