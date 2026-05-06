@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
+import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
@@ -56,14 +57,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
     }
 
     await _controller.goNext();
-  }
-
-  Future<void> _handleSecondary(OnboardingStep step) async {
-    _dismissKeyboard();
-    final override = step.onSecondary;
-    if (override != null) {
-      await override(context, _controller);
-    }
   }
 
   void _submit() {
@@ -124,8 +117,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     _Footer(
                       step: step,
                       controller: _controller,
-                      onPrimary: () => _handlePrimary(step),
-                      onSecondary: () => _handleSecondary(step),
+                      onPrimary: () {
+                        SensorialFeedback.navigationChanged();
+                        _handlePrimary(step);
+                      },
                     ),
                   ],
                 ),
@@ -186,17 +181,14 @@ class _Footer extends StatelessWidget {
     required this.step,
     required this.controller,
     required this.onPrimary,
-    required this.onSecondary,
   });
 
   final OnboardingStep step;
   final OnboardingFormController controller;
   final VoidCallback onPrimary;
-  final VoidCallback onSecondary;
 
   @override
   Widget build(BuildContext context) {
-    final secondaryLabel = step.secondaryLabel(context);
     final canContinue = step.canContinue(controller);
 
     return Padding(
@@ -206,24 +198,12 @@ class _Footer extends StatelessWidget {
         bottom: Margins.spacingS,
         top: Margins.spacingS,
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (secondaryLabel != null) ...[
-            TextButton(
-              onPressed: onSecondary,
-              child: Text(secondaryLabel),
-            ),
-            const SizedBox(height: Margins.spacingS),
-          ],
-          SizedBox(
-            width: double.infinity,
-            child: PrimaryButton(
-              text: step.primaryLabel(context),
-              onPressed: canContinue ? onPrimary : null,
-            ),
-          ),
-        ],
+      child: SizedBox(
+        width: double.infinity,
+        child: PrimaryButton(
+          text: step.primaryLabel(context),
+          onPressed: canContinue ? onPrimary : null,
+        ),
       ),
     );
   }

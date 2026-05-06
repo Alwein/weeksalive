@@ -1,11 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:hidden_logo/hidden_logo.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:redux/redux.dart';
+import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/presentation/bootstrap/bootstrap_page.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/widgets/notch_logo.dart';
@@ -60,12 +60,12 @@ class HapticNavigatorObserver extends NavigatorObserver {
   @override
   void didPush(Route route, Route? previousRoute) {
     super.didPush(route, previousRoute);
-    HapticFeedback.lightImpact();
+    SensorialFeedback.navigationChanged();
   }
 
   @override
   void didPop(Route route, Route? previousRoute) {
     super.didPop(route, previousRoute);
-    HapticFeedback.lightImpact();
+    SensorialFeedback.navigationChanged();
   }
 }

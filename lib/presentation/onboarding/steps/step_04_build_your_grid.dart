@@ -24,6 +24,7 @@ class Step04BuildYourGrid extends OnboardingStep {
           const Expanded(
             child: Center(
               child: ParallaxRive(
+                maxOffset: 0,
                 assetPath: "assets/animations/outline_grid.riv",
               ),
             ),

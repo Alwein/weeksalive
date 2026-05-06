@@ -3,6 +3,7 @@ import 'package:rive/rive.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/domain/user/user.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
@@ -164,7 +165,10 @@ class _GenderChip extends StatelessWidget {
     final fgColor = selected ? AppColors.contentMuted(context) : AppColors.contentSoftOnSoft(context);
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        SensorialFeedback.selectionChanged();
+        onTap();
+      },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,

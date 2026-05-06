@@ -8,8 +8,6 @@ abstract class OnboardingStep {
 
   String primaryLabel(BuildContext context);
 
-  String? secondaryLabel(BuildContext context) => null;
-
   bool canContinue(OnboardingFormController controller) => true;
 
   Future<void> Function(BuildContext context, OnboardingFormController controller)? get onPrimary => null;

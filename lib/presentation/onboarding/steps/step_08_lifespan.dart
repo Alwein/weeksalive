@@ -4,6 +4,7 @@ import 'package:rive_native/rive_native.dart' as rive_native;
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
@@ -214,19 +215,35 @@ class _Step08LifespanContentState extends State<_Step08LifespanContent> with Riv
   }
 }
 
-class _LifespanSlider extends StatelessWidget {
+class _LifespanSlider extends StatefulWidget {
   const _LifespanSlider({required this.value, required this.min, required this.onChanged});
 
   final int value;
   final int min;
   final ValueChanged<int> onChanged;
 
+  @override
+  State<_LifespanSlider> createState() => _LifespanSliderState();
+}
+
+class _LifespanSliderState extends State<_LifespanSlider> {
   static const int _max = 130;
+
+  int? _lastSoundValue;
+
+  void _handleChanged(double v) {
+    final rounded = v.round();
+    if (rounded != _lastSoundValue) {
+      _lastSoundValue = rounded;
+      SensorialFeedback.sliderChanged();
+    }
+    widget.onChanged(rounded);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final effectiveMin = min.clamp(0, _max - 1);
-    final effectiveValue = value.clamp(effectiveMin, _max);
+    final effectiveMin = widget.min.clamp(0, _max - 1);
+    final effectiveValue = widget.value.clamp(effectiveMin, _max);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -243,7 +260,7 @@ class _LifespanSlider extends StatelessWidget {
           max: _max.toDouble(),
           divisions: _max - effectiveMin,
           value: effectiveValue.toDouble(),
-          onChanged: (v) => onChanged(v.round()),
+          onChanged: _handleChanged,
           thumbColor: AppColors.content(context),
           activeColor: AppColors.content(context),
           inactiveColor: AppColors.bgSoft(context),

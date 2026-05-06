@@ -5,6 +5,7 @@ import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/theme/theme_actions.dart';
@@ -76,6 +77,7 @@ class _ThemePicker extends StatelessWidget {
                     option: option,
                     selected: option.themeMode == currentThemeMode,
                     onTap: () {
+                      SensorialFeedback.selectionChanged();
                       StoreProvider.of<AppState>(context).dispatch(
                         SetThemeModeAction(option.themeMode),
                       );
