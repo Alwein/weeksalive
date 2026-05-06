@@ -128,6 +128,7 @@ class _YearGridIllustrationState extends State<_YearGridIllustration> with Singl
 
   @override
   void dispose() {
+    _haptic.cancel();
     _controller.dispose();
     super.dispose();
   }

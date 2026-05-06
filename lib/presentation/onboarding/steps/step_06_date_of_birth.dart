@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:rive/rive.dart';
 import 'package:weeksalive/core/l10n/date_picker_date_order.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
@@ -9,7 +8,7 @@ import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/rive_theme_mixin.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/umbilical_pendulum.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step06DateOfBirth extends OnboardingStep {
@@ -25,31 +24,8 @@ class Step06DateOfBirth extends OnboardingStep {
   Widget buildContent(BuildContext context) => const _Step06DateOfBirthContent();
 }
 
-class _Step06DateOfBirthContent extends StatefulWidget {
+class _Step06DateOfBirthContent extends StatelessWidget {
   const _Step06DateOfBirthContent();
-
-  @override
-  State<_Step06DateOfBirthContent> createState() => _Step06DateOfBirthContentState();
-}
-
-class _Step06DateOfBirthContentState extends State<_Step06DateOfBirthContent>
-    with RiveThemeMixin<_Step06DateOfBirthContent> {
-  late final FileLoader _fileLoader;
-
-  @override
-  void initState() {
-    super.initState();
-    _fileLoader = FileLoader.fromAsset(
-      "assets/animations/outline_birth.riv",
-      riveFactory: Factory.flutter,
-    );
-  }
-
-  @override
-  void dispose() {
-    _fileLoader.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,20 +38,9 @@ class _Step06DateOfBirthContentState extends State<_Step06DateOfBirthContent>
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            child: Center(
-              child: RiveWidgetBuilder(
-                fileLoader: _fileLoader,
-                onLoaded: (state) => onRiveLoaded(state.controller),
-                builder: (context, state) => switch (state) {
-                  RiveLoading() => const SizedBox.expand(),
-                  RiveFailed() => const SizedBox.shrink(),
-                  RiveLoaded(:final controller) => RiveWidget(
-                    controller: controller,
-                    fit: Fit.contain,
-                  ),
-                },
-              ),
+          const Expanded(
+            child: UmbilicalPendulum(
+              assetPath: "assets/animations/outline_birth.riv",
             ),
           ),
           Center(
