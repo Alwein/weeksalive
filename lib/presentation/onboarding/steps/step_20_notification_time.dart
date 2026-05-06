@@ -31,26 +31,29 @@ class Step20NotificationTime extends OnboardingStep {
 
   @override
   Widget buildContent(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          const SizedBox(height: Margins.spacingM),
-          const SizedBox(height: Margins.spacingM),
-          const _NotificationAnimation(),
-          const SizedBox(height: Margins.spacingM),
-          const SizedBox(height: Margins.spacingM),
-          Texts.xlBold(Strings.onboarding20Title),
-          const SizedBox(height: Margins.spacingM),
-          const Expanded(child: _NotificationTimeSelector()),
-          const SizedBox(height: Margins.spacingM),
-          const SmallDivider(),
-          const SizedBox(height: Margins.spacingBase),
-          Texts.primaryMediumSoft(context, Strings.onboarding20Subtitle),
-          const SizedBox(height: Margins.spacingBase),
-        ],
+    return LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: Margins.spacingM),
+              const _NotificationAnimation(),
+              const SizedBox(height: Margins.spacingL),
+              Texts.xlBold(Strings.onboarding20Title),
+              const SizedBox(height: Margins.spacingM),
+              const _NotificationTimeSelector(),
+              const SizedBox(height: Margins.spacingM),
+              const SmallDivider(),
+              const SizedBox(height: Margins.spacingBase),
+              Texts.primaryMediumSoft(context, Strings.onboarding20Subtitle),
+              const SizedBox(height: Margins.spacingBase),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -63,7 +66,7 @@ class _NotificationTimeSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = OnboardingScope.of(context);
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
         _NotificationSlotCard(
           slot: controller.slot1,
