@@ -27,37 +27,57 @@ class Step03LifeInWeeks extends OnboardingStep {
 
   @override
   Widget buildContent(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _FadeSlideIn(
-            delay: _kDelay1,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Texts.xlBold(Strings.onboarding03Title),
-                const SizedBox(height: Margins.spacingBase),
-                Texts.primaryMediumSoft(context, Strings.onboarding03Subtitle),
-                const SizedBox(height: Margins.spacingM),
-              ],
+    final bgColor = AppColors.bg(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: ShaderMask(
+            shaderCallback: (rect) => LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: const [0.0, 0.0, 0.88, 1.0],
+              colors: [bgColor, Colors.transparent, Colors.transparent, bgColor],
+            ).createShader(rect),
+            blendMode: BlendMode.dstOut,
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _FadeSlideIn(
+                    delay: _kDelay1,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Texts.xlBold(Strings.onboarding03Title),
+                        const SizedBox(height: Margins.spacingBase),
+                        Texts.primaryMediumSoft(context, Strings.onboarding03Subtitle),
+                        const SizedBox(height: Margins.spacingM),
+                      ],
+                    ),
+                  ),
+                  const _FadeSlideIn(
+                    delay: _kDelay2,
+                    child: _GridIllustration(),
+                  ),
+                  const SizedBox(height: Margins.spacingM),
+                ],
+              ),
             ),
           ),
-          const Expanded(
-            child: _FadeSlideIn(
-              delay: _kDelay2,
-              child: _GridIllustration(),
-            ),
-          ),
-          _FadeSlideIn(
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+          child: _FadeSlideIn(
             delay: _kDelay3,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const SizedBox(height: Margins.spacingM),
                 const SmallDivider(),
                 const SizedBox(height: Margins.spacingM),
                 Texts.primaryMediumSoft(context, Strings.onboarding03Footer),
@@ -65,8 +85,8 @@ class Step03LifeInWeeks extends OnboardingStep {
               ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -102,43 +122,30 @@ class _GridIllustrationState extends State<_GridIllustration> {
   Widget build(BuildContext context) {
     final activeColor = AppColors.content(context);
     final inactiveColor = AppColors.bgSoft(context);
-    final bgColor = AppColors.bg(context);
 
-    return ShaderMask(
-      shaderCallback: (rect) => LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        stops: const [0.0, 0.0, 0.90, 1.0],
-        colors: [bgColor, Colors.transparent, Colors.transparent, bgColor],
-      ).createShader(rect),
-      blendMode: BlendMode.dstOut,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final exactHeight = _WeekGridPainter.computeHeight(
-            availableWidth: constraints.maxWidth,
-            totalWeeks: _kTotalWeeks,
-            columns: _kColumns,
-            dotSpacing: _kDotSpacing,
-          );
-          return SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: SizedBox(
-              width: double.infinity,
-              height: exactHeight,
-              child: CustomPaint(
-                painter: _WeekGridPainter(
-                  columns: _kColumns,
-                  totalWeeks: _kTotalWeeks,
-                  livedWeeks: _kLivedWeeks + _extra,
-                  dotSpacing: _kDotSpacing,
-                  activeColor: activeColor,
-                  inactiveColor: inactiveColor,
-                ),
-              ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final exactHeight = _WeekGridPainter.computeHeight(
+          availableWidth: constraints.maxWidth,
+          totalWeeks: _kTotalWeeks,
+          columns: _kColumns,
+          dotSpacing: _kDotSpacing,
+        );
+        return SizedBox(
+          width: double.infinity,
+          height: exactHeight,
+          child: CustomPaint(
+            painter: _WeekGridPainter(
+              columns: _kColumns,
+              totalWeeks: _kTotalWeeks,
+              livedWeeks: _kLivedWeeks + _extra,
+              dotSpacing: _kDotSpacing,
+              activeColor: activeColor,
+              inactiveColor: inactiveColor,
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
