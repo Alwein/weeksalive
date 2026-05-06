@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 
 class Strings {
-  static String get appName => "WeeksAlive";
+  static String get appName => "WEEKSALIVE";
 
   // force update page
   static String get forceUpdateTitle => tr('force_update_title');
