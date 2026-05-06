@@ -192,7 +192,7 @@ class Strings {
   static String get paywallTimelineStep1Sublabel => 'You chose to see your life differently.';
   static String get paywallTimelineStep2Label => 'Today — Free trial starts';
   static String get paywallTimelineStep2Sublabel => 'Full access unlocked. Start shaping your grid.';
-  static String paywallTimelineStep3Label(int reminderWeek) => 'Week $reminderWeek — Get a reminder notification';
+  static String paywallTimelineStep3Label(int reminderWeek) => 'Week $reminderWeek — Get a reminder';
   static String get paywallTimelineStep3Sublabel =>
       "Your first week is already on the grid. We'll let you know when your trial is ending.";
   static String paywallTimelineStep4Label(String trialWeeks) => 'Week $trialWeeks — End of trial period';
