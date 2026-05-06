@@ -195,9 +195,9 @@ class Strings {
   static String get paywallTimelineStep1Sublabel => 'You chose to see your life differently.';
   static String get paywallTimelineStep2Label => 'Today — Free trial starts';
   static String get paywallTimelineStep2Sublabel => 'Get full access. Start shaping your grid.';
-  static String paywallTimelineStep3Label(String reminderWeek) => '$reminderWeek — Feel your first wins';
+  static String paywallTimelineStep3Label(int reminderWeek) => 'Week $reminderWeek — Feel your first wins';
   static String get paywallTimelineStep3Sublabel => "Your first week is already on the grid. You'll remember this one.";
-  static String paywallTimelineStep4Label(int trialWeeks) => 'Week $trialWeeks — End of trial period';
+  static String paywallTimelineStep4Label(String trialWeeks) => 'Week $trialWeeks — End of trial period';
   static String paywallTimelineStep4Sublabel(String endDate) =>
       "Watch your grid growing. Cancel anytime before $endDate and you won't be charged.";
 
@@ -214,14 +214,9 @@ class Strings {
   // paywall errors
   static String get paywallErrorNetwork =>
       "We couldn't reach the App Store. Please check your connection and try again.";
-  static String get paywallErrorNotAllowed =>
-      "This purchase isn't allowed on your account.";
-  static String get paywallErrorAlreadyOwned =>
-      "You already have an active subscription. Tap Restore to get access.";
-  static String get paywallErrorGeneric =>
-      "Something went wrong with your purchase. Please try again.";
-  static String get paywallErrorRestoreNotFound =>
-      "No active subscription found for this Apple ID.";
-  static String get paywallErrorRestoreGeneric =>
-      "We couldn't restore your purchase. Please try again.";
+  static String get paywallErrorNotAllowed => "This purchase isn't allowed on your account.";
+  static String get paywallErrorAlreadyOwned => "You already have an active subscription. Tap Restore to get access.";
+  static String get paywallErrorGeneric => "Something went wrong with your purchase. Please try again.";
+  static String get paywallErrorRestoreNotFound => "No active subscription found for this Apple ID.";
+  static String get paywallErrorRestoreGeneric => "We couldn't restore your purchase. Please try again.";
 }

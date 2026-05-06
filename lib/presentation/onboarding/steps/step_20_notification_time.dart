@@ -149,7 +149,7 @@ class _NotificationSlotCard extends StatelessWidget {
                       const SizedBox(width: Margins.spacingS),
                       Icon(
                         MingCuteIcons.mgc_pencil_line,
-                        size: Dimens.iconSizeBase,
+                        size: Dimens.iconSizeXs,
                         color: AppColors.contentSoft(context),
                       ),
                     ],

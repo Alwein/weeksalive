@@ -8,10 +8,10 @@ class Dimens {
   static const double radiusL = 24;
   static const double radiusXl = 32;
 
-  static const double iconSizeBase = 16;
+  static const double iconSizeXs = 16;
   static const double iconSizeS = 20;
-  static const double iconSizeM = 24;
-  static const double iconSizeL = 32;
+  static const double iconSizeBase = 24;
+  static const double iconSizeM = 32;
   static const double iconSizeHuge = 64;
 
   static const double strokeWidthS = 1;

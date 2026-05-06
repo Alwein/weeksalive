@@ -164,7 +164,7 @@ class _FeelingSection extends StatelessWidget {
       value: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Icon(MingCuteIcons.mgc_emoji_line, size: Dimens.iconSizeBase, color: AppColors.content(context)),
+          Icon(MingCuteIcons.mgc_emoji_line, size: Dimens.iconSizeXs, color: AppColors.content(context)),
           const SizedBox(width: Margins.spacingS),
           Texts.primaryXsBold(Strings.feelingSectionValueGood),
         ],
