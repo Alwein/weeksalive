@@ -51,7 +51,7 @@ class Step10MakeItCount extends OnboardingStep {
                         context,
                         Strings.onboarding10Subtitle,
                       ),
-                      const SizedBox(height: Margins.spacingM),
+                      const SizedBox(height: Margins.spacingBase),
                     ],
                   ),
                 ],
