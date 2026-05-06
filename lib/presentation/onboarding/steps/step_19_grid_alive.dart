@@ -82,7 +82,7 @@ class _YearGridIllustrationState extends State<_YearGridIllustration> with Singl
 
   static Color _randomIntensityColor(Random rng, bool isDark) {
     const optionsLight = <Color>[
-      Color(0xFFF1F1F1),
+      Color(0xFFD4D4D4),
       Color(0xFFA2A2A2),
       Color(0xFF717171),
       Color(0xFF404040),
@@ -95,7 +95,9 @@ class _YearGridIllustrationState extends State<_YearGridIllustration> with Singl
       Color(0xFFB7B7B7),
       Color(0xFFF1F1F1),
     ];
-    return (isDark ? optionsDark : optionsLight)[rng.nextInt(optionsLight.length)];
+    const weightedIndices = [0, 1, 2, 3, 4, 4, 4, 4, 4, 4];
+    final options = isDark ? optionsDark : optionsLight;
+    return options[weightedIndices[rng.nextInt(weightedIndices.length)]];
   }
 
   @override

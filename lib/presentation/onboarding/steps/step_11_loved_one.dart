@@ -1,5 +1,7 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/margins.dart';
+import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
@@ -49,10 +51,7 @@ class Step11LovedOne extends OnboardingStep {
                       const SizedBox(height: Margins.spacingM),
                       const SmallDivider(),
                       const SizedBox(height: Margins.spacingM),
-                      Texts.primaryMediumSoft(
-                        context,
-                        Strings.onboarding11Subtitle(visits),
-                      ),
+                      _Onboarding11Subtitle(visits: visits),
                       const SizedBox(height: Margins.spacingM),
                     ],
                   ),
@@ -60,6 +59,39 @@ class Step11LovedOne extends OnboardingStep {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Onboarding11Subtitle extends StatelessWidget {
+  const _Onboarding11Subtitle({required this.visits});
+
+  final int visits;
+
+  @override
+  Widget build(BuildContext context) {
+    final contentColor = AppColors.content(context);
+    final softColor = AppColors.contentSoft(context);
+    final boldStyle = TextStyles.primaryMediumBold.copyWith(color: contentColor);
+    final softStyle = TextStyles.primaryMediumMedium.copyWith(color: softColor);
+    final boldText = "$visits more visits";
+
+    final fullText = Strings.onboarding11Subtitle(visits);
+    final boldIndex = fullText.indexOf(boldText);
+
+    if (boldIndex == -1) {
+      return Text(fullText, style: softStyle);
+    }
+
+    return RichText(
+      text: TextSpan(
+        style: softStyle,
+        children: [
+          TextSpan(text: fullText.substring(0, boldIndex)),
+          TextSpan(text: boldText, style: boldStyle),
+          TextSpan(text: fullText.substring(boldIndex + boldText.length)),
         ],
       ),
     );

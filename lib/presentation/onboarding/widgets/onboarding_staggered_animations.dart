@@ -12,7 +12,7 @@ class OnboardingStaggeredColumn extends StatefulWidget {
     this.textBaseline,
     this.textDirection,
     this.verticalDirection = VerticalDirection.down,
-    this.duration = AnimationDurations.long,
+    this.duration = AnimationDurations.medium,
     this.delay = AnimationDurations.medium,
     this.verticalOffset = 20.0,
     this.spacing = 0.0,
