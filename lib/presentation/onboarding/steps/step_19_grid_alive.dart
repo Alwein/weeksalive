@@ -17,24 +17,50 @@ class Step19GridAlive extends OnboardingStep {
 
   @override
   Widget buildContent(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Texts.xlBold(Strings.onboarding19Title),
-          const SizedBox(height: Margins.spacingM),
-          Texts.primaryMediumSoft(context, Strings.onboarding19Subtitle),
-          Expanded(
-            child: _YearGridIllustration(filledCount: 126, isDarkMode: context.isDarkMode),
+    final bgColor = AppColors.bg(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: ShaderMask(
+            shaderCallback: (rect) => LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: const [0.0, 0.0, 0.88, 1.0],
+              colors: [bgColor, Colors.transparent, Colors.transparent, bgColor],
+            ).createShader(rect),
+            blendMode: BlendMode.dstOut,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Texts.xlBold(Strings.onboarding19Title),
+                  const SizedBox(height: Margins.spacingM),
+                  Texts.primaryMediumSoft(context, Strings.onboarding19Subtitle),
+                  const SizedBox(height: Margins.spacingM),
+                  _YearGridIllustration(filledCount: 126, isDarkMode: context.isDarkMode),
+                  const SizedBox(height: Margins.spacingM),
+                ],
+              ),
+            ),
           ),
-          const SmallDivider(),
-          const SizedBox(height: Margins.spacingBase),
-          Texts.primaryMediumSoft(context, Strings.onboarding19Footer),
-          const SizedBox(height: Margins.spacingBase),
-        ],
-      ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SmallDivider(),
+              const SizedBox(height: Margins.spacingBase),
+              Texts.primaryMediumSoft(context, Strings.onboarding19Footer),
+              const SizedBox(height: Margins.spacingBase),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -115,75 +141,59 @@ class _YearGridIllustrationState extends State<_YearGridIllustration> with Singl
   @override
   Widget build(BuildContext context) {
     final strokeColor = AppColors.strokeColor(context);
-    final bgColor = AppColors.bg(context);
 
-    return ShaderMask(
-      shaderCallback: (rect) => LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        stops: const [0.0, 0.0, 0.90, 1.0],
-        colors: [bgColor, Colors.transparent, Colors.transparent, bgColor],
-      ).createShader(rect),
-      blendMode: BlendMode.dstOut,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final w = constraints.maxWidth;
-            final h = _computeHeight(w);
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: Margins.spacingBase),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Texts.primaryMediumCounter(
-                        context,
-                        Strings.yearLabel,
-                        (DateTime.now().year + 1).toString(),
-                      ),
-                      Texts.primaryMediumCounter(
-                        context,
-                        Strings.dayLabel,
-                        widget.filledCount.toString(),
-                      ),
-                      Texts.primaryMediumCounter(
-                        context,
-                        Strings.progressLabel,
-                        '${((widget.filledCount / _kTotalDays) * 100).toStringAsFixed(0)}%',
-                      ),
-                    ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final w = constraints.maxWidth;
+        final h = _computeHeight(w);
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Texts.primaryMediumCounter(
+                  context,
+                  Strings.yearLabel,
+                  (DateTime.now().year + 1).toString(),
+                ),
+                Texts.primaryMediumCounter(
+                  context,
+                  Strings.dayLabel,
+                  widget.filledCount.toString(),
+                ),
+                Texts.primaryMediumCounter(
+                  context,
+                  Strings.progressLabel,
+                  '${((widget.filledCount / _kTotalDays) * 100).toStringAsFixed(0)}%',
+                ),
+              ],
+            ),
+            const SizedBox(height: Margins.spacingS),
+            SizedBox(
+              width: w,
+              height: h,
+              child: AnimatedBuilder(
+                animation: _controller,
+                builder: (context, _) => CustomPaint(
+                  painter: _YearLifeGridPainter(
+                    columns: _kColumns,
+                    totalDays: _kTotalDays,
+                    filledCount: widget.filledCount,
+                    highlightGridIndex: _highlightGridIndex,
+                    dotSpacing: _kDotSpacing,
+                    fillColors: _fillColors,
+                    emptyStrokeColor: strokeColor,
+                    highlightColor: AppColors.highlightColor,
+                    revealProgress: _controller.value,
                   ),
-                  const SizedBox(height: Margins.spacingS),
-                  SizedBox(
-                    width: w,
-                    height: h,
-                    child: AnimatedBuilder(
-                      animation: _controller,
-                      builder: (context, _) => CustomPaint(
-                        painter: _YearLifeGridPainter(
-                          columns: _kColumns,
-                          totalDays: _kTotalDays,
-                          filledCount: widget.filledCount,
-                          highlightGridIndex: _highlightGridIndex,
-                          dotSpacing: _kDotSpacing,
-                          fillColors: _fillColors,
-                          emptyStrokeColor: strokeColor,
-                          highlightColor: AppColors.highlightColor,
-                          revealProgress: _controller.value,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            );
-          },
-        ),
-      ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
