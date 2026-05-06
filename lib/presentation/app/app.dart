@@ -3,10 +3,12 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:hidden_logo/hidden_logo.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:redux/redux.dart';
 import 'package:weeksalive/presentation/bootstrap/bootstrap_page.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/widgets/notch_logo.dart';
 
 class App extends StatefulWidget {
   final Store<AppState> store;
@@ -35,7 +37,11 @@ class _AppState extends State<App> {
           themeMode: themeMode,
           builder: (context, child) {
             Jiffy.setLocale(Localizations.localeOf(context).languageCode);
-            return child!;
+            return HiddenLogo(
+              body: child!,
+              notchBuilder: (context, size) => NotchLogo(size: size),
+              dynamicIslandBuilder: (context, size) => NotchLogo(size: size),
+            );
           },
           theme: ThemeData(
             brightness: Brightness.light,
