@@ -72,15 +72,34 @@ class _PaywallView extends StatefulWidget {
   State<_PaywallView> createState() => _PaywallViewState();
 }
 
-class _PaywallViewState extends State<_PaywallView> {
+class _PaywallViewState extends State<_PaywallView> with SingleTickerProviderStateMixin {
+  bool _showSuccess = false;
+  late final AnimationController _successAnimController;
+  late final Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _successAnimController = AnimationController(
+      vsync: this,
+      duration: AnimationDurations.long,
+    );
+    _fadeAnimation = CurvedAnimation(parent: _successAnimController, curve: Curves.easeOut);
+  }
+
+  @override
+  void dispose() {
+    _successAnimController.dispose();
+    super.dispose();
+  }
+
   @override
   void didUpdateWidget(_PaywallView old) {
     super.didUpdateWidget(old);
 
     if (widget.isPro && !old.isPro) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) Navigator.of(context).pop(true);
-      });
+      setState(() => _showSuccess = true);
+      _successAnimController.forward();
     }
   }
 
@@ -90,27 +109,103 @@ class _PaywallViewState extends State<_PaywallView> {
       backgroundColor: AppColors.bg(context),
       body: SafeArea(
         top: true,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            _TimelineOffer(
-              trialWeeks: widget.trialWeeks,
-              trialEndDate: widget.trialEndDate,
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: _FooterSection(
-                errorMessage: widget.errorMessage,
-                pricePerYear: widget.pricePerYear,
-                pricePerWeek: widget.pricePerWeek,
-                trialWeeks: widget.trialWeeks,
-                isLoading: widget.isLoading,
-                onStartTrial: widget.onStartTrial,
-                onRestore: widget.onRestore,
-                onDismiss: widget.onDismiss,
+        child: _showSuccess
+            ? _SuccessView(
+                fadeAnimation: _fadeAnimation,
+                onGetStarted: () => Navigator.of(context).pop(true),
+              )
+            : Stack(
+                fit: StackFit.expand,
+                children: [
+                  _TimelineOffer(
+                    trialWeeks: widget.trialWeeks,
+                    trialEndDate: widget.trialEndDate,
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: _FooterSection(
+                      errorMessage: widget.errorMessage,
+                      pricePerYear: widget.pricePerYear,
+                      pricePerWeek: widget.pricePerWeek,
+                      trialWeeks: widget.trialWeeks,
+                      isLoading: widget.isLoading,
+                      onStartTrial: widget.onStartTrial,
+                      onRestore: widget.onRestore,
+                      onDismiss: widget.onDismiss,
+                    ),
+                  ),
+                ],
               ),
+      ),
+    );
+  }
+}
+
+class _SuccessView extends StatelessWidget {
+  const _SuccessView({
+    required this.fadeAnimation,
+    required this.onGetStarted,
+  });
+
+  final Animation<double> fadeAnimation;
+  final VoidCallback onGetStarted;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+      child: FadeTransition(
+        opacity: fadeAnimation,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Spacer(),
+            _SuccessIcon(),
+            const SizedBox(height: Margins.spacingL),
+            Text(
+              Strings.paywallSuccessTitle,
+              style: TextStyles.xlBold.copyWith(color: AppColors.content(context)),
+              textAlign: TextAlign.center,
             ),
+            const SizedBox(height: Margins.spacingBase),
+            Text(
+              Strings.paywallSuccessSubtitle,
+              style: TextStyles.primaryRegular.copyWith(
+                color: AppColors.contentSoft(context),
+                height: 1.6,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const Spacer(),
+            PrimaryButton.animated(
+              text: Strings.paywallSuccessCta,
+              onPressed: onGetStarted,
+              displayState: DisplayState.success,
+            ),
+            const SizedBox(height: Margins.spacingL),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SuccessIcon extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: Dimens.iconSizeHuge,
+        height: Dimens.iconSizeHuge,
+        decoration: BoxDecoration(
+          color: AppColors.content(context),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          Icons.check_rounded,
+          color: AppColors.contentMuted(context),
+          size: Dimens.iconSizeM,
         ),
       ),
     );
@@ -203,7 +298,7 @@ class _TimelineOffer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: Margins.spacingM),
-          Texts.xlBold(Strings.paywallTitle(trialWeeks!)),
+          Texts.xlBold(Strings.paywallTitle(trialWeeks?.toString() ?? "-")),
           const SizedBox(height: Margins.spacingL),
           _TrialTimeline(trialWeeks: trialWeeks, trialEndDate: trialEndDate),
         ],

@@ -187,7 +187,7 @@ class Strings {
   static String get onboarding25Footer => "This is that chance.";
 
   // paywall
-  static String paywallTitle(int trialWeeks) => 'Try WeeksAlive free for $trialWeeks weeks.';
+  static String paywallTitle(String trialWeeks) => 'Try WeeksAlive free for $trialWeeks weeks.';
   static String get paywallCtaWithTrial => 'Start free trial';
   static String paywallCtaWithWeeks(int trialWeeks) => 'Start my $trialWeeks-week free trial';
 
@@ -219,4 +219,9 @@ class Strings {
   static String get paywallErrorGeneric => "Something went wrong with your purchase. Please try again.";
   static String get paywallErrorRestoreNotFound => "No active subscription found for this Apple ID.";
   static String get paywallErrorRestoreGeneric => "We couldn't restore your purchase. Please try again.";
+
+  // paywall success
+  static String get paywallSuccessTitle => "You're in.";
+  static String get paywallSuccessSubtitle => "Your free trial has started.\nEvery week ahead is yours to shape.";
+  static String get paywallSuccessCta => "Get started";
 }
