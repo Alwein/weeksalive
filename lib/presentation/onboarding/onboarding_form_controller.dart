@@ -69,7 +69,6 @@ class OnboardingFormController extends ChangeNotifier {
     return diff.inDays;
   }
 
-  /// Weeks in the onboarding grid from birth to projected end of life, and weeks lived so far.
   LifeWeekGrid get lifeWeekGrid => LifeWeekGrid.fromProfile(
     dateOfBirth: _dateOfBirth,
     projectedLifespanYears: _lifespan,
