@@ -224,4 +224,10 @@ class Strings {
   static String get paywallSuccessTitle => "You're in.";
   static String get paywallSuccessSubtitle => "Your free trial has started.\nEvery week ahead is yours to shape.";
   static String get paywallSuccessCta => "Get started";
+
+  // theme
+  static String get themePickerTitle => "THEME";
+  static String get themeSystem => "System";
+  static String get themeLight => "Light";
+  static String get themeDark => "Dark";
 }

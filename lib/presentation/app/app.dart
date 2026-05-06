@@ -21,27 +21,30 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return StoreProvider<AppState>(
       store: widget.store,
-      child: MaterialApp(
-        title: 'WeeksAlive',
-        localizationsDelegates: context.localizationDelegates,
-        supportedLocales: context.supportedLocales,
-        locale: context.locale,
-        navigatorObservers: [
-          FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
-          HapticNavigatorObserver(),
-        ],
-        themeMode: ThemeMode.system,
-        builder: (context, child) {
-          Jiffy.setLocale(Localizations.localeOf(context).languageCode);
-          return child!;
-        },
-        theme: ThemeData(
-          brightness: Brightness.light,
+      child: StoreConnector<AppState, ThemeMode>(
+        converter: (store) => store.state.themeState.themeMode,
+        builder: (context, themeMode) => MaterialApp(
+          title: 'WeeksAlive',
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
+          navigatorObservers: [
+            FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+            HapticNavigatorObserver(),
+          ],
+          themeMode: themeMode,
+          builder: (context, child) {
+            Jiffy.setLocale(Localizations.localeOf(context).languageCode);
+            return child!;
+          },
+          theme: ThemeData(
+            brightness: Brightness.light,
+          ),
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+          ),
+          home: const BootstrapPage(),
         ),
-        darkTheme: ThemeData(
-          brightness: Brightness.dark,
-        ),
-        home: const BootstrapPage(),
       ),
     );
   }

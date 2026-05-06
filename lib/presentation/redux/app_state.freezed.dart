@@ -20,6 +20,7 @@ mixin _$AppState {
   RemoteConfigState get remoteConfigState => throw _privateConstructorUsedError;
   UserState get userState => throw _privateConstructorUsedError;
   PurchaseState get purchaseState => throw _privateConstructorUsedError;
+  ThemeState get themeState => throw _privateConstructorUsedError;
 
   /// Create a copy of AppState
   /// with the given fields replaced by the non-null parameter values.
@@ -37,6 +38,7 @@ abstract class $AppStateCopyWith<$Res> {
     RemoteConfigState remoteConfigState,
     UserState userState,
     PurchaseState purchaseState,
+    ThemeState themeState,
   });
 
   $RemoteConfigStateCopyWith<$Res> get remoteConfigState;
@@ -62,6 +64,7 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
     Object? remoteConfigState = null,
     Object? userState = null,
     Object? purchaseState = null,
+    Object? themeState = null,
   }) {
     return _then(
       _value.copyWith(
@@ -77,6 +80,10 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
                 ? _value.purchaseState
                 : purchaseState // ignore: cast_nullable_to_non_nullable
                       as PurchaseState,
+            themeState: null == themeState
+                ? _value.themeState
+                : themeState // ignore: cast_nullable_to_non_nullable
+                      as ThemeState,
           )
           as $Val,
     );
@@ -126,6 +133,7 @@ abstract class _$$AppStateImplCopyWith<$Res>
     RemoteConfigState remoteConfigState,
     UserState userState,
     PurchaseState purchaseState,
+    ThemeState themeState,
   });
 
   @override
@@ -153,6 +161,7 @@ class __$$AppStateImplCopyWithImpl<$Res>
     Object? remoteConfigState = null,
     Object? userState = null,
     Object? purchaseState = null,
+    Object? themeState = null,
   }) {
     return _then(
       _$AppStateImpl(
@@ -168,6 +177,10 @@ class __$$AppStateImplCopyWithImpl<$Res>
             ? _value.purchaseState
             : purchaseState // ignore: cast_nullable_to_non_nullable
                   as PurchaseState,
+        themeState: null == themeState
+            ? _value.themeState
+            : themeState // ignore: cast_nullable_to_non_nullable
+                  as ThemeState,
       ),
     );
   }
@@ -180,6 +193,7 @@ class _$AppStateImpl implements _AppState {
     required this.remoteConfigState,
     required this.userState,
     required this.purchaseState,
+    required this.themeState,
   });
 
   @override
@@ -188,10 +202,12 @@ class _$AppStateImpl implements _AppState {
   final UserState userState;
   @override
   final PurchaseState purchaseState;
+  @override
+  final ThemeState themeState;
 
   @override
   String toString() {
-    return 'AppState(remoteConfigState: $remoteConfigState, userState: $userState, purchaseState: $purchaseState)';
+    return 'AppState(remoteConfigState: $remoteConfigState, userState: $userState, purchaseState: $purchaseState, themeState: $themeState)';
   }
 
   @override
@@ -204,12 +220,19 @@ class _$AppStateImpl implements _AppState {
             (identical(other.userState, userState) ||
                 other.userState == userState) &&
             (identical(other.purchaseState, purchaseState) ||
-                other.purchaseState == purchaseState));
+                other.purchaseState == purchaseState) &&
+            (identical(other.themeState, themeState) ||
+                other.themeState == themeState));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, remoteConfigState, userState, purchaseState);
+  int get hashCode => Object.hash(
+    runtimeType,
+    remoteConfigState,
+    userState,
+    purchaseState,
+    themeState,
+  );
 
   /// Create a copy of AppState
   /// with the given fields replaced by the non-null parameter values.
@@ -225,6 +248,7 @@ abstract class _AppState implements AppState {
     required final RemoteConfigState remoteConfigState,
     required final UserState userState,
     required final PurchaseState purchaseState,
+    required final ThemeState themeState,
   }) = _$AppStateImpl;
 
   @override
@@ -233,6 +257,8 @@ abstract class _AppState implements AppState {
   UserState get userState;
   @override
   PurchaseState get purchaseState;
+  @override
+  ThemeState get themeState;
 
   /// Create a copy of AppState
   /// with the given fields replaced by the non-null parameter values.
