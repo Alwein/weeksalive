@@ -60,7 +60,7 @@ class Strings {
   static String get weeksLabel => "WEEKS";
 
   // onboarding
-  static String get onboarding01Subtitle => "A gentle reminder that\nyour time is precious";
+  static String get onboarding01Subtitle => "A gentle reminder\nthat your time is precious";
 
   static String get onboarding02Title1 => "Life feels long.";
   static String get onboarding02Title2 => "Until it doesn\u2019t.";
@@ -68,7 +68,7 @@ class Strings {
       "Most of us move through weeks without really feeling them. Until we look back and wonder where the years went.";
 
   static String get onboarding03Title => "Your life is made of weeks.";
-  static String get onboarding03Subtitle => "Birthdays, heartbreaks, tuesdays.\nEvery one is here.";
+  static String get onboarding03Subtitle => "Birthdays, heartbreaks, Tuesdays.\nEvery one is here.";
   static String get onboarding03Footer => "Every dot is a week you lived, or a week still ahead of you.";
 
   static String get iAmReady => "I\u2019m ready";
@@ -83,18 +83,17 @@ class Strings {
   static String get onboarding06Title => "When did your story begin?";
   static String get onboarding06DateOfBirth => "DATE OF BIRTH";
 
-  static String get onboarding07Title => "Are you a man or a woman?";
+  static String get onboarding07Title => "What's your biological sex?";
   static String get onboarding07Subtitle => "Women tend to live 5 years longer than men.";
 
   static String get man => "Man";
   static String get woman => "Woman";
   static String get other => "Other";
 
-  static String get onboarding08Title => "What is your projected lifespan?";
+  static String get onboarding08Title => "How long do you expect to live?";
   static String get onboarding08Subtitle => "This is only an estimate, you can change it anytime.";
   static String get onboarding08LifespanLabel => "PROJECTED LIFESPAN";
   static String get onboarding08ShowGrid => "Show me my grid";
-  static String get onboarding08EstimateLifespan => "Feel lost? Answer 5 questions to estimate it";
 
   static String onboarding09Title(String name) => "$name's life in weeks.";
   static String get onboarding09Subtitle => "Every dot is a week you lived, or a week still ahead of you.";
@@ -107,10 +106,10 @@ class Strings {
   static String onboarding11Subtitle(int visits) =>
       "If you see them twice a year, and you're both in good health, you might have around $visits more visits together in your lifetime.";
 
-  static String onboarding12Title(int visits) => "What $visits visits looks like in your grid.";
+  static String onboarding12Title(int visits) => "What $visits visits look like in your grid.";
   static String get visitsAheadLabel => "VISITS AHEAD";
   static String get onboarding12Subtitle =>
-      "This isn’t meant to feel heavy. It’s meant to make those visits feel like what they are... Precious.";
+      "This isn’t meant to feel heavy. It’s meant to make those visits feel like what they are — precious.";
 
   static String get onboarding13Title => "Think about last year.";
   static String get onboarding13Subtitle => "How many weeks can you actually name?";
@@ -139,14 +138,14 @@ class Strings {
   static String get onboarding15Caption2Value2 => "Distracted";
   static String get onboarding15Caption2Value3 => "Rushed";
   static String get onboarding15Footer =>
-      "The difference between them isn't luck. It's awareness - the simple act of deciding to show up.";
+      "The difference between them isn't luck. It's awareness — the simple act of deciding to show up.";
 
   static String get onboarding16Title1 => "Awareness is beautiful.";
   static String get onboarding16Title2 => "But it fades without a ritual.";
   static String get onboarding16Subtitle =>
       "That's why we built something to help you stay present, not just today, but every week of your life.";
 
-  static String get onboarding17Title => "Make living a real daily habit.";
+  static String get onboarding17Title => "Turn living into a daily habit.";
   static String get onboarding17Title2 => "Build a streak, one day at a time.";
   static String get onboarding17Subtitle => "Small ritual. Big difference.";
 
@@ -155,11 +154,10 @@ class Strings {
       "A quick check-in to notice how you\u2019re really living before the day slips away.";
 
   static String get onboarding19Title => "Watch your grid come alive.";
-  static String get onboarding19Subtitle =>
-      "Every day you check in. Over time, you won't just see time passing. You'll see a life being lived.";
+  static String get onboarding19Subtitle => "Every day you check in, over time, you’ll see a life being lived.";
   static String get onboarding19Footer => "A day noticed is a day that stays.";
 
-  static String get onboarding20Title => "What time of the day is best for you to check in?";
+  static String get onboarding20Title => "What time of day works best for your daily check-in?";
   static String get onboarding20Subtitle => "WeeksAlive will send you a notification to complete today's entry.";
   static String get onboarding20CheckIn => "CHECK IN";
   static String get onboardingNotificationTitle => "WeeksAlive";
@@ -171,11 +169,11 @@ class Strings {
 
   static String get onboarding22Title1 => "Your data is yours.";
   static String get onboarding22Subtitle =>
-      "It never leaves your device. No ads. No tracking. No data release. Works 100% offline.";
+      "It never leaves your device. No ads. No tracking. No data shared. Works 100% offline.";
 
   static String get onboarding23Title => "One small favor?";
   static String get onboarding23Subtitle =>
-      "If you allow tracking on the next screen, it simply tells us which ad brought you here.\n\nNothing personal, no data sold, ever. That one signal helps us find more people who need this app and keeps us building it for you.";
+      "If you allow tracking on the next screen, it simply tells us which ad brought you here.\n\nNothing personal, no data sold, ever. That one signal helps us reach people who need this app — and keeps us building it for you.";
 
   static String get onboarding25Title1 => "You have";
   static String get onboarding25Title2 => "exactly one life.";
@@ -193,7 +191,7 @@ class Strings {
   static String get paywallTimelineStep1Label => 'Download the app';
   static String get paywallTimelineStep1Sublabel => 'You chose to see your life differently.';
   static String get paywallTimelineStep2Label => 'Today — Free trial starts';
-  static String get paywallTimelineStep2Sublabel => 'Get full access. Start shaping your grid.';
+  static String get paywallTimelineStep2Sublabel => 'Full access unlocked. Start shaping your grid.';
   static String paywallTimelineStep3Label(int reminderWeek) => 'Week $reminderWeek — Get a reminder notification';
   static String get paywallTimelineStep3Sublabel =>
       "Your first week is already on the grid. We'll let you know when your trial is ending.";
