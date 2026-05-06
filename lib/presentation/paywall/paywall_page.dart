@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
@@ -114,25 +115,28 @@ class _PaywallViewState extends State<_PaywallView> with SingleTickerProviderSta
                 fadeAnimation: _fadeAnimation,
                 onGetStarted: () => Navigator.of(context).pop(true),
               )
-            : Stack(
-                fit: StackFit.expand,
+            : Column(
                 children: [
-                  _TimelineOffer(
-                    trialWeeks: widget.trialWeeks,
-                    trialEndDate: widget.trialEndDate,
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: _FooterSection(
-                      errorMessage: widget.errorMessage,
-                      pricePerYear: widget.pricePerYear,
-                      pricePerWeek: widget.pricePerWeek,
-                      trialWeeks: widget.trialWeeks,
-                      isLoading: widget.isLoading,
-                      onStartTrial: widget.onStartTrial,
-                      onRestore: widget.onRestore,
-                      onDismiss: widget.onDismiss,
+                  Expanded(
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 520),
+                        child: _TimelineOffer(
+                          trialWeeks: widget.trialWeeks,
+                          trialEndDate: widget.trialEndDate,
+                        ),
+                      ),
                     ),
+                  ),
+                  _FooterSection(
+                    errorMessage: widget.errorMessage,
+                    pricePerYear: widget.pricePerYear,
+                    pricePerWeek: widget.pricePerWeek,
+                    trialWeeks: widget.trialWeeks,
+                    isLoading: widget.isLoading,
+                    onStartTrial: widget.onStartTrial,
+                    onRestore: widget.onRestore,
+                    onDismiss: widget.onDismiss,
                   ),
                 ],
               ),
@@ -301,6 +305,7 @@ class _TimelineOffer extends StatelessWidget {
           Texts.xlBold(Strings.paywallTitle(trialWeeks?.toString() ?? "-")),
           const SizedBox(height: Margins.spacingL),
           _TrialTimeline(trialWeeks: trialWeeks, trialEndDate: trialEndDate),
+          const SizedBox(height: Margins.spacingBase),
         ],
       ),
     );
@@ -318,21 +323,25 @@ class _TrialTimeline extends StatelessWidget {
       _TimelineItem(
         isActive: false,
         isDone: true,
+        icon: MingCuteIcons.mgc_check_line,
         label: Strings.paywallTimelineStep1Label,
         sublabel: Strings.paywallTimelineStep1Sublabel,
       ),
       _TimelineItem(
         isActive: true,
+        icon: MingCuteIcons.mgc_unlock_line,
         label: Strings.paywallTimelineStep2Label,
         sublabel: Strings.paywallTimelineStep2Sublabel,
       ),
       _TimelineItem(
         isActive: false,
-        label: Strings.paywallTimelineStep3Label(1),
+        icon: MingCuteIcons.mgc_notification_line,
+        label: Strings.paywallTimelineStep3Label(trialWeeks != null ? trialWeeks! - 1 : 0),
         sublabel: Strings.paywallTimelineStep3Sublabel,
       ),
       _TimelineItem(
         isActive: false,
+        icon: MingCuteIcons.mgc_checks_line,
         label: Strings.paywallTimelineStep4Label(trialWeeks?.toString() ?? "x"),
         sublabel: trialEndDate != null
             ? Strings.paywallTimelineStep4Sublabel(trialEndDate!)
@@ -348,6 +357,7 @@ class _TrialTimeline extends StatelessWidget {
 class _TimelineItem {
   const _TimelineItem({
     required this.isActive,
+    required this.icon,
     required this.label,
     required this.sublabel,
     this.isDone = false,
@@ -355,6 +365,7 @@ class _TimelineItem {
   });
   final bool isActive;
   final bool isDone;
+  final IconData icon;
   final String label;
   final String sublabel;
   final bool isLast;
@@ -369,7 +380,7 @@ class _TimelineRow extends StatelessWidget {
     final Color dotColor;
     final Widget dotWidget;
 
-    const double dotSize = Dimens.iconSizeBase;
+    const double dotSize = Dimens.iconSizeM;
     const double lineWidth = Dimens.strokeWidthS;
 
     if (item.isDone) {
@@ -378,7 +389,7 @@ class _TimelineRow extends StatelessWidget {
         width: dotSize,
         height: dotSize,
         decoration: BoxDecoration(shape: BoxShape.circle, color: dotColor),
-        child: const Icon(Icons.check, size: Dimens.iconSizeXs, color: Colors.white),
+        child: Icon(item.icon, size: Dimens.iconSizeXs, color: AppColors.bg(context)),
       );
     } else if (item.isActive) {
       dotColor = AppColors.highlightColor;
@@ -389,6 +400,7 @@ class _TimelineRow extends StatelessWidget {
           shape: BoxShape.circle,
           color: AppColors.highlightColor,
         ),
+        child: Icon(item.icon, size: Dimens.iconSizeXs, color: Colors.white),
       );
     } else {
       dotColor = AppColors.strokeColor(context);
@@ -402,6 +414,7 @@ class _TimelineRow extends StatelessWidget {
             width: lineWidth,
           ),
         ),
+        child: Icon(item.icon, size: Dimens.iconSizeXs, color: AppColors.contentSoft(context)),
       );
     }
 
@@ -546,12 +559,6 @@ class _Links extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
-          Strings.paywallFooterDisclaimer,
-          style: TextStyles.primaryXsRegular.copyWith(color: AppColors.contentSoft(context)),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: Margins.spacingXs),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

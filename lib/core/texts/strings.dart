@@ -194,8 +194,9 @@ class Strings {
   static String get paywallTimelineStep1Sublabel => 'You chose to see your life differently.';
   static String get paywallTimelineStep2Label => 'Today — Free trial starts';
   static String get paywallTimelineStep2Sublabel => 'Get full access. Start shaping your grid.';
-  static String paywallTimelineStep3Label(int reminderWeek) => 'Week $reminderWeek — Feel your first wins';
-  static String get paywallTimelineStep3Sublabel => "Your first week is already on the grid. You'll remember this one.";
+  static String paywallTimelineStep3Label(int reminderWeek) => 'Week $reminderWeek — Get a reminder notification';
+  static String get paywallTimelineStep3Sublabel =>
+      "Your first week is already on the grid. We'll let you know when your trial is ending.";
   static String paywallTimelineStep4Label(String trialWeeks) => 'Week $trialWeeks — End of trial period';
   static String paywallTimelineStep4Sublabel(String endDate) =>
       "Watch your grid growing. Cancel anytime before $endDate and you won't be charged.";
@@ -204,7 +205,6 @@ class Strings {
       '$trialWeeks weeks free, then $pricePerYear / year';
   static String paywallPricePerWeek(String pricePerWeek) => 'Only $pricePerWeek / week';
 
-  static String get paywallFooterDisclaimer => 'Cancel anytime. Billed via App Store.';
   static String get paywallFooterTerms => 'Terms';
   static String get paywallFooterPrivacy => 'Privacy';
   static String get paywallFooterRestore => 'Restore';
