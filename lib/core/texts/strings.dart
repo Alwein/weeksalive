@@ -68,7 +68,7 @@ class Strings {
       "Most of us move through weeks without really feeling them. Until we look back and wonder where the years went.";
 
   static String get onboarding03Title => "Your life is made of weeks.";
-  static String get onboarding03Subtitle => "Birthdays, heartbreaks.\nTuesdays. Every one is here.";
+  static String get onboarding03Subtitle => "Birthdays, heartbreaks, tuesdays.\nEvery one is here.";
   static String get onboarding03Footer => "Every dot is a week you lived, or a week still ahead of you.";
 
   static String get iAmReady => "I\u2019m ready";

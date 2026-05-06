@@ -22,36 +22,40 @@ class Step02LifeFeelsLong extends OnboardingStep {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Expanded(
+            flex: 10,
             child: Center(
               child: ParallaxRive(
                 assetPath: "assets/animations/outline_floating.riv",
               ),
             ),
           ),
-          Center(
-            child: SingleChildScrollView(
-              child: OnboardingStaggeredColumn(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Texts.xlBold(Strings.onboarding02Title1),
-                  Texts.xlBoldSoft(context, Strings.onboarding02Title2),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(height: Margins.spacingM),
-                      const SmallDivider(),
-                      const SizedBox(height: Margins.spacingM),
-                      Texts.primaryMediumSoft(
-                        context,
-                        Strings.onboarding02Subtitle,
-                      ),
-                      const SizedBox(height: Margins.spacingM),
-                    ],
-                  ),
-                ],
+          Expanded(
+            flex: 16,
+            child: Center(
+              child: SingleChildScrollView(
+                child: OnboardingStaggeredColumn(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Texts.xlBold(Strings.onboarding02Title1),
+                    Texts.xlBoldSoft(context, Strings.onboarding02Title2),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(height: Margins.spacingM),
+                        const SmallDivider(),
+                        const SizedBox(height: Margins.spacingM),
+                        Texts.primaryMediumSoft(
+                          context,
+                          Strings.onboarding02Subtitle,
+                        ),
+                        const SizedBox(height: Margins.spacingM),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
