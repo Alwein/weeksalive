@@ -145,6 +145,25 @@ class Texts {
     );
   }
 
+  static Widget primaryXsMediumSoft(
+    BuildContext context,
+    String text, {
+    TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
+    bool? softWrap,
+  }) {
+    return _StyledText(
+      text: text,
+      style: TextStyles.primaryXsMedium,
+      color: AppColors.contentSoft(context),
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
+      softWrap: softWrap,
+    );
+  }
+
   static Widget primaryRegular(
     String text, {
     TextAlign? textAlign,

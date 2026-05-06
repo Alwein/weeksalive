@@ -17,38 +17,63 @@ class Step13WeeksDisappear extends OnboardingStep {
 
   @override
   Widget buildContent(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: Margins.spacingBase),
-          Texts.xlBold(Strings.onboarding13Title),
-          const SizedBox(height: Margins.spacingBase),
-          Texts.primaryMediumSoft(context, Strings.onboarding13Subtitle),
-          const SizedBox(height: Margins.spacingM),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Texts.primaryMediumCounter(context, Strings.lastYearWeeksLabel, '52 ${Strings.weeksLabel}'),
-                const SizedBox(height: Margins.spacingBase),
-                Flexible(child: _YearWeeksIllustration()),
-                const SizedBox(height: Margins.spacingBase),
-                _Caption(),
-              ],
+    final bgColor = AppColors.bg(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: ShaderMask(
+            shaderCallback: (rect) => LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: const [0.0, 0.0, 0.88, 1.0],
+              colors: [bgColor, Colors.transparent, Colors.transparent, bgColor],
+            ).createShader(rect),
+            blendMode: BlendMode.dstOut,
+            child: LayoutBuilder(
+              builder: (context, constraints) => SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: Margins.spacingS),
+                      Texts.xlBold(Strings.onboarding13Title),
+                      const SizedBox(height: Margins.spacingBase),
+                      Texts.primaryMediumSoft(context, Strings.onboarding13Subtitle),
+                      const SizedBox(height: Margins.spacingM),
+                      Texts.primaryMediumCounter(context, Strings.lastYearWeeksLabel, '52 ${Strings.weeksLabel}'),
+                      const SizedBox(height: Margins.spacingBase),
+                      _YearWeeksIllustration(),
+                      const SizedBox(height: Margins.spacingBase),
+                      _Caption(),
+                      const SizedBox(height: Margins.spacingM),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
-          const SizedBox(height: Margins.spacingM),
-          const SmallDivider(),
-          const SizedBox(height: Margins.spacingM),
-          Texts.primaryMediumBold(Strings.onboarding13Footer),
-          const SizedBox(height: Margins.spacingS),
-          Texts.primaryMediumSoft(context, Strings.onboarding13Footer2),
-          const SizedBox(height: Margins.spacingM),
-        ],
-      ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SmallDivider(),
+              const SizedBox(height: Margins.spacingM),
+              Texts.primaryMediumBold(Strings.onboarding13Footer),
+              const SizedBox(height: Margins.spacingS),
+              Texts.primaryMediumSoft(context, Strings.onboarding13Footer2),
+              const SizedBox(height: Margins.spacingM),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -158,7 +183,7 @@ class _Caption extends StatelessWidget {
             children: [
               _circle(AppColors.content(context)),
               const SizedBox(width: Margins.spacingS),
-              Flexible(child: Texts.primaryMediumSoft(context, Strings.onboarding13Caption1)),
+              Flexible(child: Texts.primaryXsMediumSoft(context, Strings.onboarding13Caption1)),
             ],
           ),
         ),
@@ -168,7 +193,7 @@ class _Caption extends StatelessWidget {
             children: [
               _circle(AppColors.bgSoft(context)),
               const SizedBox(width: Margins.spacingS),
-              Flexible(child: Texts.primaryMediumSoft(context, Strings.onboarding13Caption2)),
+              Flexible(child: Texts.primaryXsMediumSoft(context, Strings.onboarding13Caption2)),
             ],
           ),
         ),
