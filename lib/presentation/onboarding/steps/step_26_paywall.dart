@@ -42,7 +42,9 @@ class __PaywallDisplayerState extends State<_PaywallDisplayer> {
   }
 
   void _next() {
-    if (mounted) OnboardingScope.of(context).goNext();
+    if (!mounted) return;
+    OnboardingScope.submitOf(context)();
+    OnboardingScope.of(context).goNext();
   }
 
   @override

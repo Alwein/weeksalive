@@ -8,7 +8,6 @@ import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_steps.dart';
-import 'package:weeksalive/presentation/onboarding/steps/step_26_paywall.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_progress_bar.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_actions.dart';
@@ -56,10 +55,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
       return;
     }
 
-    final nextIndex = _controller.currentIndex + 1;
-    if (nextIndex < widget.steps.length && widget.steps[nextIndex] is Step26Paywall) {
-      _submit();
-    }
     await _controller.goNext();
   }
 
@@ -87,6 +82,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   Widget build(BuildContext context) {
     return OnboardingScope(
       controller: _controller,
+      onSubmit: _submit,
       child: AnimatedBuilder(
         animation: _controller,
         builder: (context, _) {
