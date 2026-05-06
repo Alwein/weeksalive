@@ -28,10 +28,12 @@ class Step09GridReveal extends OnboardingStep {
         children: [
           Texts.xlBold(Strings.onboarding09Title(name)),
           Expanded(
-            child: _GridIllustration(
-              totalWeeks: grid.totalWeeks,
-              livedWeeks: grid.livedWeeks,
-              progressFraction: grid.progressFraction,
+            child: Center(
+              child: _GridIllustration(
+                totalWeeks: grid.totalWeeks,
+                livedWeeks: grid.livedWeeks,
+                progressFraction: grid.progressFraction,
+              ),
             ),
           ),
           const SizedBox(height: Margins.spacingBase),
@@ -85,82 +87,91 @@ class _GridIllustrationState extends State<_GridIllustration> with SingleTickerP
     super.dispose();
   }
 
+  static const _kGridPadding = EdgeInsets.only(
+    left: Margins.spacingL,
+    right: Margins.spacingL,
+    top: Margins.spacingS,
+  );
+
   @override
   Widget build(BuildContext context) {
     final activeColor = AppColors.content(context);
     final inactiveColor = AppColors.bgSoft(context);
     final bgColor = AppColors.bg(context);
 
-    return ShaderMask(
-      shaderCallback: (rect) => LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        stops: const [0.0, 0.0, 0.90, 1.0],
-        colors: [bgColor, Colors.transparent, Colors.transparent, bgColor],
-      ).createShader(rect),
-      blendMode: BlendMode.dstOut,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final exactHeight = WeekGridPainter.computeHeight(
-            availableWidth: constraints.maxWidth,
-            totalWeeks: widget.totalWeeks,
-            columns: _kColumns,
-            dotSpacing: _kDotSpacing,
-          );
-          return SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: Margins.spacingBase),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
-                  child: Row(
-                    spacing: Margins.spacingBase,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Texts.primaryMediumCounter(
-                        context,
-                        Strings.progressLabel,
-                        '${(widget.progressFraction * 100).toStringAsFixed(2)}%',
-                      ),
-                      Texts.primaryMediumCounter(
-                        context,
-                        Strings.weekLabel,
-                        widget.livedWeeks.toString(),
-                      ),
-                    ],
-                  ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final exactHeight = WeekGridPainter.computeHeight(
+          availableWidth: constraints.maxWidth,
+          totalWeeks: widget.totalWeeks,
+          columns: _kColumns,
+          dotSpacing: _kDotSpacing,
+          padding: _kGridPadding,
+        );
+        final needsScroll = exactHeight > constraints.maxHeight;
+
+        final scrollContent = SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: Margins.spacingBase),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
+                child: Row(
+                  spacing: Margins.spacingBase,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Texts.primaryMediumCounter(
+                      context,
+                      Strings.progressLabel,
+                      '${(widget.progressFraction * 100).toStringAsFixed(2)}%',
+                    ),
+                    Texts.primaryMediumCounter(
+                      context,
+                      Strings.weekLabel,
+                      widget.livedWeeks.toString(),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  width: double.infinity,
-                  height: exactHeight,
-                  child: AnimatedBuilder(
-                    animation: _controller,
-                    builder: (context, _) => CustomPaint(
-                      painter: WeekGridPainter(
-                        columns: _kColumns,
-                        totalWeeks: widget.totalWeeks,
-                        livedWeeks: widget.livedWeeks,
-                        dotSpacing: _kDotSpacing,
-                        activeColor: activeColor,
-                        inactiveColor: inactiveColor,
-                        padding: const EdgeInsets.only(
-                          left: Margins.spacingL,
-                          right: Margins.spacingL,
-                          top: Margins.spacingS,
-                        ),
-                        revealProgress: _controller.value,
-                      ),
+              ),
+              SizedBox(
+                width: double.infinity,
+                height: exactHeight,
+                child: AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, _) => CustomPaint(
+                    painter: WeekGridPainter(
+                      columns: _kColumns,
+                      totalWeeks: widget.totalWeeks,
+                      livedWeeks: widget.livedWeeks,
+                      dotSpacing: _kDotSpacing,
+                      activeColor: activeColor,
+                      inactiveColor: inactiveColor,
+                      padding: _kGridPadding,
+                      revealProgress: _controller.value,
                     ),
                   ),
                 ),
-              ],
-            ),
-          );
-        },
-      ),
+              ),
+            ],
+          ),
+        );
+
+        if (!needsScroll) return scrollContent;
+
+        return ShaderMask(
+          shaderCallback: (rect) => LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: const [0.0, 0.0, 0.90, 1.0],
+            colors: [bgColor, Colors.transparent, Colors.transparent, bgColor],
+          ).createShader(rect),
+          blendMode: BlendMode.dstOut,
+          child: scrollContent,
+        );
+      },
     );
   }
 }

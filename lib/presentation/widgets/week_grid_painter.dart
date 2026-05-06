@@ -39,10 +39,12 @@ class WeekGridPainter extends CustomPainter {
     required int totalWeeks,
     required int columns,
     required double dotSpacing,
+    EdgeInsets padding = EdgeInsets.zero,
   }) {
-    final dotSize = (availableWidth - dotSpacing * (columns - 1)) / columns;
+    final paintWidth = availableWidth - padding.left - padding.right;
+    final dotSize = (paintWidth - dotSpacing * (columns - 1)) / columns;
     final rows = (totalWeeks / columns).ceil();
-    return rows * (dotSize + dotSpacing);
+    return padding.top + padding.bottom + rows * dotSize + (rows - 1) * dotSpacing;
   }
 
   @override

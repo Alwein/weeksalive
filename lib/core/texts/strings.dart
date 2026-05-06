@@ -81,7 +81,6 @@ class Strings {
   static String get onboarding05Hint => "Nickname";
 
   static String get onboarding06Title => "When did your story begin?";
-  static String get onboarding06Subtitle => "We\u2019ll build your personal life grid from this moment.";
   static String get onboarding06DateOfBirth => "DATE OF BIRTH";
 
   static String get onboarding07Title => "Are you a man or a woman?";

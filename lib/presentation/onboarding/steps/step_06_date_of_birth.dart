@@ -91,19 +91,7 @@ class _Step06DateOfBirthContentState extends State<_Step06DateOfBirthContent>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const SizedBox(height: Margins.spacingM),
-                      Texts.primaryMediumSoft(
-                        context,
-                        Strings.onboarding06Subtitle,
-                      ),
-                      const SizedBox(height: Margins.spacingM),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Texts.primaryMedium(Strings.onboarding06DateOfBirth),
+                      Texts.primaryMediumSoft(context, Strings.onboarding06DateOfBirth),
                       const SizedBox(height: Margins.spacingS),
                       _DateOfBirthPicker(
                         value: date,

@@ -108,12 +108,17 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       hideBack: _controller.isFirst,
                     ),
                     Expanded(
-                      child: PageView.builder(
-                        controller: _controller.pageController,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: widget.steps.length,
-                        onPageChanged: _controller.onPageChanged,
-                        itemBuilder: (context, index) => widget.steps[index].buildContent(context),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxWidth: 520,
+                        ),
+                        child: PageView.builder(
+                          controller: _controller.pageController,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: widget.steps.length,
+                          onPageChanged: _controller.onPageChanged,
+                          itemBuilder: (context, index) => widget.steps[index].buildContent(context),
+                        ),
                       ),
                     ),
                     _Footer(
