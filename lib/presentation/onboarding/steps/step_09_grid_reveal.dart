@@ -111,7 +111,6 @@ class _GridIllustrationState extends State<_GridIllustration> with SingleTickerP
         final needsScroll = exactHeight > constraints.maxHeight;
 
         final scrollContent = SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,

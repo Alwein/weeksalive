@@ -132,7 +132,6 @@ class _YearGridIllustrationState extends State<_YearGridIllustration> with Singl
             final w = constraints.maxWidth;
             final h = _computeHeight(w);
             return SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,

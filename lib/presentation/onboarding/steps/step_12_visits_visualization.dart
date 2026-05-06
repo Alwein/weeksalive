@@ -21,28 +21,56 @@ class Step12VisitsVisualization extends OnboardingStep {
     final controller = OnboardingScope.of(context);
     final visits = controller.remainingVisits;
     final grid = controller.lifeWeekGrid;
+    final bgColor = AppColors.bg(context);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Texts.xlBold(Strings.onboarding12Title(visits)),
-          Expanded(
-            child: _GridIllustration(
-              totalWeeks: grid.totalWeeks,
-              livedWeeks: grid.livedWeeks,
-              remainingVisits: visits,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: ShaderMask(
+            shaderCallback: (rect) => LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: const [0.0, 0.0, 0.88, 1.0],
+              colors: [bgColor, Colors.transparent, Colors.transparent, bgColor],
+            ).createShader(rect),
+            blendMode: BlendMode.dstOut,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Texts.xlBold(Strings.onboarding12Title(visits)),
+                  const SizedBox(height: Margins.spacingM),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
+                    child: _GridIllustration(
+                      totalWeeks: grid.totalWeeks,
+                      livedWeeks: grid.livedWeeks,
+                      remainingVisits: visits,
+                    ),
+                  ),
+                  const SizedBox(height: Margins.spacingM),
+                ],
+              ),
             ),
           ),
-          Texts.primaryMediumSoft(
-            context,
-            Strings.onboarding12Subtitle,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Texts.primaryMediumSoft(
+                context,
+                Strings.onboarding12Subtitle,
+              ),
+              const SizedBox(height: Margins.spacingM),
+            ],
           ),
-          const SizedBox(height: Margins.spacingBase),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -114,70 +142,50 @@ class _GridIllustrationState extends State<_GridIllustration> with SingleTickerP
   Widget build(BuildContext context) {
     final activeColor = AppColors.content(context);
     final inactiveColor = AppColors.bgSoft(context);
-    final bgColor = AppColors.bg(context);
 
-    return ShaderMask(
-      shaderCallback: (rect) => LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        stops: const [0.0, 0.0, 0.90, 1.0],
-        colors: [bgColor, Colors.transparent, Colors.transparent, bgColor],
-      ).createShader(rect),
-      blendMode: BlendMode.dstOut,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final exactHeight = WeekGridPainter.computeHeight(
-            availableWidth: constraints.maxWidth,
-            totalWeeks: widget.totalWeeks,
-            columns: _kColumns,
-            dotSpacing: _kDotSpacing,
-          );
-          return SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: Margins.spacingBase),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
-                  child: Texts.primaryMediumCounter(
-                    context,
-                    Strings.visitsAheadLabel,
-                    widget.remainingVisits.toString(),
-                  ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  height: exactHeight,
-                  child: AnimatedBuilder(
-                    animation: _controller,
-                    builder: (context, _) => CustomPaint(
-                      painter: WeekGridPainter(
-                        columns: _kColumns,
-                        totalWeeks: widget.totalWeeks,
-                        livedWeeks: widget.livedWeeks,
-                        dotSpacing: _kDotSpacing,
-                        activeColor: activeColor,
-                        inactiveColor: inactiveColor,
-                        padding: const EdgeInsets.only(
-                          left: Margins.spacingL,
-                          right: Margins.spacingL,
-                          top: Margins.spacingS,
-                        ),
-                        revealProgress: 1.0,
-                        highlightedDots: _highlightedDots,
-                        highlightColor: _kHighlightColor,
-                        highlightRevealProgress: _controller.value,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final exactHeight = WeekGridPainter.computeHeight(
+          availableWidth: constraints.maxWidth,
+          totalWeeks: widget.totalWeeks,
+          columns: _kColumns,
+          dotSpacing: _kDotSpacing,
+        );
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: Margins.spacingBase),
+            Texts.primaryMediumCounter(
+              context,
+              Strings.visitsAheadLabel,
+              widget.remainingVisits.toString(),
             ),
-          );
-        },
-      ),
+            SizedBox(
+              width: double.infinity,
+              height: exactHeight,
+              child: AnimatedBuilder(
+                animation: _controller,
+                builder: (context, _) => CustomPaint(
+                  painter: WeekGridPainter(
+                    columns: _kColumns,
+                    totalWeeks: widget.totalWeeks,
+                    livedWeeks: widget.livedWeeks,
+                    dotSpacing: _kDotSpacing,
+                    activeColor: activeColor,
+                    inactiveColor: inactiveColor,
+                    padding: const EdgeInsets.only(top: Margins.spacingS),
+                    revealProgress: 1.0,
+                    highlightedDots: _highlightedDots,
+                    highlightColor: _kHighlightColor,
+                    highlightRevealProgress: _controller.value,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

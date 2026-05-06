@@ -42,7 +42,6 @@ class Step03LifeInWeeks extends OnboardingStep {
             ).createShader(rect),
             blendMode: BlendMode.dstOut,
             child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
