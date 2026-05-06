@@ -22,6 +22,7 @@ class Step16AwarenessFades extends OnboardingStep {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Expanded(
+            flex: 14,
             child: Center(
               child: ParallaxRive(
                 maxOffset: 0,
@@ -29,29 +30,31 @@ class Step16AwarenessFades extends OnboardingStep {
               ),
             ),
           ),
-          const SizedBox(height: Margins.spacingM),
-          Center(
-            child: SingleChildScrollView(
-              child: OnboardingStaggeredColumn(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Texts.xlBold(Strings.onboarding16Title1),
-                  const SizedBox(height: Margins.spacingS),
-                  Texts.xlBoldSoft(context, Strings.onboarding16Title2),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(height: Margins.spacingM),
-                      const SmallDivider(),
-                      const SizedBox(height: Margins.spacingM),
-                      Texts.primaryMediumSoft(context, Strings.onboarding16Subtitle),
-                      const SizedBox(height: Margins.spacingM),
-                    ],
-                  ),
-                ],
+          Expanded(
+            flex: 16,
+            child: Center(
+              child: SingleChildScrollView(
+                child: OnboardingStaggeredColumn(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Texts.xlBold(Strings.onboarding16Title1),
+                    const SizedBox(height: Margins.spacingS),
+                    Texts.xlBoldSoft(context, Strings.onboarding16Title2),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(height: Margins.spacingM),
+                        const SmallDivider(),
+                        const SizedBox(height: Margins.spacingM),
+                        Texts.primaryMediumSoft(context, Strings.onboarding16Subtitle),
+                        const SizedBox(height: Margins.spacingM),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

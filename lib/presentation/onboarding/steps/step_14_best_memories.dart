@@ -16,25 +16,30 @@ class Step14BestMemories extends OnboardingStep {
 
   @override
   Widget buildContent(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
-      child: SingleChildScrollView(
-        child: OnboardingStaggeredColumn(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: Margins.spacingM,
-          children: [
-            Texts.xlBold(Strings.onboarding14Title),
-            Texts.primaryMediumSoft(context, Strings.onboarding14Subtitle),
-            const SmallDivider(),
-            _BulletedLine(text: Strings.onboarding14Item1),
-            const SmallDivider(),
-            _BulletedLine(text: Strings.onboarding14Item2),
-            const SmallDivider(),
-            _BulletedLine(text: Strings.onboarding14Item3),
-            const SmallDivider(),
-            Texts.primaryMediumSoft(context, Strings.onboarding14Footer),
-          ],
+    return LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+          child: Center(
+            child: OnboardingStaggeredColumn(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: Margins.spacingM,
+              children: [
+                Texts.xlBold(Strings.onboarding14Title),
+                Texts.primaryMediumSoft(context, Strings.onboarding14Subtitle),
+                const SmallDivider(),
+                _BulletedLine(text: Strings.onboarding14Item1),
+                const SmallDivider(),
+                _BulletedLine(text: Strings.onboarding14Item2),
+                const SmallDivider(),
+                _BulletedLine(text: Strings.onboarding14Item3),
+                const SmallDivider(),
+                Texts.primaryMediumSoft(context, Strings.onboarding14Footer),
+              ],
+            ),
+          ),
         ),
       ),
     );

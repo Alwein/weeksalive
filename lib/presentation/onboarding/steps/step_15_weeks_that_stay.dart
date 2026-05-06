@@ -18,20 +18,25 @@ class Step15WeeksThatStay extends OnboardingStep {
 
   @override
   Widget buildContent(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
-      child: SingleChildScrollView(
-        child: OnboardingStaggeredColumn(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: Margins.spacingM,
-          children: [
-            Texts.xlBold(Strings.onboarding15Title1),
-            Texts.xlBoldSoft(context, Strings.onboarding15Title2),
-            _Illustration(),
-            const SmallDivider(),
-            Texts.primaryMediumSoft(context, Strings.onboarding15Footer),
-          ],
+    return LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+          child: Center(
+            child: OnboardingStaggeredColumn(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: Margins.spacingM,
+              children: [
+                Texts.xlBold(Strings.onboarding15Title1),
+                Texts.xlBoldSoft(context, Strings.onboarding15Title2),
+                _Illustration(),
+                const SmallDivider(),
+                Texts.primaryMediumSoft(context, Strings.onboarding15Footer),
+              ],
+            ),
+          ),
         ),
       ),
     );

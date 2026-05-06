@@ -22,21 +22,24 @@ class Step18OneMinute extends OnboardingStep {
 
   @override
   Widget buildContent(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
-      child: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: Margins.spacingS),
-            Texts.xlBold(Strings.onboarding18Title),
-            const SizedBox(height: Margins.spacingS),
-            Texts.primaryMediumSoft(context, Strings.onboarding18Subtitle),
-            const SizedBox(height: Margins.spacingM),
-            const Expanded(child: _Illustration()),
-            const SizedBox(height: Margins.spacingM),
-          ],
+    return LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: Margins.spacingS),
+              Texts.xlBold(Strings.onboarding18Title),
+              const SizedBox(height: Margins.spacingS),
+              Texts.primaryMediumSoft(context, Strings.onboarding18Subtitle),
+              const SizedBox(height: Margins.spacingM),
+              const _Illustration(),
+              const SizedBox(height: Margins.spacingM),
+            ],
+          ),
         ),
       ),
     );
@@ -48,20 +51,23 @@ class _Illustration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: Margins.spacingL),
-          child: AspectRatio(
-            aspectRatio: 2,
-            child: ParallaxRive(
-              maxOffset: 0,
-              assetPath: "assets/animations/outline_landed.riv",
+          padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
+          child: LayoutBuilder(
+            builder: (context, constraints) => SizedBox(
+              width: constraints.maxWidth,
+              height: constraints.maxWidth / 2,
+              child: const ParallaxRive(
+                maxOffset: 0,
+                assetPath: "assets/animations/outline_landed.riv",
+              ),
             ),
           ),
         ),
-        _WeekCard(),
+        const _WeekCard(),
       ],
     );
   }
