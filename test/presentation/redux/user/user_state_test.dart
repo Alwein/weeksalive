@@ -12,9 +12,12 @@ import '../../../mocks.dart';
 void main() {
   group('user state', () {
     late StoreTester storeTester;
-    final repository = MockUserRepository();
+    late MockUserRepository repository;
 
-    setUp(() => storeTester = StoreTester());
+    setUp(() {
+      storeTester = StoreTester();
+      repository = MockUserRepository();
+    });
 
     test('userState should be typed correctly', () {
       expect(const UserState.loading(), isA<UserStateLoading>());
@@ -26,9 +29,12 @@ void main() {
       test('should load then succeed when user is not found', () {
         // Given
         when(() => repository.getUser()).thenAnswer((_) async => null);
-        storeTester.givenStore(initialAppState(), configure: (f) {
-          f.userRepository = repository;
-        });
+        storeTester.givenStore(
+          initialAppState(),
+          configure: (f) {
+            f.userRepository = repository;
+          },
+        );
 
         // When
         storeTester.whenDispatching(() => BootstrapAction());
@@ -43,9 +49,12 @@ void main() {
       test('should load then succeed when user is found', () {
         // Given
         when(() => repository.getUser()).thenAnswer((_) async => userFixture());
-        storeTester.givenStore(initialAppState(), configure: (f) {
-          f.userRepository = repository;
-        });
+        storeTester.givenStore(
+          initialAppState(),
+          configure: (f) {
+            f.userRepository = repository;
+          },
+        );
 
         // When
         storeTester.whenDispatching(() => BootstrapAction());

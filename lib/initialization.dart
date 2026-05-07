@@ -7,6 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:redux/redux.dart';
 import 'package:weeksalive/app_purchase_config.dart';
+import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/store.dart';
 
@@ -24,6 +25,8 @@ Future<Store<AppState>> initializeApp() async {
   await EasyLocalization.ensureInitialized();
 
   await initializeDateFormatting();
+
+  await PushNotificationRepository().initialize();
 
   final remoteConfig = await _remoteConfig();
 

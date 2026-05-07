@@ -2,6 +2,7 @@ import 'package:redux/redux.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
+import 'package:weeksalive/presentation/redux/user/user_actions.dart';
 
 class PushNotificationMiddleware extends MiddlewareClass<AppState> {
   final PushNotificationRepository pushNotificationRepository;
@@ -14,6 +15,10 @@ class PushNotificationMiddleware extends MiddlewareClass<AppState> {
 
     if (action is RequestNotificationPermissionAction) {
       await pushNotificationRepository.requestNotificationPermission();
+    }
+
+    if (action is SetUserAction) {
+      await pushNotificationRepository.scheduleNotifications(action.user.notificationTimes);
     }
   }
 }

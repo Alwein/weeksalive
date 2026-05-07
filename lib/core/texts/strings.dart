@@ -162,6 +162,8 @@ class Strings {
   static String get onboarding20CheckIn => "CHECK IN";
   static String get onboardingNotificationTitle => "WeeksAlive";
   static String get onboardingNotificationSubtitle => "Time for your daily check-in.";
+  static String get dailyNotificationTitle => "Make this day count";
+  static String get dailyNotificationBody => "It's time to check in";
 
   static String get onboarding21Title => "Your life, always in sight.";
   static String get onboarding21Subtitle =>

@@ -106,40 +106,43 @@ class _PaywallViewState extends State<_PaywallView> with SingleTickerProviderSta
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.bg(context),
-      body: SafeArea(
-        top: true,
-        child: _showSuccess
-            ? _SuccessView(
-                fadeAnimation: _fadeAnimation,
-                onGetStarted: () => Navigator.of(context).pop(true),
-              )
-            : Column(
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 520),
-                        child: _TimelineOffer(
-                          trialWeeks: widget.trialWeeks,
-                          trialEndDate: widget.trialEndDate,
+    return PopScope(
+      canPop: _showSuccess,
+      child: Scaffold(
+        backgroundColor: AppColors.bg(context),
+        body: SafeArea(
+          top: true,
+          child: _showSuccess
+              ? _SuccessView(
+                  fadeAnimation: _fadeAnimation,
+                  onGetStarted: () => Navigator.of(context).pop(true),
+                )
+              : Column(
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 520),
+                          child: _TimelineOffer(
+                            trialWeeks: widget.trialWeeks,
+                            trialEndDate: widget.trialEndDate,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  _FooterSection(
-                    errorMessage: widget.errorMessage,
-                    pricePerYear: widget.pricePerYear,
-                    pricePerWeek: widget.pricePerWeek,
-                    trialWeeks: widget.trialWeeks,
-                    isLoading: widget.isLoading,
-                    onStartTrial: widget.onStartTrial,
-                    onRestore: widget.onRestore,
-                    onDismiss: widget.onDismiss,
-                  ),
-                ],
-              ),
+                    _FooterSection(
+                      errorMessage: widget.errorMessage,
+                      pricePerYear: widget.pricePerYear,
+                      pricePerWeek: widget.pricePerWeek,
+                      trialWeeks: widget.trialWeeks,
+                      isLoading: widget.isLoading,
+                      onStartTrial: widget.onStartTrial,
+                      onRestore: widget.onRestore,
+                      onDismiss: widget.onDismiss,
+                    ),
+                  ],
+                ),
+        ),
       ),
     );
   }
