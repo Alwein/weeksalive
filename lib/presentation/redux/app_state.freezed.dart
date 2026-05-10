@@ -21,6 +21,7 @@ mixin _$AppState {
   UserState get userState => throw _privateConstructorUsedError;
   PurchaseState get purchaseState => throw _privateConstructorUsedError;
   ThemeState get themeState => throw _privateConstructorUsedError;
+  StreakState get streakState => throw _privateConstructorUsedError;
 
   /// Create a copy of AppState
   /// with the given fields replaced by the non-null parameter values.
@@ -39,6 +40,7 @@ abstract class $AppStateCopyWith<$Res> {
     UserState userState,
     PurchaseState purchaseState,
     ThemeState themeState,
+    StreakState streakState,
   });
 
   $RemoteConfigStateCopyWith<$Res> get remoteConfigState;
@@ -65,6 +67,7 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
     Object? userState = null,
     Object? purchaseState = null,
     Object? themeState = null,
+    Object? streakState = null,
   }) {
     return _then(
       _value.copyWith(
@@ -84,6 +87,10 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
                 ? _value.themeState
                 : themeState // ignore: cast_nullable_to_non_nullable
                       as ThemeState,
+            streakState: null == streakState
+                ? _value.streakState
+                : streakState // ignore: cast_nullable_to_non_nullable
+                      as StreakState,
           )
           as $Val,
     );
@@ -134,6 +141,7 @@ abstract class _$$AppStateImplCopyWith<$Res>
     UserState userState,
     PurchaseState purchaseState,
     ThemeState themeState,
+    StreakState streakState,
   });
 
   @override
@@ -162,6 +170,7 @@ class __$$AppStateImplCopyWithImpl<$Res>
     Object? userState = null,
     Object? purchaseState = null,
     Object? themeState = null,
+    Object? streakState = null,
   }) {
     return _then(
       _$AppStateImpl(
@@ -181,6 +190,10 @@ class __$$AppStateImplCopyWithImpl<$Res>
             ? _value.themeState
             : themeState // ignore: cast_nullable_to_non_nullable
                   as ThemeState,
+        streakState: null == streakState
+            ? _value.streakState
+            : streakState // ignore: cast_nullable_to_non_nullable
+                  as StreakState,
       ),
     );
   }
@@ -194,6 +207,7 @@ class _$AppStateImpl implements _AppState {
     required this.userState,
     required this.purchaseState,
     required this.themeState,
+    required this.streakState,
   });
 
   @override
@@ -204,10 +218,12 @@ class _$AppStateImpl implements _AppState {
   final PurchaseState purchaseState;
   @override
   final ThemeState themeState;
+  @override
+  final StreakState streakState;
 
   @override
   String toString() {
-    return 'AppState(remoteConfigState: $remoteConfigState, userState: $userState, purchaseState: $purchaseState, themeState: $themeState)';
+    return 'AppState(remoteConfigState: $remoteConfigState, userState: $userState, purchaseState: $purchaseState, themeState: $themeState, streakState: $streakState)';
   }
 
   @override
@@ -222,7 +238,9 @@ class _$AppStateImpl implements _AppState {
             (identical(other.purchaseState, purchaseState) ||
                 other.purchaseState == purchaseState) &&
             (identical(other.themeState, themeState) ||
-                other.themeState == themeState));
+                other.themeState == themeState) &&
+            (identical(other.streakState, streakState) ||
+                other.streakState == streakState));
   }
 
   @override
@@ -232,6 +250,7 @@ class _$AppStateImpl implements _AppState {
     userState,
     purchaseState,
     themeState,
+    streakState,
   );
 
   /// Create a copy of AppState
@@ -249,6 +268,7 @@ abstract class _AppState implements AppState {
     required final UserState userState,
     required final PurchaseState purchaseState,
     required final ThemeState themeState,
+    required final StreakState streakState,
   }) = _$AppStateImpl;
 
   @override
@@ -259,6 +279,8 @@ abstract class _AppState implements AppState {
   PurchaseState get purchaseState;
   @override
   ThemeState get themeState;
+  @override
+  StreakState get streakState;
 
   /// Create a copy of AppState
   /// with the given fields replaced by the non-null parameter values.

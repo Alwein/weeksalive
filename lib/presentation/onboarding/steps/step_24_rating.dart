@@ -12,11 +12,9 @@ class Step24Rating extends OnboardingStep {
 
   /// Triggers native in-app rating prompt + goNext.
   @override
-  Future<void> Function(BuildContext, OnboardingFormController)?
-  get onPrimary => (context, controller) async {
-        // TODO: show native rating prompt here.
-        await controller.goNext();
-      };
+  Future<void> Function(BuildContext, OnboardingFormController)? get onPrimary => (context, controller) async {
+    await controller.goNext();
+  };
 
   @override
   Widget buildContent(BuildContext context) {

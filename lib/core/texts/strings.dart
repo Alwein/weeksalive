@@ -229,4 +229,7 @@ class Strings {
   static String get themeSystem => "System";
   static String get themeLight => "Light";
   static String get themeDark => "Dark";
+
+  // Home page
+  static String homePageTitle(String userName) => "$userName's life";
 }

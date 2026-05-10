@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 import 'package:weeksalive/presentation/redux/remote_config/remote_config_state.dart';
+import 'package:weeksalive/presentation/redux/streak/streak_state.dart';
 import 'package:weeksalive/presentation/redux/theme/theme_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
 
@@ -13,6 +14,7 @@ class AppState with _$AppState {
     required UserState userState,
     required PurchaseState purchaseState,
     required ThemeState themeState,
+    required StreakState streakState,
   }) = _AppState;
 
   factory AppState.initial() {
@@ -21,6 +23,7 @@ class AppState with _$AppState {
       userState: UserState.loading(),
       purchaseState: PurchaseState.initial(),
       themeState: ThemeState(),
+      streakState: StreakState(),
     );
   }
 }

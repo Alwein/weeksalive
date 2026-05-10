@@ -26,7 +26,7 @@ class BootstrapPage extends StatelessWidget {
           child: switch (viewModel.redirect) {
             BootstrapPageRedirect.splash => const SplashPage(),
             BootstrapPageRedirect.onboarding => const OnboardingPage(),
-            BootstrapPageRedirect.home => const MyHomePage(title: 'Home'),
+            BootstrapPageRedirect.home => const HomePage(),
           },
         );
       },

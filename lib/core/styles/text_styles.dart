@@ -7,6 +7,12 @@ class TextStyles {
     fontWeight: FontWeight.bold,
   );
 
+  static TextStyle primarySemiBold = const TextStyle(
+    fontFamily: "SpaceGrotesk",
+    fontSize: FontSizes.semi,
+    fontWeight: FontWeight.bold,
+  );
+
   static TextStyle primaryRegularBold = const TextStyle(
     fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.regular,

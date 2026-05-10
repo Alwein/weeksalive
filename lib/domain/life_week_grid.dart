@@ -1,17 +1,14 @@
-/// Weeks-based view of a life grid for onboarding (one dot ≈ one week).
 class LifeWeekGrid {
   const LifeWeekGrid({required this.totalWeeks, required this.livedWeeks});
 
   final int totalWeeks;
   final int livedWeeks;
 
-  /// 0.0–1.0 for progress UI.
   double get progressFraction {
     if (totalWeeks <= 0) return 0;
     return (livedWeeks / totalWeeks).clamp(0.0, 1.0);
   }
 
-  /// [projectedLifespanYears] is the age reached at end of life (e.g. 85 → 85th birthday).
   factory LifeWeekGrid.fromProfile({
     required DateTime? dateOfBirth,
     required int projectedLifespanYears,
@@ -31,8 +28,6 @@ class LifeWeekGrid {
   }
 }
 
-/// Full weeks from [dateOfBirth] to the same calendar date [ageYears] later
-/// (the “Nth birthday” instant used for lifespan in years).
 int totalWeeksFromBirthToAgeAnniversary({
   required DateTime dateOfBirth,
   required int ageYears,

@@ -2,6 +2,7 @@ import 'package:redux/redux.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
+import 'package:weeksalive/data/streak/streak_repository.dart';
 import 'package:weeksalive/data/theme/theme_repository.dart';
 import 'package:weeksalive/data/user/user_repository.dart';
 import 'package:weeksalive/presentation/redux/app_reducer.dart';
@@ -9,6 +10,7 @@ import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_middleware.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_middleware.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_middleware.dart';
+import 'package:weeksalive/presentation/redux/streak/streak_middleware.dart';
 import 'package:weeksalive/presentation/redux/theme/theme_middleware.dart';
 import 'package:weeksalive/presentation/redux/user/user_middleware.dart';
 
@@ -18,6 +20,7 @@ class StoreFactory {
   final ThemeRepository themeRepository;
   final PushNotificationRepository pushNotificationRepository;
   final PurchaseRepository purchaseRepository;
+  final StreakRepository streakRepository;
 
   StoreFactory({
     required this.remoteConfigRepository,
@@ -25,6 +28,7 @@ class StoreFactory {
     required this.themeRepository,
     required this.pushNotificationRepository,
     required this.purchaseRepository,
+    required this.streakRepository,
   });
 
   Store<AppState> createStore({AppState? initialState}) {
@@ -37,6 +41,7 @@ class StoreFactory {
         ThemeMiddleware(themeRepository: themeRepository).call,
         PushNotificationMiddleware(pushNotificationRepository: pushNotificationRepository).call,
         PurchaseMiddleware(purchaseRepository: purchaseRepository).call,
+        StreakMiddleware(streakRepository: streakRepository).call,
       ],
     );
   }

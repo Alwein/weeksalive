@@ -257,6 +257,25 @@ class Texts {
     );
   }
 
+  static Widget primaryRegularMedium(
+    String text, {
+    TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
+    bool? softWrap,
+    Color? color,
+  }) {
+    return _StyledText(
+      text: text,
+      style: TextStyles.primaryRegularMedium,
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
+      softWrap: softWrap,
+      color: color,
+    );
+  }
+
   static Widget primaryMediumCounter(
     BuildContext context,
     String type,

@@ -2,6 +2,7 @@ import 'package:redux/redux.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
+import 'package:weeksalive/data/streak/streak_repository.dart';
 import 'package:weeksalive/data/theme/theme_repository.dart';
 import 'package:weeksalive/data/user/user_repository.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
@@ -15,6 +16,7 @@ class TestStoreFactory {
   PushNotificationRepository pushNotificationRepository = MockPushNotificationRepository();
   PurchaseRepository purchaseRepository = MockPurchaseRepository();
   ThemeRepository themeRepository = MockThemeRepository();
+  StreakRepository streakRepository = MockStreakRepository();
 
   Store<AppState> initializeReduxStore(AppState initialState) {
     return StoreFactory(
@@ -23,6 +25,7 @@ class TestStoreFactory {
       pushNotificationRepository: pushNotificationRepository,
       purchaseRepository: purchaseRepository,
       themeRepository: themeRepository,
+      streakRepository: streakRepository,
     ).createStore(initialState: initialState);
   }
 }

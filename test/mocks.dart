@@ -3,6 +3,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
+import 'package:weeksalive/data/streak/streak_repository.dart';
 import 'package:weeksalive/data/theme/theme_repository.dart';
 import 'package:weeksalive/data/user/user_repository.dart';
 import 'package:weeksalive/domain/user/user.dart';
@@ -35,5 +36,12 @@ class MockPurchaseRepository extends Mock implements PurchaseRepository {}
 class MockThemeRepository extends Mock implements ThemeRepository {
   MockThemeRepository() {
     when(() => getThemeMode()).thenAnswer((_) async => ThemeMode.system);
+  }
+}
+
+class MockStreakRepository extends Mock implements StreakRepository {
+  MockStreakRepository() {
+    when(() => getStreakCount()).thenAnswer((_) async => 0);
+    when(() => setStreakCount(any())).thenAnswer((_) async {});
   }
 }
