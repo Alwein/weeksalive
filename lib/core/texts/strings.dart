@@ -20,6 +20,9 @@ class Strings {
   static String get yearLabel => "YEAR";
   static String get archivedLabel => "ARCHIVED";
 
+  static String get homeGridTabLife => "Life";
+  static String get homeGridTabYear => "Year";
+
   static String get feelingSectionTitle => "Average feeling";
   static String get feelingSectionValueRough => "ROUGH";
   static String get feelingSectionValueLow => "LOW";

@@ -8,6 +8,7 @@ import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
+import 'package:weeksalive/presentation/widgets/year_grid_painter.dart';
 
 class Step19GridAlive extends OnboardingStep {
   const Step19GridAlive();
@@ -134,9 +135,12 @@ class _YearGridIllustrationState extends State<_YearGridIllustration> with Singl
   }
 
   static double _computeHeight(double width) {
-    final dotSize = (width - _kDotSpacing * (_kColumns - 1)) / _kColumns;
-    final rows = (_kTotalDays / _kColumns).ceil();
-    return rows * (dotSize + _kDotSpacing);
+    return YearGridPainter.computeHeight(
+      availableWidth: width,
+      totalDays: _kTotalDays,
+      columns: _kColumns,
+      dotSpacing: _kDotSpacing,
+    );
   }
 
   @override
@@ -178,7 +182,7 @@ class _YearGridIllustrationState extends State<_YearGridIllustration> with Singl
               child: AnimatedBuilder(
                 animation: _controller,
                 builder: (context, _) => CustomPaint(
-                  painter: _YearLifeGridPainter(
+                  painter: YearGridPainter(
                     columns: _kColumns,
                     totalDays: _kTotalDays,
                     filledCount: widget.filledCount,
@@ -197,79 +201,6 @@ class _YearGridIllustrationState extends State<_YearGridIllustration> with Singl
       },
     );
   }
-}
-
-class _YearLifeGridPainter extends CustomPainter {
-  const _YearLifeGridPainter({
-    required this.columns,
-    required this.totalDays,
-    required this.filledCount,
-    required this.highlightGridIndex,
-    required this.dotSpacing,
-    required this.fillColors,
-    required this.emptyStrokeColor,
-    required this.highlightColor,
-    required this.revealProgress,
-  });
-
-  static const _emptyStrokeWidth = 1.0;
-
-  final int columns;
-  final int totalDays;
-  final int filledCount;
-  final int highlightGridIndex;
-  final double dotSpacing;
-  final List<Color> fillColors;
-  final Color emptyStrokeColor;
-  final Color highlightColor;
-  final double revealProgress;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final dotSize = (size.width - dotSpacing * (columns - 1)) / columns;
-    final maxRadius = dotSize / 2;
-    final emptyStroke = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = _emptyStrokeWidth
-      ..color = emptyStrokeColor;
-
-    final emptyStrokeRadius = maxRadius - _emptyStrokeWidth / 2;
-
-    final continuousRevealed = revealProgress * filledCount;
-    final animationComplete = revealProgress >= 1.0;
-
-    for (var i = 0; i < totalDays; i++) {
-      final col = i % columns;
-      final row = i ~/ columns;
-      final cx = col * (dotSize + dotSpacing) + maxRadius;
-      final cy = row * (dotSize + dotSpacing) + maxRadius;
-      final center = Offset(cx, cy);
-
-      if (i >= filledCount) {
-        canvas.drawCircle(center, emptyStrokeRadius, emptyStroke);
-        continue;
-      }
-
-      final revealThreshold = i + 1;
-      final fillColor = animationComplete && i == highlightGridIndex ? highlightColor : fillColors[i];
-
-      if (continuousRevealed >= revealThreshold) {
-        canvas.drawCircle(center, maxRadius, Paint()..color = fillColor);
-      } else if (continuousRevealed > i) {
-        final scale = continuousRevealed - i;
-        final radius = maxRadius * scale.clamp(0.0, 1.0);
-        if (radius > 0) {
-          canvas.drawCircle(center, radius, Paint()..color = fillColor);
-        }
-      } else {
-        canvas.drawCircle(center, emptyStrokeRadius, emptyStroke);
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _YearLifeGridPainter old) =>
-      old.revealProgress != revealProgress || old.emptyStrokeColor != emptyStrokeColor || old.fillColors != fillColors;
 }
 
 extension on BuildContext {
