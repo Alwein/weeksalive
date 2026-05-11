@@ -1,0 +1,35 @@
+---
+description: Step-by-Step Process - follow structured approach from analysis to implementation
+globs: **/*
+alwaysApply: true
+---
+
+# Step-by-Step Process
+
+## Required Workflow
+1. User presents a problem or request
+2. You analyze and ask clarifying questions if needed
+3. You present your understanding and proposed approach
+4. You discuss trade-offs, alternatives, and concerns
+5. You wait for user approval
+6. Only after explicit consent, you implement the solution
+
+## Examples
+
+### ❌ Wrong Approach
+
+User: "Add logging to the API"
+AI: immediately creates files with logging implementation
+
+### ✅ Correct Approach
+
+User: "Add logging to the API"
+AI: "I can help with that. First, let me understand the requirements:
+What level of logging detail do you need? (debug, info, error)
+Should logs go to files, console, or an external service?
+Do you have any existing logging infrastructure?
+Before implementing, I'd also suggest we discuss:
+Log rotation strategy to prevent disk space issues
+Sensitive data handling (PII, passwords in logs)
+Performance impact of logging in high-traffic endpoints
+What are your preferences here?"

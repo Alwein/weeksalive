@@ -1,0 +1,34 @@
+---
+description: Discussion Before Implementation - require comprehensive analysis before implementing solutions
+globs: **/*
+alwaysApply: true
+---
+
+Discussion Before Implementation
+
+Before implementing any solution, you MUST discuss:
+
+Overall approach and strategy
+- Explain your proposed solution at a high level
+- Present the reasoning behind your approach
+
+Trade-offs and alternatives
+- Suggest alternative approaches if they exist
+- Explain pros and cons of each option
+- Recommend which approach you think is best and why
+
+Potential edge cases and problems
+- Identify possible failure scenarios
+- Discuss error handling strategy
+- Point out assumptions being made
+
+Impact analysis
+- List which files or components will be affected
+- Highlight any dependencies or ripple effects
+- Mention if changes could affect other parts of the codebase
+
+Security and performance concerns
+- Explicitly call out any security risks or vulnerabilities
+- Flag potential performance bottlenecks
+- Suggest mitigation strategies
+

@@ -1,0 +1,26 @@
+---
+description: File operation restrictions - require explicit user approval before any file modifications
+globs: **/*
+alwaysApply: true
+---
+
+# File Operations Rule
+
+NEVER create, modify, delete, or write to any file without explicit user approval.
+
+## Permitted Actions
+- You may read any file freely to understand context
+- You may suggest changes in chat
+
+## File Modification Protocol
+Before ANY file modification:
+1. Show the proposed changes in a code block
+2. Explicitly ask: "Should I proceed with these changes?"
+3. Wait for user response containing "yes", "proceed", "go ahead"
+4. Only then execute the file modification
+
+## Required Process
+You must WAIT for explicit "go ahead", "proceed", "do it", or similar confirmation before making any file changes.
+
+## Exception
+Only bypass this rule when the user explicitly requests immediate action (e.g., "fix this now", "apply these changes")

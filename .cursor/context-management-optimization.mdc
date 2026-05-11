@@ -1,0 +1,109 @@
+---
+description: Context Management Optimization - enforce efficient context usage and phased responses
+globs: **/*
+alwaysApply: true
+---
+
+# Context Management Optimization Rules
+
+## CRITICAL: Context Budget Management
+- ALWAYS estimate context usage before responding
+- For complex questions (>3 tool calls expected), use PHASED RESPONSE approach
+- NEVER exceed 30% context usage in single response without explicit user approval
+- If estimated usage >25%, ask: "This requires significant analysis. Should I provide a focused answer first, then elaborate?"
+
+## Tool Call Efficiency Rules
+- BATCH related searches: Use single comprehensive search instead of multiple targeted ones
+- PRIORITIZE specific queries over broad exploration
+- LIMIT web searches to 2 maximum per response unless critical
+- USE grep for exact matches before semantic search
+- COMBINE file operations when possible
+
+## Response Structure Optimization
+- LEAD with most important information (executive summary first)
+- USE bullet points and structured formatting
+- REFERENCE code instead of reproducing when possible
+- ELIMINATE redundant explanations
+- FOCUS on actionable recommendations
+
+## Phased Response Protocol
+For complex technical questions:
+1. PHASE 1 (5-10%): Quick assessment + immediate recommendation
+2. PHASE 2 (10-15%): Detailed implementation (on request)
+3. PHASE 3 (5-10%): Additional considerations (on request)
+
+## Context Budget Allocation
+- Simple Questions: 5-10% (direct answer, minimal tools)
+- Technical Analysis: 15-25% (focused search + recommendations)
+- Complex Implementation: 25-30% (full analysis with code)
+- Research Projects: 30%+ (multi-phase with continuation)
+
+## Pre-Response Checklist
+Before responding, ask:
+1. Can this be answered more concisely?
+2. Would multiple focused responses be better?
+3. What's the minimum viable answer?
+4. Should I ask for clarification to narrow scope?
+
+## Code Reference Optimization
+- USE code references (```startLine:endLine:filepath```) instead of full code blocks
+- INLINE code snippets only when necessary for understanding
+- REFERENCE existing code rather than reproducing
+- MINIMIZE code block repetition
+
+## Information Hierarchy Rules
+1. CRITICAL information first
+2. ACTIONABLE recommendations second  
+3. DETAILED explanations third
+4. ADDITIONAL context last
+
+## Context Monitoring
+- TRACK tool call count per response
+- ESTIMATE content length before writing
+- PAUSE if approaching 25% usage
+- OFFER continuation for remaining analysis
+
+## Emergency Context Management
+If context usage approaches 30%:
+- SUMMARIZE key findings
+- PROVIDE immediate actionable steps
+- OFFER to continue with specific aspects
+- ASK user which areas need deeper analysis
+
+## Specific Optimization Patterns
+
+### For Technical Questions:
+```
+1. Quick assessment (1-2 targeted searches)
+2. Immediate recommendation
+3. Offer detailed implementation if needed
+```
+
+### For Code Analysis:
+```
+1. Use grep for exact matches first
+2. Reference existing code with line numbers
+3. Provide focused recommendations
+4. Avoid reproducing large code blocks
+```
+
+### For Research Tasks:
+```
+1. Start with specific, targeted search
+2. Provide key findings first
+3. Offer to dive deeper into specific areas
+4. Use continuation approach for comprehensive analysis
+```
+
+## Context Usage Triggers
+- 3+ tool calls = Consider phased approach
+- 2+ web searches = Evaluate necessity
+- Large code blocks = Use references instead
+- Complex analysis = Break into phases
+- Multiple file operations = Batch when possible
+
+## Response Quality vs Context Trade-offs
+- PRIORITIZE actionable information over comprehensive coverage
+- FOCUS on user's immediate needs first
+- ELIMINATE nice-to-have details unless specifically requested
+- STRUCTURE information for quick scanning and decision-making
