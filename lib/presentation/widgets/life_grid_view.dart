@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
-import 'package:weeksalive/core/styles/margins.dart';
-import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/domain/life_week_grid.dart';
-import 'package:weeksalive/presentation/widgets/texts.dart';
 import 'package:weeksalive/presentation/widgets/week_grid_painter.dart';
 
 class LifeGridView extends StatelessWidget {
@@ -68,27 +65,6 @@ class LifeGridView extends StatelessWidget {
           child: scrollContent,
         );
       },
-    );
-  }
-}
-
-class LifeGridCounters extends StatelessWidget {
-  const LifeGridCounters({super.key, required this.grid});
-
-  final LifeWeekGrid grid;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      spacing: Margins.spacingBase,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Texts.primaryMediumCounter(
-          context,
-          Strings.progressLabel,
-          '${(grid.progressFraction * 100).toStringAsFixed(2)}%',
-        ),
-      ],
     );
   }
 }

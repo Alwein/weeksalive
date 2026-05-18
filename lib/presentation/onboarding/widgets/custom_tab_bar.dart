@@ -33,11 +33,11 @@ class CustomTabBar extends StatelessWidget {
           child: TabBar(
             controller: controller,
             onTap: onTap,
-            labelColor: AppColors.contentMuted(context),
+            labelColor: AppColors.content(context),
             unselectedLabelColor: AppColors.contentSoftOnSoft(context),
             tabs: tabs,
             indicator: BoxDecoration(
-              color: AppColors.content(context),
+              color: AppColors.bg(context),
               borderRadius: const BorderRadius.all(Radius.circular(360)),
             ),
             indicatorSize: TabBarIndicatorSize.tab,

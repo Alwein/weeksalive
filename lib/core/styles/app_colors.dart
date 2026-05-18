@@ -23,7 +23,7 @@ class AppColors {
 
   static Color bgSoft(BuildContext context) => context.isDarkMode ? bgDarkSoft : bgLightSoft;
   static const bgDarkSoft = Color(0xFF333333);
-  static const bgLightSoft = Color(0xFFE6E6E6);
+  static const bgLightSoft = Color(0xFFF2F2F3);
 
   static Color widgetBg(BuildContext context) => context.isDarkMode ? Colors.black : Colors.white;
   static Color widgetContent(Brightness brightness) => brightness == Brightness.dark ? Colors.white : Colors.black;

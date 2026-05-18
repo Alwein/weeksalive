@@ -45,7 +45,7 @@ class Step13WeeksDisappear extends OnboardingStep {
                       const SizedBox(height: Margins.spacingBase),
                       Texts.primaryMediumSoft(context, Strings.onboarding13Subtitle),
                       const SizedBox(height: Margins.spacingM),
-                      Texts.primaryMediumCounter(context, Strings.lastYearWeeksLabel, '52 ${Strings.weeksLabel}'),
+                      Texts.primaryXsCounter(context, Strings.lastYearWeeksLabel, '52 ${Strings.weeksLabel}'),
                       const SizedBox(height: Margins.spacingBase),
                       _YearWeeksIllustration(),
                       const SizedBox(height: Margins.spacingBase),

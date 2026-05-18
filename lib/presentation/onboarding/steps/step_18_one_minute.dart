@@ -120,13 +120,13 @@ class _WeekHeader extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Texts.primaryMediumCounter(
+                    Texts.primaryXsCounter(
                       context,
                       Strings.dayLabel,
                       controller.totalDaysLived.toString(),
                       softColor: AppColors.contentSoftOnSoft(context),
                     ),
-                    Texts.primaryMediumCounter(
+                    Texts.primaryXsCounter(
                       context,
                       Strings.archivedLabel,
                       null,

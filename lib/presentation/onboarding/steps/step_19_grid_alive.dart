@@ -158,17 +158,17 @@ class _YearGridIllustrationState extends State<_YearGridIllustration> with Singl
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Texts.primaryMediumCounter(
+                Texts.primaryXsCounter(
                   context,
                   Strings.yearLabel,
                   (DateTime.now().year + 1).toString(),
                 ),
-                Texts.primaryMediumCounter(
+                Texts.primaryXsCounter(
                   context,
                   Strings.dayLabel,
                   widget.filledCount.toString(),
                 ),
-                Texts.primaryMediumCounter(
+                Texts.primaryXsCounter(
                   context,
                   Strings.progressLabel,
                   '${((widget.filledCount / _kTotalDays) * 100).toStringAsFixed(0)}%',

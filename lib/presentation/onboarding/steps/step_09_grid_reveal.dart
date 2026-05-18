@@ -122,12 +122,12 @@ class _GridIllustrationState extends State<_GridIllustration> with SingleTickerP
                   spacing: Margins.spacingBase,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Texts.primaryMediumCounter(
+                    Texts.primaryXsCounter(
                       context,
                       Strings.progressLabel,
                       '${(widget.progressFraction * 100).toStringAsFixed(2)}%',
                     ),
-                    Texts.primaryMediumCounter(
+                    Texts.primaryXsCounter(
                       context,
                       Strings.weekLabel,
                       widget.livedWeeks.toString(),

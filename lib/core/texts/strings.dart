@@ -22,6 +22,7 @@ class Strings {
 
   static String get homeGridTabLife => "Life";
   static String get homeGridTabYear => "Year";
+  static String get today => "Today";
 
   static String get feelingSectionTitle => "Average feeling";
   static String get feelingSectionValueRough => "ROUGH";
@@ -235,4 +236,6 @@ class Strings {
 
   // Home page
   static String homePageTitle(String userName) => "$userName's life";
+
+  static List<String> get homePageDayLabels => ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
 }

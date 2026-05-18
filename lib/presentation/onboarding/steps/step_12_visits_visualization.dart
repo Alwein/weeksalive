@@ -156,7 +156,7 @@ class _GridIllustrationState extends State<_GridIllustration> with SingleTickerP
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: Margins.spacingBase),
-            Texts.primaryMediumCounter(
+            Texts.primaryXsCounter(
               context,
               Strings.visitsAheadLabel,
               widget.remainingVisits.toString(),

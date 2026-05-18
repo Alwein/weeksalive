@@ -4,12 +4,13 @@ import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/domain/life_week_grid.dart';
+import 'package:weeksalive/presentation/home/view_model/home_page_view_model.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class HomeAppBar extends StatelessWidget {
-  const HomeAppBar({super.key, required this.userName, required this.streak});
-  final String userName;
-  final int streak;
+  const HomeAppBar({super.key, required this.vm});
+  final HomePageViewModel vm;
 
   @override
   Widget build(BuildContext context) {
@@ -18,15 +19,17 @@ class HomeAppBar extends StatelessWidget {
       child: SafeArea(
         bottom: false,
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(child: _Title(userName: userName)),
+            Expanded(
+              child: _Title(userName: vm.userName, grid: vm.lifeWeekGrid),
+            ),
             Row(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                _StreaksButton(streaks: streak),
+                _StreaksButton(streaks: vm.streakCount),
                 const SizedBox(width: Margins.spacingXs),
                 const _ProfileButton(),
               ],
@@ -41,17 +44,24 @@ class HomeAppBar extends StatelessWidget {
 class _Title extends StatelessWidget {
   const _Title({
     required this.userName,
+    required this.grid,
   });
 
   final String userName;
+  final LifeWeekGrid grid;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Texts.primaryRegularMedium(Strings.appName, color: AppColors.contentSoft(context)),
         Text(Strings.homePageTitle(userName), style: TextStyles.primarySemiBold),
+        const SizedBox(height: Margins.spacingXs),
+        Texts.primaryXsCounter(
+          context,
+          Strings.progressLabel,
+          '${(grid.progressFraction * 100).toStringAsFixed(0)}%',
+        ),
       ],
     );
   }

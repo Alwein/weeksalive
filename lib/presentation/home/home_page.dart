@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
+import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/presentation/home/view_model/home_page_view_model.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/custom_tab_bar.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/widgets/home_appbar.dart';
-import 'package:weeksalive/presentation/widgets/life_grid_view.dart';
 import 'package:weeksalive/presentation/widgets/zoomable_life_grid_view.dart';
 
 class HomePage extends StatelessWidget {
@@ -81,26 +80,12 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        const SizedBox(height: Margins.spacingS),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
-          child: Column(
-            children: [
-              HomeAppBar(
-                userName: widget.vm.userName,
-                streak: widget.vm.streakCount,
-              ),
-              const SizedBox(height: Margins.spacingBase),
-              const SmallDivider(width: double.infinity),
-              const SizedBox(height: Margins.spacingBase),
-              _GridHeader(
-                vm: widget.vm,
-                tabController: _gridTabController,
-                onTabTap: _onGridTabTapped,
-              ),
-              const SizedBox(height: Margins.spacingBase),
-            ],
-          ),
+          child: HomeAppBar(vm: widget.vm),
         ),
+        const SizedBox(height: Margins.spacingM),
         Expanded(
           child: ZoomableLifeGridView(
             key: _zoomableGridKey,
@@ -109,54 +94,23 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
             onYearModeCommitted: _onGridYearModeCommitted,
           ),
         ),
-        _WeekBar(streakCount: widget.vm.streakCount),
-      ],
-    );
-  }
-}
-
-class _GridHeader extends StatelessWidget {
-  const _GridHeader({
-    required this.vm,
-    required this.tabController,
-    required this.onTabTap,
-  });
-
-  final HomePageViewModel vm;
-  final TabController tabController;
-  final ValueChanged<int> onTabTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final labelStyle = TextStyles.primaryXsBold;
-
-    return Row(
-      children: [
-        Expanded(child: LifeGridCounters(grid: vm.lifeWeekGrid)),
-        const SizedBox(width: Margins.spacingBase),
-        Flexible(
-          child: CustomTabBar(
-            controller: tabController,
-            onTap: onTabTap,
-            tabHeight: 42,
-            tabs: [
-              Tab(
-                child: Text(Strings.homeGridTabLife, style: labelStyle),
-              ),
-              Tab(
-                child: Text(Strings.homeGridTabYear, style: labelStyle),
-              ),
-            ],
-          ),
+        _BottomBar(
+          streakCount: widget.vm.streakCount,
+          tabController: _gridTabController,
+          onTabTap: _onGridTabTapped,
         ),
       ],
     );
   }
 }
 
-class _WeekBar extends StatelessWidget {
-  const _WeekBar({required this.streakCount});
+class _BottomBar extends StatelessWidget {
+  const _BottomBar({required this.streakCount, required this.tabController, required this.onTabTap});
   final int streakCount;
+  final TabController tabController;
+  final ValueChanged<int> onTabTap;
+
+  static const double kTabHeight = 42;
 
   @override
   Widget build(BuildContext context) {
@@ -173,21 +127,36 @@ class _WeekBar extends StatelessWidget {
         bottom: Margins.spacingBase + MediaQuery.paddingOf(context).bottom,
       ),
       child: Row(
+        spacing: Margins.spacingM,
         children: [
+          IntrinsicWidth(
+            child: CustomTabBar(
+              controller: tabController,
+              onTap: onTabTap,
+              tabHeight: _BottomBar.kTabHeight,
+              tabs: [
+                Tab(
+                  child: Text(Strings.homeGridTabLife, style: TextStyles.primaryRegularBold),
+                ),
+                Tab(
+                  child: Text(Strings.homeGridTabYear, style: TextStyles.primaryRegularBold),
+                ),
+              ],
+            ),
+          ),
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(7, (i) {
-                final day = monday.add(Duration(days: i));
+              children: List.generate(3, (i) {
+                final day = monday.subtract(Duration(days: i));
                 return _DayCell(
                   day: day,
                   today: today,
                   streakCount: streakCount,
                 );
-              }),
+              }).reversed.toList(),
             ),
           ),
-          const SizedBox(width: Margins.spacingBase),
           _TodayButton(onTap: () {}),
         ],
       ),
@@ -206,8 +175,6 @@ class _DayCell extends StatelessWidget {
   final DateTime today;
   final int streakCount;
 
-  static const _kDayLabels = ['LU', 'MA', 'ME', 'JE', 'VE', 'SA', 'DI'];
-
   bool get _isToday => day.year == today.year && day.month == today.month && day.day == today.day;
 
   bool get _isFuture => day.isAfter(DateTime(today.year, today.month, today.day));
@@ -221,7 +188,7 @@ class _DayCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final label = _kDayLabels[day.weekday - 1];
+    final label = Strings.homePageDayLabels[day.weekday - 1];
     final contentColor = AppColors.content(context);
     final softColor = AppColors.contentSoft(context);
 
@@ -262,46 +229,27 @@ class _DayIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final contentColor = AppColors.content(context);
-    final softColor = AppColors.contentSoft(context);
 
     if (isChecked && !isToday) {
       return Icon(Icons.check, size: 16, color: contentColor);
     }
 
-    final label = isToday
-        ? day.day.toString()
-        : isFuture
-        ? day.day.toString()
-        : day.day.toString();
+    const size = 16.0;
 
-    final color = isFuture ? softColor : contentColor;
+    final todayEmpty = !isChecked && isToday;
 
-    if (isToday) {
-      return Container(
-        width: 24,
-        height: 24,
-        decoration: BoxDecoration(
-          color: contentColor,
-          shape: BoxShape.circle,
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          label,
-          style: TextStyles.primaryXsBold.copyWith(
-            color: AppColors.bg(context),
-          ),
-        ),
-      );
-    }
-
-    return SizedBox(
-      width: 24,
-      height: 24,
-      child: Center(
-        child: Text(
-          label,
-          style: TextStyles.primaryXsBold.copyWith(color: color),
-        ),
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: todayEmpty ? AppColors.highlightColor : Colors.transparent,
+        shape: BoxShape.circle,
+        border: todayEmpty
+            ? null
+            : Border.all(
+                color: AppColors.strokeColor(context),
+                width: 1,
+              ),
       ),
     );
   }
@@ -313,29 +261,35 @@ class _TodayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: Margins.spacingBase,
-          vertical: Margins.spacingS,
-        ),
-        decoration: BoxDecoration(
-          color: AppColors.content(context),
-          borderRadius: BorderRadius.circular(100),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          spacing: Margins.spacingXs,
-          children: [
-            Icon(Icons.add, size: 16, color: AppColors.bg(context)),
-            Text(
-              'Today',
-              style: TextStyles.primaryRegularBold.copyWith(
-                color: AppColors.bg(context),
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(100),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(100),
+        child: Container(
+          height: _BottomBar.kTabHeight,
+          padding: const EdgeInsets.symmetric(
+            horizontal: Margins.spacingBase,
+            vertical: Margins.spacingS,
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.content(context),
+            borderRadius: BorderRadius.circular(100),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            spacing: Margins.spacingXs,
+            children: [
+              Icon(Icons.add, size: Dimens.iconSizeS, color: AppColors.bg(context)),
+              Text(
+                Strings.today,
+                style: TextStyles.primaryRegularBold.copyWith(
+                  color: AppColors.bg(context),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
