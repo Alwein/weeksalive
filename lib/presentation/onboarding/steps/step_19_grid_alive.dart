@@ -84,7 +84,7 @@ class _YearGridIllustrationState extends State<_YearGridIllustration> with Singl
   static const _kDelayBeforeAnimation = Duration(milliseconds: 500);
 
   late final AnimationController _controller;
-  late final List<Color> _fillColors;
+  late final List<int> _fillSizes;
   late final int _highlightGridIndex;
 
   late final FlutterHaptic _haptic;
@@ -93,7 +93,7 @@ class _YearGridIllustrationState extends State<_YearGridIllustration> with Singl
   void initState() {
     super.initState();
     final rng = Random(42);
-    _fillColors = List.generate(widget.filledCount, (_) => _randomIntensityColor(rng, widget.isDarkMode));
+    _fillSizes = List.generate(widget.filledCount, (_) => _randomSizeLevel(rng));
     _highlightGridIndex = widget.filledCount - 1;
     _controller = AnimationController(vsync: this, duration: _kAnimationDuration);
     _haptic = FlutterHaptic.instance;
@@ -107,24 +107,9 @@ class _YearGridIllustrationState extends State<_YearGridIllustration> with Singl
     });
   }
 
-  static Color _randomIntensityColor(Random rng, bool isDark) {
-    const optionsLight = <Color>[
-      Color(0xFFD4D4D4),
-      Color(0xFFA2A2A2),
-      Color(0xFF717171),
-      Color(0xFF404040),
-      Color(0xFF0A0A0A),
-    ];
-    const optionsDark = <Color>[
-      Color(0xFF181818),
-      Color(0xFF313131),
-      Color(0xFF646464),
-      Color(0xFFB7B7B7),
-      Color(0xFFF1F1F1),
-    ];
-    const weightedIndices = [0, 1, 2, 3, 4, 4, 4, 4, 4, 4];
-    final options = isDark ? optionsDark : optionsLight;
-    return options[weightedIndices[rng.nextInt(weightedIndices.length)]];
+  static int _randomSizeLevel(Random rng) {
+    const weightedLevels = [0, 1, 2, 2, 3, 3, 4, 4, 4];
+    return weightedLevels[rng.nextInt(weightedLevels.length)];
   }
 
   @override
@@ -188,7 +173,8 @@ class _YearGridIllustrationState extends State<_YearGridIllustration> with Singl
                     filledCount: widget.filledCount,
                     highlightGridIndex: _highlightGridIndex,
                     dotSpacing: _kDotSpacing,
-                    fillColors: _fillColors,
+                    fillSizes: _fillSizes,
+                    fillColor: AppColors.content(context),
                     emptyStrokeColor: strokeColor,
                     highlightColor: AppColors.highlightColor,
                     revealProgress: _controller.value,
