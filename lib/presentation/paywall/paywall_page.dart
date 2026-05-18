@@ -328,7 +328,6 @@ class _TrialTimeline extends StatelessWidget {
         isDone: true,
         icon: MingCuteIcons.mgc_check_line,
         label: Strings.paywallTimelineStep1Label,
-        sublabel: Strings.paywallTimelineStep1Sublabel,
       ),
       _TimelineItem(
         isActive: true,
@@ -362,7 +361,7 @@ class _TimelineItem {
     required this.isActive,
     required this.icon,
     required this.label,
-    required this.sublabel,
+    this.sublabel,
     this.isDone = false,
     this.isLast = false,
   });
@@ -370,7 +369,7 @@ class _TimelineItem {
   final bool isDone;
   final IconData icon;
   final String label;
-  final String sublabel;
+  final String? sublabel;
   final bool isLast;
 }
 
@@ -460,10 +459,12 @@ class _TimelineRow extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: Margins.spacingXs),
-                  Text(
-                    item.sublabel,
-                    style: TextStyles.primaryRegular.copyWith(color: AppColors.contentSoft(context)),
-                  ),
+                  if (item.sublabel != null) ...[
+                    Text(
+                      item.sublabel!,
+                      style: TextStyles.primaryRegular.copyWith(color: AppColors.contentSoft(context)),
+                    ),
+                  ],
                 ],
               ),
             ),

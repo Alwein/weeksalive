@@ -186,7 +186,7 @@ class Strings {
   static String get onboarding25Title4 => "a new chance.";
   static String get onboarding25Title5 => "To feel more.";
   static String get onboarding25Title6 => "To love more.";
-  static String get onboarding25Footer => "This is that chance.";
+  static String get onboarding25Footer => "Will you take this chance?";
 
   // paywall
   static String paywallTitle(String trialWeeks) => 'Try WeeksAlive free for $trialWeeks weeks.';
