@@ -136,7 +136,7 @@ class _NotificationSlotCard extends StatelessWidget {
                 children: [
                   Text(
                     Strings.onboarding20CheckIn,
-                    style: TextStyles.primaryXsBold.copyWith(
+                    style: TextStyles.primarySmallBold.copyWith(
                       color: AppColors.contentSoftOnSoft(context),
                     ),
                   ),

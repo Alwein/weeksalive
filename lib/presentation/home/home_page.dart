@@ -198,7 +198,7 @@ class _DayCell extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyles.primaryXsBold.copyWith(
+          style: TextStyles.primarySmallBold.copyWith(
             color: _isToday ? contentColor : softColor,
           ),
         ),

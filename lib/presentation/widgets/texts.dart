@@ -155,7 +155,7 @@ class Texts {
   }) {
     return _StyledText(
       text: text,
-      style: TextStyles.primaryXsMedium,
+      style: TextStyles.primarySmallMedium,
       color: AppColors.contentSoft(context),
       textAlign: textAlign,
       maxLines: maxLines,
@@ -229,7 +229,7 @@ class Texts {
   }) {
     return _StyledText(
       text: text,
-      style: TextStyles.primaryXsMedium,
+      style: TextStyles.primarySmallMedium,
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,
@@ -248,7 +248,7 @@ class Texts {
   }) {
     return _StyledText(
       text: text,
-      style: TextStyles.primaryXsBold,
+      style: TextStyles.primarySmallBold,
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,
@@ -316,12 +316,12 @@ class _TypeValueText extends StatelessWidget {
         children: [
           TextSpan(
             text: '$type ',
-            style: TextStyles.primaryXsMedium.copyWith(color: softColor ?? AppColors.contentSoft(context)),
+            style: TextStyles.primarySmallMedium.copyWith(color: softColor ?? AppColors.contentSoft(context)),
           ),
           if (value != null)
             TextSpan(
               text: value,
-              style: TextStyles.primaryXsMedium.copyWith(color: AppColors.content(context)),
+              style: TextStyles.primarySmallMedium.copyWith(color: AppColors.content(context)),
             ),
         ],
       ),

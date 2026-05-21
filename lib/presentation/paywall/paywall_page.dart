@@ -258,7 +258,7 @@ class _FooterSection extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: Margins.spacingBase),
                     child: Text(
                       errorMessage!,
-                      style: TextStyles.primaryXsBold.copyWith(color: AppColors.redWarning),
+                      style: TextStyles.primarySmallBold.copyWith(color: AppColors.redWarning),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -581,7 +581,7 @@ class _Links extends StatelessWidget {
     padding: const EdgeInsets.symmetric(horizontal: 6),
     child: Text(
       '·',
-      style: TextStyles.primaryXsRegular.copyWith(color: AppColors.contentSoftOnSoft(context)),
+      style: TextStyles.primarySmallRegular.copyWith(color: AppColors.contentSoftOnSoft(context)),
     ),
   );
 
@@ -599,7 +599,7 @@ class _FooterLink extends StatelessWidget {
       onTap: onTap,
       child: Text(
         label,
-        style: TextStyles.primaryXsRegular.copyWith(
+        style: TextStyles.primarySmallRegular.copyWith(
           color: AppColors.contentSoft(context),
           decoration: TextDecoration.underline,
           decorationColor: AppColors.contentSoft(context),

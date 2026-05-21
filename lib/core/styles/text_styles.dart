@@ -121,21 +121,26 @@ class TextStyles {
     height: 0,
   );
 
-  static TextStyle primaryXsRegular = const TextStyle(
+  static TextStyle primarySmallRegular = const TextStyle(
     fontFamily: "SpaceGrotesk",
-    fontSize: FontSizes.xs,
+    fontSize: FontSizes.small,
     fontWeight: FontWeight.normal,
   );
-
-  static TextStyle primaryXsMedium = const TextStyle(
+  static TextStyle primarySmallMedium = const TextStyle(
     fontFamily: "SpaceGrotesk",
-    fontSize: FontSizes.xs,
+    fontSize: FontSizes.small,
     fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle primarySmallBold = const TextStyle(
+    fontFamily: "SpaceGrotesk",
+    fontSize: FontSizes.small,
+    fontWeight: FontWeight.bold,
   );
 
   static TextStyle primaryXsBold = const TextStyle(
     fontFamily: "SpaceGrotesk",
-    fontSize: FontSizes.xs,
+    fontSize: FontSizes.extraSmall,
     fontWeight: FontWeight.bold,
   );
 
@@ -150,12 +155,6 @@ class TextStyles {
     fontSize: FontSizes.regular,
     fontWeight: FontWeight.w500,
   );
-
-  static TextStyle primaryXSRegular = const TextStyle(
-    fontFamily: "SpaceGrotesk",
-    fontSize: FontSizes.xs,
-    fontWeight: FontWeight.normal,
-  );
 }
 
 class FontSizes {
@@ -167,7 +166,6 @@ class FontSizes {
   static const double large = 18;
   static const double medium = 16;
   static const double regular = 14;
-  static const double xs = 12;
-  static const double small = 11;
+  static const double small = 12;
   static const double extraSmall = 10;
 }

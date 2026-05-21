@@ -241,7 +241,7 @@ class _FeelingSelector extends StatelessWidget {
       children: [
         Text(
           Strings.feelingSectionQuestion,
-          style: TextStyles.primaryXsMedium.copyWith(color: AppColors.content(context)),
+          style: TextStyles.primarySmallMedium.copyWith(color: AppColors.content(context)),
         ),
         const SizedBox(height: Margins.spacingBase),
         Row(
@@ -447,10 +447,11 @@ class _PillChip extends StatelessWidget {
 }
 
 class _MeaningBars extends StatelessWidget {
-  const _MeaningBars({required this.filled, required this.color});
+  const _MeaningBars({required this.filled, required this.color, this.size = Dimens.iconSizeBase});
 
   final int filled;
   final Color color;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
@@ -458,22 +459,27 @@ class _MeaningBars extends StatelessWidget {
     const baseHeight = 6.0;
     const heightStep = 4.0;
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        for (int i = 0; i < totalBars; i++) ...[
-          if (i > 0) const SizedBox(width: 2),
-          Container(
-            width: 3,
-            height: baseHeight + heightStep * i,
-            decoration: BoxDecoration(
-              color: i < filled ? color : color.withValues(alpha: 0.25),
-              borderRadius: BorderRadius.circular(1),
-            ),
-          ),
+    return Transform.scale(
+      scale: size / Dimens.iconSizeBase,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          for (int i = 0; i < totalBars; i++) ...[
+            if (i < filled) ...[
+              if (i > 0) const SizedBox(width: 3),
+              Container(
+                width: 3,
+                height: baseHeight + heightStep * i,
+                decoration: BoxDecoration(
+                  color: i < filled ? color : color.withValues(alpha: 0.25),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ],
+          ],
         ],
-      ],
+      ),
     );
   }
 }
@@ -490,7 +496,7 @@ class _FeelingSummary extends StatelessWidget {
       children: [
         Icon(
           _FeelingSelector._feelingIcon(value),
-          size: Dimens.iconSizeS,
+          size: Dimens.iconSizeXs,
           color: AppColors.content(context),
         ),
         const SizedBox(width: Margins.spacingS),
@@ -513,7 +519,7 @@ class _MeaningSummary extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _MeaningBars(filled: value.filledBars, color: AppColors.content(context)),
+        _MeaningBars(filled: value.filledBars, color: AppColors.content(context), size: Dimens.iconSizeXs),
         const SizedBox(width: Margins.spacingS),
         Text(
           value.label,
@@ -533,7 +539,7 @@ class _NewExperienceSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       value ? Strings.newExperienceSectionValueYes : Strings.newExperienceSectionValueNo,
-      style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
+      style: TextStyles.primarySmallBold.copyWith(color: AppColors.content(context)),
     );
   }
 }
