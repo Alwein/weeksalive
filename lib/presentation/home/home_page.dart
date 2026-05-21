@@ -6,6 +6,7 @@ import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
+import 'package:weeksalive/presentation/day_form/day_form.dart';
 import 'package:weeksalive/presentation/home/view_model/home_page_view_model.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/custom_tab_bar.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
@@ -157,7 +158,7 @@ class _BottomBar extends StatelessWidget {
               }).reversed.toList(),
             ),
           ),
-          _TodayButton(onTap: () {}),
+          _TodayButton(onTap: () => DayForm.showBottomSheet(context, DateTime.now())),
         ],
       ),
     );

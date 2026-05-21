@@ -10,6 +10,11 @@ class AppColors {
   static const contentDarkSoft = Color(0xFF8E8E8E);
   static const contentLightSoft = Color(0xFF949494);
 
+  static Color contentExtraSoft(BuildContext context) =>
+      context.isDarkMode ? contentDarkExtraSoft : contentLightExtraSoft;
+  static const contentDarkExtraSoft = Color(0xFF333232);
+  static const contentLightExtraSoft = Color(0xFFCFCFCF);
+
   static Color contentSoftOnSoft(BuildContext context) =>
       context.isDarkMode ? contentDarkSoftOnSoft : contentLightSoftOnSoft;
   static const contentDarkSoftOnSoft = Color(0xFFA3A3A3);

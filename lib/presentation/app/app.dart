@@ -5,9 +5,11 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:hidden_logo/hidden_logo.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:redux/redux.dart';
+import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/presentation/bootstrap/bootstrap_page.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/widgets/app_background_scale.dart';
 import 'package:weeksalive/presentation/widgets/notch_logo.dart';
 
 class App extends StatefulWidget {
@@ -19,6 +21,7 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  final _backgroundScaleController = AppBackgroundScaleController();
   @override
   Widget build(BuildContext context) {
     return StoreProvider<AppState>(
@@ -38,7 +41,19 @@ class _AppState extends State<App> {
           builder: (context, child) {
             Jiffy.setLocale(Localizations.localeOf(context).languageCode);
             return HiddenLogo(
-              body: child!,
+              body: AppBackgroundScaleScope(
+                notifier: _backgroundScaleController,
+                child: AnimatedBuilder(
+                  animation: _backgroundScaleController,
+                  child: child!,
+                  builder: (context, child) => AnimatedScale(
+                    scale: _backgroundScaleController.scale,
+                    duration: AnimationDurations.base,
+                    curve: Curves.easeOutSine,
+                    child: child,
+                  ),
+                ),
+              ),
               notchBuilder: (context, size) => NotchLogo(size: size),
               dynamicIslandBuilder: (context, size) => NotchLogo(size: size),
             );
