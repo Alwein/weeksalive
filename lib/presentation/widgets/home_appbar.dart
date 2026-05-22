@@ -60,7 +60,7 @@ class _Title extends StatelessWidget {
         Texts.primaryXsCounter(
           context,
           Strings.progressLabel,
-          '${(grid.progressFraction * 100).toStringAsFixed(0)}%',
+          '${(grid.progressFraction * 100).toStringAsFixed(1)}%',
         ),
       ],
     );

@@ -125,7 +125,7 @@ class _GridIllustrationState extends State<_GridIllustration> with SingleTickerP
                     Texts.primaryXsCounter(
                       context,
                       Strings.progressLabel,
-                      '${(widget.progressFraction * 100).toStringAsFixed(2)}%',
+                      '${(widget.progressFraction * 100).toStringAsFixed(1)}%',
                     ),
                     Texts.primaryXsCounter(
                       context,
