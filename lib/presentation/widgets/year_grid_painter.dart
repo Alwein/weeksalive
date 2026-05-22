@@ -87,9 +87,15 @@ class YearGridPainter extends CustomPainter {
         continue;
       }
 
+      final rawLevel = (i < fillSizes.length) ? fillSizes[i] : 4;
+      if (rawLevel == -1) {
+        canvas.drawCircle(center, emptyStrokeRadius, emptyStroke);
+        continue;
+      }
+
       final isHighlight = animationComplete && i == highlightGridIndex && highlightColor != null;
       final color = isHighlight ? highlightColor! : fillColor;
-      final level = (i < fillSizes.length) ? fillSizes[i].clamp(0, 4) : 4;
+      final level = rawLevel.clamp(0, 4);
       final targetRadius = _sizeRadius(level, maxRadius);
 
       final revealThreshold = i + 1;

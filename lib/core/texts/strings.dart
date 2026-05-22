@@ -62,6 +62,7 @@ class Strings {
   static String get progressLabel => "PROGRESS";
   static String get weekLabel => "WEEK";
   static String get weeksLabel => "WEEKS";
+  static String get daysLabel => "DAYS";
 
   // onboarding
   static String get onboarding01Subtitle => "A gentle reminder\nthat your time is precious";
@@ -116,9 +117,8 @@ class Strings {
       "This isn’t meant to feel heavy. It’s meant to make those visits feel like what they are — precious.";
 
   static String get onboarding13Title => "Think about last year.";
-  static String get onboarding13Subtitle => "How many weeks can you actually name?";
+  static String get onboarding13Subtitle => "How many days can you actually name?";
   static String get onboarding13Footer => "Most don\u2019t stand out because nothing made them worth noticing.";
-  static String get onboarding13Footer2 => "This one doesn\u2019t have to fade.";
   static String get lastYearWeeksLabel => "LAST YEAR";
   static String get onboarding13Caption1 => "Week you remember";
   static String get onboarding13Caption2 => "Week that faded";
