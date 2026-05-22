@@ -244,4 +244,15 @@ class Strings {
   static String get feelingSectionQuestion => "How did you feel today?";
   static String get meaningSectionQuestion => "How meaningful was your time today?";
   static String get newExperienceSectionQuestion => "Did you try something new today?";
+
+  // weekly intent
+  static String get intentBePresent => "Be Present";
+  static String get intentExplore => "Explore";
+  static String get intentConnect => "Connect";
+  static String get intentRest => "Rest";
+  static String get intentGive => "Give";
+  static String get intentLearn => "Learn";
+  static String get intentCreate => "Create";
+  static String get intentTakeCare => "Take Care";
+  static String get intentObserve => "Observe";
 }

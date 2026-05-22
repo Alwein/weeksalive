@@ -22,6 +22,7 @@ mixin _$AppState {
   PurchaseState get purchaseState => throw _privateConstructorUsedError;
   ThemeState get themeState => throw _privateConstructorUsedError;
   StreakState get streakState => throw _privateConstructorUsedError;
+  WeeklyIntentState get weeklyIntentState => throw _privateConstructorUsedError;
 
   /// Create a copy of AppState
   /// with the given fields replaced by the non-null parameter values.
@@ -41,6 +42,7 @@ abstract class $AppStateCopyWith<$Res> {
     PurchaseState purchaseState,
     ThemeState themeState,
     StreakState streakState,
+    WeeklyIntentState weeklyIntentState,
   });
 
   $RemoteConfigStateCopyWith<$Res> get remoteConfigState;
@@ -68,6 +70,7 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
     Object? purchaseState = null,
     Object? themeState = null,
     Object? streakState = null,
+    Object? weeklyIntentState = null,
   }) {
     return _then(
       _value.copyWith(
@@ -91,6 +94,10 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
                 ? _value.streakState
                 : streakState // ignore: cast_nullable_to_non_nullable
                       as StreakState,
+            weeklyIntentState: null == weeklyIntentState
+                ? _value.weeklyIntentState
+                : weeklyIntentState // ignore: cast_nullable_to_non_nullable
+                      as WeeklyIntentState,
           )
           as $Val,
     );
@@ -142,6 +149,7 @@ abstract class _$$AppStateImplCopyWith<$Res>
     PurchaseState purchaseState,
     ThemeState themeState,
     StreakState streakState,
+    WeeklyIntentState weeklyIntentState,
   });
 
   @override
@@ -171,6 +179,7 @@ class __$$AppStateImplCopyWithImpl<$Res>
     Object? purchaseState = null,
     Object? themeState = null,
     Object? streakState = null,
+    Object? weeklyIntentState = null,
   }) {
     return _then(
       _$AppStateImpl(
@@ -194,6 +203,10 @@ class __$$AppStateImplCopyWithImpl<$Res>
             ? _value.streakState
             : streakState // ignore: cast_nullable_to_non_nullable
                   as StreakState,
+        weeklyIntentState: null == weeklyIntentState
+            ? _value.weeklyIntentState
+            : weeklyIntentState // ignore: cast_nullable_to_non_nullable
+                  as WeeklyIntentState,
       ),
     );
   }
@@ -208,6 +221,7 @@ class _$AppStateImpl implements _AppState {
     required this.purchaseState,
     required this.themeState,
     required this.streakState,
+    required this.weeklyIntentState,
   });
 
   @override
@@ -220,10 +234,12 @@ class _$AppStateImpl implements _AppState {
   final ThemeState themeState;
   @override
   final StreakState streakState;
+  @override
+  final WeeklyIntentState weeklyIntentState;
 
   @override
   String toString() {
-    return 'AppState(remoteConfigState: $remoteConfigState, userState: $userState, purchaseState: $purchaseState, themeState: $themeState, streakState: $streakState)';
+    return 'AppState(remoteConfigState: $remoteConfigState, userState: $userState, purchaseState: $purchaseState, themeState: $themeState, streakState: $streakState, weeklyIntentState: $weeklyIntentState)';
   }
 
   @override
@@ -240,7 +256,9 @@ class _$AppStateImpl implements _AppState {
             (identical(other.themeState, themeState) ||
                 other.themeState == themeState) &&
             (identical(other.streakState, streakState) ||
-                other.streakState == streakState));
+                other.streakState == streakState) &&
+            (identical(other.weeklyIntentState, weeklyIntentState) ||
+                other.weeklyIntentState == weeklyIntentState));
   }
 
   @override
@@ -251,6 +269,7 @@ class _$AppStateImpl implements _AppState {
     purchaseState,
     themeState,
     streakState,
+    weeklyIntentState,
   );
 
   /// Create a copy of AppState
@@ -269,6 +288,7 @@ abstract class _AppState implements AppState {
     required final PurchaseState purchaseState,
     required final ThemeState themeState,
     required final StreakState streakState,
+    required final WeeklyIntentState weeklyIntentState,
   }) = _$AppStateImpl;
 
   @override
@@ -281,6 +301,8 @@ abstract class _AppState implements AppState {
   ThemeState get themeState;
   @override
   StreakState get streakState;
+  @override
+  WeeklyIntentState get weeklyIntentState;
 
   /// Create a copy of AppState
   /// with the given fields replaced by the non-null parameter values.

@@ -4,6 +4,7 @@ import 'package:weeksalive/presentation/redux/remote_config/remote_config_state.
 import 'package:weeksalive/presentation/redux/streak/streak_state.dart';
 import 'package:weeksalive/presentation/redux/theme/theme_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
+import 'package:weeksalive/presentation/redux/weekly_intent/weekly_intent_state.dart';
 
 part 'app_state.freezed.dart';
 
@@ -15,15 +16,17 @@ class AppState with _$AppState {
     required PurchaseState purchaseState,
     required ThemeState themeState,
     required StreakState streakState,
+    required WeeklyIntentState weeklyIntentState,
   }) = _AppState;
 
   factory AppState.initial() {
-    return const AppState(
-      remoteConfigState: RemoteConfigState(),
-      userState: UserState.loading(),
-      purchaseState: PurchaseState.initial(),
-      themeState: ThemeState(),
-      streakState: StreakState(),
+    return AppState(
+      remoteConfigState: const RemoteConfigState(),
+      userState: const UserState.loading(),
+      purchaseState: const PurchaseState.initial(),
+      themeState: const ThemeState(),
+      streakState: const StreakState(),
+      weeklyIntentState: WeeklyIntentState.initial(),
     );
   }
 }
