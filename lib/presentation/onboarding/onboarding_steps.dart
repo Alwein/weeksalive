@@ -8,6 +8,9 @@ import 'package:weeksalive/presentation/onboarding/steps/step_06_date_of_birth.d
 import 'package:weeksalive/presentation/onboarding/steps/step_07_gender.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_08_lifespan.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_09_grid_reveal.dart';
+import 'package:weeksalive/presentation/onboarding/steps/step_09a_birthdays.dart';
+import 'package:weeksalive/presentation/onboarding/steps/step_09b_winters.dart';
+import 'package:weeksalive/presentation/onboarding/steps/step_09c_olympics.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_10_make_it_count.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_11_loved_one.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_12_visits_visualization.dart';
@@ -36,6 +39,9 @@ const List<OnboardingStep> kOnboardingSteps = <OnboardingStep>[
   Step07Gender(),
   Step08Lifespan(),
   Step09GridReveal(),
+  Step09aBirthdays(),
+  Step09bWinters(),
+  Step09cOlympics(),
   Step11LovedOne(),
   Step12VisitsVisualization(),
   Step13WeeksDisappear(),

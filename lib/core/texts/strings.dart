@@ -102,6 +102,16 @@ class Strings {
 
   static String onboarding09Title(String name) => "$name's life in weeks.";
   static String get onboarding09Subtitle => "Every dot is a week you lived, or a week still ahead of you.";
+  static String get onboarding09LoadingLabel => "Building your life grid\u2026";
+
+  static String onboarding09BirthdaysTitle(int count) => "You have $count birthdays ahead.";
+
+  static String onboarding09WintersTitle(int count) => "You have $count weeks of winter ahead.";
+
+  static String onboarding09OlympicsTitle(int count) => "You have $count Olympic games ahead.";
+
+  static String get livedLabel => "LIVED";
+  static String get aheadLabel => "AHEAD";
 
   static String get onboarding10Title1 => "This isn't about counting time down.";
   static String get onboarding10Title2 => "It's about making each week count.";

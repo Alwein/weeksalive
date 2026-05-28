@@ -243,7 +243,7 @@ class _DayIndicator extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: todayEmpty ? AppColors.highlightColor : Colors.transparent,
+        color: todayEmpty ? AppColors.accentOrange : Colors.transparent,
         shape: BoxShape.circle,
         border: todayEmpty
             ? null

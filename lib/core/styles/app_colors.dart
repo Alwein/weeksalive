@@ -40,7 +40,9 @@ class AppColors {
   static const redWarning = Color(0xFFFF5C5C);
   static const greenSuccess = Color(0xFF43C59E);
   static const blueInfo = Color(0xFF007AFF);
-  static const highlightColor = Color(0xFFFF8D28);
+  static const accentOrange = Color(0xFFFF8D28);
+  static const accentMint = Color(0xFF00C8B3);
+  static const accentPurple = Color(0xFFCB30E0);
 }
 
 extension on BuildContext {

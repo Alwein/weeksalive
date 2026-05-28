@@ -88,7 +88,7 @@ class _GridIllustration extends StatefulWidget {
 class _GridIllustrationState extends State<_GridIllustration> with SingleTickerProviderStateMixin {
   static const _kColumns = 52;
   static const _kDotSpacing = 2.0;
-  static const _kHighlightColor = AppColors.highlightColor;
+  static const _kHighlightColor = AppColors.accentOrange;
   static const _kAnimationDurationMs = 5000;
   static const _kAnimationDuration = Duration(milliseconds: _kAnimationDurationMs);
 

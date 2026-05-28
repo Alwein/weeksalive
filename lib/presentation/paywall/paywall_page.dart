@@ -394,13 +394,13 @@ class _TimelineRow extends StatelessWidget {
         child: Icon(item.icon, size: Dimens.iconSizeXs, color: AppColors.bg(context)),
       );
     } else if (item.isActive) {
-      dotColor = AppColors.highlightColor;
+      dotColor = AppColors.accentOrange;
       dotWidget = Container(
         width: dotSize,
         height: dotSize,
         decoration: const BoxDecoration(
           shape: BoxShape.circle,
-          color: AppColors.highlightColor,
+          color: AppColors.accentOrange,
         ),
         child: Icon(item.icon, size: Dimens.iconSizeXs, color: Colors.white),
       );
