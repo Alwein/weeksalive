@@ -11,9 +11,9 @@ import 'package:weeksalive/presentation/onboarding/steps/step_09_grid_reveal.dar
 import 'package:weeksalive/presentation/onboarding/steps/step_10_make_it_count.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_11_loved_one.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_12_visits_visualization.dart';
-import 'package:weeksalive/presentation/onboarding/steps/step_13_weeks_disappear.dart';
+import 'package:weeksalive/presentation/onboarding/steps/step_13_days_disappear.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_14_best_memories.dart';
-import 'package:weeksalive/presentation/onboarding/steps/step_15_weeks_that_stay.dart';
+import 'package:weeksalive/presentation/onboarding/steps/step_15_days_that_stay.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_16_awareness_fades.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_17_daily_habit.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_18_one_minute.dart';
@@ -29,13 +29,13 @@ const List<OnboardingStep> kOnboardingSteps = <OnboardingStep>[
   Step01Welcome(),
   Step02LifeFeelsLong(),
   Step03LifeInWeeks(),
+  Step10MakeItCount(),
   Step04BuildYourGrid(),
   Step05Name(),
   Step06DateOfBirth(),
   Step07Gender(),
   Step08Lifespan(),
   Step09GridReveal(),
-  Step10MakeItCount(),
   Step11LovedOne(),
   Step12VisitsVisualization(),
   Step13WeeksDisappear(),

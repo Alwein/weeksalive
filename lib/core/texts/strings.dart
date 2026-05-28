@@ -119,7 +119,7 @@ class Strings {
   static String get onboarding13Title => "Think about last year.";
   static String get onboarding13Subtitle => "How many days can you actually name?";
   static String get onboarding13Footer => "Most don\u2019t stand out because nothing made them worth noticing.";
-  static String get lastYearWeeksLabel => "LAST YEAR";
+  static String get lastYearWeeksLabel => "365 DAYS LAST YEAR";
   static String get onboarding13Caption1 => "Week you remember";
   static String get onboarding13Caption2 => "Week that faded";
 
@@ -131,18 +131,17 @@ class Strings {
   static String get onboarding14Footer =>
       "Notice them. Savor them. Let them count.\nYou never know the value of a moment until it becomes a memory.";
 
-  static String get onboarding15Title1 => "Some weeks feel like years.";
-  static String get onboarding15Title2 => "Others vanish like days.";
-  static String get onboarding15Caption1 => "WEEK THAT STAYED";
+  static String get onboarding15Title1 => "Some days feel super long.";
+  static String get onboarding15Title2 => "Others go whoosh!";
+  static String get onboarding15Caption1 => "DAY YOU REMEMBER";
   static String get onboarding15Caption1Value1 => "Present";
   static String get onboarding15Caption1Value2 => "Connected";
   static String get onboarding15Caption1Value3 => "Alive";
-  static String get onboarding15Caption2 => "WEEK THAT FADED";
+  static String get onboarding15Caption2 => "DAY YOU FORGOT";
   static String get onboarding15Caption2Value1 => "Autopilot";
   static String get onboarding15Caption2Value2 => "Distracted";
   static String get onboarding15Caption2Value3 => "Rushed";
-  static String get onboarding15Footer =>
-      "The difference between them isn't luck. It's awareness — the simple act of deciding to show up.";
+  static String get onboarding15Footer => "The difference between them is awareness.";
 
   static String get onboarding16Title1 => "Awareness is beautiful.";
   static String get onboarding16Title2 => "But it fades without a ritual.";

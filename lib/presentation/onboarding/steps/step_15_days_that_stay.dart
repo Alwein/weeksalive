@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
@@ -7,7 +7,6 @@ import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
-import 'package:weeksalive/presentation/widgets/circle.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step15WeeksThatStay extends OnboardingStep {
@@ -29,8 +28,14 @@ class Step15WeeksThatStay extends OnboardingStep {
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: Margins.spacingM,
               children: [
-                Texts.xlBold(Strings.onboarding15Title1),
-                Texts.xlBoldSoft(context, Strings.onboarding15Title2),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Texts.xlBold(Strings.onboarding15Title1),
+                    Texts.xlBoldSoft(context, Strings.onboarding15Title2),
+                  ],
+                ),
                 _Illustration(),
                 const SmallDivider(),
                 Texts.primaryMediumSoft(context, Strings.onboarding15Footer),
@@ -51,8 +56,10 @@ class _Illustration extends StatelessWidget {
         const SizedBox(height: Margins.spacingM),
         Row(
           spacing: Margins.spacingBase,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
+              flex: 2,
               child: _Card(
                 title: Strings.onboarding15Caption1,
                 value1: Strings.onboarding15Caption1Value1,
@@ -63,19 +70,19 @@ class _Illustration extends StatelessWidget {
               ),
             ),
             Expanded(
+              flex: 1,
               child: _Card(
                 title: Strings.onboarding15Caption2,
                 value1: Strings.onboarding15Caption2Value1,
                 value2: Strings.onboarding15Caption2Value2,
                 value3: Strings.onboarding15Caption2Value3,
+                small: true,
                 foregroundColor: AppColors.contentSoftOnSoft(context),
                 backgroundColor: AppColors.bgSoft(context),
               ),
             ),
           ],
         ),
-        const SizedBox(height: Margins.spacingBase),
-        const _GradientIllustration(),
         const SizedBox(height: Margins.spacingM),
       ],
     );
@@ -84,78 +91,47 @@ class _Illustration extends StatelessWidget {
 
 class _Card extends StatelessWidget {
   const _Card({
+    required this.foregroundColor,
+    required this.backgroundColor,
     required this.title,
     required this.value1,
     required this.value2,
     required this.value3,
-    required this.foregroundColor,
-    required this.backgroundColor,
+    this.small = false,
   });
   final String title;
   final String value1;
   final String value2;
   final String value3;
+  final bool small;
   final Color foregroundColor;
   final Color backgroundColor;
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM, vertical: Margins.spacingL),
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(Dimens.radiusL),
-          ),
-          child: Column(
-            spacing: Margins.spacingBase,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: TextStyles.primaryRegular.copyWith(color: foregroundColor)),
-              Text("•  $value1", style: TextStyles.primaryMediumMedium.copyWith(color: foregroundColor)),
-              Text("•  $value2", style: TextStyles.primaryMediumMedium.copyWith(color: foregroundColor)),
-              Text("•  $value3", style: TextStyles.primaryMediumMedium.copyWith(color: foregroundColor)),
-            ],
-          ),
+    final hPadding = small ? Margins.spacingBase : Margins.spacingM;
+    final vPadding = small ? Margins.spacingM : Margins.spacingL;
+    final titleStyle = small ? TextStyles.primarySmallRegular : TextStyles.primaryRegularBold;
+    final valueStyle = small ? TextStyles.primarySmallMedium : TextStyles.primaryLargeBold;
+    return AspectRatio(
+      aspectRatio: 9 / 12,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: hPadding, vertical: vPadding),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(Dimens.radiusL),
         ),
-      ],
-    );
-  }
-}
-
-class _GradientIllustration extends StatelessWidget {
-  const _GradientIllustration();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 42,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(360),
-        gradient: LinearGradient(
-          colors: [
-            AppColors.content(context),
-            AppColors.bgSoft(context),
+        child: Column(
+          spacing: small ? Margins.spacingXs : Margins.spacingBase,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title, style: titleStyle.copyWith(color: foregroundColor)),
+            Text("•  $value1", style: valueStyle.copyWith(color: foregroundColor)),
+            Text("•  $value2", style: valueStyle.copyWith(color: foregroundColor)),
+            Text("•  $value3", style: valueStyle.copyWith(color: foregroundColor)),
           ],
         ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _circle(AppColors.content(context)),
-          _circle(AppColors.bgSoft(context)),
-        ],
-      ),
     );
   }
-
-  Widget _circle(Color color) => Circle(
-    size: 42,
-    color: color,
-  );
 }

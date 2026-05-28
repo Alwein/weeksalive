@@ -50,10 +50,9 @@ class Step13WeeksDisappear extends OnboardingStep {
                           children: [
                             YearGridIllustration(
                               animationDurationMs: 2000,
-                              header: Texts.primaryXsCounter(
-                                context,
+                              header: Texts.primaryXsMedium(
                                 Strings.lastYearWeeksLabel,
-                                '365 ${Strings.daysLabel}',
+                                color: AppColors.contentSoft(context),
                               ),
                               filledCount: 365,
                               wheightDistribution: const [-1, -1, -1, -1, -1, -1, 4, -1, -1, -1, -1, -1, -1],
