@@ -147,6 +147,33 @@ LivedAheadDots winterDotIndices({
   return LivedAheadDots(lived: lived, ahead: ahead);
 }
 
+/// Returns the indices of the 52 weeks in the current year-of-life row
+/// (the row being lived right now), partitioned into already lived and still ahead.
+///
+/// Each grid row spans one year of life (birthday to birthday). The current row
+/// is derived directly from [livedWeeks] so it is always the row the user is
+/// actually living through, regardless of calendar year.
+LivedAheadDots currentYearDotIndices({
+  required int totalWeeks,
+  required int livedWeeks,
+  int columns = 52,
+}) {
+  if (totalWeeks <= 0) return const LivedAheadDots(lived: [], ahead: []);
+  final currentRow = livedWeeks ~/ columns;
+  final lived = <int>[];
+  final ahead = <int>[];
+  for (var col = 0; col < columns; col++) {
+    final i = currentRow * columns + col;
+    if (i >= totalWeeks) break;
+    if (i < livedWeeks) {
+      lived.add(i);
+    } else {
+      ahead.add(i);
+    }
+  }
+  return LivedAheadDots(lived: lived, ahead: ahead);
+}
+
 /// Returns the indices of the weeks that fall during a Summer Olympic games
 /// event, partitioned into already lived and still ahead. The Summer Olympics
 /// happen every 4 years (e.g. 2024, 2028…) and last roughly 17 days, so we

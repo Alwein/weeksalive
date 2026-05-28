@@ -109,9 +109,14 @@ class Strings {
   static String onboarding09WintersTitle(int count) => "You have $count weeks of winter ahead.";
 
   static String onboarding09OlympicsTitle(int count) => "You have $count Olympic games ahead.";
+  static String get onboarding09dThisYearTitle => "How? Let's zoom into this year.";
+
+  static String onboarding27OneYearButTitle(int georgianDays) => "This year has $georgianDays days.\nOkay but…";
 
   static String get livedLabel => "LIVED";
   static String get aheadLabel => "AHEAD";
+  static String get thisYearLabel => "THIS YEAR";
+  static String get livedDaysLabel => "LIVED DAYS";
 
   static String get onboarding10Title1 => "This isn't about counting time down.";
   static String get onboarding10Title2 => "It's about making each week count.";
@@ -125,6 +130,10 @@ class Strings {
   static String get visitsAheadLabel => "VISITS AHEAD";
   static String get onboarding12Subtitle =>
       "This isn’t meant to feel heavy. It’s meant to make those visits feel like what they are — precious.";
+
+  static String get onboardingButAddLifeTitle1 => "You can’t add weeks to your life.";
+  static String get onboardingButAddLifeBut => "BUT";
+  static String get onboardingButAddLifeTitle2 => "You can add life to your weeks.";
 
   static String get onboarding13Title => "Think about last year.";
   static String get onboarding13Subtitle => "How many days can you actually name?";

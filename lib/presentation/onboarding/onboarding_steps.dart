@@ -11,6 +11,7 @@ import 'package:weeksalive/presentation/onboarding/steps/step_09_grid_reveal.dar
 import 'package:weeksalive/presentation/onboarding/steps/step_09a_birthdays.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_09b_winters.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_09c_olympics.dart';
+import 'package:weeksalive/presentation/onboarding/steps/step_09d_this_year.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_10_make_it_count.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_11_loved_one.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_12_visits_visualization.dart';
@@ -27,6 +28,8 @@ import 'package:weeksalive/presentation/onboarding/steps/step_22_privacy.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_23_attribution.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_25_final.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_26_paywall.dart';
+import 'package:weeksalive/presentation/onboarding/steps/step_27_one_year_but.dart';
+import 'package:weeksalive/presentation/onboarding/steps/step_but_add_life.dart';
 
 const List<OnboardingStep> kOnboardingSteps = <OnboardingStep>[
   Step01Welcome(),
@@ -44,6 +47,9 @@ const List<OnboardingStep> kOnboardingSteps = <OnboardingStep>[
   Step09cOlympics(),
   Step11LovedOne(),
   Step12VisitsVisualization(),
+  StepButAddLife(),
+  Step09dThisYear(),
+  Step27OneYearBut(),
   Step13WeeksDisappear(),
   Step14BestMemories(),
   Step15WeeksThatStay(),

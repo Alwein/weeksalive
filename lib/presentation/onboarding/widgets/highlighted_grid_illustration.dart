@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_advanced_haptic/flutter_advanced_haptic.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/margins.dart';
-import 'package:weeksalive/core/texts/strings.dart';
-import 'package:weeksalive/presentation/widgets/texts.dart';
 import 'package:weeksalive/presentation/widgets/week_grid_painter.dart';
 
 /// Displays the full life-in-weeks grid (already revealed) and animates a list
@@ -14,19 +12,19 @@ class HighlightedGridIllustration extends StatefulWidget {
     required this.totalWeeks,
     required this.livedWeeks,
     required this.highlightedDots,
-    required this.livedCount,
-    required this.aheadCount,
+    this.caption,
     this.animationDurationMs = 3000,
+    this.delayMs = 200,
     this.highlightColor = AppColors.accentOrange,
   });
 
   final int totalWeeks;
   final int livedWeeks;
   final List<int> highlightedDots;
-  final int livedCount;
-  final int aheadCount;
   final int animationDurationMs;
+  final int delayMs;
   final Color highlightColor;
+  final Widget? caption;
 
   @override
   State<HighlightedGridIllustration> createState() => _HighlightedGridIllustrationState();
@@ -45,14 +43,18 @@ class _HighlightedGridIllustrationState extends State<HighlightedGridIllustratio
     _controller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: widget.animationDurationMs),
-    )..forward();
-    _haptic = FlutterHaptic.instance;
-    _haptic.playPattern(
-      HapticPattern.custom(
-        pattern: List.generate((widget.animationDurationMs / 50).toInt(), (index) => 50),
-        defaultIntensity: 0.3,
-      ),
     );
+    _haptic = FlutterHaptic.instance;
+    Future.delayed(Duration(milliseconds: widget.delayMs), () {
+      if (!mounted) return;
+      _controller.forward();
+      _haptic.playPattern(
+        HapticPattern.custom(
+          pattern: List.generate((widget.animationDurationMs / 50).toInt(), (index) => 50),
+          defaultIntensity: 0.3,
+        ),
+      );
+    });
   }
 
   @override
@@ -80,21 +82,7 @@ class _HighlightedGridIllustrationState extends State<HighlightedGridIllustratio
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: Margins.spacingBase),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Texts.primaryXsCounter(
-                  context,
-                  Strings.livedLabel,
-                  widget.livedCount.toString(),
-                ),
-                Texts.primaryXsCounter(
-                  context,
-                  Strings.aheadLabel,
-                  widget.aheadCount.toString(),
-                ),
-              ],
-            ),
+            widget.caption ?? const SizedBox.shrink(),
             SizedBox(
               width: double.infinity,
               height: exactHeight,

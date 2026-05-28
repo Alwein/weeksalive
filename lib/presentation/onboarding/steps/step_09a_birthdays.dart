@@ -53,8 +53,13 @@ class Step09aBirthdays extends OnboardingStep {
                       totalWeeks: grid.totalWeeks,
                       livedWeeks: grid.livedWeeks,
                       highlightedDots: dots.ahead,
-                      livedCount: livedCount,
-                      aheadCount: aheadCount,
+                      caption: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Texts.primaryXsCounter(context, Strings.livedLabel, livedCount.toString()),
+                          Texts.primaryXsCounter(context, Strings.aheadLabel, aheadCount.toString()),
+                        ],
+                      ),
                       animationDurationMs: 1000,
                     ),
                   ),

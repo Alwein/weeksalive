@@ -65,8 +65,13 @@ class Step09cOlympics extends OnboardingStep {
                       totalWeeks: grid.totalWeeks,
                       livedWeeks: grid.livedWeeks,
                       highlightedDots: dots.ahead,
-                      livedCount: olympicsLived,
-                      aheadCount: olympicsAhead,
+                      caption: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Texts.primaryXsCounter(context, Strings.livedLabel, olympicsLived.toString()),
+                          Texts.primaryXsCounter(context, Strings.aheadLabel, olympicsAhead.toString()),
+                        ],
+                      ),
                       animationDurationMs: 1000,
                       highlightColor: AppColors.accentPurple,
                     ),

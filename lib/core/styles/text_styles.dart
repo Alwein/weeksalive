@@ -40,7 +40,7 @@ class TextStyles {
   static TextStyle primaryXxlBold = const TextStyle(
     fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.xxxl,
-    fontWeight: FontWeight.normal,
+    fontWeight: FontWeight.bold,
     height: 0,
   );
 

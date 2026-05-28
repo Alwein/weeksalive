@@ -1,0 +1,54 @@
+import 'package:flutter/widgets.dart';
+import 'package:weeksalive/core/styles/margins.dart';
+import 'package:weeksalive/core/styles/text_styles.dart';
+import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
+import 'package:weeksalive/presentation/widgets/texts.dart';
+
+class StepButAddLife extends OnboardingStep {
+  const StepButAddLife();
+
+  @override
+  String primaryLabel(BuildContext context) => Strings.continueString;
+
+  @override
+  Widget buildContent(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: 16,
+            child: Center(
+              child: SingleChildScrollView(
+                child: OnboardingStaggeredColumn(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Texts.xlBoldSoft(context, Strings.onboardingButAddLifeTitle1),
+                    Text(Strings.onboardingButAddLifeBut, style: TextStyles.primaryXxlBold),
+                    Texts.xlBold(Strings.onboardingButAddLifeTitle2),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const Flexible(
+            flex: 10,
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: ParallaxRive(
+                maxOffset: 0,
+                assetPath: "assets/animations/outline_looking_up.riv",
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
