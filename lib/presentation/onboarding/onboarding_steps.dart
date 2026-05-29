@@ -51,13 +51,13 @@ const List<OnboardingStep> kOnboardingSteps = <OnboardingStep>[
   Step09dThisYear(),
   Step27OneYearBut(),
   Step15WeeksThatStay(),
-  // TODO:
   Step13WeeksDisappear(),
+  Step17DailyHabit(),
+  Step18OneMinute(),
+  // TODO:
   Step14BestMemories(),
   Step16AwarenessFades(),
-  Step17DailyHabit(),
   Step19GridAlive(),
-  Step18OneMinute(),
   Step20NotificationTime(),
   Step21Widget(),
   Step22Privacy(),

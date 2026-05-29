@@ -164,13 +164,12 @@ class Strings {
   static String get onboarding16Subtitle =>
       "That's why we built something to help you stay present, not just today, but every week of your life.";
 
-  static String get onboarding17Title => "Turn living into a daily habit.";
-  static String get onboarding17Title2 => "Build a streak, one day at a time.";
-  static String get onboarding17Subtitle => "Small ritual. Big difference.";
+  static String get onboarding17Title => "That’s why WeeksAlive exists.";
+  static String get onboarding17Title2 => "Not to track time\nTo help you feel it.";
+  static String get onboarding17Subtitle => "A simple daily ritual to notice your life as it happens.";
 
-  static String get onboarding18Title => "One minute.\nEvery day.";
-  static String get onboarding18Subtitle =>
-      "A quick check-in to notice how you\u2019re really living before the day slips away.";
+  static String get onboarding18Title => "One minute a day.\nThat's all it takes.";
+  static String get onboarding18Subtitle => "Every evening, take a moment to notice today.";
 
   static String get onboarding19Title => "Watch your grid come alive.";
   static String get onboarding19Subtitle => "Every day you check in, over time, you’ll see a life being lived.";
@@ -259,6 +258,9 @@ class Strings {
   static String get feelingSectionQuestion => "How did you feel today?";
   static String get meaningSectionQuestion => "How meaningful was your time today?";
   static String get newExperienceSectionQuestion => "Did you try something new today?";
+  static String get livingIntentionsSectionQuestion => "Did your actions reflect your weekly intentions?";
+  static String get livingIntentionsSectionValueNone => "None";
+  static String get livingIntentionsSectionEditLabel => "Edit";
 
   // weekly intent
   static String get intentBePresent => "Be Present";
