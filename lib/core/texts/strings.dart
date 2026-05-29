@@ -150,17 +150,15 @@ class Strings {
   static String get onboarding14Footer =>
       "Notice them. Savor them. Let them count.\nYou never know the value of a moment until it becomes a memory.";
 
-  static String get onboarding15Title1 => "Some days feel super long.";
-  static String get onboarding15Title2 => "Others go whoosh!";
-  static String get onboarding15Caption1 => "DAY YOU REMEMBER";
-  static String get onboarding15Caption1Value1 => "Present";
-  static String get onboarding15Caption1Value2 => "Connected";
-  static String get onboarding15Caption1Value3 => "Alive";
-  static String get onboarding15Caption2 => "DAY YOU FORGOT";
-  static String get onboarding15Caption2Value1 => "Autopilot";
-  static String get onboarding15Caption2Value2 => "Distracted";
-  static String get onboarding15Caption2Value3 => "Rushed";
-  static String get onboarding15Footer => "The difference between them is awareness.";
+  static String get onboarding15Title => "Not all days carry the same weight in our brain.";
+  static String get onboarding15LeftLabel1 => "Rushed";
+  static String get onboarding15LeftLabel2 => "Autopilot";
+  static String get onboarding15LeftLabel3 => "Forgotten";
+  static String get onboarding15RightLabel1 => "Present";
+  static String get onboarding15RightLabel2 => "Intentional";
+  static String get onboarding15RightLabel3 => "Remembered";
+  static String get onboarding15Footer =>
+      "Studies show that novelty, emotion, and presence can stretch time itself.\nThe more you notice your life as it happens, the more of it you get to keep.";
 
   static String get onboarding16Title1 => "Awareness is beautiful.";
   static String get onboarding16Title2 => "But it fades without a ritual.";

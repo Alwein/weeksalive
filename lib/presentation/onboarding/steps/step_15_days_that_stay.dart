@@ -1,12 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
-import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step15WeeksThatStay extends OnboardingStep {
@@ -18,27 +18,27 @@ class Step15WeeksThatStay extends OnboardingStep {
   @override
   Widget buildContent(BuildContext context) {
     return LayoutBuilder(
-      builder: (context, constraints) => SingleChildScrollView(
+      builder: (context, constraints) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
         child: ConstrainedBox(
           constraints: BoxConstraints(minHeight: constraints.maxHeight),
           child: Center(
-            child: OnboardingStaggeredColumn(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: Margins.spacingM,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Texts.xlBold(Strings.onboarding15Title1),
-                    Texts.xlBoldSoft(context, Strings.onboarding15Title2),
-                  ],
+                const SizedBox(height: Margins.spacingBase),
+                Texts.xlBold(Strings.onboarding15Title),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: Margins.spacingBase),
+                    child: _DotScaleIllustration(),
+                  ),
                 ),
-                _Illustration(),
                 const SmallDivider(),
                 Texts.primaryMediumSoft(context, Strings.onboarding15Footer),
+                const SizedBox(height: Margins.spacingM),
               ],
             ),
           ),
@@ -48,90 +48,122 @@ class Step15WeeksThatStay extends OnboardingStep {
   }
 }
 
-class _Illustration extends StatelessWidget {
+class _DotScaleIllustration extends StatefulWidget {
+  @override
+  State<_DotScaleIllustration> createState() => _DotScaleIllustrationState();
+}
+
+class _DotScaleIllustrationState extends State<_DotScaleIllustration> with SingleTickerProviderStateMixin {
+  static const _dotSizes = [10.0, 20.0, 34.0, 50.0, 70.0];
+
+  late final AnimationController _controller;
+  late final Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2000),
+    );
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: Margins.spacingM),
-        Row(
-          spacing: Margins.spacingBase,
-          crossAxisAlignment: CrossAxisAlignment.center,
+    final color = AppColors.content(context);
+
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, _) {
+        final t = _animation.value;
+        const largestSize = 34.0;
+
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
-              flex: 2,
-              child: _Card(
-                title: Strings.onboarding15Caption1,
-                value1: Strings.onboarding15Caption1Value1,
-                value2: Strings.onboarding15Caption1Value2,
-                value3: Strings.onboarding15Caption1Value3,
-                foregroundColor: AppColors.contentMuted(context),
-                backgroundColor: AppColors.content(context),
-              ),
+            const SizedBox(height: Margins.spacingM),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                for (final targetSize in _dotSizes)
+                  () {
+                    final size = lerpDouble(largestSize, targetSize, t)!;
+                    return Container(
+                      width: size,
+                      height: size,
+                      decoration: BoxDecoration(
+                        color: color,
+                        shape: BoxShape.circle,
+                      ),
+                    );
+                  }(),
+              ],
             ),
-            Expanded(
-              flex: 1,
-              child: _Card(
-                title: Strings.onboarding15Caption2,
-                value1: Strings.onboarding15Caption2Value1,
-                value2: Strings.onboarding15Caption2Value2,
-                value3: Strings.onboarding15Caption2Value3,
-                small: true,
-                foregroundColor: AppColors.contentSoftOnSoft(context),
-                backgroundColor: AppColors.bgSoft(context),
-              ),
+            const SizedBox(height: Margins.spacingBase),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _LabelsColumn(
+                  lines: [
+                    Strings.onboarding15LeftLabel1,
+                    Strings.onboarding15LeftLabel2,
+                    Strings.onboarding15LeftLabel3,
+                  ],
+                  color: AppColors.contentSoft(context),
+                  textAlign: TextAlign.start,
+                ),
+                const Spacer(),
+                _LabelsColumn(
+                  lines: [
+                    Strings.onboarding15RightLabel1,
+                    Strings.onboarding15RightLabel2,
+                    Strings.onboarding15RightLabel3,
+                  ],
+                  color: AppColors.content(context),
+                  textAlign: TextAlign.end,
+                ),
+              ],
             ),
+            const SizedBox(height: Margins.spacingM),
           ],
-        ),
-        const SizedBox(height: Margins.spacingM),
-      ],
+        );
+      },
     );
   }
 }
 
-class _Card extends StatelessWidget {
-  const _Card({
-    required this.foregroundColor,
-    required this.backgroundColor,
-    required this.title,
-    required this.value1,
-    required this.value2,
-    required this.value3,
-    this.small = false,
+class _LabelsColumn extends StatelessWidget {
+  const _LabelsColumn({
+    required this.lines,
+    required this.color,
+    required this.textAlign,
   });
-  final String title;
-  final String value1;
-  final String value2;
-  final String value3;
-  final bool small;
-  final Color foregroundColor;
-  final Color backgroundColor;
+
+  final List<String> lines;
+  final Color color;
+  final TextAlign textAlign;
+
   @override
   Widget build(BuildContext context) {
-    final hPadding = small ? Margins.spacingBase : Margins.spacingM;
-    final vPadding = small ? Margins.spacingM : Margins.spacingL;
-    final titleStyle = small ? TextStyles.primarySmallRegular : TextStyles.primaryRegularBold;
-    final valueStyle = small ? TextStyles.primarySmallMedium : TextStyles.primaryLargeBold;
-    return AspectRatio(
-      aspectRatio: 9 / 12,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: hPadding, vertical: vPadding),
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(Dimens.radiusL),
-        ),
-        child: Column(
-          spacing: small ? Margins.spacingXs : Margins.spacingBase,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: titleStyle.copyWith(color: foregroundColor)),
-            Text("•  $value1", style: valueStyle.copyWith(color: foregroundColor)),
-            Text("•  $value2", style: valueStyle.copyWith(color: foregroundColor)),
-            Text("•  $value3", style: valueStyle.copyWith(color: foregroundColor)),
-          ],
-        ),
-      ),
+    return Column(
+      crossAxisAlignment: textAlign == TextAlign.end ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      children: [
+        for (final line in lines)
+          Text(
+            line,
+            style: TextStyles.primarySmallRegular.copyWith(color: color),
+            textAlign: textAlign,
+          ),
+      ],
     );
   }
 }
