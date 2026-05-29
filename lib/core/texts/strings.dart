@@ -135,10 +135,9 @@ class Strings {
   static String get onboardingButAddLifeBut => "BUT";
   static String get onboardingButAddLifeTitle2 => "You can add life to your weeks.";
 
-  static String get onboarding13Title => "Think about last year.";
-  static String get onboarding13Subtitle => "How many days can you actually name?";
-  static String get onboarding13Footer => "Most don\u2019t stand out because nothing made them worth noticing.";
-  static String get lastYearWeeksLabel => "365 DAYS LAST YEAR";
+  static String get onboarding13Title => "This is what it actually feels like.";
+  static String get onboarding13Footer =>
+      "Same 365 days. Each dot is a day. Its size is the weight it carries in your perception.";
   static String get onboarding13Caption1 => "Week you remember";
   static String get onboarding13Caption2 => "Week that faded";
 

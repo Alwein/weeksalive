@@ -17,6 +17,10 @@ class Step13WeeksDisappear extends OnboardingStep {
   Widget buildContent(BuildContext context) {
     final bgColor = AppColors.bg(context);
 
+    final now = DateTime.now();
+    final int dayOfYear = (now.difference(DateTime(now.year, 1, 1)).inDays + 1);
+    final int daysLived = dayOfYear;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -41,8 +45,6 @@ class Step13WeeksDisappear extends OnboardingStep {
                       children: [
                         const SizedBox(height: Margins.spacingS),
                         Texts.xlBold(Strings.onboarding13Title),
-                        const SizedBox(height: Margins.spacingS),
-                        Texts.primaryMediumSoft(context, Strings.onboarding13Subtitle),
                         const SizedBox(height: Margins.spacingM),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,12 +52,13 @@ class Step13WeeksDisappear extends OnboardingStep {
                           children: [
                             YearGridIllustration(
                               animationDurationMs: 2000,
-                              header: Texts.primaryXsMedium(
-                                Strings.lastYearWeeksLabel,
-                                color: AppColors.contentSoft(context),
+                              header: Texts.primaryXsCounter(
+                                context,
+                                Strings.thisYearLabel,
+                                DateTime.now().year.toString(),
                               ),
-                              filledCount: 365,
-                              wheightDistribution: const [-1, -1, -1, -1, -1, -1, 4, -1, -1, -1, -1, -1, -1],
+                              filledCount: daysLived,
+                              wheightDistribution: const [0, 1, 2, 2, 3, 3, 4, 4, 4],
                             ),
                           ],
                         ),
