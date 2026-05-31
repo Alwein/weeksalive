@@ -41,9 +41,6 @@ class WeeklyIntentMiddleware extends MiddlewareClass<AppState> {
 
     final intents = savedIntents ?? List<WeeklyIntent>.from(kDefaultWeeklyIntents);
 
-    // Dispatch first so the UI reflects state as early as possible.
-    // Guard against the store being torn down before this async callback
-    // completes (e.g. in tests).
     try {
       store.dispatch(
         WeeklyIntentLoadedAction(
@@ -58,7 +55,6 @@ class WeeklyIntentMiddleware extends MiddlewareClass<AppState> {
       return;
     }
 
-    // Persist defaults on first launch (fire-and-forget after dispatch).
     if (savedIntents == null) {
       await weeklyIntentRepository.setIntents(intents);
     }

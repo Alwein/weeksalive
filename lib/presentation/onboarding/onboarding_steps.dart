@@ -16,9 +16,7 @@ import 'package:weeksalive/presentation/onboarding/steps/step_10_make_it_count.d
 import 'package:weeksalive/presentation/onboarding/steps/step_11_loved_one.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_12_visits_visualization.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_13_days_disappear.dart';
-import 'package:weeksalive/presentation/onboarding/steps/step_14_best_memories.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_15_days_that_stay.dart';
-import 'package:weeksalive/presentation/onboarding/steps/step_16_awareness_fades.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_17_daily_habit.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_18_one_minute.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_19_grid_alive.dart';
@@ -28,6 +26,7 @@ import 'package:weeksalive/presentation/onboarding/steps/step_21_widget.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_22_privacy.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_22_weekly_intent.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_23_attribution.dart';
+import 'package:weeksalive/presentation/onboarding/steps/step_24_next_steps.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_25_final.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_26_paywall.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_27_one_year_but.dart';
@@ -58,15 +57,12 @@ const List<OnboardingStep> kOnboardingSteps = <OnboardingStep>[
   Step17DailyHabit(),
   Step18OneMinute(),
   Step20NotificationTime(),
-  Step19GridAlive(),
   Step22WeeklyIntent(),
-  // TODO:
-  Step14BestMemories(),
-  Step16AwarenessFades(),
+  Step19GridAlive(),
   Step21Widget(),
-  Step22Privacy(),
+  Step22Rating(),
   Step23Attribution(),
-  // Step24Rating(),
+  Step24ONextSteps(),
   Step25Final(),
   Step26Paywall(),
 ];

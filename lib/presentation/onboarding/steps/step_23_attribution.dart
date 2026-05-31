@@ -16,11 +16,10 @@ class Step23Attribution extends OnboardingStep {
   String primaryLabel(BuildContext context) => Strings.continueString;
 
   @override
-  Future<void> Function(BuildContext, OnboardingFormController)? get onPrimary =>
-      (context, controller) async {
-        await AppTrackingTransparency.requestTrackingAuthorization();
-        await controller.goNext();
-      };
+  Future<void> Function(BuildContext, OnboardingFormController)? get onPrimary => (context, controller) async {
+    await AppTrackingTransparency.requestTrackingAuthorization();
+    await controller.goNext();
+  };
 
   @override
   Widget buildContent(BuildContext context) {
@@ -34,7 +33,7 @@ class Step23Attribution extends OnboardingStep {
             child: Center(
               child: ParallaxRive(
                 maxOffset: 0,
-                assetPath: "assets/animations/outline_favor.riv",
+                assetPath: "assets/animations/outline_lock.riv",
               ),
             ),
           ),
@@ -45,7 +44,7 @@ class Step23Attribution extends OnboardingStep {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Texts.xlBold(Strings.onboarding23Title),
+                  Texts.xlBold(Strings.onboarding23Title1),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,

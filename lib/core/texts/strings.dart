@@ -13,6 +13,7 @@ class Strings {
   static String get done => tr('done');
   static String get continueString => tr('continue');
   static String get editName => "Edit name";
+  static String get custom => "Custom";
 
   // weeksalive
 
@@ -141,14 +142,6 @@ class Strings {
   static String get onboarding13Caption1 => "Week you remember";
   static String get onboarding13Caption2 => "Week that faded";
 
-  static String get onboarding14Title => "Your best memories weren\u2019t planned.";
-  static String get onboarding14Subtitle => "They happened in ordinary weeks, when you were not even paying attention.";
-  static String get onboarding14Item1 => "The conversation that went way too deep";
-  static String get onboarding14Item2 => "That moment everyone started laughing at once";
-  static String get onboarding14Item3 => "When you felt exactly where you belonged";
-  static String get onboarding14Footer =>
-      "Notice them. Savor them. Let them count.\nYou never know the value of a moment until it becomes a memory.";
-
   static String get onboarding15Title => "Not all days carry the same weight in our brain.";
   static String get onboarding15LeftLabel1 => "Rushed";
   static String get onboarding15LeftLabel2 => "Autopilot";
@@ -159,21 +152,15 @@ class Strings {
   static String get onboarding15Footer =>
       "Studies show that novelty, emotion, and presence can stretch time itself.\nThe more you notice your life as it happens, the more of it you get to keep.";
 
-  static String get onboarding16Title1 => "Awareness is beautiful.";
-  static String get onboarding16Title2 => "But it fades without a ritual.";
-  static String get onboarding16Subtitle =>
-      "That's why we built something to help you stay present, not just today, but every week of your life.";
-
   static String get onboarding17Title => "That’s why WeeksAlive exists.";
   static String get onboarding17Title2 => "Not to track time\nTo help you feel it.";
   static String get onboarding17Subtitle => "A simple daily ritual to notice your life as it happens.";
 
-  static String get onboarding18Title => "Your daily check-in.";
-  static String get onboarding18Subtitle =>
-      "A few quick questions about how today felt — same ones you'll answer every day.";
+  static String get onboarding18Title => "Answer 4 questions every day.";
+  static String get onboarding18Subtitle => "A few quick questions about how today felt.";
 
   static String get onboarding19Title => "Day after day.\nWeek after week.";
-  static String get onboarding19Subtitle => "Watch both grids come alive.";
+  static String get onboarding19Subtitle => "Watch both your grids come alive.";
 
   static String get onboarding20Title => "What time of day for your daily check-in?";
   static String get onboarding20Subtitle => "WeeksAlive will send you a notification to complete today's entry.";
@@ -185,16 +172,16 @@ class Strings {
 
   static String get onboardingWeekBeginTitle => "When do you prefer the week to begin?";
   static String get onboardingWeekBeginSubtitle => "When a new dot is added to your life grid.";
-  static String get onboardingWeekBeginMonday => "Every monday";
-  static String onboardingWeekBeginBirthday(String weekday) => "Your birth day (every $weekday)";
+  static String get onboardingWeekBeginMonday => "On every monday";
+  static String onboardingWeekBeginBirthday(String weekday) => "On your birth day (every $weekday)";
   static String get onboardingWeekBeginCustom => "Custom";
   static String get onboardingWeekBeginFooter => "You can change this anytime.";
 
   // weekly intent onboarding
-  static String get onboardingWeeklyIntentTitle => "What matters to you\nthis week?";
+  static String get onboardingWeeklyIntentTitle => "Select what matters to you this week.";
   static String get onboardingWeeklyIntentSubtitle =>
-      "Choose up to 3 intentions. Not a goal, just a\nguideline, at your own pace.";
-  static String get onboardingWeeklyIntentFooter => "Your intentions appear at every check-in.";
+      "Choose up to 3 intentions.\nNot a goal, just a guideline, at your own pace.";
+  static String get onboardingWeeklyIntentFooter => "Your intentions reset every week.";
 
   static List<String> get weekdayFullNames => [
     'Monday',
@@ -211,13 +198,13 @@ class Strings {
   static String get onboarding21Subtitle =>
       "Add your grid to your Home Screen, your Lock Screen, or your walls \u2014 a beautiful, constant reminder to live on purpose.";
 
-  static String get onboarding22Title1 => "Your data is yours.";
+  static String get onboarding22Title1 => "Do you like it so far?";
   static String get onboarding22Subtitle =>
-      "It never leaves your device. No ads. No tracking. No data shared. Works 100% offline.";
+      "91% of people using WeeksAlive say it helps them getting the most of their time";
 
-  static String get onboarding23Title => "One small favor?";
+  static String get onboarding23Title1 => "Your data is yours.";
   static String get onboarding23Subtitle =>
-      "If you allow tracking on the next screen, it simply tells us which ad brought you here.\n\nNothing personal, no data sold, ever. That one signal helps us reach people who need this app — and keeps us building it for you.";
+      "It never leaves your device. No ads. No data release. Works 100% offline.\n\nIf you allow tracking on the next screen, it simply tells us which ad brought you here.\n\nNothing personal, no data sold, ever. That one signal help us find more people who need this app an keeps us building it for you.";
 
   static String get onboarding25Title1 => "You have";
   static String get onboarding25Title2 => "exactly one life.";
@@ -226,6 +213,18 @@ class Strings {
   static String get onboarding25Title5 => "To feel more.";
   static String get onboarding25Title6 => "To love more.";
   static String get onboarding25Footer => "Will you take this chance?";
+
+  static String get onboarding24Title => "Next steps";
+  static String onboarding24PlanHeader(String planName) => "Plan for $planName";
+  static String get onboarding24TodaySection => "Today";
+  static String onboarding24TodayDescription(String preferedTime) =>
+      "Take 60 seconds at $preferedTime to notice how today really felt.";
+  static String get onboarding24ThisWeekSection => "This week";
+  static String onboarding24ThisWeekDescription(List<String> intentions) =>
+      "Live with your ${intentions.length} itentions : ${intentions.join(", ")}";
+  static String get onboarding24NextWeekSection => "Next week";
+  static String onboarding24NextWeekDescription(String weekday) =>
+      "One dot is added to your life grid.\nOn $weekday, your week closes with a short recap. ";
 
   // paywall
   static String paywallTitle(String trialWeeks) => 'Try WeeksAlive free for $trialWeeks weeks.';
@@ -296,4 +295,9 @@ class Strings {
   static String get intentCreate => "Create";
   static String get intentTakeCare => "Take Care";
   static String get intentObserve => "Observe";
+
+  static String get editWeeklyIntentsTitle => "Your intentions";
+  static String get editWeeklyIntentsAddCustomLabel => "ADD A CUSTOM INTENTION";
+  static String get editWeeklyIntentsCustomHint => "Anything\u2026";
+  static String get editWeeklyIntentsAdd => "Add";
 }

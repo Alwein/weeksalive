@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
@@ -31,7 +31,8 @@ class Step02LifeFeelsLong extends OnboardingStep {
           ),
           Expanded(
             flex: 16,
-            child: Center(
+            child: Align(
+              alignment: Alignment.bottomCenter,
               child: SingleChildScrollView(
                 child: OnboardingStaggeredColumn(
                   crossAxisAlignment: CrossAxisAlignment.start,

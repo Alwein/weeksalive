@@ -1,17 +1,25 @@
 import 'package:flutter/widgets.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
+import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class Step22Privacy extends OnboardingStep {
-  const Step22Privacy();
+class Step22Rating extends OnboardingStep {
+  const Step22Rating();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;
+
+  @override
+  Future<void> Function(BuildContext, OnboardingFormController)? get onPrimary => (context, controller) async {
+    await InAppReview.instance.requestReview();
+    await controller.goNext();
+  };
 
   @override
   Widget buildContent(BuildContext context) {
@@ -25,7 +33,7 @@ class Step22Privacy extends OnboardingStep {
             child: Center(
               child: ParallaxRive(
                 maxOffset: 0,
-                assetPath: "assets/animations/outline_lock.riv",
+                assetPath: "assets/animations/outline_favor.riv",
               ),
             ),
           ),

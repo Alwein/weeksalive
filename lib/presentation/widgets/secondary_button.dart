@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
+import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 
@@ -46,7 +47,7 @@ class SecondaryButton extends StatelessWidget {
           spacing: Margins.spacingS,
           children: [
             if (icon != null && !iconRight)
-              Icon(icon, color: textColor ?? AppColors.contentSoftOnSoft(context), size: 24),
+              Icon(icon, color: textColor ?? AppColors.contentSoftOnSoft(context), size: Dimens.iconSizeS),
             Text(text, style: TextStyles.mediumBold.copyWith(color: textColor ?? AppColors.contentSoftOnSoft(context))),
             if (icon != null && iconRight) Icon(icon, color: textColor ?? AppColors.contentSoftOnSoft(context)),
           ],

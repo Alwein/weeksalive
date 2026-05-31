@@ -64,7 +64,7 @@ WeeklyIntentState _handleAdd(WeeklyIntentState state, String label) {
   final trimmed = label.trim();
   if (trimmed.isEmpty) return state;
 
-  final newIntent = WeeklyIntent(id: _uuid.v4(), label: trimmed.toUpperCase());
+  final newIntent = WeeklyIntent(id: _uuid.v4(), label: trimmed);
   return state.copyWith(
     availableIntents: [newIntent, ...state.availableIntents],
   );
