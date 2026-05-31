@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -14,7 +13,6 @@ import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/domain/day/day.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
-import 'package:weeksalive/presentation/widgets/circle.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step18OneMinute extends OnboardingStep {
@@ -38,7 +36,7 @@ class Step18OneMinute extends OnboardingStep {
                 const SizedBox(height: Margins.spacingS),
                 Texts.xlBold(Strings.onboarding18Title),
                 const SizedBox(height: Margins.spacingS),
-                Texts.primaryMediumSoft(context, Strings.onboarding18Subtitle),
+                Texts.primaryRegularSoft(context, Strings.onboarding18Subtitle),
                 const SizedBox(height: Margins.spacingM),
                 const Expanded(
                   child: Center(
@@ -55,8 +53,67 @@ class Step18OneMinute extends OnboardingStep {
   }
 }
 
-class _WeekCard extends StatelessWidget {
+const double _kBaseCircleSize = 6;
+const double _kMaxStepCircleContribution = 6;
+
+double _proportionalContribution(int index, int valueCount) => index / (valueCount - 1) * _kMaxStepCircleContribution;
+
+double _demoCircleSize({
+  required AverageFeeling? feeling,
+  required MeaningScore? meaning,
+  required bool? hasNewExperience,
+  required Set<_DemoIntent> intents,
+}) {
+  final feelingContribution = feeling != null
+      ? _proportionalContribution(feeling.index, AverageFeeling.values.length)
+      : 0.0;
+  final meaningContribution = meaning != null
+      ? _proportionalContribution(meaning.index, MeaningScore.values.length)
+      : 0.0;
+  final newExperienceContribution = hasNewExperience == true ? _kMaxStepCircleContribution : 0.0;
+  final intentionContribution = intents.isNotEmpty ? _kMaxStepCircleContribution : 0.0;
+
+  return _kBaseCircleSize +
+      feelingContribution +
+      meaningContribution +
+      newExperienceContribution +
+      intentionContribution;
+}
+
+class _WeekCard extends StatefulWidget {
   const _WeekCard();
+
+  @override
+  State<_WeekCard> createState() => _WeekCardState();
+}
+
+class _WeekCardState extends State<_WeekCard> {
+  AverageFeeling? _feeling;
+  MeaningScore? _meaning;
+  bool? _hasNewExperience;
+  final Set<_DemoIntent> _intents = {};
+
+  _DemoSection _expanded = _DemoSection.feeling;
+
+  double get _circleSize => _demoCircleSize(
+    feeling: _feeling,
+    meaning: _meaning,
+    hasNewExperience: _hasNewExperience,
+    intents: _intents,
+  );
+
+  void _onSectionTap(_DemoSection section) {
+    setState(() => _expanded = section);
+  }
+
+  Future<void> _advanceToNextSection(_DemoSection from) async {
+    final nextIndex = from.index + 1;
+    if (nextIndex >= _DemoSection.values.length) return;
+
+    await Future<void>.delayed(AnimationDurations.short);
+    if (!mounted) return;
+    setState(() => _expanded = _DemoSection.values[nextIndex]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,19 +123,100 @@ class _WeekCard extends StatelessWidget {
         border: Border.all(color: AppColors.strokeColor(context), width: Dimens.strokeWidthS),
       ),
       clipBehavior: Clip.hardEdge,
-      child: const Column(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _WeekHeader(),
-          _AnimatedFormDemo(),
+          _WeekHeader(circleSize: _circleSize),
+          _buildFormDemo(),
         ],
       ),
+    );
+  }
+
+  Widget _buildFormDemo() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _DemoSectionTile(
+          index: '01',
+          title: Strings.feelingSectionTitle,
+          isExpanded: _expanded == _DemoSection.feeling,
+          summary: _feeling != null ? _FeelingSummary(value: _feeling!) : null,
+          onTap: () => _onSectionTap(_DemoSection.feeling),
+          child: _FeelingSelector(
+            value: _feeling,
+            onChanged: (v) {
+              SensorialFeedback.selectionChanged();
+              final wasUnanswered = _feeling == null;
+              setState(() => _feeling = v);
+              if (wasUnanswered) _advanceToNextSection(_DemoSection.feeling);
+            },
+          ),
+        ),
+        const _Divider(),
+        _DemoSectionTile(
+          index: '02',
+          title: Strings.meaningSectionTitle,
+          isExpanded: _expanded == _DemoSection.meaning,
+          summary: _meaning != null ? _MeaningSummary(value: _meaning!) : null,
+          onTap: () => _onSectionTap(_DemoSection.meaning),
+          child: _MeaningSelector(
+            value: _meaning,
+            onChanged: (v) {
+              SensorialFeedback.selectionChanged();
+              final wasUnanswered = _meaning == null;
+              setState(() => _meaning = v);
+              if (wasUnanswered) _advanceToNextSection(_DemoSection.meaning);
+            },
+          ),
+        ),
+        const _Divider(),
+        _DemoSectionTile(
+          index: '03',
+          title: Strings.newExperienceSectionTitle,
+          isExpanded: _expanded == _DemoSection.newExperience,
+          summary: _hasNewExperience != null ? _NewExperienceSummary(value: _hasNewExperience!) : null,
+          onTap: () => _onSectionTap(_DemoSection.newExperience),
+          child: _NewExperienceSelector(
+            value: _hasNewExperience,
+            onChanged: (v) {
+              SensorialFeedback.selectionChanged();
+              final wasUnanswered = _hasNewExperience == null;
+              setState(() => _hasNewExperience = v);
+              if (wasUnanswered) _advanceToNextSection(_DemoSection.newExperience);
+            },
+          ),
+        ),
+        const _Divider(),
+        _DemoSectionTile(
+          index: '04',
+          title: Strings.livingIntentionsSectionTitle,
+          isExpanded: _expanded == _DemoSection.intention,
+          summary: _intents.isNotEmpty ? _IntentionSummary(values: _intents) : null,
+          onTap: () => _onSectionTap(_DemoSection.intention),
+          child: _IntentionSelector(
+            values: _intents,
+            onToggle: (intent) {
+              SensorialFeedback.selectionChanged();
+              setState(() {
+                if (_intents.contains(intent)) {
+                  _intents.remove(intent);
+                } else {
+                  _intents.add(intent);
+                }
+              });
+            },
+          ),
+        ),
+      ],
     );
   }
 }
 
 class _WeekHeader extends StatelessWidget {
-  const _WeekHeader();
+  const _WeekHeader({required this.circleSize});
+
+  final double circleSize;
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +225,18 @@ class _WeekHeader extends StatelessWidget {
       padding: const EdgeInsets.all(Margins.spacingBase),
       color: AppColors.bgSoft(context),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Circle(size: 24, color: AppColors.content(context)),
+          AnimatedContainer(
+            duration: AnimationDurations.short,
+            curve: Curves.easeInOut,
+            width: circleSize,
+            height: circleSize,
+            decoration: BoxDecoration(
+              color: AppColors.content(context),
+              shape: BoxShape.circle,
+            ),
+          ),
           const SizedBox(width: Margins.spacingBase),
           Expanded(
             child: Column(
@@ -118,137 +266,6 @@ class _WeekHeader extends StatelessWidget {
 
 enum _DemoSection { feeling, meaning, newExperience, intention }
 
-const Duration _kAutoCycleInterval = Duration(milliseconds: 1800);
-
-class _AnimatedFormDemo extends StatefulWidget {
-  const _AnimatedFormDemo();
-
-  @override
-  State<_AnimatedFormDemo> createState() => _AnimatedFormDemoState();
-}
-
-class _AnimatedFormDemoState extends State<_AnimatedFormDemo> {
-  AverageFeeling _feeling = AverageFeeling.good;
-  MeaningScore _meaning = MeaningScore.some;
-  bool _hasNewExperience = true;
-  final Set<_DemoIntent> _intents = {_DemoIntent.explore};
-
-  _DemoSection _expanded = _DemoSection.feeling;
-  Timer? _timer;
-  bool _autoPlay = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _startAutoCycle();
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
-
-  void _startAutoCycle() {
-    _timer?.cancel();
-    _timer = Timer.periodic(_kAutoCycleInterval, (_) {
-      if (!mounted || !_autoPlay) return;
-      setState(() {
-        _expanded = _DemoSection.values[(_expanded.index + 1) % _DemoSection.values.length];
-      });
-    });
-  }
-
-  void _stopAutoCycle() {
-    if (!_autoPlay) return;
-    _autoPlay = false;
-    _timer?.cancel();
-  }
-
-  void _onUserSelected(_DemoSection section) {
-    _stopAutoCycle();
-    setState(() => _expanded = section);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _DemoSectionTile(
-          index: '01',
-          title: Strings.feelingSectionTitle,
-          isExpanded: _expanded == _DemoSection.feeling,
-          summary: _FeelingSummary(value: _feeling),
-          onTap: () => _onUserSelected(_DemoSection.feeling),
-          child: _FeelingSelector(
-            value: _feeling,
-            onChanged: (v) {
-              SensorialFeedback.selectionChanged();
-              _stopAutoCycle();
-              setState(() => _feeling = v);
-            },
-          ),
-        ),
-        const _Divider(),
-        _DemoSectionTile(
-          index: '02',
-          title: Strings.meaningSectionTitle,
-          isExpanded: _expanded == _DemoSection.meaning,
-          summary: _MeaningSummary(value: _meaning),
-          onTap: () => _onUserSelected(_DemoSection.meaning),
-          child: _MeaningSelector(
-            value: _meaning,
-            onChanged: (v) {
-              SensorialFeedback.selectionChanged();
-              _stopAutoCycle();
-              setState(() => _meaning = v);
-            },
-          ),
-        ),
-        const _Divider(),
-        _DemoSectionTile(
-          index: '03',
-          title: Strings.newExperienceSectionTitle,
-          isExpanded: _expanded == _DemoSection.newExperience,
-          summary: _NewExperienceSummary(value: _hasNewExperience),
-          onTap: () => _onUserSelected(_DemoSection.newExperience),
-          child: _NewExperienceSelector(
-            value: _hasNewExperience,
-            onChanged: (v) {
-              SensorialFeedback.selectionChanged();
-              _stopAutoCycle();
-              setState(() => _hasNewExperience = v);
-            },
-          ),
-        ),
-        const _Divider(),
-        _DemoSectionTile(
-          index: '04',
-          title: Strings.livingIntentionsSectionTitle,
-          isExpanded: _expanded == _DemoSection.intention,
-          summary: _IntentionSummary(values: _intents),
-          onTap: () => _onUserSelected(_DemoSection.intention),
-          child: _IntentionSelector(
-            values: _intents,
-            onToggle: (intent) {
-              SensorialFeedback.selectionChanged();
-              _stopAutoCycle();
-              setState(() {
-                if (_intents.contains(intent)) {
-                  _intents.remove(intent);
-                } else {
-                  _intents.add(intent);
-                }
-              });
-            },
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class _Divider extends StatelessWidget {
   const _Divider();
 
@@ -276,7 +293,7 @@ class _DemoSectionTile extends StatelessWidget {
   final String index;
   final String title;
   final bool isExpanded;
-  final Widget summary;
+  final Widget? summary;
   final VoidCallback onTap;
   final Widget child;
 
@@ -306,8 +323,8 @@ class _DemoSectionTile extends StatelessWidget {
                     style: TextStyles.primaryRegularBold.copyWith(color: titleColor),
                   ),
                 ),
-                if (!isExpanded) ...[
-                  summary,
+                if (!isExpanded && summary != null) ...[
+                  summary!,
                   const SizedBox(width: Margins.spacingS),
                 ],
                 if (isExpanded)
@@ -353,7 +370,7 @@ IconData _feelingIcon(AverageFeeling feeling) => switch (feeling) {
 class _FeelingSelector extends StatelessWidget {
   const _FeelingSelector({required this.value, required this.onChanged});
 
-  final AverageFeeling value;
+  final AverageFeeling? value;
   final ValueChanged<AverageFeeling> onChanged;
 
   @override
@@ -385,7 +402,7 @@ class _FeelingSelector extends StatelessWidget {
 class _MeaningSelector extends StatelessWidget {
   const _MeaningSelector({required this.value, required this.onChanged});
 
-  final MeaningScore value;
+  final MeaningScore? value;
   final ValueChanged<MeaningScore> onChanged;
 
   @override
@@ -417,7 +434,7 @@ class _MeaningSelector extends StatelessWidget {
 class _NewExperienceSelector extends StatelessWidget {
   const _NewExperienceSelector({required this.value, required this.onChanged});
 
-  final bool value;
+  final bool? value;
   final ValueChanged<bool> onChanged;
 
   @override

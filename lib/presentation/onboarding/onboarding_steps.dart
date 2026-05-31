@@ -23,8 +23,10 @@ import 'package:weeksalive/presentation/onboarding/steps/step_17_daily_habit.dar
 import 'package:weeksalive/presentation/onboarding/steps/step_18_one_minute.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_19_grid_alive.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_20_notification_time.dart';
+import 'package:weeksalive/presentation/onboarding/steps/step_21_week_begin.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_21_widget.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_22_privacy.dart';
+import 'package:weeksalive/presentation/onboarding/steps/step_22_weekly_intent.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_23_attribution.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_25_final.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_26_paywall.dart';
@@ -39,6 +41,7 @@ const List<OnboardingStep> kOnboardingSteps = <OnboardingStep>[
   Step04BuildYourGrid(),
   Step05Name(),
   Step06DateOfBirth(),
+  Step21WeekBegin(),
   Step07Gender(),
   Step08Lifespan(),
   Step09GridReveal(),
@@ -54,11 +57,12 @@ const List<OnboardingStep> kOnboardingSteps = <OnboardingStep>[
   Step13WeeksDisappear(),
   Step17DailyHabit(),
   Step18OneMinute(),
+  Step20NotificationTime(),
+  Step19GridAlive(),
+  Step22WeeklyIntent(),
   // TODO:
   Step14BestMemories(),
   Step16AwarenessFades(),
-  Step19GridAlive(),
-  Step20NotificationTime(),
   Step21Widget(),
   Step22Privacy(),
   Step23Attribution(),

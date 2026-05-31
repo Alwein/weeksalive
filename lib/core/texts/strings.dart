@@ -168,20 +168,44 @@ class Strings {
   static String get onboarding17Title2 => "Not to track time\nTo help you feel it.";
   static String get onboarding17Subtitle => "A simple daily ritual to notice your life as it happens.";
 
-  static String get onboarding18Title => "One minute a day.\nThat's all it takes.";
-  static String get onboarding18Subtitle => "Every evening, take a moment to notice today.";
+  static String get onboarding18Title => "Your daily check-in.";
+  static String get onboarding18Subtitle =>
+      "A few quick questions about how today felt — same ones you'll answer every day.";
 
-  static String get onboarding19Title => "Watch your grid come alive.";
-  static String get onboarding19Subtitle => "Every day you check in, over time, you’ll see a life being lived.";
-  static String get onboarding19Footer => "A day noticed is a day that stays.";
+  static String get onboarding19Title => "Day after day.\nWeek after week.";
+  static String get onboarding19Subtitle => "Watch both grids come alive.";
 
-  static String get onboarding20Title => "What time of day works best for your daily check-in?";
+  static String get onboarding20Title => "What time of day for your daily check-in?";
   static String get onboarding20Subtitle => "WeeksAlive will send you a notification to complete today's entry.";
   static String get onboarding20CheckIn => "CHECK IN";
   static String get onboardingNotificationTitle => "WeeksAlive";
   static String get onboardingNotificationSubtitle => "Time for your daily check-in.";
   static String get dailyNotificationTitle => "Make this day count";
   static String get dailyNotificationBody => "It's time to check in";
+
+  static String get onboardingWeekBeginTitle => "When do you prefer the week to begin?";
+  static String get onboardingWeekBeginSubtitle => "When a new dot is added to your life grid.";
+  static String get onboardingWeekBeginMonday => "Every monday";
+  static String onboardingWeekBeginBirthday(String weekday) => "Your birth day (every $weekday)";
+  static String get onboardingWeekBeginCustom => "Custom";
+  static String get onboardingWeekBeginFooter => "You can change this anytime.";
+
+  // weekly intent onboarding
+  static String get onboardingWeeklyIntentTitle => "What matters to you\nthis week?";
+  static String get onboardingWeeklyIntentSubtitle =>
+      "Choose up to 3 intentions. Not a goal, just a\nguideline, at your own pace.";
+  static String get onboardingWeeklyIntentFooter => "Your intentions appear at every check-in.";
+
+  static List<String> get weekdayFullNames => [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+  static List<String> get weekdayShortNames => ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
 
   static String get onboarding21Title => "Your life, always in sight.";
   static String get onboarding21Subtitle =>

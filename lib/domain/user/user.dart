@@ -26,6 +26,9 @@ class User with _$User {
     required int lifespan,
     required List<TimeOfDay> notificationTimes,
     required DateTime createdAt,
+
+    /// ISO weekday (1 = Monday … 7 = Sunday).
+    @Default(DateTime.monday) int weekStartDay,
   }) = _User;
 }
 
@@ -36,26 +39,21 @@ extension UserExtension on User {
     'dateOfBirth': dateOfBirth.toIso8601String(),
     'gender': gender.name,
     'lifespan': lifespan,
-    'notificationTimes': notificationTimes
-        .map((t) => {'hour': t.hour, 'minute': t.minute})
-        .toList(),
+    'notificationTimes': notificationTimes.map((t) => {'hour': t.hour, 'minute': t.minute}).toList(),
     'createdAt': createdAt.toIso8601String(),
+    'weekStartDay': weekStartDay,
   };
 
   static User fromJson(Map<String, dynamic> json) {
     List<TimeOfDay> times;
-    if (json.containsKey('notificationTimes')) {
-      times = (json['notificationTimes'] as List<dynamic>)
-          .map((e) => TimeOfDay(
-                hour: (e as Map<String, dynamic>)['hour'] as int,
-                minute: e['minute'] as int,
-              ))
-          .toList();
-    } else {
-      // Legacy migration: single notificationTime field
-      final t = json['notificationTime'] as Map<String, dynamic>;
-      times = [TimeOfDay(hour: t['hour'] as int, minute: t['minute'] as int)];
-    }
+    times = (json['notificationTimes'] as List<dynamic>)
+        .map(
+          (e) => TimeOfDay(
+            hour: (e as Map<String, dynamic>)['hour'] as int,
+            minute: e['minute'] as int,
+          ),
+        )
+        .toList();
 
     return User(
       id: json['id'] as String,
@@ -65,6 +63,7 @@ extension UserExtension on User {
       lifespan: json['lifespan'] as int,
       notificationTimes: times,
       createdAt: DateTime.parse(json['createdAt'] as String),
+      weekStartDay: json['weekStartDay'] as int? ?? DateTime.monday,
     );
   }
 }

@@ -38,6 +38,12 @@ class OnboardingFormController extends ChangeNotifier {
   int _lifespan = 85;
   int get lifespan => _lifespan;
 
+  int _weekStartDay = DateTime.monday;
+  int get weekStartDay => _weekStartDay;
+
+  final Set<String> _selectedIntentIds = {};
+  Set<String> get selectedIntentIds => Set.unmodifiable(_selectedIntentIds);
+
   int get currentAge {
     final dob = _dateOfBirth;
     if (dob == null) return 0;
@@ -117,6 +123,21 @@ class OnboardingFormController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setWeekStartDay(int day) {
+    if (_weekStartDay == day) return;
+    _weekStartDay = day;
+    notifyListeners();
+  }
+
+  void toggleIntent(String intentId, {int maxSelections = 3}) {
+    if (_selectedIntentIds.contains(intentId)) {
+      _selectedIntentIds.remove(intentId);
+    } else if (_selectedIntentIds.length < maxSelections) {
+      _selectedIntentIds.add(intentId);
+    }
+    notifyListeners();
+  }
+
   void toggleSlot1(bool value) {
     _slot1 = _slot1.copyWith(enabled: value);
     notifyListeners();
@@ -190,6 +211,7 @@ class OnboardingFormController extends ChangeNotifier {
       lifespan: _lifespan,
       notificationTimes: times,
       createdAt: createdAt,
+      weekStartDay: _weekStartDay,
     );
   }
 

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -36,22 +34,27 @@ class Step20NotificationTime extends OnboardingStep {
         padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
         child: ConstrainedBox(
           constraints: BoxConstraints(minHeight: constraints.maxHeight),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: Margins.spacingM),
-              const _NotificationAnimation(),
-              const SizedBox(height: Margins.spacingL),
-              Texts.xlBold(Strings.onboarding20Title),
-              const SizedBox(height: Margins.spacingM),
-              const _NotificationTimeSelector(),
-              const SizedBox(height: Margins.spacingM),
-              const SmallDivider(),
-              const SizedBox(height: Margins.spacingBase),
-              Texts.primaryMediumSoft(context, Strings.onboarding20Subtitle),
-              const SizedBox(height: Margins.spacingBase),
-            ],
+          child: IntrinsicHeight(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Expanded(
+                  child: Center(
+                    child: _NotificationAnimation(),
+                  ),
+                ),
+                const SizedBox(height: Margins.spacingL),
+                Texts.xlBold(Strings.onboarding20Title),
+                const SizedBox(height: Margins.spacingM),
+                const _NotificationTimeSelector(),
+                const SizedBox(height: Margins.spacingM),
+                const SmallDivider(),
+                const SizedBox(height: Margins.spacingBase),
+                Texts.primaryMediumSoft(context, Strings.onboarding20Subtitle),
+                const SizedBox(height: Margins.spacingBase),
+              ],
+            ),
           ),
         ),
       ),
@@ -235,10 +238,7 @@ class _SlidingNotificationState extends State<SlidingNotification> with SingleTi
             opacity: _notificationOpacityAnimation,
             child: SlideTransition(
               position: _notificationSlideAnimation,
-              child: Transform.rotate(
-                angle: (_notificationOpacityAnimation.value) * -((2 * pi) / 360 * 5),
-                child: const OnboardingFakeNotification(),
-              ),
+              child: const OnboardingFakeNotification(),
             ),
           );
         },

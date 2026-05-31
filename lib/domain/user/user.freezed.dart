@@ -25,6 +25,9 @@ mixin _$User {
   List<TimeOfDay> get notificationTimes => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
 
+  /// ISO weekday (1 = Monday … 7 = Sunday).
+  int get weekStartDay => throw _privateConstructorUsedError;
+
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -44,6 +47,7 @@ abstract class $UserCopyWith<$Res> {
     int lifespan,
     List<TimeOfDay> notificationTimes,
     DateTime createdAt,
+    int weekStartDay,
   });
 }
 
@@ -69,6 +73,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? lifespan = null,
     Object? notificationTimes = null,
     Object? createdAt = null,
+    Object? weekStartDay = null,
   }) {
     return _then(
       _value.copyWith(
@@ -100,6 +105,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
                       as DateTime,
+            weekStartDay: null == weekStartDay
+                ? _value.weekStartDay
+                : weekStartDay // ignore: cast_nullable_to_non_nullable
+                      as int,
           )
           as $Val,
     );
@@ -122,6 +131,7 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
     int lifespan,
     List<TimeOfDay> notificationTimes,
     DateTime createdAt,
+    int weekStartDay,
   });
 }
 
@@ -144,6 +154,7 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? lifespan = null,
     Object? notificationTimes = null,
     Object? createdAt = null,
+    Object? weekStartDay = null,
   }) {
     return _then(
       _$UserImpl(
@@ -175,6 +186,10 @@ class __$$UserImplCopyWithImpl<$Res>
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
                   as DateTime,
+        weekStartDay: null == weekStartDay
+            ? _value.weekStartDay
+            : weekStartDay // ignore: cast_nullable_to_non_nullable
+                  as int,
       ),
     );
   }
@@ -191,6 +206,7 @@ class _$UserImpl implements _User {
     required this.lifespan,
     required final List<TimeOfDay> notificationTimes,
     required this.createdAt,
+    this.weekStartDay = DateTime.monday,
   }) : _notificationTimes = notificationTimes;
 
   @override
@@ -215,9 +231,14 @@ class _$UserImpl implements _User {
   @override
   final DateTime createdAt;
 
+  /// ISO weekday (1 = Monday … 7 = Sunday).
+  @override
+  @JsonKey()
+  final int weekStartDay;
+
   @override
   String toString() {
-    return 'User(id: $id, name: $name, dateOfBirth: $dateOfBirth, gender: $gender, lifespan: $lifespan, notificationTimes: $notificationTimes, createdAt: $createdAt)';
+    return 'User(id: $id, name: $name, dateOfBirth: $dateOfBirth, gender: $gender, lifespan: $lifespan, notificationTimes: $notificationTimes, createdAt: $createdAt, weekStartDay: $weekStartDay)';
   }
 
   @override
@@ -237,7 +258,9 @@ class _$UserImpl implements _User {
               _notificationTimes,
             ) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+                other.createdAt == createdAt) &&
+            (identical(other.weekStartDay, weekStartDay) ||
+                other.weekStartDay == weekStartDay));
   }
 
   @override
@@ -250,6 +273,7 @@ class _$UserImpl implements _User {
     lifespan,
     const DeepCollectionEquality().hash(_notificationTimes),
     createdAt,
+    weekStartDay,
   );
 
   /// Create a copy of User
@@ -270,6 +294,7 @@ abstract class _User implements User {
     required final int lifespan,
     required final List<TimeOfDay> notificationTimes,
     required final DateTime createdAt,
+    final int weekStartDay,
   }) = _$UserImpl;
 
   @override
@@ -286,6 +311,10 @@ abstract class _User implements User {
   List<TimeOfDay> get notificationTimes;
   @override
   DateTime get createdAt;
+
+  /// ISO weekday (1 = Monday … 7 = Sunday).
+  @override
+  int get weekStartDay;
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
