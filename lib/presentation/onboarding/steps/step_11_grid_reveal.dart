@@ -4,6 +4,7 @@ import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
+import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 import 'package:weeksalive/presentation/widgets/week_grid_painter.dart';
@@ -27,6 +28,9 @@ class Step11GridReveal extends OnboardingStep {
       progressFraction: grid.progressFraction,
     );
   }
+
+  @override
+  bool canContinue(OnboardingFormController controller) => controller.gridRevealReady;
 }
 
 class _Step11Content extends StatefulWidget {
@@ -56,6 +60,7 @@ class _Step11ContentState extends State<_Step11Content> with SingleTickerProvide
   @override
   void initState() {
     super.initState();
+    OnboardingScope.read(context).setGridRevealReady(false);
     _loaderController = AnimationController(vsync: this, duration: _loaderDuration);
 
     _progressAnimation = TweenSequence<double>([
@@ -79,6 +84,7 @@ class _Step11ContentState extends State<_Step11Content> with SingleTickerProvide
 
     _loaderController.addStatusListener((status) {
       if (status == AnimationStatus.completed && mounted) {
+        OnboardingScope.of(context).setGridRevealReady(true);
         setState(() => _isLoading = false);
       }
     });

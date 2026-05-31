@@ -44,6 +44,9 @@ class OnboardingFormController extends ChangeNotifier {
   final Set<String> _selectedIntentIds = {};
   Set<String> get selectedIntentIds => Set.unmodifiable(_selectedIntentIds);
 
+  bool _gridRevealReady = false;
+  bool get gridRevealReady => _gridRevealReady;
+
   int get currentAge {
     final dob = _dateOfBirth;
     if (dob == null) return 0;
@@ -126,6 +129,12 @@ class OnboardingFormController extends ChangeNotifier {
   void setWeekStartDay(int day) {
     if (_weekStartDay == day) return;
     _weekStartDay = day;
+    notifyListeners();
+  }
+
+  void setGridRevealReady(bool value) {
+    if (_gridRevealReady == value) return;
+    _gridRevealReady = value;
     notifyListeners();
   }
 

@@ -132,37 +132,38 @@ class _CustomBottomSheetContentState extends State<_CustomBottomSheetContent> wi
                   (MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top) *
                   widget.maxSheetHeightFactor,
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(Dimens.radiusXl),
-              child: Container(
+            child: Container(
+              decoration: BoxDecoration(
                 color: AppColors.bg(context),
-                child: AnimatedPadding(
-                  duration: AnimationDurations.veryShort,
-                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: Builder(
-                    builder: (context) {
-                      final content = Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          if (widget.showhandle) ...[
-                            if (widget.dismissible) ...[
-                              const SizedBox(height: Margins.spacingS),
-                              const Center(child: _Handle()),
-                            ],
-                            const SizedBox(height: Margins.spacingM),
+                borderRadius: BorderRadius.circular(Dimens.radiusXl),
+                border: Border.all(color: AppColors.strokeColor(context)),
+              ),
+              child: AnimatedPadding(
+                duration: AnimationDurations.veryShort,
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: Builder(
+                  builder: (context) {
+                    final content = Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (widget.showhandle) ...[
+                          if (widget.dismissible) ...[
+                            const SizedBox(height: Margins.spacingS),
+                            const Center(child: _Handle()),
                           ],
-                          widget.builder(context),
+                          const SizedBox(height: Margins.spacingM),
                         ],
-                      );
-                      return widget.isScrollable
-                          ? SingleChildScrollView(
-                              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                              child: content,
-                            )
-                          : content;
-                    },
-                  ),
+                        widget.builder(context),
+                      ],
+                    );
+                    return widget.isScrollable
+                        ? SingleChildScrollView(
+                            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                            child: content,
+                          )
+                        : content;
+                  },
                 ),
               ),
             ),
