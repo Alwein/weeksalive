@@ -52,7 +52,7 @@ class Step20NotificationTime extends OnboardingStep {
                 const SmallDivider(),
                 const SizedBox(height: Margins.spacingBase),
                 Texts.primaryMediumSoft(context, Strings.onboarding20Subtitle),
-                const SizedBox(height: Margins.spacingBase),
+                const SizedBox(height: Margins.spacingM),
               ],
             ),
           ),
