@@ -93,8 +93,8 @@ base class _LifespanScrubController extends RiveWidgetController {
   }
 }
 
-class Step08Lifespan extends OnboardingStep {
-  const Step08Lifespan();
+class Step10Lifespan extends OnboardingStep {
+  const Step10Lifespan();
 
   @override
   String primaryLabel(BuildContext context) => Strings.onboarding08ShowGrid;
@@ -103,17 +103,17 @@ class Step08Lifespan extends OnboardingStep {
   bool canContinue(OnboardingFormController controller) => true;
 
   @override
-  Widget buildContent(BuildContext context) => const _Step08LifespanContent();
+  Widget buildContent(BuildContext context) => const _Step10LifespanContent();
 }
 
-class _Step08LifespanContent extends StatefulWidget {
-  const _Step08LifespanContent();
+class _Step10LifespanContent extends StatefulWidget {
+  const _Step10LifespanContent();
 
   @override
-  State<_Step08LifespanContent> createState() => _Step08LifespanContentState();
+  State<_Step10LifespanContent> createState() => _Step10LifespanContentState();
 }
 
-class _Step08LifespanContentState extends State<_Step08LifespanContent> with RiveThemeMixin<_Step08LifespanContent> {
+class _Step10LifespanContentState extends State<_Step10LifespanContent> with RiveThemeMixin<_Step10LifespanContent> {
   late final FileLoader _fileLoader;
   _LifespanScrubController? _scrubController;
 

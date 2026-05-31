@@ -7,8 +7,8 @@ import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divi
 import 'package:weeksalive/presentation/onboarding/widgets/year_grid_illustration.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class Step13WeeksDisappear extends OnboardingStep {
-  const Step13WeeksDisappear();
+class Step21WeeksDisappear extends OnboardingStep {
+  const Step21WeeksDisappear();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;

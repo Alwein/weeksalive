@@ -7,11 +7,11 @@ import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_
 import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class Step17DailyHabit extends OnboardingStep {
-  const Step17DailyHabit();
+class Step05BuildYourGrid extends OnboardingStep {
+  const Step05BuildYourGrid();
 
   @override
-  String primaryLabel(BuildContext context) => Strings.continueString;
+  String primaryLabel(BuildContext context) => Strings.iAmReady;
 
   @override
   Widget buildContent(BuildContext context) {
@@ -25,20 +25,17 @@ class Step17DailyHabit extends OnboardingStep {
             child: Center(
               child: ParallaxRive(
                 maxOffset: 0,
-                assetPath: "assets/animations/outline_meditate.riv",
+                assetPath: "assets/animations/outline_grid.riv",
               ),
             ),
           ),
-          const SizedBox(height: Margins.spacingM),
           Center(
             child: SingleChildScrollView(
               child: OnboardingStaggeredColumn(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Texts.xlBold(Strings.onboarding17Title),
-                  const SizedBox(height: Margins.spacingS),
-                  Texts.xlBoldSoft(context, Strings.onboarding17Title2),
+                  Texts.xlBold(Strings.onboarding04Title),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -47,7 +44,10 @@ class Step17DailyHabit extends OnboardingStep {
                       const SizedBox(height: Margins.spacingM),
                       const SmallDivider(),
                       const SizedBox(height: Margins.spacingM),
-                      Texts.primaryMediumSoft(context, Strings.onboarding17Subtitle),
+                      Texts.primaryMediumSoft(
+                        context,
+                        Strings.onboarding04Subtitle,
+                      ),
                       const SizedBox(height: Margins.spacingM),
                     ],
                   ),

@@ -8,8 +8,8 @@ import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/highlighted_grid_illustration.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class Step09dThisYear extends OnboardingStep {
-  const Step09dThisYear();
+class Step14Olympics extends OnboardingStep {
+  const Step14Olympics();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;
@@ -19,10 +19,26 @@ class Step09dThisYear extends OnboardingStep {
     final controller = OnboardingScope.of(context);
     final grid = controller.lifeWeekGrid;
     final bgColor = AppColors.bg(context);
-    final dots = currentYearDotIndices(
+    final dateOfBirth = controller.dateOfBirth;
+
+    final dots = olympicsDotIndices(
+      dateOfBirth: dateOfBirth,
       totalWeeks: grid.totalWeeks,
       livedWeeks: grid.livedWeeks,
     );
+
+    const columns = 52;
+    int countDistinctYears(List<int> indices) {
+      if (dateOfBirth == null) return 0;
+      final years = <int>{};
+      for (final i in indices) {
+        years.add(dateOfBirth.year + i ~/ columns);
+      }
+      return years.length;
+    }
+
+    final olympicsAhead = countDistinctYears(dots.ahead);
+    final olympicsLived = countDistinctYears(dots.lived);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,22 +57,23 @@ class Step09dThisYear extends OnboardingStep {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Texts.xlBold(Strings.onboarding09dThisYearTitle),
+                  Texts.xlBold(Strings.onboarding09OlympicsTitle(olympicsAhead)),
                   const SizedBox(height: Margins.spacingM),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
                     child: HighlightedGridIllustration(
                       totalWeeks: grid.totalWeeks,
                       livedWeeks: grid.livedWeeks,
-                      highlightedDots: [...dots.lived, ...dots.ahead],
+                      highlightedDots: dots.ahead,
                       caption: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Texts.primaryXsCounter(context, Strings.thisYearLabel, DateTime.now().year.toString()),
+                          Texts.primaryXsCounter(context, Strings.livedLabel, olympicsLived.toString()),
+                          Texts.primaryXsCounter(context, Strings.aheadLabel, olympicsAhead.toString()),
                         ],
                       ),
                       animationDurationMs: 1000,
-                      highlightColor: AppColors.accentOrange,
+                      highlightColor: AppColors.accentPurple,
                     ),
                   ),
                   const SizedBox(height: Margins.spacingM),

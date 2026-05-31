@@ -9,8 +9,8 @@ import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class Step15WeeksThatStay extends OnboardingStep {
-  const Step15WeeksThatStay();
+class Step20WeeksThatStay extends OnboardingStep {
+  const Step20WeeksThatStay();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;

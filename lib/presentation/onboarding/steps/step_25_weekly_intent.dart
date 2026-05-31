@@ -19,27 +19,27 @@ import 'package:weeksalive/presentation/redux/weekly_intent/widgets/edit_weekly_
 import 'package:weeksalive/presentation/widgets/secondary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class Step22WeeklyIntent extends OnboardingStep {
-  const Step22WeeklyIntent();
+class Step25WeeklyIntent extends OnboardingStep {
+  const Step25WeeklyIntent();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;
 
   @override
-  Widget buildContent(BuildContext context) => const _Step22Content();
+  Widget buildContent(BuildContext context) => const _Step25Content();
 
   @override
   bool canContinue(OnboardingFormController controller) => controller.selectedIntentIds.isNotEmpty;
 }
 
-class _Step22Content extends StatefulWidget {
-  const _Step22Content();
+class _Step25Content extends StatefulWidget {
+  const _Step25Content();
 
   @override
-  State<_Step22Content> createState() => _Step22ContentState();
+  State<_Step25Content> createState() => _Step25ContentState();
 }
 
-class _Step22ContentState extends State<_Step22Content> {
+class _Step25ContentState extends State<_Step25Content> {
   @override
   Widget build(BuildContext context) {
     final controller = OnboardingScope.of(context);

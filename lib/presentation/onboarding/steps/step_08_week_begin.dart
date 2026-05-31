@@ -7,26 +7,26 @@ import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class Step21WeekBegin extends OnboardingStep {
-  const Step21WeekBegin();
+class Step08WeekBegin extends OnboardingStep {
+  const Step08WeekBegin();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;
 
   @override
-  Widget buildContent(BuildContext context) => const _Step21Content();
+  Widget buildContent(BuildContext context) => const _Step08Content();
 }
 
 enum _WeekBeginChoice { monday, birthday, custom }
 
-class _Step21Content extends StatefulWidget {
-  const _Step21Content();
+class _Step08Content extends StatefulWidget {
+  const _Step08Content();
 
   @override
-  State<_Step21Content> createState() => _Step21ContentState();
+  State<_Step08Content> createState() => _Step08ContentState();
 }
 
-class _Step21ContentState extends State<_Step21Content> {
+class _Step08ContentState extends State<_Step08Content> {
   late _WeekBeginChoice _choice;
 
   @override

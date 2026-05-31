@@ -7,8 +7,8 @@ import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/year_grid_illustration.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class Step27OneYearBut extends OnboardingStep {
-  const Step27OneYearBut();
+class Step19OneYearBut extends OnboardingStep {
+  const Step19OneYearBut();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;

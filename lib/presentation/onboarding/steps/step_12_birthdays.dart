@@ -8,8 +8,8 @@ import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/highlighted_grid_illustration.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class Step09bWinters extends OnboardingStep {
-  const Step09bWinters();
+class Step12Birthdays extends OnboardingStep {
+  const Step12Birthdays();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;
@@ -20,13 +20,13 @@ class Step09bWinters extends OnboardingStep {
     final grid = controller.lifeWeekGrid;
     final bgColor = AppColors.bg(context);
 
-    final dots = winterDotIndices(
-      dateOfBirth: controller.dateOfBirth,
+    final dots = birthdayDotIndices(
       totalWeeks: grid.totalWeeks,
       livedWeeks: grid.livedWeeks,
     );
-    final winterWeeksAhead = dots.ahead.length;
-    final winterWeeksLived = dots.lived.length;
+    final birthdaysAhead = dots.ahead.length;
+    final livedCount = controller.currentAge;
+    final aheadCount = (controller.lifespan - controller.currentAge).clamp(0, controller.lifespan);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,7 +45,7 @@ class Step09bWinters extends OnboardingStep {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Texts.xlBold(Strings.onboarding09WintersTitle(winterWeeksAhead)),
+                  Texts.xlBold(Strings.onboarding09BirthdaysTitle(birthdaysAhead)),
                   const SizedBox(height: Margins.spacingM),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
@@ -56,12 +56,11 @@ class Step09bWinters extends OnboardingStep {
                       caption: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Texts.primaryXsCounter(context, Strings.livedLabel, winterWeeksLived.toString()),
-                          Texts.primaryXsCounter(context, Strings.aheadLabel, winterWeeksAhead.toString()),
+                          Texts.primaryXsCounter(context, Strings.livedLabel, livedCount.toString()),
+                          Texts.primaryXsCounter(context, Strings.aheadLabel, aheadCount.toString()),
                         ],
                       ),
                       animationDurationMs: 1000,
-                      highlightColor: AppColors.accentMint,
                     ),
                   ),
                   const SizedBox(height: Margins.spacingM),

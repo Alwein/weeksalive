@@ -9,8 +9,8 @@ import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_
 import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class Step23Attribution extends OnboardingStep {
-  const Step23Attribution();
+class Step29Attribution extends OnboardingStep {
+  const Step29Attribution();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;

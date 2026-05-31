@@ -11,8 +11,8 @@ import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_
 import 'package:weeksalive/presentation/onboarding/widgets/umbilical_pendulum.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class Step06DateOfBirth extends OnboardingStep {
-  const Step06DateOfBirth();
+class Step07DateOfBirth extends OnboardingStep {
+  const Step07DateOfBirth();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;
@@ -21,11 +21,11 @@ class Step06DateOfBirth extends OnboardingStep {
   bool canContinue(OnboardingFormController controller) => controller.dateOfBirth != null;
 
   @override
-  Widget buildContent(BuildContext context) => const _Step06DateOfBirthContent();
+  Widget buildContent(BuildContext context) => const _Step07DateOfBirthContent();
 }
 
-class _Step06DateOfBirthContent extends StatelessWidget {
-  const _Step06DateOfBirthContent();
+class _Step07DateOfBirthContent extends StatelessWidget {
+  const _Step07DateOfBirthContent();
 
   @override
   Widget build(BuildContext context) {

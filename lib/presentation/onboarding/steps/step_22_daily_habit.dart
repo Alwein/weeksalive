@@ -1,25 +1,17 @@
 import 'package:flutter/widgets.dart';
-import 'package:in_app_review/in_app_review.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
-import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class Step22Rating extends OnboardingStep {
-  const Step22Rating();
+class Step22DailyHabit extends OnboardingStep {
+  const Step22DailyHabit();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;
-
-  @override
-  Future<void> Function(BuildContext, OnboardingFormController)? get onPrimary => (context, controller) async {
-    await InAppReview.instance.requestReview();
-    await controller.goNext();
-  };
 
   @override
   Widget buildContent(BuildContext context) {
@@ -33,7 +25,7 @@ class Step22Rating extends OnboardingStep {
             child: Center(
               child: ParallaxRive(
                 maxOffset: 0,
-                assetPath: "assets/animations/outline_favor.riv",
+                assetPath: "assets/animations/outline_meditate.riv",
               ),
             ),
           ),
@@ -44,7 +36,9 @@ class Step22Rating extends OnboardingStep {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Texts.xlBold(Strings.onboarding22Title1),
+                  Texts.xlBold(Strings.onboarding17Title),
+                  const SizedBox(height: Margins.spacingS),
+                  Texts.xlBoldSoft(context, Strings.onboarding17Title2),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -53,7 +47,7 @@ class Step22Rating extends OnboardingStep {
                       const SizedBox(height: Margins.spacingM),
                       const SmallDivider(),
                       const SizedBox(height: Margins.spacingM),
-                      Texts.primaryMediumSoft(context, Strings.onboarding22Subtitle),
+                      Texts.primaryMediumSoft(context, Strings.onboarding17Subtitle),
                       const SizedBox(height: Margins.spacingM),
                     ],
                   ),

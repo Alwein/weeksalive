@@ -8,8 +8,8 @@ import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 import 'package:weeksalive/presentation/widgets/week_grid_painter.dart';
 
-class Step09GridReveal extends OnboardingStep {
-  const Step09GridReveal();
+class Step11GridReveal extends OnboardingStep {
+  const Step11GridReveal();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;
@@ -20,7 +20,7 @@ class Step09GridReveal extends OnboardingStep {
     final name = controller.name ?? 'You';
     final grid = controller.lifeWeekGrid;
 
-    return _Step09Content(
+    return _Step11Content(
       name: name,
       totalWeeks: grid.totalWeeks,
       livedWeeks: grid.livedWeeks,
@@ -29,8 +29,8 @@ class Step09GridReveal extends OnboardingStep {
   }
 }
 
-class _Step09Content extends StatefulWidget {
-  const _Step09Content({
+class _Step11Content extends StatefulWidget {
+  const _Step11Content({
     required this.name,
     required this.totalWeeks,
     required this.livedWeeks,
@@ -43,10 +43,10 @@ class _Step09Content extends StatefulWidget {
   final double progressFraction;
 
   @override
-  State<_Step09Content> createState() => _Step09ContentState();
+  State<_Step11Content> createState() => _Step11ContentState();
 }
 
-class _Step09ContentState extends State<_Step09Content> with SingleTickerProviderStateMixin {
+class _Step11ContentState extends State<_Step11Content> with SingleTickerProviderStateMixin {
   static const _loaderDuration = Duration(milliseconds: 2000);
 
   late final AnimationController _loaderController;

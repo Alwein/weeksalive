@@ -12,8 +12,8 @@ import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_
 import 'package:weeksalive/presentation/onboarding/widgets/rive_theme_mixin.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class Step07Gender extends OnboardingStep {
-  const Step07Gender();
+class Step09Gender extends OnboardingStep {
+  const Step09Gender();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;
@@ -22,17 +22,17 @@ class Step07Gender extends OnboardingStep {
   bool canContinue(OnboardingFormController controller) => controller.gender != null;
 
   @override
-  Widget buildContent(BuildContext context) => const _Step07GenderContent();
+  Widget buildContent(BuildContext context) => const _Step09GenderContent();
 }
 
-class _Step07GenderContent extends StatefulWidget {
-  const _Step07GenderContent();
+class _Step09GenderContent extends StatefulWidget {
+  const _Step09GenderContent();
 
   @override
-  State<_Step07GenderContent> createState() => _Step07GenderContentState();
+  State<_Step09GenderContent> createState() => _Step09GenderContentState();
 }
 
-class _Step07GenderContentState extends State<_Step07GenderContent> with RiveThemeMixin<_Step07GenderContent> {
+class _Step09GenderContentState extends State<_Step09GenderContent> with RiveThemeMixin<_Step09GenderContent> {
   late final FileLoader _fileLoader;
 
   @override

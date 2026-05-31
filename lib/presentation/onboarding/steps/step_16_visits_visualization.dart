@@ -10,8 +10,8 @@ import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 import 'package:weeksalive/presentation/widgets/week_grid_painter.dart';
 
-class Step12VisitsVisualization extends OnboardingStep {
-  const Step12VisitsVisualization();
+class Step16VisitsVisualization extends OnboardingStep {
+  const Step16VisitsVisualization();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;

@@ -7,8 +7,8 @@ import 'package:weeksalive/presentation/paywall/paywall_page.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 
-class Step26Paywall extends OnboardingStep {
-  const Step26Paywall();
+class Step32Paywall extends OnboardingStep {
+  const Step32Paywall();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;

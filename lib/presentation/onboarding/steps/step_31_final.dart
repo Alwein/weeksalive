@@ -8,8 +8,8 @@ import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divi
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class Step25Final extends OnboardingStep {
-  const Step25Final();
+class Step31Final extends OnboardingStep {
+  const Step31Final();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;

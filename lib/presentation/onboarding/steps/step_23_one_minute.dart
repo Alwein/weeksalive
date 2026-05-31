@@ -15,8 +15,8 @@ import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class Step18OneMinute extends OnboardingStep {
-  const Step18OneMinute();
+class Step23OneMinute extends OnboardingStep {
+  const Step23OneMinute();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;

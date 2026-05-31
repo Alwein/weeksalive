@@ -7,8 +7,8 @@ import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_
 import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class StepButAddLife extends OnboardingStep {
-  const StepButAddLife();
+class Step17ButAddLife extends OnboardingStep {
+  const Step17ButAddLife();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;

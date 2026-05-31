@@ -15,8 +15,8 @@ import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class Step20NotificationTime extends OnboardingStep {
-  const Step20NotificationTime();
+class Step24NotificationTime extends OnboardingStep {
+  const Step24NotificationTime();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;

@@ -11,8 +11,8 @@ import 'package:weeksalive/presentation/onboarding/widgets/year_grid_illustratio
 import 'package:weeksalive/presentation/widgets/texts.dart';
 import 'package:weeksalive/presentation/widgets/week_grid_painter.dart';
 
-class Step19GridAlive extends OnboardingStep {
-  const Step19GridAlive();
+class Step26GridAlive extends OnboardingStep {
+  const Step26GridAlive();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;

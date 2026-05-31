@@ -12,8 +12,8 @@ import 'package:weeksalive/presentation/onboarding/widgets/rive_theme_mixin.dart
 import 'package:weeksalive/presentation/widgets/secondary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class Step05Name extends OnboardingStep {
-  const Step05Name();
+class Step06Name extends OnboardingStep {
+  const Step06Name();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;
@@ -22,17 +22,17 @@ class Step05Name extends OnboardingStep {
   bool canContinue(OnboardingFormController controller) => (controller.name ?? '').trim().isNotEmpty;
 
   @override
-  Widget buildContent(BuildContext context) => const _Step05NameContent();
+  Widget buildContent(BuildContext context) => const _Step06NameContent();
 }
 
-class _Step05NameContent extends StatefulWidget {
-  const _Step05NameContent();
+class _Step06NameContent extends StatefulWidget {
+  const _Step06NameContent();
 
   @override
-  State<_Step05NameContent> createState() => _Step05NameContentState();
+  State<_Step06NameContent> createState() => _Step06NameContentState();
 }
 
-class _Step05NameContentState extends State<_Step05NameContent> with RiveThemeMixin<_Step05NameContent> {
+class _Step06NameContentState extends State<_Step06NameContent> with RiveThemeMixin<_Step06NameContent> {
   final FocusNode _nameFocusNode = FocusNode();
   late final FileLoader _fileLoader;
 

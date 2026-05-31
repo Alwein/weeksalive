@@ -14,8 +14,8 @@ import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class Step24ONextSteps extends OnboardingStep {
-  const Step24ONextSteps();
+class Step30NextSteps extends OnboardingStep {
+  const Step30NextSteps();
 
   @override
   String primaryLabel(BuildContext context) => Strings.continueString;
