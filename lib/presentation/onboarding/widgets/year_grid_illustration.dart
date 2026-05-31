@@ -30,7 +30,7 @@ class _YearGridIllustrationState extends State<YearGridIllustration> with Single
   static const _kTotalDays = 365;
   static const _kDotSpacing = 4.0;
   late final Duration _kAnimationDuration;
-  static const _kDelayBeforeAnimation = Duration(milliseconds: 500);
+  static const _kDelayBeforeAnimation = Duration(milliseconds: 300);
 
   late final AnimationController _controller;
   late final List<int> _fillSizes;

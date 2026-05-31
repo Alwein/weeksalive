@@ -5,7 +5,6 @@ import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step21WeekBegin extends OnboardingStep {
@@ -51,7 +50,7 @@ class _Step21ContentState extends State<_Step21Content> {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Texts.xlBold(Strings.onboardingWeekBeginTitle),
                 const SizedBox(height: Margins.spacingS),
@@ -90,8 +89,7 @@ class _Step21ContentState extends State<_Step21Content> {
                             setState(() => _choice = _WeekBeginChoice.custom);
                             final day = controller.weekStartDay;
                             final isPresetDay =
-                                day == DateTime.monday ||
-                                (dateOfBirth != null && day == dateOfBirth.weekday);
+                                day == DateTime.monday || (dateOfBirth != null && day == dateOfBirth.weekday);
                             controller.setWeekStartDay(isPresetDay ? DateTime.monday : day);
                           },
                         ),
@@ -106,18 +104,7 @@ class _Step21ContentState extends State<_Step21Content> {
                     );
                   },
                 ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: Margins.spacingM),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SmallDivider(),
                 const SizedBox(height: Margins.spacingM),
-                Texts.primaryMediumSoft(context, Strings.onboardingWeekBeginFooter),
               ],
             ),
           ),

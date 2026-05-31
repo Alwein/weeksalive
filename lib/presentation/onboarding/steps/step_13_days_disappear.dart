@@ -51,7 +51,7 @@ class Step13WeeksDisappear extends OnboardingStep {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             YearGridIllustration(
-                              animationDurationMs: 2000,
+                              animationDurationMs: 1500,
                               header: Texts.primaryXsCounter(
                                 context,
                                 Strings.thisYearLabel,
