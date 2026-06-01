@@ -13,8 +13,10 @@ class DayFormController extends ChangeNotifier {
   bool? _hasNewExperience;
   bool? get hasNewExperience => _hasNewExperience;
 
-  bool get isComplete =>
-      _averageFeeling != null && _meaningScore != null && _hasNewExperience != null;
+  final Set<String> _livingIntentions = {};
+  Set<String> get livingIntentions => Set.unmodifiable(_livingIntentions);
+
+  bool get isComplete => _averageFeeling != null && _meaningScore != null && _hasNewExperience != null;
 
   void setAverageFeeling(AverageFeeling value) {
     if (_averageFeeling == value) return;
@@ -38,6 +40,21 @@ class DayFormController extends ChangeNotifier {
     _averageFeeling = null;
     _meaningScore = null;
     _hasNewExperience = null;
+    notifyListeners();
+  }
+
+  void toggleLivingIntention(String id) {
+    if (_livingIntentions.contains(id)) {
+      _livingIntentions.remove(id);
+    } else {
+      _livingIntentions.add(id);
+    }
+    notifyListeners();
+  }
+
+  void clearLivingIntentions() {
+    if (_livingIntentions.isEmpty) return;
+    _livingIntentions.clear();
     notifyListeners();
   }
 }

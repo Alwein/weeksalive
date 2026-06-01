@@ -12,6 +12,7 @@ import 'package:weeksalive/presentation/onboarding/onboarding_steps.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_progress_bar.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_actions.dart';
+import 'package:weeksalive/presentation/redux/weekly_intent/weekly_intent_actions.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -69,6 +70,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
     StoreProvider.of<AppState>(context, listen: false).dispatch(
       SetUserAction(user),
     );
+
+    StoreProvider.of<AppState>(
+      context,
+      listen: false,
+    ).dispatch(ToggleWeeklyIntentAction(_controller.selectedIntentIds.toList()));
   }
 
   @override

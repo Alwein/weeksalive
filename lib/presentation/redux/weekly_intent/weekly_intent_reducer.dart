@@ -11,7 +11,7 @@ WeeklyIntentState weeklyIntentReducer(WeeklyIntentState state, dynamic action) {
   }
 
   if (action is ToggleWeeklyIntentAction) {
-    return _handleToggle(state, action.id);
+    return _handleToggle(state, action.ids);
   }
 
   if (action is AddWeeklyIntentAction) {
@@ -29,21 +29,26 @@ WeeklyIntentState weeklyIntentReducer(WeeklyIntentState state, dynamic action) {
   return state;
 }
 
-WeeklyIntentState _handleToggle(WeeklyIntentState state, String id) {
-  final isSelected = state.selectedIds.contains(id);
+WeeklyIntentState _handleToggle(WeeklyIntentState state, List<String> ids) {
+  if (ids.isEmpty) return state;
+
+  final isSelected = ids.every(state.selectedIds.contains);
 
   List<String> newSelectedIds;
   if (isSelected) {
-    newSelectedIds = state.selectedIds.where((s) => s != id).toList();
+    newSelectedIds = state.selectedIds.where((s) => !ids.contains(s)).toList();
   } else {
     if (state.selectedIds.length >= 3) return state;
-    newSelectedIds = [...state.selectedIds, id];
+    final toAdd = ids.where((id) => !state.selectedIds.contains(id));
+    newSelectedIds = [...state.selectedIds, ...toAdd];
+    if (newSelectedIds.length > 3) return state;
   }
 
   final now = DateTime.now();
+  final newlySelectedIds = isSelected ? <String>{} : ids.where((id) => !state.selectedIds.contains(id)).toSet();
   final updatedIntents =
       state.availableIntents.map((intent) {
-        if (intent.id == id && !isSelected) {
+        if (newlySelectedIds.contains(intent.id)) {
           return intent.copyWith(lastSelectedAt: now);
         }
         return intent;

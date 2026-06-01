@@ -106,7 +106,7 @@ void main() {
         final targetId = kDefaultWeeklyIntents.first.id;
 
         // When
-        storeTester.whenDispatching(() => ToggleWeeklyIntentAction(targetId));
+        storeTester.whenDispatching(() => ToggleWeeklyIntentAction([targetId]));
 
         // Then
         storeTester.thenExpectStatesInOrder([
@@ -130,7 +130,7 @@ void main() {
         );
 
         // When
-        storeTester.whenDispatching(() => ToggleWeeklyIntentAction(targetId));
+        storeTester.whenDispatching(() => ToggleWeeklyIntentAction([targetId]));
 
         // Then
         storeTester.thenExpectStatesInOrder([
@@ -151,7 +151,7 @@ void main() {
         final targetId = kDefaultWeeklyIntents.first.id;
 
         // When
-        storeTester.whenDispatching(() => ToggleWeeklyIntentAction(targetId));
+        storeTester.whenDispatching(() => ToggleWeeklyIntentAction([targetId]));
 
         // Then
         await storeTester.thenExpectStatesInOrder([

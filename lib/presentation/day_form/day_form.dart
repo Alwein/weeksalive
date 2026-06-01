@@ -1,6 +1,9 @@
+import 'dart:math' as math;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
+import 'package:weeksalive/core/l10n/time_utils.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
@@ -8,10 +11,12 @@ import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/domain/day/day.dart';
+import 'package:weeksalive/domain/weekly_intent/weekly_intent.dart';
 import 'package:weeksalive/presentation/day_form/day_form_controller.dart';
 import 'package:weeksalive/presentation/day_form/day_form_view_model.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/weekly_intent/widgets/edit_weekly_intents_bottom_sheet.dart';
 import 'package:weeksalive/presentation/widgets/show_custom_bottom_sheet.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
@@ -39,7 +44,7 @@ class _Content extends StatefulWidget {
   State<_Content> createState() => _ContentState();
 }
 
-enum _DaySectionId { feeling, meaning, newExperience }
+enum _DaySectionId { feeling, meaning, newExperience, intention }
 
 class _ContentState extends State<_Content> {
   late final DayFormController _controller;
@@ -67,12 +72,14 @@ class _ContentState extends State<_Content> {
     });
   }
 
-  void _advanceFrom(_DaySectionId current) {
+  void _advanceFrom(_DaySectionId current) async {
+    await Future.delayed(const Duration(milliseconds: 300));
     final next = switch (current) {
       _DaySectionId.feeling => _controller.meaningScore == null ? _DaySectionId.meaning : _DaySectionId.newExperience,
       _DaySectionId.meaning =>
         _controller.hasNewExperience == null ? _DaySectionId.newExperience : _DaySectionId.meaning,
       _DaySectionId.newExperience => _DaySectionId.newExperience,
+      _DaySectionId.intention => _DaySectionId.intention,
     };
     setState(() => _expanded = next);
   }
@@ -84,9 +91,7 @@ class _ContentState extends State<_Content> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Texts.primaryXsCounter(context, Strings.dayLabel, widget.viewModel.dayCount),
-          const SizedBox(height: Margins.spacingS),
-          Texts.primaryLargeBold(Strings.dayFormTitle),
+          _DayHeader(circleSize: 25, viewModel: widget.viewModel),
           const SizedBox(height: Margins.spacingBase),
           const SmallDivider(width: double.infinity),
 
@@ -140,9 +145,66 @@ class _ContentState extends State<_Content> {
             ),
           ),
 
+          _DaySection(
+            index: '04',
+            title: Strings.livingIntentionsSectionTitle,
+            isExpanded: _expanded == _DaySectionId.intention,
+            isAnswered: _controller.livingIntentions.isNotEmpty,
+            onTap: () => _toggleExpanded(_DaySectionId.intention),
+            summary: _controller.livingIntentions.isNotEmpty
+                ? _LivingIntentionsSummary(selectedIds: _controller.livingIntentions)
+                : null,
+            child: _LivingIntentionsSelector(
+              value: _controller.livingIntentions,
+              onToggle: _controller.toggleLivingIntention,
+              onNone: _controller.clearLivingIntentions,
+            ),
+          ),
+
           const SizedBox(height: Margins.spacingL),
         ],
       ),
+    );
+  }
+}
+
+class _DayHeader extends StatelessWidget {
+  const _DayHeader({required this.circleSize, required this.viewModel});
+  final DayFormViewModel viewModel;
+  final double circleSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Texts.primaryXsCounter(
+                context,
+                Strings.dayLabel,
+                "#${viewModel.dayCount}",
+                softColor: AppColors.contentSoftOnSoft(context),
+              ),
+              const SizedBox(height: Margins.spacingXs),
+              Texts.primaryLargeBold(TimeUtils.formatDate(context, DateTime.now())),
+            ],
+          ),
+        ),
+        const SizedBox(width: Margins.spacingBase),
+        AnimatedContainer(
+          duration: AnimationDurations.short,
+          curve: Curves.easeInOut,
+          width: circleSize,
+          height: circleSize,
+          decoration: BoxDecoration(
+            color: AppColors.content(context),
+            shape: BoxShape.circle,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -187,13 +249,13 @@ class _DaySection extends StatelessWidget {
               children: [
                 Text(
                   index,
-                  style: TextStyles.primaryBold.copyWith(color: indexColor),
+                  style: TextStyles.primaryMediumBold.copyWith(color: indexColor),
                 ),
                 const SizedBox(width: Margins.spacingS),
                 Expanded(
                   child: Text(
                     title,
-                    style: TextStyles.primaryBold.copyWith(color: titleColor),
+                    style: TextStyles.primaryMediumBold.copyWith(color: titleColor),
                   ),
                 ),
                 if (!isExpanded && summary != null) ...[
@@ -241,7 +303,7 @@ class _FeelingSelector extends StatelessWidget {
       children: [
         Text(
           Strings.feelingSectionQuestion,
-          style: TextStyles.primarySmallMedium.copyWith(color: AppColors.content(context)),
+          style: TextStyles.primaryRegularMedium.copyWith(color: AppColors.contentSoft(context)),
         ),
         const SizedBox(height: Margins.spacingBase),
         Row(
@@ -282,7 +344,10 @@ class _MeaningSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Texts.primaryRegularSoft(context, Strings.meaningSectionQuestion),
+        Text(
+          Strings.meaningSectionQuestion,
+          style: TextStyles.primaryRegularMedium.copyWith(color: AppColors.contentSoft(context)),
+        ),
         const SizedBox(height: Margins.spacingBase),
         Row(
           spacing: Margins.spacingS,
@@ -314,7 +379,10 @@ class _NewExperienceSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Texts.primaryRegularSoft(context, Strings.newExperienceSectionQuestion),
+        Text(
+          Strings.newExperienceSectionQuestion,
+          style: TextStyles.primaryRegularMedium.copyWith(color: AppColors.contentSoft(context)),
+        ),
         const SizedBox(height: Margins.spacingBase),
         Row(
           spacing: Margins.spacingBase,
@@ -542,4 +610,228 @@ class _NewExperienceSummary extends StatelessWidget {
       style: TextStyles.primarySmallBold.copyWith(color: AppColors.content(context)),
     );
   }
+}
+
+class _LivingIntentionsSelector extends StatelessWidget {
+  const _LivingIntentionsSelector({
+    required this.value,
+    required this.onToggle,
+    required this.onNone,
+  });
+
+  final Set<String> value;
+  final ValueChanged<String> onToggle;
+  final VoidCallback onNone;
+
+  @override
+  Widget build(BuildContext context) {
+    return StoreConnector<AppState, List<WeeklyIntent>>(
+      converter: (store) {
+        final weeklyState = store.state.weeklyIntentState;
+        return weeklyState.availableIntents.where((i) => weeklyState.selectedIds.contains(i.id)).toList();
+      },
+      builder: (context, weeklyIntents) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              Strings.livingIntentionsSectionQuestion,
+              style: TextStyles.primaryRegularMedium.copyWith(color: AppColors.contentSoft(context)),
+            ),
+            const SizedBox(height: Margins.spacingBase),
+            Wrap(
+              spacing: Margins.spacingS,
+              runSpacing: Margins.spacingS,
+              children: [
+                for (final intent in weeklyIntents)
+                  _IntentPillChip(
+                    selected: value.contains(intent.id),
+                    onTap: () {
+                      SensorialFeedback.selectionChanged();
+                      onToggle(intent.id);
+                    },
+                    label: intent.label,
+                  ),
+                _IntentPillChip(
+                  selected: value.isEmpty,
+                  onTap: () {
+                    SensorialFeedback.selectionChanged();
+                    onNone();
+                  },
+                  label: Strings.livingIntentionsSectionValueNone,
+                ),
+                _IntentPillChip(
+                  selected: false,
+                  onTap: () {
+                    SensorialFeedback.selectionChanged();
+                    EditIntentsSheet.show(context);
+                  },
+                  icon: MingCuteIcons.mgc_pencil_line,
+                  label: Strings.livingIntentionsSectionEditLabel,
+                  hideLeading: true,
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _LivingIntentionsSummary extends StatelessWidget {
+  const _LivingIntentionsSummary({required this.selectedIds});
+
+  final Set<String> selectedIds;
+
+  @override
+  Widget build(BuildContext context) {
+    return StoreConnector<AppState, List<WeeklyIntent>>(
+      converter: (store) => store.state.weeklyIntentState.availableIntents,
+      builder: (context, intents) {
+        final labels = selectedIds
+            .map((id) => intents.where((i) => i.id == id).map((i) => i.label))
+            .expand((e) => e)
+            .join(', ');
+        return Text(
+          labels,
+          style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        );
+      },
+    );
+  }
+}
+
+class _IntentPillChip extends StatelessWidget {
+  const _IntentPillChip({
+    required this.selected,
+    required this.onTap,
+    required this.label,
+    this.icon,
+    this.hideLeading = false,
+  });
+
+  final bool selected;
+  final VoidCallback? onTap;
+  final String label;
+  final IconData? icon;
+  final bool hideLeading;
+
+  @override
+  Widget build(BuildContext context) {
+    final bgColor = selected ? AppColors.content(context) : AppColors.bgSoft(context);
+    final fgColor = selected ? AppColors.contentMuted(context) : AppColors.content(context);
+
+    final Widget leading;
+    if (hideLeading && icon != null) {
+      leading = Icon(icon, color: fgColor, size: Dimens.iconSizeXs);
+    } else if (selected) {
+      leading = _SelectedIntentDot(color: fgColor);
+    } else {
+      leading = _DashedCircle(color: AppColors.contentSoftOnSoft(context), size: 16);
+    }
+
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: AnimationDurations.short,
+        curve: Curves.easeInOut,
+        padding: const EdgeInsets.symmetric(
+          horizontal: Margins.spacingBase,
+          vertical: Margins.spacingS + Margins.spacingXs,
+        ),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(Dimens.radiusXl),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            leading,
+            const SizedBox(width: Margins.spacingS),
+            Text(
+              label,
+              style: TextStyles.primarySmallBold.copyWith(color: fgColor),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SelectedIntentDot extends StatelessWidget {
+  const _SelectedIntentDot({required this.color});
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 16,
+      height: 16,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+      ),
+      alignment: Alignment.center,
+      child: Icon(
+        MingCuteIcons.mgc_check_line,
+        size: 12,
+        color: AppColors.content(context),
+      ),
+    );
+  }
+}
+
+class _DashedCircle extends StatelessWidget {
+  const _DashedCircle({required this.color, required this.size});
+  final Color color;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: CustomPaint(
+        painter: _DashedCirclePainter(color: color),
+      ),
+    );
+  }
+}
+
+class _DashedCirclePainter extends CustomPainter {
+  _DashedCirclePainter({required this.color});
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.2;
+
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = math.min(size.width, size.height) / 2 - paint.strokeWidth / 2;
+
+    const dashCount = 10;
+    const sweepPerDash = (2 * math.pi) / dashCount;
+    const dashSweep = sweepPerDash * 0.55;
+
+    for (int i = 0; i < dashCount; i++) {
+      final start = i * sweepPerDash;
+      canvas.drawArc(
+        Rect.fromCircle(center: center, radius: radius),
+        start,
+        dashSweep,
+        false,
+        paint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_DashedCirclePainter oldDelegate) => oldDelegate.color != color;
 }

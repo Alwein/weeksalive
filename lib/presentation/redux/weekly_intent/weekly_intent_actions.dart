@@ -6,8 +6,8 @@ class WeeklyIntentLoadedAction {
 }
 
 class ToggleWeeklyIntentAction {
-  final String id;
-  const ToggleWeeklyIntentAction(this.id);
+  final List<String> ids;
+  const ToggleWeeklyIntentAction(this.ids);
 }
 
 class AddWeeklyIntentAction {

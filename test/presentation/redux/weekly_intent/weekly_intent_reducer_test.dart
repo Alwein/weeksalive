@@ -42,7 +42,7 @@ void main() {
 
     group('ToggleWeeklyIntentAction', () {
       test('adds an intent to the selection when not selected', () {
-        final result = weeklyIntentReducer(baseState, const ToggleWeeklyIntentAction('a'));
+        final result = weeklyIntentReducer(baseState, const ToggleWeeklyIntentAction(['a']));
 
         expect(result.selectedIds, contains('a'));
       });
@@ -50,7 +50,7 @@ void main() {
       test('removes an intent from the selection when already selected', () {
         final state = baseState.copyWith(selectedIds: ['a', 'b']);
 
-        final result = weeklyIntentReducer(state, const ToggleWeeklyIntentAction('a'));
+        final result = weeklyIntentReducer(state, const ToggleWeeklyIntentAction(['a']));
 
         expect(result.selectedIds, isNot(contains('a')));
         expect(result.selectedIds, contains('b'));
@@ -59,7 +59,7 @@ void main() {
       test('does not add a 4th intent when 3 are already selected', () {
         final state = baseState.copyWith(selectedIds: ['a', 'b', 'c']);
 
-        final result = weeklyIntentReducer(state, const ToggleWeeklyIntentAction('d'));
+        final result = weeklyIntentReducer(state, const ToggleWeeklyIntentAction(['d']));
 
         expect(result.selectedIds.length, 3);
         expect(result.selectedIds, isNot(contains('d')));
@@ -68,7 +68,7 @@ void main() {
       test('updates lastSelectedAt on the toggled intent', () {
         final before = DateTime.now().subtract(const Duration(seconds: 1));
 
-        final result = weeklyIntentReducer(baseState, const ToggleWeeklyIntentAction('a'));
+        final result = weeklyIntentReducer(baseState, const ToggleWeeklyIntentAction(['a']));
 
         final updated = result.availableIntents.firstWhere((i) => i.id == 'a');
         expect(updated.lastSelectedAt, isNotNull);
@@ -84,16 +84,36 @@ void main() {
           currentWeekKey: '',
         );
 
-        final result = weeklyIntentReducer(state, const ToggleWeeklyIntentAction('a'));
+        final result = weeklyIntentReducer(state, const ToggleWeeklyIntentAction(['a']));
 
         final updated = result.availableIntents.firstWhere((i) => i.id == 'a');
         expect(updated.lastSelectedAt, selectedAt);
       });
 
       test('sorts intents by lastSelectedAt descending after selection', () {
-        final result = weeklyIntentReducer(baseState, const ToggleWeeklyIntentAction('c'));
+        final result = weeklyIntentReducer(baseState, const ToggleWeeklyIntentAction(['c']));
 
         expect(result.availableIntents.first.id, 'c');
+      });
+
+      test('adds multiple intents in one action', () {
+        final result = weeklyIntentReducer(
+          baseState,
+          const ToggleWeeklyIntentAction(['a', 'b']),
+        );
+
+        expect(result.selectedIds, containsAll(['a', 'b']));
+      });
+
+      test('removes multiple intents when all are selected', () {
+        final state = baseState.copyWith(selectedIds: ['a', 'b', 'c']);
+
+        final result = weeklyIntentReducer(
+          state,
+          const ToggleWeeklyIntentAction(['a', 'b']),
+        );
+
+        expect(result.selectedIds, ['c']);
       });
     });
 

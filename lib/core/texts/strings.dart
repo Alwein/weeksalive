@@ -277,7 +277,6 @@ class Strings {
   static List<String> get homePageDayLabels => ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
 
   // day form
-  static String get dayFormTitle => "Daily awareness";
   static String get feelingSectionQuestion => "How did you feel today?";
   static String get meaningSectionQuestion => "How meaningful was your time today?";
   static String get newExperienceSectionQuestion => "Did you try something new today?";
