@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:weeksalive/core/l10n/time_utils.dart';
@@ -157,11 +157,8 @@ class _ContentState extends State<_Content> {
             child: _LivingIntentionsSelector(
               value: _controller.livingIntentions,
               onToggle: _controller.toggleLivingIntention,
-              onNone: _controller.clearLivingIntentions,
             ),
           ),
-
-          const SizedBox(height: Margins.spacingL),
         ],
       ),
     );
@@ -616,12 +613,10 @@ class _LivingIntentionsSelector extends StatelessWidget {
   const _LivingIntentionsSelector({
     required this.value,
     required this.onToggle,
-    required this.onNone,
   });
 
   final Set<String> value;
   final ValueChanged<String> onToggle;
-  final VoidCallback onNone;
 
   @override
   Widget build(BuildContext context) {
@@ -652,23 +647,27 @@ class _LivingIntentionsSelector extends StatelessWidget {
                     },
                     label: intent.label,
                   ),
-                _IntentPillChip(
-                  selected: value.isEmpty,
-                  onTap: () {
+                TextButton(
+                  onPressed: () {
                     SensorialFeedback.selectionChanged();
-                    onNone();
-                  },
-                  label: Strings.livingIntentionsSectionValueNone,
-                ),
-                _IntentPillChip(
-                  selected: false,
-                  onTap: () {
-                    SensorialFeedback.selectionChanged();
+                    // Nouvelle page pour éditer les weekly intents
                     EditIntentsSheet.show(context);
                   },
-                  icon: MingCuteIcons.mgc_pencil_line,
-                  label: Strings.livingIntentionsSectionEditLabel,
-                  hideLeading: true,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        Strings.livingIntentionsSectionEditLabel,
+                        style: TextStyles.primarySmallBold.copyWith(color: AppColors.contentSoft(context)),
+                      ),
+                      const SizedBox(width: Margins.spacingXs),
+                      Icon(
+                        MingCuteIcons.mgc_right_line,
+                        size: Dimens.iconSizeXs,
+                        color: AppColors.contentSoft(context),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -705,19 +704,11 @@ class _LivingIntentionsSummary extends StatelessWidget {
 }
 
 class _IntentPillChip extends StatelessWidget {
-  const _IntentPillChip({
-    required this.selected,
-    required this.onTap,
-    required this.label,
-    this.icon,
-    this.hideLeading = false,
-  });
+  const _IntentPillChip({required this.selected, required this.onTap, required this.label});
 
   final bool selected;
   final VoidCallback? onTap;
   final String label;
-  final IconData? icon;
-  final bool hideLeading;
 
   @override
   Widget build(BuildContext context) {
@@ -725,9 +716,7 @@ class _IntentPillChip extends StatelessWidget {
     final fgColor = selected ? AppColors.contentMuted(context) : AppColors.content(context);
 
     final Widget leading;
-    if (hideLeading && icon != null) {
-      leading = Icon(icon, color: fgColor, size: Dimens.iconSizeXs);
-    } else if (selected) {
+    if (selected) {
       leading = _SelectedIntentDot(color: fgColor);
     } else {
       leading = _DashedCircle(color: AppColors.contentSoftOnSoft(context), size: 16);

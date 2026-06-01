@@ -282,7 +282,7 @@ class Strings {
   static String get newExperienceSectionQuestion => "Did you try something new today?";
   static String get livingIntentionsSectionQuestion => "Did your actions reflect your weekly intentions?";
   static String get livingIntentionsSectionValueNone => "None";
-  static String get livingIntentionsSectionEditLabel => "Edit";
+  static String get livingIntentionsSectionEditLabel => "Edit weekly intentions";
 
   // weekly intent
   static String get intentBePresent => "Be Present";
