@@ -50,6 +50,11 @@ class Strings {
   static String get livingIntentionsSectionValueTakeCare => "TAKE CARE";
   static String get livingIntentionsSectionValueObserve => "OBSERVE";
   static String get livingIntentionsSectionValueBePresent => "BE PRESENT";
+  static String get leaveATraceSectionTitle => "Leave a trace (optional)";
+  static String get leaveATraceSectionSubtitle => "A few words or a picture to describe your day";
+  static String get leaveATraceSectionTextHint => "What made today special…";
+  static String get leaveATraceSectionAddPhoto => "Add pictures";
+  static String leaveATraceSectionPhotoCount(int count) => "$count picture${count > 1 ? 's' : ''}";
 
   // In app feedback
   static String get inAppFeedbackTitle => tr('inAppFeedbackTitle');
@@ -180,7 +185,7 @@ class Strings {
   // weekly intent onboarding
   static String get onboardingWeeklyIntentTitle => "Select what matters to you this week.";
   static String get onboardingWeeklyIntentSubtitle =>
-      "Choose up to 3 intentions.\nNot a goal, just a guideline, at your own pace.";
+      "Choose 1 to 3 intentions.\nNot a goal, just a guideline, at your own pace.";
   static String get onboardingWeeklyIntentFooter => "Your intentions reset every week.";
 
   static List<String> get weekdayFullNames => [
@@ -283,6 +288,7 @@ class Strings {
   static String get livingIntentionsSectionQuestion => "Did your actions reflect your weekly intentions?";
   static String get livingIntentionsSectionValueNone => "None";
   static String get livingIntentionsSectionEditLabel => "Edit weekly intentions";
+  static String get leaveATraceSectionQuestion => "What made today special?";
 
   // weekly intent
   static String get intentBePresent => "Be Present";

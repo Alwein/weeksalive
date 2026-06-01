@@ -1,5 +1,23 @@
 import 'package:weeksalive/core/texts/strings.dart';
 
+class LeaveATrace {
+  const LeaveATrace({this.text = '', this.imagePaths = const []});
+
+  final String text;
+  final List<String> imagePaths;
+
+  static const int maxImages = 3;
+
+  bool get isAnswered => text.isNotEmpty || imagePaths.isNotEmpty;
+
+  LeaveATrace copyWith({String? text, List<String>? imagePaths}) {
+    return LeaveATrace(
+      text: text ?? this.text,
+      imagePaths: imagePaths ?? this.imagePaths,
+    );
+  }
+}
+
 enum AverageFeeling {
   rough,
   low,

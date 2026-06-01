@@ -16,6 +16,9 @@ class DayFormController extends ChangeNotifier {
   final Set<String> _livingIntentions = {};
   Set<String> get livingIntentions => Set.unmodifiable(_livingIntentions);
 
+  LeaveATrace _leaveATrace = const LeaveATrace();
+  LeaveATrace get leaveATrace => _leaveATrace;
+
   bool get isComplete => _averageFeeling != null && _meaningScore != null && _hasNewExperience != null;
 
   void setAverageFeeling(AverageFeeling value) {
@@ -36,10 +39,16 @@ class DayFormController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setLeaveATrace(LeaveATrace value) {
+    _leaveATrace = value;
+    notifyListeners();
+  }
+
   void reset() {
     _averageFeeling = null;
     _meaningScore = null;
     _hasNewExperience = null;
+    _leaveATrace = const LeaveATrace();
     notifyListeners();
   }
 

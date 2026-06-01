@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:weeksalive/core/l10n/time_utils.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
@@ -44,7 +46,7 @@ class _Content extends StatefulWidget {
   State<_Content> createState() => _ContentState();
 }
 
-enum _DaySectionId { feeling, meaning, newExperience, intention }
+enum _DaySectionId { feeling, meaning, newExperience, intention, leaveATrace }
 
 class _ContentState extends State<_Content> {
   late final DayFormController _controller;
@@ -80,6 +82,7 @@ class _ContentState extends State<_Content> {
         _controller.hasNewExperience == null ? _DaySectionId.newExperience : _DaySectionId.meaning,
       _DaySectionId.newExperience => _DaySectionId.newExperience,
       _DaySectionId.intention => _DaySectionId.intention,
+      _DaySectionId.leaveATrace => _DaySectionId.leaveATrace,
     };
     setState(() => _expanded = next);
   }
@@ -140,7 +143,7 @@ class _ContentState extends State<_Content> {
               value: _controller.hasNewExperience,
               onChanged: (v) {
                 _controller.setHasNewExperience(v);
-                _advanceFrom(_DaySectionId.newExperience);
+                _advanceFrom(_DaySectionId.intention);
               },
             ),
           ),
@@ -156,7 +159,25 @@ class _ContentState extends State<_Content> {
                 : null,
             child: _LivingIntentionsSelector(
               value: _controller.livingIntentions,
-              onToggle: _controller.toggleLivingIntention,
+              onToggle: (id) {
+                _controller.toggleLivingIntention(id);
+              },
+              onAllSelected: () => _advanceFrom(_DaySectionId.leaveATrace),
+            ),
+          ),
+
+          _DaySection(
+            index: '05',
+            title: Strings.leaveATraceSectionTitle,
+            isExpanded: _expanded == _DaySectionId.leaveATrace,
+            isAnswered: _controller.leaveATrace.isAnswered,
+            onTap: () => _toggleExpanded(_DaySectionId.leaveATrace),
+            summary: _controller.leaveATrace.isAnswered ? _LeaveATraceSummary(value: _controller.leaveATrace) : null,
+            child: _LeaveATraceInput(
+              value: _controller.leaveATrace,
+              onChanged: (v) {
+                _controller.setLeaveATrace(v);
+              },
             ),
           ),
         ],
@@ -259,12 +280,17 @@ class _DaySection extends StatelessWidget {
                   summary!,
                   const SizedBox(width: Margins.spacingBase),
                 ],
-                if (isExpanded)
-                  Icon(
-                    MingCuteIcons.mgc_minimize_line,
-                    size: Dimens.iconSizeBase,
-                    color: AppColors.content(context),
-                  ),
+                isExpanded
+                    ? Icon(
+                        MingCuteIcons.mgc_minimize_line,
+                        size: Dimens.iconSizeS,
+                        color: AppColors.content(context),
+                      )
+                    : Icon(
+                        MingCuteIcons.mgc_down_line,
+                        size: Dimens.iconSizeS,
+                        color: AppColors.contentSoft(context),
+                      ),
               ],
             ),
           ),
@@ -613,10 +639,12 @@ class _LivingIntentionsSelector extends StatelessWidget {
   const _LivingIntentionsSelector({
     required this.value,
     required this.onToggle,
+    required this.onAllSelected,
   });
 
   final Set<String> value;
   final ValueChanged<String> onToggle;
+  final VoidCallback onAllSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -643,7 +671,11 @@ class _LivingIntentionsSelector extends StatelessWidget {
                     selected: value.contains(intent.id),
                     onTap: () {
                       SensorialFeedback.selectionChanged();
+                      final willBeSelected = !value.contains(intent.id);
                       onToggle(intent.id);
+                      if (willBeSelected && value.length + 1 == weeklyIntents.length) {
+                        onAllSelected();
+                      }
                     },
                     label: intent.label,
                   ),
@@ -822,4 +854,268 @@ class _DashedCirclePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_DashedCirclePainter oldDelegate) => oldDelegate.color != color;
+}
+
+class _LeaveATraceSummary extends StatelessWidget {
+  const _LeaveATraceSummary({required this.value});
+
+  final LeaveATrace value;
+
+  @override
+  Widget build(BuildContext context) {
+    final parts = <String>[];
+    if (value.text.isNotEmpty) parts.add('…');
+    if (value.imagePaths.isNotEmpty) {
+      parts.add(Strings.leaveATraceSectionPhotoCount(value.imagePaths.length));
+    }
+    return Text(
+      parts.join(' '),
+      style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+}
+
+class _LeaveATraceInput extends StatefulWidget {
+  const _LeaveATraceInput({required this.value, required this.onChanged});
+
+  final LeaveATrace value;
+  final ValueChanged<LeaveATrace> onChanged;
+
+  @override
+  State<_LeaveATraceInput> createState() => _LeaveATraceInputState();
+}
+
+class _LeaveATraceInputState extends State<_LeaveATraceInput> {
+  late final TextEditingController _textController;
+  final _picker = ImagePicker();
+
+  @override
+  void initState() {
+    super.initState();
+    _textController = TextEditingController(text: widget.value.text)..addListener(_onTextChanged);
+  }
+
+  @override
+  void dispose() {
+    _textController
+      ..removeListener(_onTextChanged)
+      ..dispose();
+    super.dispose();
+  }
+
+  void _onTextChanged() {
+    widget.onChanged(widget.value.copyWith(text: _textController.text));
+  }
+
+  Future<void> _pickImages() async {
+    final remaining = LeaveATrace.maxImages - widget.value.imagePaths.length;
+    if (remaining <= 0) return;
+
+    final picked = await _picker.pickMultiImage(limit: remaining);
+    if (picked.isEmpty) return;
+
+    final paths = [...widget.value.imagePaths, ...picked.map((f) => f.path)];
+    widget.onChanged(widget.value.copyWith(imagePaths: paths));
+  }
+
+  Future<void> _replaceImages() async {
+    final picked = await _picker.pickMultiImage(limit: LeaveATrace.maxImages);
+    if (picked.isEmpty) return;
+
+    widget.onChanged(widget.value.copyWith(imagePaths: picked.map((f) => f.path).toList()));
+  }
+
+  void _removeImage(int index) {
+    final paths = [...widget.value.imagePaths]..removeAt(index);
+    widget.onChanged(widget.value.copyWith(imagePaths: paths));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final images = widget.value.imagePaths;
+    final canAddMore = images.length < LeaveATrace.maxImages;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          Strings.leaveATraceSectionSubtitle,
+          style: TextStyles.primaryRegularMedium.copyWith(color: AppColors.contentSoft(context)),
+        ),
+        const SizedBox(height: Margins.spacingBase),
+        SizedBox(
+          height: 120,
+          width: double.infinity,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.bgSoft(context),
+                    borderRadius: BorderRadius.circular(Dimens.radiusBase),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Margins.spacingBase,
+                    vertical: Margins.spacingS,
+                  ),
+                  child: TextField(
+                    controller: _textController,
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
+                    style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: Strings.leaveATraceSectionTextHint,
+                      hintStyle: TextStyles.primaryXsBold.copyWith(
+                        color: AppColors.contentSoft(context),
+                      ),
+                      isCollapsed: true,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: Margins.spacingS),
+              Container(
+                width: 1,
+                color: AppColors.strokeColor(context),
+              ),
+              const SizedBox(width: Margins.spacingS),
+              Expanded(
+                child: _ImageMosaic(
+                  images: images,
+                  canAddMore: canAddMore,
+                  onAdd: _pickImages,
+                  onReplace: _replaceImages,
+                  onRemove: _removeImage,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ImageMosaic extends StatelessWidget {
+  const _ImageMosaic({
+    required this.images,
+    required this.canAddMore,
+    required this.onAdd,
+    required this.onReplace,
+    required this.onRemove,
+  });
+
+  final List<String> images;
+  final bool canAddMore;
+  final VoidCallback onAdd;
+  final VoidCallback onReplace;
+  final ValueChanged<int> onRemove;
+
+  static const double _gap = Margins.spacingXs;
+
+  @override
+  Widget build(BuildContext context) {
+    if (images.isEmpty) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(Dimens.radiusBase),
+        child: _AddPhotoButton(onTap: onAdd),
+      );
+    }
+
+    return GestureDetector(
+      onTap: () {
+        SensorialFeedback.selectionChanged();
+        onReplace();
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(Dimens.radiusBase),
+        child: _buildGrid(),
+      ),
+    );
+  }
+
+  Widget _buildGrid() {
+    if (images.length == 1) {
+      return _MosaicImage(path: images[0]);
+    }
+
+    if (images.length == 2) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(child: _MosaicImage(path: images[0])),
+          const SizedBox(width: _gap),
+          Expanded(child: _MosaicImage(path: images[1])),
+        ],
+      );
+    }
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(child: _MosaicImage(path: images[0])),
+        const SizedBox(width: _gap),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(child: _MosaicImage(path: images[1])),
+              const SizedBox(height: _gap),
+              Expanded(child: _MosaicImage(path: images[2])),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _MosaicImage extends StatelessWidget {
+  const _MosaicImage({required this.path});
+
+  final String path;
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.file(File(path), fit: BoxFit.cover);
+  }
+}
+
+class _AddPhotoButton extends StatelessWidget {
+  const _AddPhotoButton({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        SensorialFeedback.selectionChanged();
+        onTap();
+      },
+      child: Container(
+        color: AppColors.bgSoft(context),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              MingCuteIcons.mgc_photo_album_line,
+              size: Dimens.iconSizeBase,
+              color: AppColors.contentSoft(context),
+            ),
+            const SizedBox(height: Margins.spacingXs),
+            Text(
+              Strings.leaveATraceSectionAddPhoto,
+              style: TextStyles.primaryXsBold.copyWith(color: AppColors.contentSoft(context)),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
