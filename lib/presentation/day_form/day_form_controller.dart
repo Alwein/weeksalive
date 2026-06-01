@@ -49,26 +49,12 @@ class DayFormController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void reset() {
-    _averageFeeling = null;
-    _meaningScore = null;
-    _hasNewExperience = null;
-    _leaveATrace = const LeaveATrace();
-    notifyListeners();
-  }
-
   void toggleLivingIntention(String id) {
     if (_livingIntentions.contains(id)) {
       _livingIntentions.remove(id);
     } else {
       _livingIntentions.add(id);
     }
-    notifyListeners();
-  }
-
-  void clearLivingIntentions() {
-    if (_livingIntentions.isEmpty) return;
-    _livingIntentions.clear();
     notifyListeners();
   }
 }

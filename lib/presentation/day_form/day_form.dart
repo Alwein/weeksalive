@@ -754,10 +754,7 @@ class _LivingIntentionsSummary extends StatelessWidget {
     return StoreConnector<AppState, List<WeeklyIntent>>(
       converter: (store) => store.state.weeklyIntentState.availableIntents,
       builder: (context, intents) {
-        final labels = selectedIds
-            .map((id) => intents.where((i) => i.id == id).map((i) => i.label))
-            .expand((e) => e)
-            .join(', ');
+        final labels = selectedIds.map((id) => intents.firstWhere((i) => i.id == id).label).join(', ');
         return Text(
           labels,
           style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
@@ -824,8 +821,8 @@ class _SelectedIntentDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 16,
-      height: 16,
+      width: Dimens.iconSizeXs,
+      height: Dimens.iconSizeXs,
       decoration: BoxDecoration(
         color: color,
         shape: BoxShape.circle,
@@ -871,7 +868,7 @@ class _DashedCirclePainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = math.min(size.width, size.height) / 2 - paint.strokeWidth / 2;
 
-    const dashCount = 10;
+    const dashCount = 8;
     const sweepPerDash = (2 * math.pi) / dashCount;
     const dashSweep = sweepPerDash * 0.55;
 
@@ -1086,38 +1083,34 @@ class _ImageMosaic extends StatelessWidget {
   }
 
   Widget _buildGrid() {
-    if (images.length == 1) {
-      return _MosaicImage(path: images[0]);
-    }
-
-    if (images.length == 2) {
-      return Row(
+    return switch (images.length) {
+      1 => _MosaicImage(path: images[0]),
+      2 => Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(child: _MosaicImage(path: images[0])),
           const SizedBox(width: _gap),
           Expanded(child: _MosaicImage(path: images[1])),
         ],
-      );
-    }
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Expanded(child: _MosaicImage(path: images[0])),
-        const SizedBox(width: _gap),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(child: _MosaicImage(path: images[1])),
-              const SizedBox(height: _gap),
-              Expanded(child: _MosaicImage(path: images[2])),
-            ],
+      ),
+      _ => Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(child: _MosaicImage(path: images[0])),
+          const SizedBox(width: _gap),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: _MosaicImage(path: images[1])),
+                const SizedBox(height: _gap),
+                Expanded(child: _MosaicImage(path: images[2])),
+              ],
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      ),
+    };
   }
 }
 
@@ -1131,8 +1124,6 @@ class _MosaicImage extends StatelessWidget {
     return Image.file(
       File(path),
       fit: BoxFit.cover,
-      width: 200,
-      height: 200,
     );
   }
 }
