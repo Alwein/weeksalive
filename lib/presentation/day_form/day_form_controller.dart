@@ -19,7 +19,12 @@ class DayFormController extends ChangeNotifier {
   LeaveATrace _leaveATrace = const LeaveATrace();
   LeaveATrace get leaveATrace => _leaveATrace;
 
-  bool get isComplete => _averageFeeling != null && _meaningScore != null && _hasNewExperience != null;
+  bool get canSave =>
+      _averageFeeling != null ||
+      _meaningScore != null ||
+      _hasNewExperience != null ||
+      _livingIntentions.isNotEmpty ||
+      _leaveATrace.isAnswered;
 
   void setAverageFeeling(AverageFeeling value) {
     if (_averageFeeling == value) return;

@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:weeksalive/core/l10n/time_utils.dart';
@@ -19,6 +20,7 @@ import 'package:weeksalive/presentation/day_form/day_form_view_model.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/weekly_intent/widgets/edit_weekly_intent_bottom_sheet.dart';
+import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/show_custom_bottom_sheet.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
@@ -48,9 +50,31 @@ class _Content extends StatefulWidget {
 
 enum _DaySectionId { feeling, meaning, newExperience, intention, leaveATrace }
 
+const double _kBaseCircleSize = 6;
+const double _kMaxStepCircleContribution = 6;
+
+double _proportionalContribution(int index, int valueCount) => index / (valueCount - 1) * _kMaxStepCircleContribution;
+
 class _ContentState extends State<_Content> {
   late final DayFormController _controller;
   _DaySectionId _expanded = _DaySectionId.feeling;
+
+  double get _circleSize {
+    final feelingContribution = _controller.averageFeeling != null
+        ? _proportionalContribution(_controller.averageFeeling!.index, AverageFeeling.values.length)
+        : 0.0;
+    final meaningContribution = _controller.meaningScore != null
+        ? _proportionalContribution(_controller.meaningScore!.index, MeaningScore.values.length)
+        : 0.0;
+    final newExperienceContribution = _controller.hasNewExperience == true ? _kMaxStepCircleContribution : 0.0;
+    final intentionContribution = _controller.livingIntentions.isNotEmpty ? _kMaxStepCircleContribution : 0.0;
+
+    return _kBaseCircleSize +
+        feelingContribution +
+        meaningContribution +
+        newExperienceContribution +
+        intentionContribution;
+  }
 
   @override
   void initState() {
@@ -92,9 +116,10 @@ class _ContentState extends State<_Content> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+
         children: [
-          _DayHeader(circleSize: 25, viewModel: widget.viewModel),
+          _DayHeader(circleSize: _circleSize, viewModel: widget.viewModel),
           const SizedBox(height: Margins.spacingBase),
           const SmallDivider(width: double.infinity),
 
@@ -180,6 +205,16 @@ class _ContentState extends State<_Content> {
               },
             ),
           ),
+          const SizedBox(height: Margins.spacingBase),
+          PrimaryButton(
+            text: Strings.done,
+            onPressed: _controller.canSave
+                ? () {
+                    // TODO: save day
+                  }
+                : null,
+          ),
+          const SizedBox(height: Margins.spacingM),
         ],
       ),
     );
@@ -630,7 +665,7 @@ class _NewExperienceSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       value ? Strings.newExperienceSectionValueYes : Strings.newExperienceSectionValueNo,
-      style: TextStyles.primarySmallBold.copyWith(color: AppColors.content(context)),
+      style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
     );
   }
 }
@@ -894,19 +929,26 @@ class _LeaveATraceInputState extends State<_LeaveATraceInput> {
   @override
   void initState() {
     super.initState();
-    _textController = TextEditingController(text: widget.value.text)..addListener(_onTextChanged);
+    _textController = TextEditingController(text: widget.value.text);
   }
 
   @override
   void dispose() {
-    _textController
-      ..removeListener(_onTextChanged)
-      ..dispose();
+    _textController.dispose();
     super.dispose();
   }
 
-  void _onTextChanged() {
-    widget.onChanged(widget.value.copyWith(text: _textController.text));
+  Future<void> _openTextEditor() async {
+    final result = await Navigator.of(context).push<String>(
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (_) => _TextEditorPage(initialText: _textController.text),
+      ),
+    );
+    if (result != null) {
+      _textController.text = result;
+      widget.onChanged(widget.value.copyWith(text: result));
+    }
   }
 
   Future<void> _pickImages() async {
@@ -952,27 +994,32 @@ class _LeaveATraceInputState extends State<_LeaveATraceInput> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.bgSoft(context),
-                    borderRadius: BorderRadius.circular(Dimens.radiusBase),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: Margins.spacingBase,
-                    vertical: Margins.spacingS,
-                  ),
-                  child: TextField(
-                    controller: _textController,
-                    maxLines: null,
-                    keyboardType: TextInputType.multiline,
-                    style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: Strings.leaveATraceSectionTextHint,
-                      hintStyle: TextStyles.primaryXsBold.copyWith(
-                        color: AppColors.contentSoft(context),
+                child: Hero(
+                  tag: 'leaveATraceTextEditor',
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.bgSoft(context),
+                      borderRadius: BorderRadius.circular(Dimens.radiusBase),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Margins.spacingBase,
+                      vertical: Margins.spacingS,
+                    ),
+                    child: TextField(
+                      onTap: _openTextEditor,
+                      readOnly: true,
+                      controller: _textController,
+                      maxLines: null,
+                      keyboardType: TextInputType.multiline,
+                      style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: Strings.leaveATraceSectionTextHint,
+                        hintStyle: TextStyles.primaryXsBold.copyWith(
+                          color: AppColors.contentSoft(context),
+                        ),
+                        isCollapsed: true,
                       ),
-                      isCollapsed: true,
                     ),
                   ),
                 ),
@@ -1081,7 +1128,109 @@ class _MosaicImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.file(File(path), fit: BoxFit.cover);
+    return Image.file(
+      File(path),
+      fit: BoxFit.cover,
+      width: 200,
+      height: 200,
+    );
+  }
+}
+
+class _TextEditorPage extends StatefulWidget {
+  const _TextEditorPage({required this.initialText});
+
+  final String initialText;
+
+  @override
+  State<_TextEditorPage> createState() => _TextEditorPageState();
+}
+
+class _TextEditorPageState extends State<_TextEditorPage> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialText);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _confirm() {
+    Navigator.of(context).pop(_controller.text);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.bg(context),
+
+      appBar: AppBar(
+        backgroundColor: AppColors.bg(context),
+        leading: const CloseButton(),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: Margins.spacingBase,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: Margins.spacingBase),
+            Text(
+              Strings.leaveATraceSectionQuestion,
+              style: TextStyles.primaryLargeMedium.copyWith(color: AppColors.content(context)),
+            ),
+            const SizedBox(height: Margins.spacingBase),
+            Expanded(
+              child: Hero(
+                tag: 'leaveATraceTextEditor',
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Margins.spacingBase,
+                    vertical: Margins.spacingS,
+                  ),
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    color: AppColors.bgSoft(context),
+                    borderRadius: BorderRadius.circular(Dimens.radiusBase),
+                  ),
+                  child: TextField(
+                    controller: _controller,
+                    autofocus: true,
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
+                    style: TextStyles.primaryRegularMedium.copyWith(color: AppColors.content(context)),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: Strings.leaveATraceSectionTextHint,
+                      hintStyle: TextStyles.primaryRegularMedium.copyWith(
+                        color: AppColors.contentSoft(context),
+                      ),
+                      isCollapsed: true,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: Margins.spacingBase),
+            SizedBox(
+              width: double.infinity,
+              child: PrimaryButton(
+                text: Strings.done,
+                onPressed: _confirm,
+              ),
+            ),
+            const SizedBox(height: Margins.spacingBase),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -1102,10 +1251,11 @@ class _AddPhotoButton extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              MingCuteIcons.mgc_photo_album_line,
-              size: Dimens.iconSizeBase,
-              color: AppColors.contentSoft(context),
+            SvgPicture.asset(
+              "assets/images/add_images.svg",
+              width: 52,
+              height: 52,
+              colorFilter: ColorFilter.mode(AppColors.contentSoft(context), BlendMode.srcIn),
             ),
             const SizedBox(height: Margins.spacingXs),
             Text(

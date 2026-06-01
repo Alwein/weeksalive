@@ -52,7 +52,7 @@ class Strings {
   static String get livingIntentionsSectionValueBePresent => "BE PRESENT";
   static String get leaveATraceSectionTitle => "Leave a trace (optional)";
   static String get leaveATraceSectionSubtitle => "A few words or a picture to describe your day";
-  static String get leaveATraceSectionTextHint => "What made today special…";
+  static String get leaveATraceSectionTextHint => "Write what made today special…";
   static String get leaveATraceSectionAddPhoto => "Add pictures";
   static String leaveATraceSectionPhotoCount(int count) => "$count picture${count > 1 ? 's' : ''}";
 
