@@ -74,7 +74,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     StoreProvider.of<AppState>(
       context,
       listen: false,
-    ).dispatch(ToggleWeeklyIntentAction(_controller.selectedIntentIds.toList()));
+    ).dispatch(SetWeeklyIntentSelectionAction(_controller.selectedIntentIds.toList()));
   }
 
   @override

@@ -5,9 +5,9 @@ class WeeklyIntentLoadedAction {
   const WeeklyIntentLoadedAction(this.state);
 }
 
-class ToggleWeeklyIntentAction {
+class SetWeeklyIntentSelectionAction {
   final List<String> ids;
-  const ToggleWeeklyIntentAction(this.ids);
+  const SetWeeklyIntentSelectionAction(this.ids);
 }
 
 class AddWeeklyIntentAction {

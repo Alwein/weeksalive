@@ -14,21 +14,21 @@ import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/show_custom_bottom_sheet.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class EditIntentsSheet extends StatefulWidget {
-  const EditIntentsSheet({super.key});
+class EditAllIntentsSheet extends StatefulWidget {
+  const EditAllIntentsSheet({super.key});
 
   static Future<void> show(BuildContext context) {
     return showCustomBottomSheet<void>(
       context,
-      (sheetContext) => const EditIntentsSheet(),
+      (sheetContext) => const EditAllIntentsSheet(),
     );
   }
 
   @override
-  State<EditIntentsSheet> createState() => _EditIntentsSheetState();
+  State<EditAllIntentsSheet> createState() => _EditAllIntentsSheetState();
 }
 
-class _EditIntentsSheetState extends State<EditIntentsSheet> {
+class _EditAllIntentsSheetState extends State<EditAllIntentsSheet> {
   final _textController = TextEditingController();
 
   @override

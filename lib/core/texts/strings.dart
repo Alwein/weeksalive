@@ -13,7 +13,7 @@ class Strings {
   static String get done => tr('done');
   static String get continueString => tr('continue');
   static String get editName => "Edit name";
-  static String get custom => "Custom";
+  static String get editList => "Edit list";
 
   // weeksalive
 

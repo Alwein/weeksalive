@@ -95,8 +95,8 @@ void main() {
       });
     });
 
-    group('when toggling an intent', () {
-      test('adds intent to selection', () {
+    group('when setting the selection', () {
+      test('sets intent selection', () {
         // Given
         storeTester.givenStore(
           initialAppState(),
@@ -106,18 +106,18 @@ void main() {
         final targetId = kDefaultWeeklyIntents.first.id;
 
         // When
-        storeTester.whenDispatching(() => ToggleWeeklyIntentAction([targetId]));
+        storeTester.whenDispatching(() => SetWeeklyIntentSelectionAction([targetId]));
 
         // Then
         storeTester.thenExpectStatesInOrder([
           stateWith(
             (s) => s.weeklyIntentState.selectedIds,
-            contains(targetId),
+            [targetId],
           ),
         ]);
       });
 
-      test('removes intent from selection when toggled again', () {
+      test('clears selection', () {
         // Given
         final targetId = kDefaultWeeklyIntents.first.id;
         final preloaded = initialAppState().weeklyIntentState.copyWith(
@@ -130,13 +130,13 @@ void main() {
         );
 
         // When
-        storeTester.whenDispatching(() => ToggleWeeklyIntentAction([targetId]));
+        storeTester.whenDispatching(() => const SetWeeklyIntentSelectionAction([]));
 
         // Then
         storeTester.thenExpectStatesInOrder([
           stateWith(
             (s) => s.weeklyIntentState.selectedIds,
-            isNot(contains(targetId)),
+            isEmpty,
           ),
         ]);
       });
@@ -151,13 +151,13 @@ void main() {
         final targetId = kDefaultWeeklyIntents.first.id;
 
         // When
-        storeTester.whenDispatching(() => ToggleWeeklyIntentAction([targetId]));
+        storeTester.whenDispatching(() => SetWeeklyIntentSelectionAction([targetId]));
 
         // Then
         await storeTester.thenExpectStatesInOrder([
           stateWith(
             (s) => s.weeklyIntentState.selectedIds,
-            contains(targetId),
+            [targetId],
           ),
         ]);
         verify(() => repository.setSelection(any())).called(1);

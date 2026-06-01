@@ -19,7 +19,9 @@ class WeeklyIntentMiddleware extends MiddlewareClass<AppState> {
       await _load(store);
     }
 
-    if (action is ToggleWeeklyIntentAction || action is AddWeeklyIntentAction || action is RemoveWeeklyIntentAction) {
+    if (action is SetWeeklyIntentSelectionAction ||
+        action is AddWeeklyIntentAction ||
+        action is RemoveWeeklyIntentAction) {
       await _persist(store);
     }
 

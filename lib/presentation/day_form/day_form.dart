@@ -16,7 +16,7 @@ import 'package:weeksalive/presentation/day_form/day_form_controller.dart';
 import 'package:weeksalive/presentation/day_form/day_form_view_model.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
-import 'package:weeksalive/presentation/redux/weekly_intent/widgets/edit_weekly_intents_bottom_sheet.dart';
+import 'package:weeksalive/presentation/redux/weekly_intent/widgets/edit_weekly_intent_bottom_sheet.dart';
 import 'package:weeksalive/presentation/widgets/show_custom_bottom_sheet.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
@@ -647,29 +647,28 @@ class _LivingIntentionsSelector extends StatelessWidget {
                     },
                     label: intent.label,
                   ),
-                TextButton(
-                  onPressed: () {
-                    SensorialFeedback.selectionChanged();
-                    // Nouvelle page pour éditer les weekly intents
-                    EditIntentsSheet.show(context);
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        Strings.livingIntentionsSectionEditLabel,
-                        style: TextStyles.primarySmallBold.copyWith(color: AppColors.contentSoft(context)),
-                      ),
-                      const SizedBox(width: Margins.spacingXs),
-                      Icon(
-                        MingCuteIcons.mgc_right_line,
-                        size: Dimens.iconSizeXs,
-                        color: AppColors.contentSoft(context),
-                      ),
-                    ],
-                  ),
-                ),
               ],
+            ),
+            TextButton(
+              onPressed: () {
+                SensorialFeedback.selectionChanged();
+                EditWeeklyIntentBottomSheet.show(context);
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    Strings.livingIntentionsSectionEditLabel,
+                    style: TextStyles.primarySmallBold.copyWith(color: AppColors.contentSoft(context)),
+                  ),
+                  const SizedBox(width: Margins.spacingXs),
+                  Icon(
+                    MingCuteIcons.mgc_right_line,
+                    size: Dimens.iconSizeXs,
+                    color: AppColors.contentSoft(context),
+                  ),
+                ],
+              ),
             ),
           ],
         );
