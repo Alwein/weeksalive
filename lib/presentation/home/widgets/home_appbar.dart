@@ -33,36 +33,34 @@ class _HomeAppBarState extends State<HomeAppBar> {
     final isLifeGridMode = widget.tabController.index == 0;
     return Material(
       color: AppColors.bg(context),
-      child: SafeArea(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: AnimatedSwitcher(
-                duration: AnimationDurations.short,
-                switchInCurve: Curves.easeInOut,
-                switchOutCurve: Curves.easeInOut,
-                transitionBuilder: (child, animation) => FadeTransition(
-                  opacity: animation,
-                  child: child,
-                ),
-                child: isLifeGridMode
-                    ? _UserNameTitle(userName: widget.vm.userName, grid: widget.vm.lifeWeekGrid)
-                    : const _YearGridTitle(),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: AnimatedSwitcher(
+              duration: AnimationDurations.short,
+              switchInCurve: Curves.easeInOut,
+              switchOutCurve: Curves.easeInOut,
+              transitionBuilder: (child, animation) => FadeTransition(
+                opacity: animation,
+                child: child,
               ),
+              child: isLifeGridMode
+                  ? _UserNameTitle(userName: widget.vm.userName, grid: widget.vm.lifeWeekGrid)
+                  : const _YearGridTitle(),
             ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                _StreaksButton(streaks: widget.vm.streakCount),
-                const SizedBox(width: Margins.spacingS),
-                const _ProfileButton(),
-              ],
-            ),
-          ],
-        ),
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              _StreaksButton(streaks: widget.vm.streakCount),
+              const SizedBox(width: Margins.spacingS),
+              const _ProfileButton(),
+            ],
+          ),
+        ],
       ),
     );
   }

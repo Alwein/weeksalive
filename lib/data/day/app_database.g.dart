@@ -247,12 +247,8 @@ class Day extends DataClass implements Insertable<Day> {
   final String? averageFeeling;
   final String? meaningScore;
   final bool? hasNewExperience;
-
-  /// JSON-encoded list of weekly intent ids.
   final String livingIntentionIds;
   final String leaveATraceText;
-
-  /// JSON-encoded list of image paths.
   final String leaveATraceImagePaths;
   final int sizeLevel;
   const Day({

@@ -8,9 +8,10 @@ import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/presentation/day_form/day_form.dart';
 import 'package:weeksalive/presentation/home/view_model/home_page_view_model.dart';
+import 'package:weeksalive/presentation/home/widgets/home_appbar.dart';
+import 'package:weeksalive/presentation/home/widgets/home_week_calendar.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/custom_tab_bar.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
-import 'package:weeksalive/presentation/widgets/home_appbar.dart';
 import 'package:weeksalive/presentation/widgets/zoomable_life_grid_view.dart';
 
 class HomePage extends StatelessWidget {
@@ -81,12 +82,14 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: Margins.spacingS),
+        SizedBox(height: MediaQuery.paddingOf(context).top),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
           child: HomeAppBar(vm: widget.vm, tabController: _gridTabController),
         ),
-        const SizedBox(height: Margins.spacingM),
+        const SizedBox(height: Margins.spacingBase),
+        HomeWeekCalendar(vm: widget.vm),
+        const SizedBox(height: Margins.spacingBase),
         Expanded(
           child: ZoomableLifeGridView(
             key: _zoomableGridKey,

@@ -12,6 +12,10 @@ abstract class HomePageViewModel with _$HomePageViewModel {
     required String userName,
     required int streakCount,
     required LifeWeekGrid lifeWeekGrid,
+    /// ISO weekday (1 = Monday … 7 = Sunday) at which the week starts.
+    @Default(DateTime.monday) int weekStartDay,
+    /// Set of dates (normalized to midnight) that have been recorded.
+    @Default({}) Set<DateTime> recordedDays,
   }) = _HomePageViewModel;
 
   factory HomePageViewModel.create(Store<AppState> store) {
@@ -19,6 +23,8 @@ abstract class HomePageViewModel with _$HomePageViewModel {
       userName: _userName(store),
       streakCount: store.state.streakState.count,
       lifeWeekGrid: _lifeWeekGrid(store),
+      weekStartDay: _weekStartDay(store),
+      recordedDays: store.state.dayState.entries.keys.toSet(),
     );
   }
 }
@@ -29,6 +35,14 @@ String _userName(Store<AppState> store) {
     return userState.user?.name ?? '';
   }
   return '';
+}
+
+int _weekStartDay(Store<AppState> store) {
+  final userState = store.state.userState;
+  if (userState is UserStateSuccess) {
+    return userState.user?.weekStartDay ?? DateTime.monday;
+  }
+  return DateTime.monday;
 }
 
 LifeWeekGrid _lifeWeekGrid(Store<AppState> store) {
