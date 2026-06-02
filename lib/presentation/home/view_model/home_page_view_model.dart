@@ -54,6 +54,7 @@ LifeWeekGrid _lifeWeekGrid(Store<AppState> store) {
         dateOfBirth: user.dateOfBirth,
         projectedLifespanYears: user.lifespan,
         at: DateTime.now(),
+        weekStartDay: user.weekStartDay,
       );
     }
   }

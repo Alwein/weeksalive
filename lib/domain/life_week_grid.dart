@@ -13,6 +13,7 @@ class LifeWeekGrid {
     required DateTime? dateOfBirth,
     required int projectedLifespanYears,
     required DateTime at,
+    int weekStartDay = DateTime.monday,
   }) {
     if (dateOfBirth == null) {
       final total = projectedLifespanYears * 52;
@@ -22,7 +23,11 @@ class LifeWeekGrid {
       dateOfBirth: dateOfBirth,
       ageYears: projectedLifespanYears,
     );
-    var lived = weeksSinceBirth(dateOfBirth: dateOfBirth, at: at);
+    var lived = weeksSinceBirth(
+      dateOfBirth: dateOfBirth,
+      at: at,
+      weekStartDay: weekStartDay,
+    );
     if (lived > total) lived = total;
     return LifeWeekGrid(totalWeeks: total, livedWeeks: lived);
   }
@@ -36,9 +41,27 @@ int totalWeeksFromBirthToAgeAnniversary({
   return end.difference(dateOfBirth).inDays ~/ 7;
 }
 
-int weeksSinceBirth({required DateTime dateOfBirth, required DateTime at}) {
+/// Counts the number of completed life-weeks at [at], where each week boundary
+/// falls on [weekStartDay] (an ISO weekday, 1 = Monday … 7 = Sunday).
+///
+/// The grid's first cell represents the partial week of birth, so a new cell is
+/// added every time a [weekStartDay] is reached: the result is the number of
+/// [weekStartDay] occurrences in the interval `(dateOfBirth, at]`.
+int weeksSinceBirth({
+  required DateTime dateOfBirth,
+  required DateTime at,
+  int weekStartDay = DateTime.monday,
+}) {
   if (!at.isAfter(dateOfBirth)) return 0;
-  return at.difference(dateOfBirth).inDays ~/ 7;
+  final birth = DateTime(dateOfBirth.year, dateOfBirth.month, dateOfBirth.day);
+  final today = DateTime(at.year, at.month, at.day);
+  // Days from birth to the first weekStartDay strictly after birth.
+  final daysToFirstBoundary = ((weekStartDay - birth.weekday) % 7 == 0)
+      ? 7
+      : (weekStartDay - birth.weekday) % 7;
+  final firstBoundary = birth.add(Duration(days: daysToFirstBoundary));
+  if (today.isBefore(firstBoundary)) return 0;
+  return today.difference(firstBoundary).inDays ~/ 7 + 1;
 }
 
 DateTime addCalendarYears(DateTime d, int years) {

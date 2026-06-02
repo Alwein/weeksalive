@@ -82,6 +82,7 @@ class OnboardingFormController extends ChangeNotifier {
     dateOfBirth: _dateOfBirth,
     projectedLifespanYears: _lifespan,
     at: DateTime.now(),
+    weekStartDay: _weekStartDay,
   );
 
   NotificationSlotState _slot1 = const NotificationSlotState(

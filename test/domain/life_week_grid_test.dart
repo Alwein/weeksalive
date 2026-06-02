@@ -14,18 +14,22 @@ void main() {
       expect(grid.progressFraction, 0);
     });
 
-    test('lived weeks are full weeks since birth, not age in years plus weeks', () {
+    test('lived weeks count weekStartDay boundaries crossed since birth', () {
+      // 1990-06-15 is a Friday.
       final dob = DateTime.utc(1990, 6, 15);
       final at = DateTime.utc(2020, 6, 15);
       final grid = LifeWeekGrid.fromProfile(
         dateOfBirth: dob,
         projectedLifespanYears: 85,
         at: at,
+        weekStartDay: DateTime.monday,
       );
-      // Exactly 30 calendar years → same as 30 * ~365.25 days floored to weeks
-      final expectedLived = at.difference(dob).inDays ~/ 7;
+      final expectedLived = weeksSinceBirth(
+        dateOfBirth: dob,
+        at: at,
+        weekStartDay: DateTime.monday,
+      );
       expect(grid.livedWeeks, expectedLived);
-      expect(grid.livedWeeks, isNot(30 + expectedLived));
     });
 
     test('total weeks span from birth to Nth birthday, not lifespan * 52', () {
@@ -63,6 +67,66 @@ void main() {
         at: DateTime.utc(2000, 5, 10),
       );
       expect(grid.livedWeeks, 0);
+    });
+  });
+
+  group('weeksSinceBirth (weekStartDay)', () {
+    test('returns zero before the first weekStartDay after birth', () {
+      // 2000-01-01 is a Saturday; first Monday after birth is 2000-01-03.
+      final dob = DateTime.utc(2000, 1, 1);
+      expect(
+        weeksSinceBirth(dateOfBirth: dob, at: DateTime.utc(2000, 1, 2), weekStartDay: DateTime.monday),
+        0,
+      );
+    });
+
+    test('adds a cell exactly on the weekStartDay', () {
+      // 2000-01-01 is a Saturday; first Monday after birth is 2000-01-03.
+      final dob = DateTime.utc(2000, 1, 1);
+      expect(
+        weeksSinceBirth(dateOfBirth: dob, at: DateTime.utc(2000, 1, 3), weekStartDay: DateTime.monday),
+        1,
+      );
+    });
+
+    test('does not advance between two consecutive weekStartDays', () {
+      final dob = DateTime.utc(2000, 1, 1);
+      for (final day in [4, 5, 6, 7, 8, 9]) {
+        expect(
+          weeksSinceBirth(dateOfBirth: dob, at: DateTime.utc(2000, 1, day), weekStartDay: DateTime.monday),
+          1,
+          reason: '2000-01-$day should still be in the first counted week',
+        );
+      }
+      // Next Monday is 2000-01-10.
+      expect(
+        weeksSinceBirth(dateOfBirth: dob, at: DateTime.utc(2000, 1, 10), weekStartDay: DateTime.monday),
+        2,
+      );
+    });
+
+    test('weekStartDay equal to birth weekday counts the next occurrence, not birth day', () {
+      // 2000-01-01 is a Saturday.
+      final dob = DateTime.utc(2000, 1, 1);
+      expect(
+        weeksSinceBirth(dateOfBirth: dob, at: dob, weekStartDay: DateTime.saturday),
+        0,
+      );
+      // Next Saturday is 2000-01-08.
+      expect(
+        weeksSinceBirth(dateOfBirth: dob, at: DateTime.utc(2000, 1, 8), weekStartDay: DateTime.saturday),
+        1,
+      );
+    });
+
+    test('different weekStartDay yields a different first boundary', () {
+      // 2000-01-01 is a Saturday.
+      final dob = DateTime.utc(2000, 1, 1);
+      // First Sunday after birth is 2000-01-02.
+      expect(
+        weeksSinceBirth(dateOfBirth: dob, at: DateTime.utc(2000, 1, 2), weekStartDay: DateTime.sunday),
+        1,
+      );
     });
   });
 
