@@ -84,7 +84,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
         const SizedBox(height: Margins.spacingS),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
-          child: HomeAppBar(vm: widget.vm),
+          child: HomeAppBar(vm: widget.vm, tabController: _gridTabController),
         ),
         const SizedBox(height: Margins.spacingM),
         Expanded(

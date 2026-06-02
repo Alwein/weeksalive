@@ -1,35 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
+import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/domain/life_week_grid.dart';
 import 'package:weeksalive/presentation/home/view_model/home_page_view_model.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class HomeAppBar extends StatelessWidget {
-  const HomeAppBar({super.key, required this.vm});
+class HomeAppBar extends StatefulWidget {
+  const HomeAppBar({super.key, required this.vm, required this.tabController});
   final HomePageViewModel vm;
+  final TabController tabController;
+
+  @override
+  State<HomeAppBar> createState() => _HomeAppBarState();
+}
+
+class _HomeAppBarState extends State<HomeAppBar> {
+  @override
+  void initState() {
+    super.initState();
+    widget.tabController.addListener(() {
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final isLifeGridMode = widget.tabController.index == 0;
     return Material(
       color: AppColors.bg(context),
       child: SafeArea(
-        bottom: false,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: _Title(userName: vm.userName, grid: vm.lifeWeekGrid),
+              child: AnimatedSwitcher(
+                duration: AnimationDurations.short,
+                switchInCurve: Curves.easeInOut,
+                switchOutCurve: Curves.easeInOut,
+                transitionBuilder: (child, animation) => FadeTransition(
+                  opacity: animation,
+                  child: child,
+                ),
+                child: isLifeGridMode
+                    ? _UserNameTitle(userName: widget.vm.userName, grid: widget.vm.lifeWeekGrid)
+                    : const _YearGridTitle(),
+              ),
             ),
             Row(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                _StreaksButton(streaks: vm.streakCount),
+                _StreaksButton(streaks: widget.vm.streakCount),
                 const SizedBox(width: Margins.spacingXs),
                 const _ProfileButton(),
               ],
@@ -41,8 +68,8 @@ class HomeAppBar extends StatelessWidget {
   }
 }
 
-class _Title extends StatelessWidget {
-  const _Title({
+class _UserNameTitle extends StatelessWidget {
+  const _UserNameTitle({
     required this.userName,
     required this.grid,
   });
@@ -53,7 +80,7 @@ class _Title extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(Strings.homePageTitle(userName), style: TextStyles.primarySemiBold),
         const SizedBox(height: Margins.spacingXs),
@@ -64,6 +91,35 @@ class _Title extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class _YearGridTitle extends StatelessWidget {
+  const _YearGridTitle();
+
+  @override
+  Widget build(BuildContext context) {
+    final String year = DateTime.now().year.toString();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(year, style: TextStyles.primarySemiBold),
+        const SizedBox(height: Margins.spacingXs),
+        Texts.primaryXsCounter(
+          context,
+          Strings.progressLabel,
+          _getYearProgress(),
+        ),
+      ],
+    );
+  }
+
+  String _getYearProgress() {
+    final now = DateTime.now();
+    final year = now.year;
+    final totalDays = daysInGregorianYear(year);
+    final livedDays = now.difference(DateTime(year, 1, 1)).inDays;
+    return '${(livedDays / totalDays * 100).toStringAsFixed(1)}%';
   }
 }
 
