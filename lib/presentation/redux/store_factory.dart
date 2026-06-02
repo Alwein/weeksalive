@@ -1,4 +1,5 @@
 import 'package:redux/redux.dart';
+import 'package:weeksalive/data/day/day_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
@@ -9,6 +10,7 @@ import 'package:weeksalive/data/weekly_intent/weekly_intent_repository.dart';
 import 'package:weeksalive/presentation/redux/app_reducer.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_middleware.dart';
+import 'package:weeksalive/presentation/redux/day/day_middleware.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_middleware.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_middleware.dart';
 import 'package:weeksalive/presentation/redux/streak/streak_middleware.dart';
@@ -24,6 +26,7 @@ class StoreFactory {
   final PurchaseRepository purchaseRepository;
   final StreakRepository streakRepository;
   final WeeklyIntentRepository weeklyIntentRepository;
+  final DayRepository dayRepository;
 
   StoreFactory({
     required this.remoteConfigRepository,
@@ -33,6 +36,7 @@ class StoreFactory {
     required this.purchaseRepository,
     required this.streakRepository,
     required this.weeklyIntentRepository,
+    required this.dayRepository,
   });
 
   Store<AppState> createStore({AppState? initialState}) {
@@ -47,6 +51,7 @@ class StoreFactory {
         PurchaseMiddleware(purchaseRepository: purchaseRepository).call,
         StreakMiddleware(streakRepository: streakRepository).call,
         WeeklyIntentMiddleware(weeklyIntentRepository: weeklyIntentRepository).call,
+        DayMiddleware(dayRepository: dayRepository).call,
       ],
     );
   }

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:weeksalive/presentation/redux/day/day_state.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 import 'package:weeksalive/presentation/redux/remote_config/remote_config_state.dart';
 import 'package:weeksalive/presentation/redux/streak/streak_state.dart';
@@ -9,7 +10,7 @@ import 'package:weeksalive/presentation/redux/weekly_intent/weekly_intent_state.
 part 'app_state.freezed.dart';
 
 @freezed
-class AppState with _$AppState {
+abstract class AppState with _$AppState {
   const factory AppState({
     required RemoteConfigState remoteConfigState,
     required UserState userState,
@@ -17,6 +18,7 @@ class AppState with _$AppState {
     required ThemeState themeState,
     required StreakState streakState,
     required WeeklyIntentState weeklyIntentState,
+    required DayState dayState,
   }) = _AppState;
 
   factory AppState.initial() {
@@ -27,6 +29,7 @@ class AppState with _$AppState {
       themeState: const ThemeState(),
       streakState: const StreakState(),
       weeklyIntentState: WeeklyIntentState.initial(),
+      dayState: DayState.initial(),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/day/day_reducer.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_reducer.dart';
 import 'package:weeksalive/presentation/redux/remote_config/remote_config_reducer.dart';
 import 'package:weeksalive/presentation/redux/streak/streak_reducer.dart';
@@ -14,5 +15,6 @@ AppState appReducer(AppState state, dynamic action) {
     themeState: themeReducer(state.themeState, action),
     streakState: streakReducer(state.streakState, action),
     weeklyIntentState: weeklyIntentReducer(state.weeklyIntentState, action),
+    dayState: dayReducer(state.dayState, action),
   );
 }

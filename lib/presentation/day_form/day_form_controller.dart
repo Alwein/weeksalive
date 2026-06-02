@@ -1,8 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:weeksalive/domain/day/day.dart';
+import 'package:weeksalive/domain/day/day_entry.dart';
 
 class DayFormController extends ChangeNotifier {
-  DayFormController();
+  DayFormController({DayEntry? initialEntry}) {
+    if (initialEntry != null) {
+      _averageFeeling = initialEntry.averageFeeling;
+      _meaningScore = initialEntry.meaningScore;
+      _hasNewExperience = initialEntry.hasNewExperience;
+      _livingIntentions.addAll(initialEntry.livingIntentionIds);
+      _leaveATrace = initialEntry.leaveATrace;
+    }
+  }
 
   AverageFeeling? _averageFeeling;
   AverageFeeling? get averageFeeling => _averageFeeling;
@@ -56,5 +65,16 @@ class DayFormController extends ChangeNotifier {
       _livingIntentions.add(id);
     }
     notifyListeners();
+  }
+
+  DayEntry buildEntry(DateTime date) {
+    return DayEntry(
+      date: date,
+      averageFeeling: _averageFeeling,
+      meaningScore: _meaningScore,
+      hasNewExperience: _hasNewExperience,
+      livingIntentionIds: _livingIntentions.toList(),
+      leaveATrace: _leaveATrace,
+    );
   }
 }

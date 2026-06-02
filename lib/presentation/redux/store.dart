@@ -3,6 +3,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:redux/redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weeksalive/data/crashlytics/crashlytics_repository.dart';
+import 'package:weeksalive/data/day/app_database.dart';
+import 'package:weeksalive/data/day/day_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
@@ -18,6 +20,7 @@ Future<Store<AppState>> initializeReduxStore(
 ) async {
   final crashlyticsRepository = CrashlyticsRepositoryImpl();
   final sharedPreferences = await SharedPreferences.getInstance();
+  final appDatabase = AppDatabase();
 
   final reduxStore = StoreFactory(
     remoteConfigRepository: RemoteConfigRepository(crashlyticsRepository: crashlyticsRepository),
@@ -27,6 +30,7 @@ Future<Store<AppState>> initializeReduxStore(
     purchaseRepository: PurchaseRepository(dotenv: dotenv),
     streakRepository: StreakRepository(preferences: sharedPreferences),
     weeklyIntentRepository: WeeklyIntentRepository(preferences: sharedPreferences),
+    dayRepository: DayRepository(database: appDatabase),
   ).createStore();
 
   return reduxStore;

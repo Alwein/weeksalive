@@ -1,9 +1,12 @@
 import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/domain/life_week_grid.dart';
+import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/day/day_state.dart';
 import 'package:weeksalive/presentation/widgets/life_grid_view.dart';
 import 'package:weeksalive/presentation/widgets/year_grid_painter.dart';
 
@@ -165,49 +168,79 @@ class _YearDayGridLayer extends StatelessWidget {
   Widget build(BuildContext context) {
     final bgColor = AppColors.bg(context);
     final strokeColor = AppColors.strokeColor(context);
+    final fillColor = AppColors.content(context);
+    final pastEmptyColor = AppColors.bgSoft(context);
     final now = DateTime.now();
     final totalDays = daysInGregorianYear(now.year);
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final exactHeight = YearGridPainter.computeHeight(
-          availableWidth: constraints.maxWidth,
-          totalDays: totalDays,
-          columns: ZoomableLifeGridView.yearGridColumns,
-          dotSpacing: ZoomableLifeGridView.yearGridDotSpacing,
-          padding: padding,
-        );
-        final needsScroll = exactHeight > constraints.maxHeight;
+    return StoreConnector<AppState, DayState>(
+      converter: (store) => store.state.dayState,
+      builder: (context, dayState) {
+        final fillSizes = _fillSizesForYear(dayState, now, totalDays);
 
-        final scrollContent = SingleChildScrollView(
-          child: SizedBox(
-            width: constraints.maxWidth,
-            height: exactHeight,
-            child: CustomPaint(
-              painter: YearGridPainter(
-                columns: ZoomableLifeGridView.yearGridColumns,
-                totalDays: totalDays,
-                dotSpacing: ZoomableLifeGridView.yearGridDotSpacing,
-                emptyStrokeColor: strokeColor,
-                padding: padding,
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final exactHeight = YearGridPainter.computeHeight(
+              availableWidth: constraints.maxWidth,
+              totalDays: totalDays,
+              columns: ZoomableLifeGridView.yearGridColumns,
+              dotSpacing: ZoomableLifeGridView.yearGridDotSpacing,
+              padding: padding,
+            );
+            final needsScroll = exactHeight > constraints.maxHeight;
+
+            final scrollContent = SingleChildScrollView(
+              child: SizedBox(
+                width: constraints.maxWidth,
+                height: exactHeight,
+                child: CustomPaint(
+                  painter: YearGridPainter(
+                    columns: ZoomableLifeGridView.yearGridColumns,
+                    totalDays: totalDays,
+                    dotSpacing: ZoomableLifeGridView.yearGridDotSpacing,
+                    emptyStrokeColor: strokeColor,
+                    fillColor: fillColor,
+                    pastEmptyColor: pastEmptyColor,
+                    filledCount: totalDays,
+                    fillSizes: fillSizes,
+                    padding: padding,
+                  ),
+                ),
               ),
-            ),
-          ),
-        );
+            );
 
-        if (!needsScroll) return scrollContent;
+            if (!needsScroll) return scrollContent;
 
-        return ShaderMask(
-          shaderCallback: (rect) => LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: const [0.0, 0.0, 0.90, 1.0],
-            colors: [bgColor, Colors.transparent, Colors.transparent, bgColor],
-          ).createShader(rect),
-          blendMode: BlendMode.dstOut,
-          child: scrollContent,
+            return ShaderMask(
+              shaderCallback: (rect) => LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: const [0.0, 0.0, 0.90, 1.0],
+                colors: [bgColor, Colors.transparent, Colors.transparent, bgColor],
+              ).createShader(rect),
+              blendMode: BlendMode.dstOut,
+              child: scrollContent,
+            );
+          },
         );
       },
     );
+  }
+
+  /// One entry per day of the year.
+  /// - `-2` means "past day with no record" (drawn filled with [AppColors.bgSoft]).
+  /// - `-1` means "future day with no record" (drawn as an empty circle).
+  /// - `[0, 4]` is the recorded size level.
+  static List<int> _fillSizesForYear(DayState dayState, DateTime now, int totalDays) {
+    final year = now.year;
+    final todayIndex = DateTime(now.year, now.month, now.day).difference(DateTime(year, 1, 1)).inDays;
+    final sizes = List<int>.generate(totalDays, (i) => i < todayIndex ? -2 : -1);
+    for (final entry in dayState.entries.values) {
+      if (entry.date.year != year) continue;
+      final dayOfYear = entry.date.difference(DateTime(year, 1, 1)).inDays;
+      if (dayOfYear < 0 || dayOfYear >= totalDays) continue;
+      sizes[dayOfYear] = entry.sizeLevel;
+    }
+    return sizes;
   }
 }

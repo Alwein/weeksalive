@@ -19,6 +19,7 @@ import 'package:weeksalive/presentation/day_form/day_form_controller.dart';
 import 'package:weeksalive/presentation/day_form/day_form_view_model.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/day/day_actions.dart';
 import 'package:weeksalive/presentation/redux/weekly_intent/widgets/edit_weekly_intent_bottom_sheet.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/show_custom_bottom_sheet.dart';
@@ -35,14 +36,15 @@ class DayForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreConnector<AppState, DayFormViewModel>(
       converter: (store) => DayFormViewModel.create(store, date),
-      builder: (context, viewModel) => _Content(viewModel: viewModel),
+      builder: (context, viewModel) => _Content(viewModel: viewModel, date: date),
     );
   }
 }
 
 class _Content extends StatefulWidget {
-  const _Content({required this.viewModel});
+  const _Content({required this.viewModel, required this.date});
   final DayFormViewModel viewModel;
+  final DateTime date;
 
   @override
   State<_Content> createState() => _ContentState();
@@ -79,7 +81,7 @@ class _ContentState extends State<_Content> {
   @override
   void initState() {
     super.initState();
-    _controller = DayFormController()..addListener(_onControllerChanged);
+    _controller = DayFormController(initialEntry: widget.viewModel.existingEntry)..addListener(_onControllerChanged);
   }
 
   @override
@@ -210,7 +212,11 @@ class _ContentState extends State<_Content> {
             text: Strings.done,
             onPressed: _controller.canSave
                 ? () {
-                    // TODO: save day
+                    SensorialFeedback.selectionChanged();
+                    StoreProvider.of<AppState>(context).dispatch(
+                      SaveDayAction(_controller.buildEntry(widget.date)),
+                    );
+                    Navigator.of(context).pop();
                   }
                 : null,
           ),

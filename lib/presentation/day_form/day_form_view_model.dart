@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:redux/redux.dart';
+import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/domain/user/user.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
@@ -7,9 +8,10 @@ import 'package:weeksalive/presentation/redux/user/user_state.dart';
 part 'day_form_view_model.freezed.dart';
 
 @freezed
-class DayFormViewModel with _$DayFormViewModel {
-  const factory DayFormViewModel._({
+abstract class DayFormViewModel with _$DayFormViewModel {
+  const factory DayFormViewModel({
     required String dayCount,
+    DayEntry? existingEntry,
   }) = _DayFormViewModel;
 
   factory DayFormViewModel.create(Store<AppState> store, DateTime date) {
@@ -17,8 +19,9 @@ class DayFormViewModel with _$DayFormViewModel {
       UserStateSuccess(:final user) => user,
       _ => null,
     };
-    return DayFormViewModel._(
+    return DayFormViewModel(
       dayCount: _dayNumber(user, date).toString(),
+      existingEntry: store.state.dayState.entryFor(date),
     );
   }
 }

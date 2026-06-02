@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,151 +9,263 @@ part of 'bootstrap_page_view_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
 /// @nodoc
 mixin _$BootstrapPageViewModel {
-  BootstrapPageRedirect get redirect => throw _privateConstructorUsedError;
 
-  /// Create a copy of BootstrapPageViewModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $BootstrapPageViewModelCopyWith<BootstrapPageViewModel> get copyWith =>
-      throw _privateConstructorUsedError;
+ BootstrapPageRedirect get redirect;
+/// Create a copy of BootstrapPageViewModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$BootstrapPageViewModelCopyWith<BootstrapPageViewModel> get copyWith => _$BootstrapPageViewModelCopyWithImpl<BootstrapPageViewModel>(this as BootstrapPageViewModel, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BootstrapPageViewModel&&(identical(other.redirect, redirect) || other.redirect == redirect));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,redirect);
+
+@override
+String toString() {
+  return 'BootstrapPageViewModel(redirect: $redirect)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $BootstrapPageViewModelCopyWith<$Res> {
-  factory $BootstrapPageViewModelCopyWith(
-    BootstrapPageViewModel value,
-    $Res Function(BootstrapPageViewModel) then,
-  ) = _$BootstrapPageViewModelCopyWithImpl<$Res, BootstrapPageViewModel>;
-  @useResult
-  $Res call({BootstrapPageRedirect redirect});
-}
+abstract mixin class $BootstrapPageViewModelCopyWith<$Res>  {
+  factory $BootstrapPageViewModelCopyWith(BootstrapPageViewModel value, $Res Function(BootstrapPageViewModel) _then) = _$BootstrapPageViewModelCopyWithImpl;
+@useResult
+$Res call({
+ BootstrapPageRedirect redirect
+});
 
+
+
+
+}
 /// @nodoc
-class _$BootstrapPageViewModelCopyWithImpl<
-  $Res,
-  $Val extends BootstrapPageViewModel
->
+class _$BootstrapPageViewModelCopyWithImpl<$Res>
     implements $BootstrapPageViewModelCopyWith<$Res> {
-  _$BootstrapPageViewModelCopyWithImpl(this._value, this._then);
+  _$BootstrapPageViewModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final BootstrapPageViewModel _self;
+  final $Res Function(BootstrapPageViewModel) _then;
 
-  /// Create a copy of BootstrapPageViewModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? redirect = null}) {
-    return _then(
-      _value.copyWith(
-            redirect: null == redirect
-                ? _value.redirect
-                : redirect // ignore: cast_nullable_to_non_nullable
-                      as BootstrapPageRedirect,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of BootstrapPageViewModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? redirect = null,}) {
+  return _then(_self.copyWith(
+redirect: null == redirect ? _self.redirect : redirect // ignore: cast_nullable_to_non_nullable
+as BootstrapPageRedirect,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [BootstrapPageViewModel].
+extension BootstrapPageViewModelPatterns on BootstrapPageViewModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _BootstrapPageViewModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _BootstrapPageViewModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _BootstrapPageViewModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _BootstrapPageViewModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _BootstrapPageViewModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _BootstrapPageViewModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( BootstrapPageRedirect redirect)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _BootstrapPageViewModel() when $default != null:
+return $default(_that.redirect);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( BootstrapPageRedirect redirect)  $default,) {final _that = this;
+switch (_that) {
+case _BootstrapPageViewModel():
+return $default(_that.redirect);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( BootstrapPageRedirect redirect)?  $default,) {final _that = this;
+switch (_that) {
+case _BootstrapPageViewModel() when $default != null:
+return $default(_that.redirect);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
-abstract class _$$BootstrapPageViewModelImplCopyWith<$Res>
-    implements $BootstrapPageViewModelCopyWith<$Res> {
-  factory _$$BootstrapPageViewModelImplCopyWith(
-    _$BootstrapPageViewModelImpl value,
-    $Res Function(_$BootstrapPageViewModelImpl) then,
-  ) = __$$BootstrapPageViewModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({BootstrapPageRedirect redirect});
+
+
+class _BootstrapPageViewModel implements BootstrapPageViewModel {
+  const _BootstrapPageViewModel({required this.redirect});
+  
+
+@override final  BootstrapPageRedirect redirect;
+
+/// Create a copy of BootstrapPageViewModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$BootstrapPageViewModelCopyWith<_BootstrapPageViewModel> get copyWith => __$BootstrapPageViewModelCopyWithImpl<_BootstrapPageViewModel>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BootstrapPageViewModel&&(identical(other.redirect, redirect) || other.redirect == redirect));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,redirect);
+
+@override
+String toString() {
+  return 'BootstrapPageViewModel(redirect: $redirect)';
+}
+
+
 }
 
 /// @nodoc
-class __$$BootstrapPageViewModelImplCopyWithImpl<$Res>
-    extends
-        _$BootstrapPageViewModelCopyWithImpl<$Res, _$BootstrapPageViewModelImpl>
-    implements _$$BootstrapPageViewModelImplCopyWith<$Res> {
-  __$$BootstrapPageViewModelImplCopyWithImpl(
-    _$BootstrapPageViewModelImpl _value,
-    $Res Function(_$BootstrapPageViewModelImpl) _then,
-  ) : super(_value, _then);
+abstract mixin class _$BootstrapPageViewModelCopyWith<$Res> implements $BootstrapPageViewModelCopyWith<$Res> {
+  factory _$BootstrapPageViewModelCopyWith(_BootstrapPageViewModel value, $Res Function(_BootstrapPageViewModel) _then) = __$BootstrapPageViewModelCopyWithImpl;
+@override @useResult
+$Res call({
+ BootstrapPageRedirect redirect
+});
 
-  /// Create a copy of BootstrapPageViewModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? redirect = null}) {
-    return _then(
-      _$BootstrapPageViewModelImpl(
-        redirect: null == redirect
-            ? _value.redirect
-            : redirect // ignore: cast_nullable_to_non_nullable
-                  as BootstrapPageRedirect,
-      ),
-    );
-  }
+
+
+
 }
-
 /// @nodoc
+class __$BootstrapPageViewModelCopyWithImpl<$Res>
+    implements _$BootstrapPageViewModelCopyWith<$Res> {
+  __$BootstrapPageViewModelCopyWithImpl(this._self, this._then);
 
-class _$BootstrapPageViewModelImpl implements _BootstrapPageViewModel {
-  const _$BootstrapPageViewModelImpl({required this.redirect});
+  final _BootstrapPageViewModel _self;
+  final $Res Function(_BootstrapPageViewModel) _then;
 
-  @override
-  final BootstrapPageRedirect redirect;
-
-  @override
-  String toString() {
-    return 'BootstrapPageViewModel._(redirect: $redirect)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$BootstrapPageViewModelImpl &&
-            (identical(other.redirect, redirect) ||
-                other.redirect == redirect));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, redirect);
-
-  /// Create a copy of BootstrapPageViewModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$BootstrapPageViewModelImplCopyWith<_$BootstrapPageViewModelImpl>
-  get copyWith =>
-      __$$BootstrapPageViewModelImplCopyWithImpl<_$BootstrapPageViewModelImpl>(
-        this,
-        _$identity,
-      );
+/// Create a copy of BootstrapPageViewModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? redirect = null,}) {
+  return _then(_BootstrapPageViewModel(
+redirect: null == redirect ? _self.redirect : redirect // ignore: cast_nullable_to_non_nullable
+as BootstrapPageRedirect,
+  ));
 }
 
-abstract class _BootstrapPageViewModel implements BootstrapPageViewModel {
-  const factory _BootstrapPageViewModel({
-    required final BootstrapPageRedirect redirect,
-  }) = _$BootstrapPageViewModelImpl;
 
-  @override
-  BootstrapPageRedirect get redirect;
-
-  /// Create a copy of BootstrapPageViewModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$BootstrapPageViewModelImplCopyWith<_$BootstrapPageViewModelImpl>
-  get copyWith => throw _privateConstructorUsedError;
 }
+
+// dart format on

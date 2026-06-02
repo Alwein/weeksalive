@@ -4,7 +4,7 @@ import 'package:weeksalive/domain/user/user.dart';
 part 'user_state.freezed.dart';
 
 @freezed
-class UserState with _$UserState {
+sealed class UserState with _$UserState {
   const factory UserState.loading() = UserStateLoading;
   const factory UserState.success(User? user) = UserStateSuccess;
   const factory UserState.error(String message) = UserStateError;

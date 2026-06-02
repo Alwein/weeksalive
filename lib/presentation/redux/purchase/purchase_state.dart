@@ -4,7 +4,7 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 part 'purchase_state.freezed.dart';
 
 @freezed
-class PurchaseState with _$PurchaseState {
+sealed class PurchaseState with _$PurchaseState {
   const factory PurchaseState.initial() = PurchaseStateInitial;
 
   const factory PurchaseState.loading({Offering? offering}) = PurchaseStateLoading;
@@ -22,18 +22,18 @@ class PurchaseState with _$PurchaseState {
 }
 
 extension PurchaseStateX on PurchaseState {
-  bool get isPro => maybeMap(
-    success: (s) => s.isPro,
-    error: (s) => s.isPro,
-    orElse: () => false,
-  );
+  bool get isPro => switch (this) {
+    PurchaseStateSuccess(:final isPro) => isPro,
+    PurchaseStateError(:final isPro) => isPro,
+    _ => false,
+  };
 
-  Offering? get offering => maybeMap(
-    loading: (s) => s.offering,
-    success: (s) => s.offering,
-    error: (s) => s.offering,
-    orElse: () => null,
-  );
+  Offering? get offering => switch (this) {
+    PurchaseStateLoading(:final offering) => offering,
+    PurchaseStateSuccess(:final offering) => offering,
+    PurchaseStateError(:final offering) => offering,
+    _ => null,
+  };
 
-  bool get isLoading => maybeMap(loading: (_) => true, orElse: () => false);
+  bool get isLoading => this is PurchaseStateLoading;
 }

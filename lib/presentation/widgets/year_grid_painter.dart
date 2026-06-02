@@ -8,6 +8,7 @@ class YearGridPainter extends CustomPainter {
     required this.dotSpacing,
     required this.emptyStrokeColor,
     this.fillColor = Colors.black,
+    this.pastEmptyColor,
     this.padding = EdgeInsets.zero,
     this.filledCount = 0,
     this.highlightGridIndex = -1,
@@ -28,6 +29,10 @@ class YearGridPainter extends CustomPainter {
 
   /// Uniform color used for all filled dots.
   final Color fillColor;
+
+  /// Color used to fill past days that have no journal entry.
+  /// When null, those dots are drawn as empty circles.
+  final Color? pastEmptyColor;
   final EdgeInsets padding;
 
   /// When > 0, draws filled circles with optional [revealProgress] animation (onboarding).
@@ -92,6 +97,14 @@ class YearGridPainter extends CustomPainter {
         canvas.drawCircle(center, emptyStrokeRadius, emptyStroke);
         continue;
       }
+      if (rawLevel == -2) {
+        if (pastEmptyColor != null) {
+          canvas.drawCircle(center, maxRadius, Paint()..color = pastEmptyColor!);
+        } else {
+          canvas.drawCircle(center, emptyStrokeRadius, emptyStroke);
+        }
+        continue;
+      }
 
       final isHighlight = animationComplete && i == highlightGridIndex && highlightColor != null;
       final color = isHighlight ? highlightColor! : fillColor;
@@ -120,6 +133,7 @@ class YearGridPainter extends CustomPainter {
       old.dotSpacing != dotSpacing ||
       old.emptyStrokeColor != emptyStrokeColor ||
       old.fillColor != fillColor ||
+      old.pastEmptyColor != pastEmptyColor ||
       old.padding != padding ||
       old.filledCount != filledCount ||
       old.highlightGridIndex != highlightGridIndex ||

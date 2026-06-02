@@ -54,7 +54,10 @@ class PaywallViewModel {
       trialEndDate: trialEndDate,
       isLoading: ps.isLoading,
       isPro: ps.isPro,
-      errorMessage: ps.maybeMap(error: (e) => e.message, orElse: () => null),
+      errorMessage: switch (ps) {
+        PurchaseStateError(:final message) => message,
+        _ => null,
+      },
       onPurchase: (context, pkg) => store.dispatch(PurchasePackageAction(pkg)),
       onRestore: (context) => store.dispatch(const RestorePurchasesAction()),
     );

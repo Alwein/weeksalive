@@ -1,4 +1,5 @@
 import 'package:redux/redux.dart';
+import 'package:weeksalive/data/day/day_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
@@ -22,7 +23,10 @@ class TestStoreFactory {
   /// Not wired into the test store by default to prevent async dispatch
   /// interference with other middleware bootstrap tests. Use the isolated
   /// store helper in weekly_intent_state_test.dart for bootstrap tests.
-  WeeklyIntentRepository weeklyIntentRepository = MockWeeklyIntentRepository();  Store<AppState> initializeReduxStore(AppState initialState) {
+  WeeklyIntentRepository weeklyIntentRepository = MockWeeklyIntentRepository();
+  DayRepository dayRepository = MockDayRepository();
+
+  Store<AppState> initializeReduxStore(AppState initialState) {
     return StoreFactory(
       remoteConfigRepository: remoteConfigRepository,
       userRepository: userRepository,
@@ -31,6 +35,7 @@ class TestStoreFactory {
       themeRepository: themeRepository,
       streakRepository: streakRepository,
       weeklyIntentRepository: weeklyIntentRepository,
+      dayRepository: dayRepository,
     ).createStore(initialState: initialState);
   }
 }

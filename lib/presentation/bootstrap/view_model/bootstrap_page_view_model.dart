@@ -12,13 +12,13 @@ enum BootstrapPageRedirect {
 }
 
 @freezed
-class BootstrapPageViewModel with _$BootstrapPageViewModel {
-  const factory BootstrapPageViewModel._({
+abstract class BootstrapPageViewModel with _$BootstrapPageViewModel {
+  const factory BootstrapPageViewModel({
     required BootstrapPageRedirect redirect,
   }) = _BootstrapPageViewModel;
 
   factory BootstrapPageViewModel.create(Store<AppState> store) {
-    return BootstrapPageViewModel._(
+    return BootstrapPageViewModel(
       redirect: _redirect(store),
     );
   }

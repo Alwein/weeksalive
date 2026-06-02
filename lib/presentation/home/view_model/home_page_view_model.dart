@@ -7,15 +7,15 @@ import 'package:weeksalive/presentation/redux/user/user_state.dart';
 part 'home_page_view_model.freezed.dart';
 
 @freezed
-class HomePageViewModel with _$HomePageViewModel {
-  const factory HomePageViewModel._({
+abstract class HomePageViewModel with _$HomePageViewModel {
+  const factory HomePageViewModel({
     required String userName,
     required int streakCount,
     required LifeWeekGrid lifeWeekGrid,
   }) = _HomePageViewModel;
 
   factory HomePageViewModel.create(Store<AppState> store) {
-    return HomePageViewModel._(
+    return HomePageViewModel(
       userName: _userName(store),
       streakCount: store.state.streakState.count,
       lifeWeekGrid: _lifeWeekGrid(store),

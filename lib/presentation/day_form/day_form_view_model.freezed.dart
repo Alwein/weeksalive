@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,145 +9,266 @@ part of 'day_form_view_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
 /// @nodoc
 mixin _$DayFormViewModel {
-  String get dayCount => throw _privateConstructorUsedError;
 
-  /// Create a copy of DayFormViewModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $DayFormViewModelCopyWith<DayFormViewModel> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get dayCount; DayEntry? get existingEntry;
+/// Create a copy of DayFormViewModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DayFormViewModelCopyWith<DayFormViewModel> get copyWith => _$DayFormViewModelCopyWithImpl<DayFormViewModel>(this as DayFormViewModel, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DayFormViewModel&&(identical(other.dayCount, dayCount) || other.dayCount == dayCount)&&(identical(other.existingEntry, existingEntry) || other.existingEntry == existingEntry));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,dayCount,existingEntry);
+
+@override
+String toString() {
+  return 'DayFormViewModel(dayCount: $dayCount, existingEntry: $existingEntry)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $DayFormViewModelCopyWith<$Res> {
-  factory $DayFormViewModelCopyWith(
-    DayFormViewModel value,
-    $Res Function(DayFormViewModel) then,
-  ) = _$DayFormViewModelCopyWithImpl<$Res, DayFormViewModel>;
-  @useResult
-  $Res call({String dayCount});
-}
+abstract mixin class $DayFormViewModelCopyWith<$Res>  {
+  factory $DayFormViewModelCopyWith(DayFormViewModel value, $Res Function(DayFormViewModel) _then) = _$DayFormViewModelCopyWithImpl;
+@useResult
+$Res call({
+ String dayCount, DayEntry? existingEntry
+});
 
+
+
+
+}
 /// @nodoc
-class _$DayFormViewModelCopyWithImpl<$Res, $Val extends DayFormViewModel>
+class _$DayFormViewModelCopyWithImpl<$Res>
     implements $DayFormViewModelCopyWith<$Res> {
-  _$DayFormViewModelCopyWithImpl(this._value, this._then);
+  _$DayFormViewModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final DayFormViewModel _self;
+  final $Res Function(DayFormViewModel) _then;
 
-  /// Create a copy of DayFormViewModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? dayCount = null}) {
-    return _then(
-      _value.copyWith(
-            dayCount: null == dayCount
-                ? _value.dayCount
-                : dayCount // ignore: cast_nullable_to_non_nullable
-                      as String,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of DayFormViewModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? dayCount = null,Object? existingEntry = freezed,}) {
+  return _then(_self.copyWith(
+dayCount: null == dayCount ? _self.dayCount : dayCount // ignore: cast_nullable_to_non_nullable
+as String,existingEntry: freezed == existingEntry ? _self.existingEntry : existingEntry // ignore: cast_nullable_to_non_nullable
+as DayEntry?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [DayFormViewModel].
+extension DayFormViewModelPatterns on DayFormViewModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _DayFormViewModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _DayFormViewModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _DayFormViewModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _DayFormViewModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _DayFormViewModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _DayFormViewModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String dayCount,  DayEntry? existingEntry)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _DayFormViewModel() when $default != null:
+return $default(_that.dayCount,_that.existingEntry);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String dayCount,  DayEntry? existingEntry)  $default,) {final _that = this;
+switch (_that) {
+case _DayFormViewModel():
+return $default(_that.dayCount,_that.existingEntry);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String dayCount,  DayEntry? existingEntry)?  $default,) {final _that = this;
+switch (_that) {
+case _DayFormViewModel() when $default != null:
+return $default(_that.dayCount,_that.existingEntry);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
-abstract class _$$DayFormViewModelImplCopyWith<$Res>
-    implements $DayFormViewModelCopyWith<$Res> {
-  factory _$$DayFormViewModelImplCopyWith(
-    _$DayFormViewModelImpl value,
-    $Res Function(_$DayFormViewModelImpl) then,
-  ) = __$$DayFormViewModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String dayCount});
+
+
+class _DayFormViewModel implements DayFormViewModel {
+  const _DayFormViewModel({required this.dayCount, this.existingEntry});
+  
+
+@override final  String dayCount;
+@override final  DayEntry? existingEntry;
+
+/// Create a copy of DayFormViewModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$DayFormViewModelCopyWith<_DayFormViewModel> get copyWith => __$DayFormViewModelCopyWithImpl<_DayFormViewModel>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DayFormViewModel&&(identical(other.dayCount, dayCount) || other.dayCount == dayCount)&&(identical(other.existingEntry, existingEntry) || other.existingEntry == existingEntry));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,dayCount,existingEntry);
+
+@override
+String toString() {
+  return 'DayFormViewModel(dayCount: $dayCount, existingEntry: $existingEntry)';
+}
+
+
 }
 
 /// @nodoc
-class __$$DayFormViewModelImplCopyWithImpl<$Res>
-    extends _$DayFormViewModelCopyWithImpl<$Res, _$DayFormViewModelImpl>
-    implements _$$DayFormViewModelImplCopyWith<$Res> {
-  __$$DayFormViewModelImplCopyWithImpl(
-    _$DayFormViewModelImpl _value,
-    $Res Function(_$DayFormViewModelImpl) _then,
-  ) : super(_value, _then);
+abstract mixin class _$DayFormViewModelCopyWith<$Res> implements $DayFormViewModelCopyWith<$Res> {
+  factory _$DayFormViewModelCopyWith(_DayFormViewModel value, $Res Function(_DayFormViewModel) _then) = __$DayFormViewModelCopyWithImpl;
+@override @useResult
+$Res call({
+ String dayCount, DayEntry? existingEntry
+});
 
-  /// Create a copy of DayFormViewModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? dayCount = null}) {
-    return _then(
-      _$DayFormViewModelImpl(
-        dayCount: null == dayCount
-            ? _value.dayCount
-            : dayCount // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
-  }
+
+
+
 }
-
 /// @nodoc
+class __$DayFormViewModelCopyWithImpl<$Res>
+    implements _$DayFormViewModelCopyWith<$Res> {
+  __$DayFormViewModelCopyWithImpl(this._self, this._then);
 
-class _$DayFormViewModelImpl implements _DayFormViewModel {
-  const _$DayFormViewModelImpl({required this.dayCount});
+  final _DayFormViewModel _self;
+  final $Res Function(_DayFormViewModel) _then;
 
-  @override
-  final String dayCount;
-
-  @override
-  String toString() {
-    return 'DayFormViewModel._(dayCount: $dayCount)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$DayFormViewModelImpl &&
-            (identical(other.dayCount, dayCount) ||
-                other.dayCount == dayCount));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, dayCount);
-
-  /// Create a copy of DayFormViewModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$DayFormViewModelImplCopyWith<_$DayFormViewModelImpl> get copyWith =>
-      __$$DayFormViewModelImplCopyWithImpl<_$DayFormViewModelImpl>(
-        this,
-        _$identity,
-      );
+/// Create a copy of DayFormViewModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? dayCount = null,Object? existingEntry = freezed,}) {
+  return _then(_DayFormViewModel(
+dayCount: null == dayCount ? _self.dayCount : dayCount // ignore: cast_nullable_to_non_nullable
+as String,existingEntry: freezed == existingEntry ? _self.existingEntry : existingEntry // ignore: cast_nullable_to_non_nullable
+as DayEntry?,
+  ));
 }
 
-abstract class _DayFormViewModel implements DayFormViewModel {
-  const factory _DayFormViewModel({required final String dayCount}) =
-      _$DayFormViewModelImpl;
 
-  @override
-  String get dayCount;
-
-  /// Create a copy of DayFormViewModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$DayFormViewModelImplCopyWith<_$DayFormViewModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
+
+// dart format on

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:purchases_flutter/models/customer_info_wrapper.dart';
+import 'package:weeksalive/data/day/day_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
@@ -8,6 +9,7 @@ import 'package:weeksalive/data/streak/streak_repository.dart';
 import 'package:weeksalive/data/theme/theme_repository.dart';
 import 'package:weeksalive/data/user/user_repository.dart';
 import 'package:weeksalive/data/weekly_intent/weekly_intent_repository.dart';
+import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/domain/user/user.dart';
 import 'package:weeksalive/domain/weekly_intent/weekly_intent.dart';
 
@@ -70,5 +72,18 @@ class MockWeeklyIntentRepository extends Mock implements WeeklyIntentRepository 
     when(() => setSelection(any())).thenAnswer((_) => Future.sync(() {}));
     when(() => getWeekKey()).thenAnswer((_) => Future.sync(() => null));
     when(() => setWeekKey(any())).thenAnswer((_) => Future.sync(() {}));
+  }
+}
+
+class _FakeDayEntry extends Fake implements DayEntry {}
+
+class MockDayRepository extends Mock implements DayRepository {
+  MockDayRepository() {
+    registerFallbackValue(_FakeDayEntry());
+    // Use Future.sync to complete in the current microtask queue, avoiding
+    // async dispatch interference when the Redux store is torn down in tests.
+    when(() => getAll()).thenAnswer((_) => Future.sync(() => <DayEntry>[]));
+    when(() => getByDate(any())).thenAnswer((_) => Future.sync(() => null));
+    when(() => upsert(any())).thenAnswer((_) => Future.sync(() {}));
   }
 }
