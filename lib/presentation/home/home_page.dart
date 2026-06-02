@@ -111,14 +111,10 @@ class _BottomBar extends StatelessWidget {
   final TabController tabController;
   final ValueChanged<int> onTabTap;
 
-  static const double kTabHeight = 42;
+  static const double kTabHeight = 48.0;
 
   @override
   Widget build(BuildContext context) {
-    final today = DateTime.now();
-
-    final monday = today.subtract(Duration(days: today.weekday - 1));
-
     return Container(
       color: AppColors.bg(context),
       padding: EdgeInsets.only(
@@ -128,9 +124,9 @@ class _BottomBar extends StatelessWidget {
         bottom: Margins.spacingBase + MediaQuery.paddingOf(context).bottom,
       ),
       child: Row(
-        spacing: Margins.spacingM,
+        spacing: Margins.spacingBase,
         children: [
-          IntrinsicWidth(
+          Expanded(
             child: CustomTabBar(
               controller: tabController,
               onTap: onTabTap,
@@ -145,112 +141,8 @@ class _BottomBar extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(3, (i) {
-                final day = monday.subtract(Duration(days: i));
-                return _DayCell(
-                  day: day,
-                  today: today,
-                  streakCount: streakCount,
-                );
-              }).reversed.toList(),
-            ),
-          ),
           _TodayButton(onTap: () => DayForm.showBottomSheet(context, DateTime.now())),
         ],
-      ),
-    );
-  }
-}
-
-class _DayCell extends StatelessWidget {
-  const _DayCell({
-    required this.day,
-    required this.today,
-    required this.streakCount,
-  });
-
-  final DateTime day;
-  final DateTime today;
-  final int streakCount;
-
-  bool get _isToday => day.year == today.year && day.month == today.month && day.day == today.day;
-
-  bool get _isFuture => day.isAfter(DateTime(today.year, today.month, today.day));
-
-  bool get _isChecked {
-    if (_isFuture) return false;
-
-    final diff = DateTime(today.year, today.month, today.day).difference(DateTime(day.year, day.month, day.day)).inDays;
-    return diff < streakCount;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final label = Strings.homePageDayLabels[day.weekday - 1];
-    final contentColor = AppColors.content(context);
-    final softColor = AppColors.contentSoft(context);
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          label,
-          style: TextStyles.primarySmallBold.copyWith(
-            color: _isToday ? contentColor : softColor,
-          ),
-        ),
-        const SizedBox(height: Margins.spacingXs),
-        _DayIndicator(
-          day: day,
-          isToday: _isToday,
-          isFuture: _isFuture,
-          isChecked: _isChecked,
-        ),
-      ],
-    );
-  }
-}
-
-class _DayIndicator extends StatelessWidget {
-  const _DayIndicator({
-    required this.day,
-    required this.isToday,
-    required this.isFuture,
-    required this.isChecked,
-  });
-
-  final DateTime day;
-  final bool isToday;
-  final bool isFuture;
-  final bool isChecked;
-
-  @override
-  Widget build(BuildContext context) {
-    final contentColor = AppColors.content(context);
-
-    if (isChecked && !isToday) {
-      return Icon(Icons.check, size: 16, color: contentColor);
-    }
-
-    const size = 16.0;
-
-    final todayEmpty = !isChecked && isToday;
-
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: todayEmpty ? AppColors.accentOrange : Colors.transparent,
-        shape: BoxShape.circle,
-        border: todayEmpty
-            ? null
-            : Border.all(
-                color: AppColors.strokeColor(context),
-                width: 1,
-              ),
       ),
     );
   }

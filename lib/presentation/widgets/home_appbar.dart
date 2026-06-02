@@ -57,7 +57,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 _StreaksButton(streaks: widget.vm.streakCount),
-                const SizedBox(width: Margins.spacingXs),
+                const SizedBox(width: Margins.spacingS),
                 const _ProfileButton(),
               ],
             ),
