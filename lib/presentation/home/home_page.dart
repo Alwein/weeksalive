@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
@@ -100,6 +101,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
         ),
         _BottomBar(
           streakCount: widget.vm.streakCount,
+          isTodayDone: widget.vm.isTodayDone,
           tabController: _gridTabController,
           onTabTap: _onGridTabTapped,
         ),
@@ -109,8 +111,14 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
 }
 
 class _BottomBar extends StatelessWidget {
-  const _BottomBar({required this.streakCount, required this.tabController, required this.onTabTap});
+  const _BottomBar({
+    required this.streakCount,
+    required this.isTodayDone,
+    required this.tabController,
+    required this.onTabTap,
+  });
   final int streakCount;
+  final bool isTodayDone;
   final TabController tabController;
   final ValueChanged<int> onTabTap;
 
@@ -124,7 +132,7 @@ class _BottomBar extends StatelessWidget {
         left: Margins.spacingL,
         right: Margins.spacingL,
         top: Margins.spacingBase,
-        bottom: Margins.spacingBase + MediaQuery.paddingOf(context).bottom,
+        bottom: Margins.spacingXs + MediaQuery.paddingOf(context).bottom,
       ),
       child: Row(
         spacing: Margins.spacingBase,
@@ -144,19 +152,24 @@ class _BottomBar extends StatelessWidget {
               ],
             ),
           ),
-          _TodayButton(onTap: () => DayForm.showBottomSheet(context, DateTime.now())),
+          _TodayButton(isTodayDone: isTodayDone, onTap: () => DayForm.showBottomSheet(context, DateTime.now())),
         ],
       ),
     );
   }
 }
 
+// custom button to keep same size as the tabs
 class _TodayButton extends StatelessWidget {
-  const _TodayButton({required this.onTap});
+  const _TodayButton({required this.isTodayDone, required this.onTap});
+  final bool isTodayDone;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+    final fgColor = isTodayDone ? AppColors.contentSoftOnSoft(context) : AppColors.contentMuted(context);
+    final bgColor = isTodayDone ? AppColors.bgSoft(context) : AppColors.content(context);
+
     return Material(
       color: Colors.transparent,
       borderRadius: BorderRadius.circular(100),
@@ -170,18 +183,22 @@ class _TodayButton extends StatelessWidget {
             vertical: Margins.spacingS,
           ),
           decoration: BoxDecoration(
-            color: AppColors.content(context),
+            color: bgColor,
             borderRadius: BorderRadius.circular(100),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             spacing: Margins.spacingXs,
             children: [
-              Icon(Icons.add, size: Dimens.iconSizeS, color: AppColors.bg(context)),
+              Icon(
+                isTodayDone ? MingCuteIcons.mgc_check_line : MingCuteIcons.mgc_add_line,
+                size: Dimens.iconSizeS,
+                color: fgColor,
+              ),
               Text(
                 Strings.today,
                 style: TextStyles.primaryRegularBold.copyWith(
-                  color: AppColors.bg(context),
+                  color: fgColor,
                 ),
               ),
             ],

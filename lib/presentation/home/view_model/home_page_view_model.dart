@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:redux/redux.dart';
+import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/domain/life_week_grid.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
@@ -16,15 +17,18 @@ abstract class HomePageViewModel with _$HomePageViewModel {
     @Default(DateTime.monday) int weekStartDay,
     /// Set of dates (normalized to midnight) that have been recorded.
     @Default({}) Set<DateTime> recordedDays,
+    @Default(false) bool isTodayDone,
   }) = _HomePageViewModel;
 
   factory HomePageViewModel.create(Store<AppState> store) {
+    final recordedDays = store.state.dayState.entries.keys.toSet();
     return HomePageViewModel(
       userName: _userName(store),
       streakCount: store.state.streakState.count,
       lifeWeekGrid: _lifeWeekGrid(store),
       weekStartDay: _weekStartDay(store),
-      recordedDays: store.state.dayState.entries.keys.toSet(),
+      recordedDays: recordedDays,
+      isTodayDone: recordedDays.contains(normalizeDay(DateTime.now())),
     );
   }
 }
