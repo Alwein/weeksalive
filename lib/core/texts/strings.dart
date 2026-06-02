@@ -281,6 +281,12 @@ class Strings {
 
   static List<String> get homePageDayLabels => ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
 
+  // day form — discard confirmation dialog
+  static String get dayFormDiscardTitle => "Leave without saving?";
+  static String get dayFormDiscardBody => "Your answers for today won't be recorded.";
+  static String get dayFormDiscardConfirm => "Leave anyway";
+  static String get dayFormDiscardCancel => "Keep going";
+
   // day form
   static String get feelingSectionQuestion => "How did you feel today?";
   static String get meaningSectionQuestion => "How meaningful was your time today?";

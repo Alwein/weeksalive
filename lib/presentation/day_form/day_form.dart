@@ -16,38 +16,76 @@ import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/domain/day/day.dart';
 import 'package:weeksalive/domain/weekly_intent/weekly_intent.dart';
 import 'package:weeksalive/presentation/day_form/day_form_controller.dart';
+import 'package:weeksalive/presentation/day_form/day_form_sheet.dart';
 import 'package:weeksalive/presentation/day_form/day_form_view_model.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/day/day_actions.dart';
 import 'package:weeksalive/presentation/redux/weekly_intent/widgets/edit_weekly_intent_bottom_sheet.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
-import 'package:weeksalive/presentation/widgets/show_custom_bottom_sheet.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class DayForm extends StatelessWidget {
+class DayForm extends StatefulWidget {
   const DayForm({super.key, required this.date});
   final DateTime date;
 
-  static void showBottomSheet(BuildContext context, DateTime date) =>
-      showCustomBottomSheet(context, (context) => DayForm(date: date));
+  static void showBottomSheet(BuildContext context, DateTime date) => showDayFormSheet(context, date);
+
+  @override
+  State<DayForm> createState() => _DayFormState();
+}
+
+class _DayFormState extends State<DayForm> {
+  DayFormController? _controller;
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, DayFormViewModel>(
-      converter: (store) => DayFormViewModel.create(store, date),
-      builder: (context, viewModel) => _Content(viewModel: viewModel, date: date),
+      converter: (store) => DayFormViewModel.create(store, widget.date),
+      builder: (context, viewModel) {
+        _controller ??= DayFormController(initialEntry: viewModel.existingEntry);
+        return DayFormContent(
+          viewModel: viewModel,
+          date: widget.date,
+          controller: _controller!,
+          onSave: () {
+            StoreProvider.of<AppState>(context).dispatch(
+              SaveDayAction(_controller!.buildEntry(widget.date)),
+            );
+            Navigator.of(context).pop();
+          },
+        );
+      },
     );
   }
 }
 
-class _Content extends StatefulWidget {
-  const _Content({required this.viewModel, required this.date});
+/// Widget de contenu du formulaire, réutilisable depuis [day_form_sheet.dart].
+///
+/// Le [controller] et le callback [onSave] sont fournis par le parent pour
+/// permettre à la sheet smooth_sheets de gérer le cycle de vie.
+class DayFormContent extends StatefulWidget {
+  const DayFormContent({
+    super.key,
+    required this.viewModel,
+    required this.date,
+    required this.controller,
+    required this.onSave,
+  });
+
   final DayFormViewModel viewModel;
   final DateTime date;
+  final DayFormController controller;
+  final VoidCallback onSave;
 
   @override
-  State<_Content> createState() => _ContentState();
+  State<DayFormContent> createState() => DayFormContentState();
 }
 
 enum _DaySectionId { feeling, meaning, newExperience, intention, leaveATrace }
@@ -57,9 +95,10 @@ const double _kMaxStepCircleContribution = 6;
 
 double _proportionalContribution(int index, int valueCount) => index / (valueCount - 1) * _kMaxStepCircleContribution;
 
-class _ContentState extends State<_Content> {
-  late final DayFormController _controller;
+class DayFormContentState extends State<DayFormContent> {
   _DaySectionId _expanded = _DaySectionId.feeling;
+
+  DayFormController get _controller => widget.controller;
 
   double get _circleSize {
     final feelingContribution = _controller.averageFeeling != null
@@ -81,14 +120,12 @@ class _ContentState extends State<_Content> {
   @override
   void initState() {
     super.initState();
-    _controller = DayFormController(initialEntry: widget.viewModel.existingEntry)..addListener(_onControllerChanged);
+    _controller.addListener(_onControllerChanged);
   }
 
   @override
   void dispose() {
-    _controller
-      ..removeListener(_onControllerChanged)
-      ..dispose();
+    _controller.removeListener(_onControllerChanged);
     super.dispose();
   }
 
@@ -102,10 +139,10 @@ class _ContentState extends State<_Content> {
 
   void _advanceFrom(_DaySectionId current) async {
     await Future.delayed(const Duration(milliseconds: 300));
+    if (!mounted) return;
     final next = switch (current) {
-      _DaySectionId.feeling => _controller.meaningScore == null ? _DaySectionId.meaning : _DaySectionId.newExperience,
-      _DaySectionId.meaning =>
-        _controller.hasNewExperience == null ? _DaySectionId.newExperience : _DaySectionId.meaning,
+      _DaySectionId.feeling => _DaySectionId.meaning,
+      _DaySectionId.meaning => _DaySectionId.newExperience,
       _DaySectionId.newExperience => _DaySectionId.newExperience,
       _DaySectionId.intention => _DaySectionId.intention,
       _DaySectionId.leaveATrace => _DaySectionId.leaveATrace,
@@ -121,6 +158,7 @@ class _ContentState extends State<_Content> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
 
         children: [
+          const SizedBox(height: Margins.spacingBase),
           _DayHeader(circleSize: _circleSize, viewModel: widget.viewModel),
           const SizedBox(height: Margins.spacingBase),
           const SmallDivider(width: double.infinity),
@@ -213,10 +251,7 @@ class _ContentState extends State<_Content> {
             onPressed: _controller.canSave
                 ? () {
                     SensorialFeedback.selectionChanged();
-                    StoreProvider.of<AppState>(context).dispatch(
-                      SaveDayAction(_controller.buildEntry(widget.date)),
-                    );
-                    Navigator.of(context).pop();
+                    widget.onSave();
                   }
                 : null,
           ),
@@ -322,11 +357,7 @@ class _DaySection extends StatelessWidget {
                   const SizedBox(width: Margins.spacingBase),
                 ],
                 isExpanded
-                    ? Icon(
-                        MingCuteIcons.mgc_minimize_line,
-                        size: Dimens.iconSizeS,
-                        color: AppColors.content(context),
-                      )
+                    ? const SizedBox.shrink()
                     : Icon(
                         MingCuteIcons.mgc_down_line,
                         size: Dimens.iconSizeS,
