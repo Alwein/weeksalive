@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_advanced_haptic/flutter_advanced_haptic.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
@@ -12,10 +14,40 @@ import 'package:weeksalive/presentation/widgets/primary_button.dart';
 
 /// Écran placeholder affiché après la sauvegarde du jour,
 /// montrant le compteur de streak actuel.
-class StreakPage extends StatelessWidget {
+class StreakPage extends StatefulWidget {
   const StreakPage({super.key, required this.onClose});
 
   final VoidCallback onClose;
+
+  @override
+  State<StreakPage> createState() => _StreakPageState();
+}
+
+class _StreakPageState extends State<StreakPage> {
+  late final FlutterHaptic _haptic;
+
+  static const _patterns = [150, 10, 150, 10, 150];
+
+  @override
+  void initState() {
+    super.initState();
+    _haptic = FlutterHaptic.instance;
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _haptic
+          .playPattern(
+            HapticPattern.custom(
+              pattern: _patterns, // vibrate, pause, vibrate, pause, vibrate
+              intensities: [0.3, 0.6, 0.9],
+            ),
+          )
+          .then((_) {
+            final totalDuration = _patterns.reduce((a, b) => a + b);
+            Future.delayed(Duration(milliseconds: totalDuration + 50), () {
+              HapticFeedback.heavyImpact();
+            });
+          });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +55,7 @@ class StreakPage extends StatelessWidget {
       converter: (store) => store.state.streakState,
       builder: (context, streak) => _StreakPageContent(
         streakCount: streak.count,
-        onClose: onClose,
+        onClose: widget.onClose,
       ),
     );
   }

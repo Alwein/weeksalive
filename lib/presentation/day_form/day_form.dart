@@ -249,7 +249,7 @@ class DayFormContentState extends State<DayFormContent> {
             text: Strings.done,
             onPressed: _controller.canSave
                 ? () {
-                    SensorialFeedback.selectionChanged();
+                    SensorialFeedback.navigationChanged();
                     widget.onSave();
                   }
                 : null,

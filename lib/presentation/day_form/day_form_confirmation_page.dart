@@ -10,6 +10,7 @@ import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
@@ -33,7 +34,7 @@ class DayFormConfirmationPage extends StatelessWidget {
     StoreProvider.of<AppState>(context).dispatch(SaveDayAction(entry));
 
     if (isFirstEntry || 1 == 1) {
-      // TODO: Remove me
+      SensorialFeedback.navigationChanged();
       Navigator.of(context).push(
         PagedSheetRoute<void>(
           builder: (_) => StreakPage(onClose: onClose),
@@ -203,13 +204,14 @@ class _AwesomeIllustration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _IllustrationSizer(
-      maxHeight: 150,
+      maxHeight: 200,
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
           SvgPicture.asset(
             "assets/images/outline_landed_bg.svg",
             colorFilter: ColorFilter.mode(AppColors.contentExtraSoft(context), BlendMode.srcIn),
+            fit: BoxFit.fitWidth,
           ),
           const ParallaxRive(
             alignment: Alignment.bottomCenter,
@@ -223,7 +225,7 @@ class _AwesomeIllustration extends StatelessWidget {
 }
 
 class _IllustrationSizer extends StatelessWidget {
-  const _IllustrationSizer({super.key, required this.child, required this.maxHeight});
+  const _IllustrationSizer({required this.child, required this.maxHeight});
   final Widget child;
   final double maxHeight;
 

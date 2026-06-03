@@ -70,7 +70,7 @@ void main() {
         );
 
         // When
-        storeTester.whenDispatching(() => SetStreakCountAction(3));
+        storeTester.whenDispatching(() => const SetStreakCountAction(3));
 
         // Then
         storeTester.thenExpectStatesInOrder([
@@ -89,7 +89,7 @@ void main() {
         );
 
         // When
-        storeTester.whenDispatching(() => SetStreakCountAction(7));
+        storeTester.whenDispatching(() => const SetStreakCountAction(7));
 
         // Then
         await storeTester.thenExpectAtSomePoint(
