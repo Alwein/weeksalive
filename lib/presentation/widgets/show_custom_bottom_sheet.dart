@@ -20,6 +20,7 @@ Future<T?> showCustomBottomSheet<T>(
   bool scaleBackground = true,
   double backgroundScaleFactor = 0.985,
   bool showhandle = true,
+  bool useRootNavigator = false,
 }) {
   final bgController = scaleBackground ? AppBackgroundScaleScope.maybeOf(context) : null;
   bgController?.push(scale: backgroundScaleFactor);
@@ -31,6 +32,7 @@ Future<T?> showCustomBottomSheet<T>(
     isScrollControlled: true,
     enableDrag: dismissible,
     isDismissible: dismissible,
+    useRootNavigator: useRootNavigator,
     builder: (context) => _CustomBottomSheetContent(
       builder: builder,
       isScrollable: isScrollable,

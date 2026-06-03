@@ -16,6 +16,7 @@ class EditWeeklyIntentBottomSheet extends StatefulWidget {
     return showCustomBottomSheet<void>(
       context,
       (sheetContext) => const EditWeeklyIntentBottomSheet(),
+      useRootNavigator: true,
     );
   }
 

@@ -156,9 +156,8 @@ class DayFormContentState extends State<DayFormContent> {
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-
         children: [
-          const SizedBox(height: Margins.spacingBase),
+          const SizedBox(height: Margins.spacingM),
           _DayHeader(circleSize: _circleSize, viewModel: widget.viewModel),
           const SizedBox(height: Margins.spacingBase),
           const SmallDivider(width: double.infinity),
