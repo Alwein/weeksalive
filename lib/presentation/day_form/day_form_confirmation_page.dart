@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
@@ -13,9 +12,8 @@ import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
-import 'package:weeksalive/presentation/redux/app_state.dart';
-import 'package:weeksalive/presentation/redux/day/day_actions.dart';
 import 'package:weeksalive/presentation/streak/streak_page.dart';
+import 'package:weeksalive/presentation/widgets/circle.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
 
 class DayFormConfirmationPage extends StatelessWidget {
@@ -30,10 +28,8 @@ class DayFormConfirmationPage extends StatelessWidget {
   final bool isFirstEntry;
   final VoidCallback onClose;
 
-  void _saveAndFinish(BuildContext context) {
-    StoreProvider.of<AppState>(context).dispatch(SaveDayAction(entry));
-
-    if (isFirstEntry || 1 == 1) {
+  void _finish(BuildContext context) {
+    if (isFirstEntry) {
       SensorialFeedback.navigationChanged();
       Navigator.of(context).push(
         PagedSheetRoute<void>(
@@ -59,6 +55,8 @@ class DayFormConfirmationPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: Margins.spacingM),
+            _Cricle(sizeLevel: entry.sizeLevel),
+            const SizedBox(height: Margins.spacingS),
             Text(
               Strings.dayFormConfirmationTitle,
               style: TextStyles.primaryHugeBold.copyWith(
@@ -91,7 +89,7 @@ class DayFormConfirmationPage extends StatelessWidget {
             const SizedBox(height: Margins.spacingM),
             PrimaryButton(
               text: Strings.dayFormConfirmationSave,
-              onPressed: () => _saveAndFinish(context),
+              onPressed: () => _finish(context),
             ),
             const SizedBox(height: Margins.spacingM),
           ],
@@ -261,6 +259,19 @@ class _PositiveAffirmation extends StatelessWidget {
           color: AppColors.contentSoftOnSoft(context),
         ),
       ),
+    );
+  }
+}
+
+class _Cricle extends StatelessWidget {
+  const _Cricle({required this.sizeLevel});
+  final int sizeLevel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Hero(
+      tag: 'dayHeaderCircle',
+      child: Circle(color: AppColors.content(context), size: 8 + sizeLevel * 8),
     );
   }
 }

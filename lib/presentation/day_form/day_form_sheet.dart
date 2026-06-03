@@ -11,6 +11,7 @@ import 'package:weeksalive/presentation/day_form/day_form_confirmation_page.dart
 import 'package:weeksalive/presentation/day_form/day_form_controller.dart';
 import 'package:weeksalive/presentation/day_form/day_form_view_model.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/day/day_actions.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/secondary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
@@ -54,6 +55,7 @@ class _DayFormSheetRoot extends StatefulWidget {
 
 class _DayFormSheetRootState extends State<_DayFormSheetRoot> {
   final _canSave = ValueNotifier<bool>(false);
+  final _heroController = HeroController();
 
   late final Navigator _nestedNavigator;
 
@@ -61,6 +63,7 @@ class _DayFormSheetRootState extends State<_DayFormSheetRoot> {
   void initState() {
     super.initState();
     _nestedNavigator = Navigator(
+      observers: [_heroController],
       onGenerateInitialRoutes: (navigator, initialRoute) {
         return [
           PagedSheetRoute<void>(
@@ -83,6 +86,7 @@ class _DayFormSheetRootState extends State<_DayFormSheetRoot> {
   @override
   void dispose() {
     _canSave.dispose();
+    _heroController.dispose();
     super.dispose();
   }
 
@@ -211,6 +215,7 @@ class _DayFormPageContent extends StatefulWidget {
 
 class _DayFormPageContentState extends State<_DayFormPageContent> {
   late final DayFormController _controller;
+  bool _saved = false;
 
   @override
   void initState() {
@@ -227,15 +232,20 @@ class _DayFormPageContentState extends State<_DayFormPageContent> {
   }
 
   void _onControllerChanged() {
-    widget.canSave.value = _controller.canSave;
+    if (!_saved) widget.canSave.value = _controller.canSave;
     setState(() {});
   }
 
   void _goToConfirmation() {
+    final entry = _controller.buildEntry(widget.date);
+    StoreProvider.of<AppState>(context).dispatch(SaveDayAction(entry));
+    _saved = true;
+    widget.canSave.value = false;
+
     Navigator.of(context).push(
       PagedSheetRoute<void>(
         builder: (_) => DayFormConfirmationPage(
-          entry: _controller.buildEntry(widget.date),
+          entry: entry,
           isFirstEntry: widget.viewModel.existingEntry == null,
           onClose: widget.onClose,
         ),

@@ -287,14 +287,17 @@ class _DayHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(width: Margins.spacingBase),
-        AnimatedContainer(
-          duration: AnimationDurations.short,
-          curve: Curves.easeInOut,
-          width: circleSize,
-          height: circleSize,
-          decoration: BoxDecoration(
-            color: AppColors.content(context),
-            shape: BoxShape.circle,
+        Hero(
+          tag: 'dayHeaderCircle',
+          child: AnimatedContainer(
+            duration: AnimationDurations.short,
+            curve: Curves.easeInOut,
+            width: circleSize,
+            height: circleSize,
+            decoration: BoxDecoration(
+              color: AppColors.content(context),
+              shape: BoxShape.circle,
+            ),
           ),
         ),
       ],
