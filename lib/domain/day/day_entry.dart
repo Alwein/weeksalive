@@ -8,6 +8,7 @@ class DayEntry {
     this.hasNewExperience,
     this.livingIntentionIds = const [],
     this.leaveATrace = const LeaveATrace(),
+    // from 0 to 4
     int? sizeLevel,
   }) : date = normalizeDay(date),
        sizeLevel =

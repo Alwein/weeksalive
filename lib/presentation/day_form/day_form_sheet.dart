@@ -7,11 +7,10 @@ import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/day_form/day_form.dart';
+import 'package:weeksalive/presentation/day_form/day_form_confirmation_page.dart';
 import 'package:weeksalive/presentation/day_form/day_form_controller.dart';
 import 'package:weeksalive/presentation/day_form/day_form_view_model.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
-import 'package:weeksalive/presentation/redux/day/day_actions.dart';
-import 'package:weeksalive/presentation/streak/streak_page.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/secondary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
@@ -115,8 +114,11 @@ class _DayFormSheetRootState extends State<_DayFormSheetRoot> {
         decoration: MaterialSheetDecoration(
           size: SheetSize.stretch,
           color: AppColors.bg(context),
-          borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(Dimens.radiusL),
+          shape: RoundedRectangleBorder(
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(Dimens.radiusL),
+            ),
+            side: BorderSide(color: AppColors.strokeColor(context)),
           ),
           clipBehavior: Clip.antiAlias,
         ),
@@ -229,13 +231,14 @@ class _DayFormPageContentState extends State<_DayFormPageContent> {
     setState(() {});
   }
 
-  void _save() {
-    StoreProvider.of<AppState>(context).dispatch(
-      SaveDayAction(_controller.buildEntry(widget.date)),
-    );
+  void _goToConfirmation() {
     Navigator.of(context).push(
       PagedSheetRoute<void>(
-        builder: (_) => StreakPage(onClose: widget.onClose),
+        builder: (_) => DayFormConfirmationPage(
+          entry: _controller.buildEntry(widget.date),
+          isFirstEntry: widget.viewModel.existingEntry == null,
+          onClose: widget.onClose,
+        ),
       ),
     );
   }
@@ -266,7 +269,7 @@ class _DayFormPageContentState extends State<_DayFormPageContent> {
           viewModel: widget.viewModel,
           controller: _controller,
           date: widget.date,
-          onSave: _save,
+          onSave: _goToConfirmation,
         ),
       ),
     );

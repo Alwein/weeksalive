@@ -9,6 +9,7 @@ import 'package:weeksalive/presentation/onboarding/widgets/rive_theme_mixin.dart
 class ParallaxRive extends StatefulWidget {
   final String assetPath;
   final Fit fit;
+  final Alignment alignment;
 
   /// Maximum pixel offset applied on each axis.
   final double maxOffset;
@@ -20,6 +21,7 @@ class ParallaxRive extends StatefulWidget {
     super.key,
     required this.assetPath,
     this.fit = Fit.contain,
+    this.alignment = Alignment.center,
     this.maxOffset = 50.0,
     this.smoothing = 0.08,
   });
@@ -28,8 +30,7 @@ class ParallaxRive extends StatefulWidget {
   State<ParallaxRive> createState() => _ParallaxRiveState();
 }
 
-class _ParallaxRiveState extends State<ParallaxRive>
-    with SingleTickerProviderStateMixin, RiveThemeMixin<ParallaxRive> {
+class _ParallaxRiveState extends State<ParallaxRive> with SingleTickerProviderStateMixin, RiveThemeMixin<ParallaxRive> {
   late final Ticker _ticker;
   StreamSubscription<AccelerometerEvent>? _subscription;
   late final FileLoader _fileLoader;
@@ -83,6 +84,7 @@ class _ParallaxRiveState extends State<ParallaxRive>
             RiveLoading() => const SizedBox.expand(),
             RiveFailed() => const SizedBox.shrink(),
             RiveLoaded(:final controller) => RiveWidget(
+              alignment: widget.alignment,
               controller: controller,
               fit: widget.fit,
             ),

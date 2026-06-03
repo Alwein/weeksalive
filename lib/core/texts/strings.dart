@@ -311,4 +311,42 @@ class Strings {
   static String get editWeeklyIntentsAddCustomLabel => "ADD A CUSTOM INTENTION";
   static String get editWeeklyIntentsCustomHint => "Anything\u2026";
   static String get editWeeklyIntentsAdd => "Add";
+
+  // day form confirmation page
+  static String get dayFormConfirmationTitle => "Daily awareness";
+  static String get dayFormConfirmationSubtitle => "Check-in complete.";
+  static String get dayFormConfirmationSave => "Save and finish";
+  static List<String> get dayFormConfirmationPositiveAffirmations => [
+    "You're becoming more mindful of your time.",
+    "You see clearly where your time goes.",
+    "Every moment tracked is a moment understood.",
+    "You're in tune with how you spend your days.",
+    "Tomorrow is an opportunity to work on what truly counts.",
+    "You're building a life of intention.",
+    "You showed up today, that matters.",
+    "You're making your time count.",
+    "Awareness is the first step to change.",
+    "You're choosing where your energy flows.",
+    "Your hours reflect your priorities.",
+    "You're investing in what matters most.",
+    "Each day, you understand yourself a little more.",
+    "You're taking ownership of your time.",
+    "Small, intentional moments add up.",
+    "You're aligning your time with your values.",
+    "Progress lives in the choices you make today.",
+    "You're learning what truly deserves your focus.",
+    "Your time is yours to shape.",
+    "You're growing more honest about your habits.",
+    "Every entry brings greater clarity.",
+    "You're designing your days with purpose.",
+    "You're present with how you live.",
+    "Mindful tracking leads to meaningful living.",
+    "You're honoring your time and your goals.",
+    "You're one step closer to balance.",
+    "Reflection today builds wisdom for tomorrow.",
+    "You're spending time like it matters, because it does.",
+    "You're turning awareness into action.",
+    "Your focus is becoming your superpower.",
+    "You're living more deliberately every day.",
+  ];
 }
