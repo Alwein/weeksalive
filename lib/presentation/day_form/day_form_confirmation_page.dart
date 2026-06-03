@@ -32,7 +32,8 @@ class DayFormConfirmationPage extends StatelessWidget {
   void _saveAndFinish(BuildContext context) {
     StoreProvider.of<AppState>(context).dispatch(SaveDayAction(entry));
 
-    if (isFirstEntry) {
+    if (isFirstEntry || 1 == 1) {
+      // TODO: Remove me
       Navigator.of(context).push(
         PagedSheetRoute<void>(
           builder: (_) => StreakPage(onClose: onClose),
@@ -108,20 +109,13 @@ class _IllustrationBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return SizedBox(
-            height: min(constraints.maxWidth, 300),
-            child: switch (sizeLevel) {
-              0 => const _RoughIllustration(),
-              1 => const _LowIllustration(),
-              2 => const _OkIllustration(),
-              3 => const _GoodIllustration(),
-              _ => const _AwesomeIllustration(),
-            },
-          );
-        },
-      ),
+      child: switch (sizeLevel) {
+        0 => const _RoughIllustration(),
+        1 => const _LowIllustration(),
+        2 => const _OkIllustration(),
+        3 => const _GoodIllustration(),
+        _ => const _AwesomeIllustration(),
+      },
     );
   }
 }
@@ -131,10 +125,13 @@ class _RoughIllustration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ParallaxRive(
-      alignment: Alignment.bottomCenter,
-      maxOffset: 0,
-      assetPath: "assets/animations/outline_love.riv",
+    return const _IllustrationSizer(
+      maxHeight: 300,
+      child: ParallaxRive(
+        alignment: Alignment.bottomCenter,
+        maxOffset: 0,
+        assetPath: "assets/animations/outline_love.riv",
+      ),
     );
   }
 }
@@ -144,10 +141,13 @@ class _LowIllustration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ParallaxRive(
-      alignment: Alignment.bottomCenter,
-      maxOffset: 0,
-      assetPath: "assets/animations/outline_floating.riv",
+    return const _IllustrationSizer(
+      maxHeight: 300,
+      child: ParallaxRive(
+        alignment: Alignment.bottomCenter,
+        maxOffset: 0,
+        assetPath: "assets/animations/outline_floating.riv",
+      ),
     );
   }
 }
@@ -157,10 +157,13 @@ class _OkIllustration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ParallaxRive(
-      alignment: Alignment.bottomCenter,
-      maxOffset: 0,
-      assetPath: "assets/animations/outline_sky.riv",
+    return const _IllustrationSizer(
+      maxHeight: 300,
+      child: ParallaxRive(
+        alignment: Alignment.bottomCenter,
+        maxOffset: 0,
+        assetPath: "assets/animations/outline_sky.riv",
+      ),
     );
   }
 }
@@ -170,19 +173,26 @@ class _GoodIllustration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        SvgPicture.asset(
-          "assets/images/outline_meditate_2_bg.svg",
-          colorFilter: ColorFilter.mode(AppColors.contentExtraSoft(context), BlendMode.srcIn),
-        ),
-        const ParallaxRive(
+    return _IllustrationSizer(
+      maxHeight: 200,
+      child: OverflowBox(
+        alignment: Alignment.bottomCenter,
+        maxHeight: 300,
+        child: Stack(
           alignment: Alignment.bottomCenter,
-          maxOffset: 0,
-          assetPath: "assets/animations/outline_meditate_2.riv",
+          children: [
+            SvgPicture.asset(
+              "assets/images/outline_meditate_2_bg.svg",
+              colorFilter: ColorFilter.mode(AppColors.contentExtraSoft(context), BlendMode.srcIn),
+            ),
+            const ParallaxRive(
+              alignment: Alignment.bottomCenter,
+              maxOffset: 0,
+              assetPath: "assets/animations/outline_meditate_2.riv",
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -192,19 +202,40 @@ class _AwesomeIllustration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        SvgPicture.asset(
-          "assets/images/outline_landed_bg.svg",
-          colorFilter: ColorFilter.mode(AppColors.contentExtraSoft(context), BlendMode.srcIn),
-        ),
-        const ParallaxRive(
-          alignment: Alignment.bottomCenter,
-          maxOffset: 0,
-          assetPath: "assets/animations/outline_landed.riv",
-        ),
-      ],
+    return _IllustrationSizer(
+      maxHeight: 150,
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          SvgPicture.asset(
+            "assets/images/outline_landed_bg.svg",
+            colorFilter: ColorFilter.mode(AppColors.contentExtraSoft(context), BlendMode.srcIn),
+          ),
+          const ParallaxRive(
+            alignment: Alignment.bottomCenter,
+            maxOffset: 0,
+            assetPath: "assets/animations/outline_landed.riv",
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _IllustrationSizer extends StatelessWidget {
+  const _IllustrationSizer({super.key, required this.child, required this.maxHeight});
+  final Widget child;
+  final double maxHeight;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SizedBox(
+          height: min(constraints.maxWidth, maxHeight),
+          child: child,
+        );
+      },
     );
   }
 }

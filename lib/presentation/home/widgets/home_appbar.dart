@@ -142,7 +142,23 @@ class _StreaksButton extends StatelessWidget {
       onPressed: () {},
       child: Row(
         children: [
-          Icon(MingCuteIcons.mgc_fire_fill, color: AppColors.content(context)),
+          SizedBox(
+            width: Dimens.iconSizeBase,
+            height: Dimens.iconSizeBase,
+            child: Stack(
+              children: [
+                Center(
+                  child: Icon(MingCuteIcons.mgc_fire_fill, color: AppColors.content(context)),
+                ),
+                // const OverflowBox(
+                //   maxWidth: 70,
+                //   maxHeight: 70,
+                //   alignment: Alignment.bottomCenter,
+                //   child: FireRivePlayer(),
+                // ),
+              ],
+            ),
+          ),
           const SizedBox(width: Margins.spacingXs),
           Text(streaks.toString(), style: TextStyles.primaryRegularBold),
         ],

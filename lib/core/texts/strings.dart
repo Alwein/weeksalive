@@ -295,6 +295,9 @@ class Strings {
   static String get livingIntentionsSectionValueNone => "None";
   static String get livingIntentionsSectionEditLabel => "Edit weekly intentions";
   static String get leaveATraceSectionQuestion => "What made today special?";
+  static String get consecutiveDay => "Consecutive day";
+  static String get consecutiveDays => "Consecutive days";
+  static String get congratulations => "Well done!";
 
   // weekly intent
   static String get intentBePresent => "Be Present";

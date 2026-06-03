@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
-import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
+import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/presentation/home/widgets/fire_rive_player.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/streak/streak_state.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
@@ -63,7 +63,7 @@ class _StreakPageContent extends StatelessWidget {
             ),
             const SizedBox(height: Margins.spacingS),
             Text(
-              streakCount == 1 ? 'jour consécutif' : 'jours consécutifs',
+              streakCount == 1 ? Strings.consecutiveDay : Strings.consecutiveDays,
               style: TextStyles.primarySemiBold.copyWith(
                 color: AppColors.contentSoft(context),
               ),
@@ -71,7 +71,7 @@ class _StreakPageContent extends StatelessWidget {
             ),
             const SizedBox(height: Margins.spacingXl),
             PrimaryButton(
-              text: 'Fermer',
+              text: Strings.congratulations,
               onPressed: onClose,
             ),
             const SizedBox(height: Margins.spacingM),
@@ -93,11 +93,12 @@ class _FireIcon extends StatelessWidget {
           color: AppColors.bgSoft(context),
           shape: BoxShape.circle,
         ),
-        child: const Center(
-          child: Icon(
-            MingCuteIcons.mgc_fire_fill,
-            size: Dimens.iconSizeHuge,
-            color: AppColors.accentOrange,
+        child: const OverflowBox(
+          maxWidth: 110,
+          maxHeight: 110,
+          alignment: Alignment.bottomCenter,
+          child: Center(
+            child: FireRivePlayer(),
           ),
         ),
       ),
