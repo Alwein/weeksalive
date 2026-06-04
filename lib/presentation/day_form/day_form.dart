@@ -981,7 +981,7 @@ class _LeaveATraceInputState extends State<_LeaveATraceInput> {
   }
 
   Future<void> _openTextEditor() async {
-    final result = await Navigator.of(context).push<String>(
+    final result = await Navigator.of(context, rootNavigator: true).push<String>(
       MaterialPageRoute(
         fullscreenDialog: true,
         builder: (_) => _TextEditorPage(initialText: _textController.text),
@@ -1036,32 +1036,29 @@ class _LeaveATraceInputState extends State<_LeaveATraceInput> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Expanded(
-                child: Hero(
-                  tag: 'leaveATraceTextEditor',
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.bgSoft(context),
-                      borderRadius: BorderRadius.circular(Dimens.radiusBase),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: Margins.spacingBase,
-                      vertical: Margins.spacingS,
-                    ),
-                    child: TextField(
-                      onTap: _openTextEditor,
-                      readOnly: true,
-                      controller: _textController,
-                      maxLines: null,
-                      keyboardType: TextInputType.multiline,
-                      style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: Strings.leaveATraceSectionTextHint,
-                        hintStyle: TextStyles.primaryXsBold.copyWith(
-                          color: AppColors.contentSoft(context),
-                        ),
-                        isCollapsed: true,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.bgSoft(context),
+                    borderRadius: BorderRadius.circular(Dimens.radiusBase),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Margins.spacingBase,
+                    vertical: Margins.spacingS,
+                  ),
+                  child: TextField(
+                    onTap: _openTextEditor,
+                    readOnly: true,
+                    controller: _textController,
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
+                    style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: Strings.leaveATraceSectionTextHint,
+                      hintStyle: TextStyles.primaryXsBold.copyWith(
+                        color: AppColors.contentSoft(context),
                       ),
+                      isCollapsed: true,
                     ),
                   ),
                 ),
@@ -1205,7 +1202,6 @@ class _TextEditorPageState extends State<_TextEditorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bg(context),
-
       appBar: AppBar(
         backgroundColor: AppColors.bg(context),
         leading: const CloseButton(),
@@ -1224,32 +1220,29 @@ class _TextEditorPageState extends State<_TextEditorPage> {
             ),
             const SizedBox(height: Margins.spacingBase),
             Expanded(
-              child: Hero(
-                tag: 'leaveATraceTextEditor',
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: Margins.spacingBase,
-                    vertical: Margins.spacingS,
-                  ),
-                  height: double.infinity,
-                  decoration: BoxDecoration(
-                    color: AppColors.bgSoft(context),
-                    borderRadius: BorderRadius.circular(Dimens.radiusBase),
-                  ),
-                  child: TextField(
-                    controller: _controller,
-                    autofocus: true,
-                    maxLines: null,
-                    keyboardType: TextInputType.multiline,
-                    style: TextStyles.primaryRegularMedium.copyWith(color: AppColors.content(context)),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: Strings.leaveATraceSectionTextHint,
-                      hintStyle: TextStyles.primaryRegularMedium.copyWith(
-                        color: AppColors.contentSoft(context),
-                      ),
-                      isCollapsed: true,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Margins.spacingBase,
+                  vertical: Margins.spacingS,
+                ),
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  color: AppColors.bgSoft(context),
+                  borderRadius: BorderRadius.circular(Dimens.radiusBase),
+                ),
+                child: TextField(
+                  controller: _controller,
+                  autofocus: true,
+                  maxLines: null,
+                  keyboardType: TextInputType.multiline,
+                  style: TextStyles.primaryRegularMedium.copyWith(color: AppColors.content(context)),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: Strings.leaveATraceSectionTextHint,
+                    hintStyle: TextStyles.primaryRegularMedium.copyWith(
+                      color: AppColors.contentSoft(context),
                     ),
+                    isCollapsed: true,
                   ),
                 ),
               ),
