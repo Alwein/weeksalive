@@ -7,8 +7,10 @@ import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
+import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/presentation/day_form/day_form.dart';
 import 'package:weeksalive/presentation/home/view_model/home_page_view_model.dart';
+import 'package:weeksalive/presentation/home/widgets/day_resume_bottom_sheet.dart';
 import 'package:weeksalive/presentation/home/widgets/home_appbar.dart';
 import 'package:weeksalive/presentation/home/widgets/home_week_calendar.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/custom_tab_bar.dart';
@@ -82,6 +84,10 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
     }
   }
 
+  void _onPastDayTap(DateTime date, DayEntry? entry) {
+    DayResumeBottomSheet.show(context, date: date, entry: entry);
+  }
+
   Future<void> _onTodayTap() async {
     final result = await DayForm.showBottomSheet(
       context,
@@ -133,6 +139,8 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
             grid: widget.vm.lifeWeekGrid,
             padding: const EdgeInsets.only(left: Margins.spacingL, right: Margins.spacingL),
             onYearModeCommitted: _onGridYearModeCommitted,
+            onPastDayTap: _onPastDayTap,
+            onTodayTap: (_) => _onTodayTap(),
           ),
         ),
         _BottomBar(

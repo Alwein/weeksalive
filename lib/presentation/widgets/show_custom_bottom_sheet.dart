@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
@@ -145,18 +146,30 @@ class _CustomBottomSheetContentState extends State<_CustomBottomSheetContent> wi
                 padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: Builder(
                   builder: (context) {
-                    final content = Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                    final content = Stack(
                       children: [
-                        if (widget.showhandle) ...[
-                          if (widget.dismissible) ...[
-                            const SizedBox(height: Margins.spacingS),
-                            const Center(child: _Handle()),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            if (widget.showhandle) ...[
+                              if (widget.dismissible) ...[
+                                const SizedBox(height: Margins.spacingS),
+                                const Center(child: _Handle()),
+                              ],
+                              const SizedBox(height: Margins.spacingM),
+                            ],
+                            widget.builder(context),
                           ],
-                          const SizedBox(height: Margins.spacingM),
-                        ],
-                        widget.builder(context),
+                        ),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () => Navigator.of(context).pop(),
+                            icon: Icon(MingCuteIcons.mgc_close_line, color: AppColors.contentSoft(context)),
+                          ),
+                        ),
                       ],
                     );
                     return widget.isScrollable

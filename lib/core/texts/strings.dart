@@ -352,4 +352,8 @@ class Strings {
     "Your focus is becoming your superpower.",
     "You're living more deliberately every day.",
   ];
+
+  // day resume bottom sheet
+  static String get dayResumeBottomSheetEmptySubtitle => "No entry for this day.";
+  static String get startTracking => "Start tracking";
 }

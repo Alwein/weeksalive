@@ -149,7 +149,7 @@ class _YearGridTitle extends StatelessWidget {
     final now = DateTime.now();
     final year = now.year;
     final totalDays = daysInGregorianYear(year);
-    final livedDays = now.difference(DateTime(year, 1, 1)).inDays;
+    final livedDays = dayOfYearIndex(now);
     return '${(livedDays / totalDays * 100).toStringAsFixed(1)}%';
   }
 }

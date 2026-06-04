@@ -65,6 +65,34 @@ class YearGridPainter extends CustomPainter {
     return padding.top + padding.bottom + rows * dotSize + (rows - 1) * dotSpacing;
   }
 
+  /// Returns the day index ([0, totalDays - 1]) whose cell contains [localPosition]
+  /// for a grid painted at [size], or -1 when the position is outside any cell.
+  static int dayIndexAtPosition({
+    required Offset localPosition,
+    required Size size,
+    required int totalDays,
+    required int columns,
+    required double dotSpacing,
+    EdgeInsets padding = EdgeInsets.zero,
+  }) {
+    final paintWidth = size.width - padding.left - padding.right;
+    final dotSize = (paintWidth - dotSpacing * (columns - 1)) / columns;
+    if (dotSize <= 0) return -1;
+
+    final dx = localPosition.dx - padding.left;
+    final dy = localPosition.dy - padding.top;
+    if (dx < 0 || dy < 0) return -1;
+
+    final cellStride = dotSize + dotSpacing;
+    final col = dx ~/ cellStride;
+    final row = dy ~/ cellStride;
+    if (col < 0 || col >= columns) return -1;
+
+    final index = row * columns + col;
+    if (index < 0 || index >= totalDays) return -1;
+    return index;
+  }
+
   /// Maps a size level [0, 4] to a radius given the maximum cell radius.
   double _sizeRadius(int level, double maxRadius) {
     const minRadius = _minDotDiameter / 2;

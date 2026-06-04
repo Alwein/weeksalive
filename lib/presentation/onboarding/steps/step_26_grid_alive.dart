@@ -4,6 +4,7 @@ import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/custom_tab_bar.dart';
@@ -81,7 +82,7 @@ class _ContentState extends State<_Content> with SingleTickerProviderStateMixin 
     final grid = controller.lifeWeekGrid;
 
     final now = DateTime.now();
-    final int daysLived = now.difference(DateTime(now.year, 1, 1)).inDays + 1;
+    final int daysLived = dayOfYearIndex(now) + 1;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

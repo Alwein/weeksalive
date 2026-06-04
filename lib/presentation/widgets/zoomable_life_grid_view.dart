@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
+import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/domain/life_week_grid.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
@@ -18,6 +19,8 @@ class ZoomableLifeGridView extends StatefulWidget {
     required this.grid,
     this.padding = EdgeInsets.zero,
     this.onYearModeCommitted,
+    this.onPastDayTap,
+    this.onTodayTap,
   });
 
   final LifeWeekGrid grid;
@@ -26,6 +29,13 @@ class ZoomableLifeGridView extends StatefulWidget {
   /// Called when a pinch ends with the resolved mode (after snap target is chosen).
   /// [true] = year (days) view, [false] = life (weeks) view.
   final ValueChanged<bool>? onYearModeCommitted;
+
+  /// Called when a past day cell is tapped in the year view, with its date and
+  /// the recorded entry (null when the day has no record).
+  final void Function(DateTime date, DayEntry? entry)? onPastDayTap;
+
+  /// Called when today's cell is tapped in the year view.
+  final ValueChanged<DateTime>? onTodayTap;
 
   /// Pinch scale delta multiplier (tuned on device).
   /// Higher = less finger spread needed to cross the full 0→1 range (~scale 1.4 at 2.5).
@@ -134,7 +144,7 @@ class ZoomableLifeGridViewState extends State<ZoomableLifeGridView> with TickerP
     final now = DateTime.now();
     final normalized = DateTime(date.year, date.month, date.day);
     if (normalized.year != now.year) return -1;
-    final index = normalized.difference(DateTime(now.year, 1, 1)).inDays;
+    final index = dayOfYearIndex(normalized);
     final totalDays = daysInGregorianYear(now.year);
     if (index < 0 || index >= totalDays) return -1;
     return index;
@@ -224,6 +234,8 @@ class ZoomableLifeGridViewState extends State<ZoomableLifeGridView> with TickerP
                   padding: widget.padding,
                   appearIndex: _appearIndex,
                   appearProgress: _appearProgress,
+                  onPastDayTap: widget.onPastDayTap,
+                  onTodayTap: widget.onTodayTap,
                 ),
               ),
             ),
@@ -239,11 +251,15 @@ class _YearDayGridLayer extends StatelessWidget {
     required this.padding,
     this.appearIndex = -1,
     this.appearProgress = 1.0,
+    this.onPastDayTap,
+    this.onTodayTap,
   });
 
   final EdgeInsets padding;
   final int appearIndex;
   final double appearProgress;
+  final void Function(DateTime date, DayEntry? entry)? onPastDayTap;
+  final ValueChanged<DateTime>? onTodayTap;
 
   @override
   Widget build(BuildContext context) {
@@ -274,19 +290,29 @@ class _YearDayGridLayer extends StatelessWidget {
               child: SizedBox(
                 width: constraints.maxWidth,
                 height: exactHeight,
-                child: CustomPaint(
-                  painter: YearGridPainter(
-                    columns: ZoomableLifeGridView.yearGridColumns,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTapUp: (details) => _handleTap(
+                    localPosition: details.localPosition,
+                    size: Size(constraints.maxWidth, exactHeight),
                     totalDays: totalDays,
-                    dotSpacing: ZoomableLifeGridView.yearGridDotSpacing,
-                    emptyStrokeColor: strokeColor,
-                    fillColor: fillColor,
-                    pastEmptyColor: pastEmptyColor,
-                    filledCount: totalDays,
-                    fillSizes: fillSizes,
-                    padding: padding,
-                    appearIndex: appearIndex,
-                    appearProgress: appearProgress,
+                    now: now,
+                    dayState: dayState,
+                  ),
+                  child: CustomPaint(
+                    painter: YearGridPainter(
+                      columns: ZoomableLifeGridView.yearGridColumns,
+                      totalDays: totalDays,
+                      dotSpacing: ZoomableLifeGridView.yearGridDotSpacing,
+                      emptyStrokeColor: strokeColor,
+                      fillColor: fillColor,
+                      pastEmptyColor: pastEmptyColor,
+                      filledCount: totalDays,
+                      fillSizes: fillSizes,
+                      padding: padding,
+                      appearIndex: appearIndex,
+                      appearProgress: appearProgress,
+                    ),
                   ),
                 ),
               ),
@@ -310,17 +336,48 @@ class _YearDayGridLayer extends StatelessWidget {
     );
   }
 
+  /// Resolves the tapped cell to a date and routes it to the right callback:
+  /// past days open the resume sheet, today opens the form, future days are
+  /// ignored.
+  void _handleTap({
+    required Offset localPosition,
+    required Size size,
+    required int totalDays,
+    required DateTime now,
+    required DayState dayState,
+  }) {
+    final index = YearGridPainter.dayIndexAtPosition(
+      localPosition: localPosition,
+      size: size,
+      totalDays: totalDays,
+      columns: ZoomableLifeGridView.yearGridColumns,
+      dotSpacing: ZoomableLifeGridView.yearGridDotSpacing,
+      padding: padding,
+    );
+    if (index < 0) return;
+
+    final todayIndex = dayOfYearIndex(now);
+    final date = dateForDayOfYear(now.year, index);
+
+    if (index < todayIndex) {
+      onPastDayTap?.call(date, dayState.entryFor(date));
+    } else if (index == todayIndex) {
+      onTodayTap?.call(date);
+    }
+    // Future days: do nothing.
+  }
+
   /// One entry per day of the year.
   /// - `-2` means "past day with no record" (drawn filled with [AppColors.bgSoft]).
   /// - `-1` means "future day with no record" (drawn as an empty circle).
   /// - `[0, 4]` is the recorded size level.
   static List<int> _fillSizesForYear(DayState dayState, DateTime now, int totalDays) {
     final year = now.year;
-    final todayIndex = DateTime(now.year, now.month, now.day).difference(DateTime(year, 1, 1)).inDays;
+    final todayIndex = dayOfYearIndex(now);
     final sizes = List<int>.generate(totalDays, (i) => i < todayIndex ? -2 : -1);
     for (final entry in dayState.entries.values) {
       if (entry.date.year != year) continue;
-      final dayOfYear = entry.date.difference(DateTime(year, 1, 1)).inDays;
+      final dayOfYear = dayOfYearIndex(entry.date);
       if (dayOfYear < 0 || dayOfYear >= totalDays) continue;
       sizes[dayOfYear] = entry.sizeLevel;
     }

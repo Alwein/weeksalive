@@ -19,7 +19,7 @@ class Step19OneYearBut extends OnboardingStep {
 
     final now = DateTime.now();
     final int georgianDays = daysInGregorianYear(now.year);
-    final int dayOfYear = (now.difference(DateTime(now.year, 1, 1)).inDays + 1);
+    final int dayOfYear = dayOfYearIndex(now) + 1;
     final int daysLived = dayOfYear;
     final int daysAhead = georgianDays - dayOfYear;
 

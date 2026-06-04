@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/year_grid_illustration.dart';
@@ -18,7 +19,7 @@ class Step21WeeksDisappear extends OnboardingStep {
     final bgColor = AppColors.bg(context);
 
     final now = DateTime.now();
-    final int dayOfYear = (now.difference(DateTime(now.year, 1, 1)).inDays + 1);
+    final int dayOfYear = dayOfYearIndex(now) + 1;
     final int daysLived = dayOfYear;
 
     return Column(
