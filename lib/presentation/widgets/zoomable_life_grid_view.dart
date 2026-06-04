@@ -3,6 +3,7 @@ import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
+import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/domain/life_week_grid.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
@@ -41,11 +42,14 @@ class ZoomableLifeGridView extends StatefulWidget {
   static const yearGridColumns = 15;
   static const yearGridDotSpacing = 4.0;
 
+  /// Duration of the single-dot scale-in played when a day is saved.
+  static const appearDuration = Duration(milliseconds: 2000);
+
   @override
   State<ZoomableLifeGridView> createState() => ZoomableLifeGridViewState();
 }
 
-class ZoomableLifeGridViewState extends State<ZoomableLifeGridView> with SingleTickerProviderStateMixin {
+class ZoomableLifeGridViewState extends State<ZoomableLifeGridView> with TickerProviderStateMixin {
   double _zoomProgress = 0;
   double _scaleBaseProgress = 0;
 
@@ -53,12 +57,24 @@ class ZoomableLifeGridViewState extends State<ZoomableLifeGridView> with SingleT
   double _snapEnd = 0;
 
   late final AnimationController _snapController;
+  late final AnimationController _appearController;
+
+  int _appearIndex = -1;
+  double _appearProgress = 1.0;
 
   @override
   void initState() {
     super.initState();
     _snapController = AnimationController(vsync: this, duration: ZoomableLifeGridView.snapDuration)
       ..addListener(_onSnapTick);
+    _appearController = AnimationController(vsync: this, duration: ZoomableLifeGridView.appearDuration)
+      ..addListener(_onAppearTick);
+  }
+
+  void _onAppearTick() {
+    setState(() {
+      _appearProgress = Curves.easeOutBack.transform(_appearController.value);
+    });
   }
 
   void _onSnapTick() {
@@ -88,27 +104,82 @@ class ZoomableLifeGridViewState extends State<ZoomableLifeGridView> with SingleT
     _startSnapTo(target);
   }
 
-  void _startSnapTo(double target) {
+  TickerFuture? _startSnapTo(double target) {
     _snapEnd = target;
     _snapStart = _zoomProgress;
-    if ((_snapStart - _snapEnd).abs() < 1e-6) return;
-    _snapController.forward(from: 0);
+    if ((_snapStart - _snapEnd).abs() < 1e-6) return null;
+    return _snapController.forward(from: 0);
   }
 
-  void animateToWeekView() {
+  Future<void> animateToWeekView() async {
     _snapController.stop();
-    _startSnapTo(0.0);
+    await _startSnapTo(0.0);
   }
 
-  void animateToYearView() {
+  Future<void> animateToYearView() async {
     _snapController.stop();
-    _startSnapTo(1.0);
+    final snap = _startSnapTo(1.0);
+    if (snap != null) {
+      await snap;
+      return;
+    }
+    // Already in year view: yield a frame so any pending "hidden" state
+    // (progress 0) is painted before a subsequent scale-in animation starts.
+    await WidgetsBinding.instance.endOfFrame;
+  }
+
+  /// Computes the day-of-year index for [date], or -1 if it is not in the
+  /// current civil year / out of range.
+  int _dayIndexForDate(DateTime date) {
+    final now = DateTime.now();
+    final normalized = DateTime(date.year, date.month, date.day);
+    if (normalized.year != now.year) return -1;
+    final index = normalized.difference(DateTime(now.year, 1, 1)).inDays;
+    final totalDays = daysInGregorianYear(now.year);
+    if (index < 0 || index >= totalDays) return -1;
+    return index;
+  }
+
+  /// Immediately hides the dot for [date] (progress 0) so it does not show at
+  /// full size before [animateDayAppear] runs. Safe to call before switching
+  /// to the year view.
+  void prepareDayAppear(DateTime date) {
+    final index = _dayIndexForDate(date);
+    if (index < 0) return;
+    setState(() {
+      _appearIndex = index;
+      _appearProgress = 0.0;
+    });
+  }
+
+  /// Scales in the dot for [date] from 0, firing a haptic whose strength
+  /// matches [sizeLevel]. Completes when the scale-in finishes.
+  Future<void> animateDayAppear(DateTime date, int sizeLevel) async {
+    final index = _dayIndexForDate(date);
+    if (index < 0) return;
+
+    setState(() {
+      _appearIndex = index;
+      _appearProgress = 0.0;
+    });
+
+    SensorialFeedback.dayAppear(sizeLevel);
+
+    await _appearController.forward(from: 0);
+
+    if (!mounted) return;
+    setState(() {
+      _appearIndex = -1;
+      _appearProgress = 1.0;
+    });
   }
 
   @override
   void dispose() {
     _snapController.removeListener(_onSnapTick);
     _snapController.dispose();
+    _appearController.removeListener(_onAppearTick);
+    _appearController.dispose();
     super.dispose();
   }
 
@@ -149,7 +220,11 @@ class ZoomableLifeGridViewState extends State<ZoomableLifeGridView> with SingleT
               child: Transform.scale(
                 scale: yearScale,
                 alignment: Alignment.center,
-                child: _YearDayGridLayer(padding: widget.padding),
+                child: _YearDayGridLayer(
+                  padding: widget.padding,
+                  appearIndex: _appearIndex,
+                  appearProgress: _appearProgress,
+                ),
               ),
             ),
           ),
@@ -160,9 +235,15 @@ class ZoomableLifeGridViewState extends State<ZoomableLifeGridView> with SingleT
 }
 
 class _YearDayGridLayer extends StatelessWidget {
-  const _YearDayGridLayer({required this.padding});
+  const _YearDayGridLayer({
+    required this.padding,
+    this.appearIndex = -1,
+    this.appearProgress = 1.0,
+  });
 
   final EdgeInsets padding;
+  final int appearIndex;
+  final double appearProgress;
 
   @override
   Widget build(BuildContext context) {
@@ -204,6 +285,8 @@ class _YearDayGridLayer extends StatelessWidget {
                     filledCount: totalDays,
                     fillSizes: fillSizes,
                     padding: padding,
+                    appearIndex: appearIndex,
+                    appearProgress: appearProgress,
                   ),
                 ),
               ),

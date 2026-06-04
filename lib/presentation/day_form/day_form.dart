@@ -25,11 +25,17 @@ import 'package:weeksalive/presentation/redux/weekly_intent/widgets/edit_weekly_
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
+export 'package:weeksalive/presentation/day_form/day_form_sheet.dart' show DayFormResult;
+
 class DayForm extends StatefulWidget {
   const DayForm({super.key, required this.date});
   final DateTime date;
 
-  static void showBottomSheet(BuildContext context, DateTime date) => showDayFormSheet(context, date);
+  static Future<DayFormResult?> showBottomSheet(
+    BuildContext context,
+    DateTime date, {
+    void Function(DayFormResult result)? onDaySaved,
+  }) => showDayFormSheet(context, date, onDaySaved: onDaySaved);
 
   @override
   State<DayForm> createState() => _DayFormState();

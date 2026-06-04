@@ -3,6 +3,8 @@ import 'package:redux/redux.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/domain/life_week_grid.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/day/day_actions.dart';
+import 'package:weeksalive/presentation/redux/streak/streak_actions.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
 
 part 'home_page_view_model.freezed.dart';
@@ -30,6 +32,11 @@ abstract class HomePageViewModel with _$HomePageViewModel {
       recordedDays: recordedDays,
       isTodayDone: recordedDays.contains(normalizeDay(DateTime.now())),
     );
+  }
+
+  static void resetToday(Store<AppState> store) {
+    store.dispatch(DeleteDayAction(DateTime.now()));
+    store.dispatch(const SetStreakCountAction(0));
   }
 }
 

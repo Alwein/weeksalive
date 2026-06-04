@@ -9,3 +9,8 @@ class SaveDayAction {
   final DayEntry entry;
   const SaveDayAction(this.entry);
 }
+
+class DeleteDayAction {
+  final DateTime date;
+  const DeleteDayAction(this.date);
+}

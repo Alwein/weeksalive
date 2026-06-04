@@ -2,6 +2,9 @@ import 'package:flutter/material.dart' hide Animation;
 import 'package:rive/rive.dart';
 
 /// Plays the "Reveal" animation once, then loops "idle" forever.
+///
+/// Show/hide transitions (scale + fade) are handled by the parent so the Rive
+/// artboard only ever plays forward.
 class FireRivePlayer extends StatefulWidget {
   const FireRivePlayer({super.key});
 

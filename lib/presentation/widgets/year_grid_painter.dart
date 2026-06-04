@@ -15,6 +15,8 @@ class YearGridPainter extends CustomPainter {
     this.fillSizes = const <int>[],
     this.highlightColor,
     this.revealProgress = 1.0,
+    this.appearIndex = -1,
+    this.appearProgress = 1.0,
   });
 
   static const _emptyStrokeWidth = 1.0;
@@ -43,6 +45,12 @@ class YearGridPainter extends CustomPainter {
   final List<int> fillSizes;
   final Color? highlightColor;
   final double revealProgress;
+
+  /// Index of a single dot that should scale in (from 0) on save. -1 disables.
+  final int appearIndex;
+
+  /// Scale-in progress in [0, 1] applied to the [appearIndex] dot.
+  final double appearProgress;
 
   static double computeHeight({
     required double availableWidth,
@@ -109,7 +117,18 @@ class YearGridPainter extends CustomPainter {
       final isHighlight = animationComplete && i == highlightGridIndex && highlightColor != null;
       final color = isHighlight ? highlightColor! : fillColor;
       final level = rawLevel.clamp(0, 4);
-      final targetRadius = _sizeRadius(level, maxRadius);
+      var targetRadius = _sizeRadius(level, maxRadius);
+
+      if (i == appearIndex) {
+        // Scale this single dot in on save: empty circle at 0, full size at 1.
+        if (appearProgress <= 0.0) {
+          canvas.drawCircle(center, emptyStrokeRadius, emptyStroke);
+          continue;
+        }
+        targetRadius *= appearProgress.clamp(0.0, 1.0);
+        canvas.drawCircle(center, targetRadius, Paint()..color = color);
+        continue;
+      }
 
       final revealThreshold = i + 1;
       if (continuousRevealed >= revealThreshold) {
@@ -139,5 +158,7 @@ class YearGridPainter extends CustomPainter {
       old.highlightGridIndex != highlightGridIndex ||
       old.revealProgress != revealProgress ||
       old.highlightColor != highlightColor ||
+      old.appearIndex != appearIndex ||
+      old.appearProgress != appearProgress ||
       old.fillSizes != fillSizes;
 }

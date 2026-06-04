@@ -23,9 +23,10 @@ class HomePage extends StatelessWidget {
     return StoreConnector<AppState, HomePageViewModel>(
       converter: HomePageViewModel.create,
       builder: (context, vm) {
+        final store = StoreProvider.of<AppState>(context);
         return Scaffold(
           backgroundColor: AppColors.bg(context),
-          body: _Body(vm: vm),
+          body: _Body(vm: vm, onResetToday: () => HomePageViewModel.resetToday(store)),
         );
       },
     );
@@ -33,8 +34,9 @@ class HomePage extends StatelessWidget {
 }
 
 class _Body extends StatefulWidget {
-  const _Body({required this.vm});
+  const _Body({required this.vm, required this.onResetToday});
   final HomePageViewModel vm;
+  final VoidCallback onResetToday;
 
   @override
   State<_Body> createState() => _BodyState();
@@ -43,6 +45,7 @@ class _Body extends StatefulWidget {
 class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
   late final TabController _gridTabController;
   final GlobalKey<ZoomableLifeGridViewState> _zoomableGridKey = GlobalKey();
+  final GlobalKey<HomeAppBarState> _appBarKey = GlobalKey();
 
   int _committedGridTabIndex = 0;
 
@@ -79,6 +82,34 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
     }
   }
 
+  Future<void> _onTodayTap() async {
+    final result = await DayForm.showBottomSheet(
+      context,
+      DateTime.now(),
+      onDaySaved: (saved) => _zoomableGridKey.currentState?.prepareDayAppear(saved.date),
+    );
+    if (!mounted || result == null) return;
+    await _playSaveAnimations(result);
+  }
+
+  Future<void> _playSaveAnimations(DayFormResult result) async {
+    // Delay to avoid animation starting during the sheet close animation
+    await Future<void>.delayed(const Duration(milliseconds: 400));
+    _zoomableGridKey.currentState?.prepareDayAppear(result.date);
+
+    _gridTabController.index = 1;
+    _committedGridTabIndex = 1;
+    await _zoomableGridKey.currentState?.animateToYearView();
+    if (!mounted) return;
+    await _zoomableGridKey.currentState?.animateDayAppear(result.date, result.sizeLevel);
+
+    if (!mounted) return;
+
+    if (result.streakIncreased) {
+      await _appBarKey.currentState?.playStreakReveal();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -86,7 +117,12 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
         SizedBox(height: MediaQuery.paddingOf(context).top),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
-          child: HomeAppBar(vm: widget.vm, tabController: _gridTabController),
+          child: HomeAppBar(
+            key: _appBarKey,
+            vm: widget.vm,
+            tabController: _gridTabController,
+            onResetToday: widget.onResetToday,
+          ),
         ),
         const SizedBox(height: Margins.spacingBase),
         HomeWeekCalendar(vm: widget.vm),
@@ -104,6 +140,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
           isTodayDone: widget.vm.isTodayDone,
           tabController: _gridTabController,
           onTabTap: _onGridTabTapped,
+          onTodayTap: _onTodayTap,
         ),
       ],
     );
@@ -116,11 +153,13 @@ class _BottomBar extends StatelessWidget {
     required this.isTodayDone,
     required this.tabController,
     required this.onTabTap,
+    required this.onTodayTap,
   });
   final int streakCount;
   final bool isTodayDone;
   final TabController tabController;
   final ValueChanged<int> onTabTap;
+  final VoidCallback onTodayTap;
 
   static const double kTabHeight = 48.0;
 
@@ -152,7 +191,7 @@ class _BottomBar extends StatelessWidget {
               ],
             ),
           ),
-          _TodayButton(isTodayDone: isTodayDone, onTap: () => DayForm.showBottomSheet(context, DateTime.now())),
+          _TodayButton(isTodayDone: isTodayDone, onTap: onTodayTap),
         ],
       ),
     );
@@ -179,7 +218,7 @@ class _TodayButton extends StatelessWidget {
         child: Container(
           height: _BottomBar.kTabHeight,
           padding: const EdgeInsets.symmetric(
-            horizontal: Margins.spacingBase,
+            horizontal: Margins.spacingM,
             vertical: Margins.spacingS,
           ),
           decoration: BoxDecoration(

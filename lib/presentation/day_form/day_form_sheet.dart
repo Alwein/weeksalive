@@ -6,6 +6,7 @@ import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/presentation/day_form/day_form.dart';
 import 'package:weeksalive/presentation/day_form/day_form_confirmation_page.dart';
 import 'package:weeksalive/presentation/day_form/day_form_controller.dart';
@@ -16,7 +17,31 @@ import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/secondary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-void showDayFormSheet(BuildContext context, DateTime date) {
+/// Result returned by the day form sheet once it closes after a save.
+///
+/// Used by the home page to orchestrate the post-save animations (year grid
+/// dot scale-in, then the streak reveal in the app bar).
+class DayFormResult {
+  const DayFormResult({
+    required this.date,
+    required this.sizeLevel,
+    required this.previousStreak,
+    required this.newStreak,
+  });
+
+  final DateTime date;
+  final int sizeLevel;
+  final int previousStreak;
+  final int newStreak;
+
+  bool get streakIncreased => newStreak > previousStreak;
+}
+
+Future<DayFormResult?> showDayFormSheet(
+  BuildContext context,
+  DateTime date, {
+  void Function(DayFormResult result)? onDaySaved,
+}) {
   final controller = SheetController();
 
   final fullscreenAnimation = SheetOffsetDrivenAnimation(
@@ -26,13 +51,14 @@ void showDayFormSheet(BuildContext context, DateTime date) {
     endOffset: const SheetOffset.proportionalToViewport(1),
   );
 
-  Navigator.of(context).push(
-    ModalSheetRoute<void>(
+  return Navigator.of(context).push(
+    ModalSheetRoute<DayFormResult>(
       swipeDismissible: true,
       builder: (context) => _DayFormSheetRoot(
         date: date,
         controller: controller,
         fullscreenAnimation: fullscreenAnimation,
+        onDaySaved: onDaySaved,
       ),
     ),
   );
@@ -43,11 +69,13 @@ class _DayFormSheetRoot extends StatefulWidget {
     required this.date,
     required this.controller,
     required this.fullscreenAnimation,
+    this.onDaySaved,
   });
 
   final DateTime date;
   final SheetController controller;
   final Animation<double> fullscreenAnimation;
+  final void Function(DayFormResult result)? onDaySaved;
 
   @override
   State<_DayFormSheetRoot> createState() => _DayFormSheetRootState();
@@ -56,6 +84,8 @@ class _DayFormSheetRoot extends StatefulWidget {
 class _DayFormSheetRootState extends State<_DayFormSheetRoot> {
   final _canSave = ValueNotifier<bool>(false);
   final _heroController = HeroController();
+
+  DayFormResult? _result;
 
   late final Navigator _nestedNavigator;
 
@@ -76,6 +106,10 @@ class _DayFormSheetRootState extends State<_DayFormSheetRoot> {
               fullscreenAnimation: widget.fullscreenAnimation,
               canSave: _canSave,
               onClose: _closeSheet,
+              onSaved: (result) {
+                _result = result;
+                widget.onDaySaved?.call(result);
+              },
             ),
           ),
         ];
@@ -90,7 +124,7 @@ class _DayFormSheetRootState extends State<_DayFormSheetRoot> {
     super.dispose();
   }
 
-  void _closeSheet() => Navigator.of(context, rootNavigator: true).pop();
+  void _closeSheet() => Navigator.of(context, rootNavigator: true).pop(_result);
 
   Future<void> _onAttemptDismiss() async {
     if (!_canSave.value) {
@@ -172,12 +206,14 @@ class _DayFormPage extends StatelessWidget {
     required this.fullscreenAnimation,
     required this.canSave,
     required this.onClose,
+    required this.onSaved,
   });
 
   final DateTime date;
   final Animation<double> fullscreenAnimation;
   final ValueNotifier<bool> canSave;
   final VoidCallback onClose;
+  final ValueChanged<DayFormResult> onSaved;
 
   @override
   Widget build(BuildContext context) {
@@ -189,6 +225,7 @@ class _DayFormPage extends StatelessWidget {
         fullscreenAnimation: fullscreenAnimation,
         canSave: canSave,
         onClose: onClose,
+        onSaved: onSaved,
       ),
     );
   }
@@ -201,6 +238,7 @@ class _DayFormPageContent extends StatefulWidget {
     required this.fullscreenAnimation,
     required this.canSave,
     required this.onClose,
+    required this.onSaved,
   });
 
   final DayFormViewModel viewModel;
@@ -208,6 +246,7 @@ class _DayFormPageContent extends StatefulWidget {
   final Animation<double> fullscreenAnimation;
   final ValueNotifier<bool> canSave;
   final VoidCallback onClose;
+  final ValueChanged<DayFormResult> onSaved;
 
   @override
   State<_DayFormPageContent> createState() => _DayFormPageContentState();
@@ -238,15 +277,34 @@ class _DayFormPageContentState extends State<_DayFormPageContent> {
 
   void _goToConfirmation() {
     final entry = _controller.buildEntry(widget.date);
-    StoreProvider.of<AppState>(context).dispatch(SaveDayAction(entry));
+    final store = StoreProvider.of<AppState>(context);
+    final previousStreak = store.state.streakState.count;
+    store.dispatch(SaveDayAction(entry));
+    // The streak is refreshed asynchronously by the middleware, so compute it
+    // synchronously from the (already updated) day state to know the new value.
+    final newStreak = computeStreak(
+      store.state.dayState.entries.keys.toSet(),
+      DateTime.now(),
+    );
     _saved = true;
     widget.canSave.value = false;
+
+    widget.onSaved(
+      DayFormResult(
+        date: entry.date,
+        sizeLevel: entry.sizeLevel,
+        previousStreak: previousStreak,
+        newStreak: newStreak,
+      ),
+    );
+
+    final isFirstEntry = widget.viewModel.existingEntry == null;
 
     Navigator.of(context).push(
       PagedSheetRoute<void>(
         builder: (_) => DayFormConfirmationPage(
           entry: entry,
-          isFirstEntry: widget.viewModel.existingEntry == null,
+          isFirstEntry: isFirstEntry,
           onClose: widget.onClose,
         ),
       ),

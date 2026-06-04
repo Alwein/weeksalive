@@ -16,5 +16,10 @@ DayState dayReducer(DayState state, dynamic action) {
     );
   }
 
+  if (action is DeleteDayAction) {
+    final updated = Map<DateTime, DayEntry>.from(state.entries)..remove(normalizeDay(action.date));
+    return state.copyWith(entries: updated);
+  }
+
   return state;
 }

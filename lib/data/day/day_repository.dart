@@ -26,6 +26,11 @@ class DayRepository {
     await _db.into(_db.days).insertOnConflictUpdate(_toCompanion(entry));
   }
 
+  Future<void> delete(DateTime date) async {
+    final normalized = normalizeDay(date);
+    await (_db.delete(_db.days)..where((t) => t.date.equals(normalized))).go();
+  }
+
   DayEntry _toEntry(Day row) {
     return DayEntry(
       date: row.date,

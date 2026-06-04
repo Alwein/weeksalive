@@ -28,6 +28,11 @@ class DayMiddleware extends MiddlewareClass<AppState> {
       await dayRepository.upsert(action.entry);
       _refreshStreak(store);
     }
+
+    if (action is DeleteDayAction) {
+      await dayRepository.delete(action.date);
+      _refreshStreak(store);
+    }
   }
 
   void _refreshStreak(Store<AppState> store) {
