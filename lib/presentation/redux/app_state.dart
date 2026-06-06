@@ -6,6 +6,7 @@ import 'package:weeksalive/presentation/redux/remote_config/remote_config_state.
 import 'package:weeksalive/presentation/redux/streak/streak_state.dart';
 import 'package:weeksalive/presentation/redux/theme/theme_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
+import 'package:weeksalive/presentation/redux/navigation/navigation_state.dart';
 import 'package:weeksalive/presentation/redux/weekly_intent/weekly_intent_state.dart';
 
 part 'app_state.freezed.dart';
@@ -21,6 +22,7 @@ abstract class AppState with _$AppState {
     required WeeklyIntentState weeklyIntentState,
     required DayState dayState,
     required PushNotificationState pushNotificationState,
+    required NavigationState navigationState,
   }) = _AppState;
 
   factory AppState.initial() {
@@ -33,6 +35,7 @@ abstract class AppState with _$AppState {
       weeklyIntentState: WeeklyIntentState.initial(),
       dayState: DayState.initial(),
       pushNotificationState: const PushNotificationState(),
+      navigationState: const NavigationState(),
     );
   }
 }

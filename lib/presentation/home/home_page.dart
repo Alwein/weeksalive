@@ -14,6 +14,7 @@ import 'package:weeksalive/presentation/home/widgets/home_appbar.dart';
 import 'package:weeksalive/presentation/home/widgets/home_week_calendar.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/custom_tab_bar.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/navigation/navigation_actions.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
 import 'package:weeksalive/presentation/widgets/zoomable_life_grid_view.dart';
 
@@ -28,7 +29,11 @@ class HomePage extends StatelessWidget {
         final store = StoreProvider.of<AppState>(context);
         return Scaffold(
           backgroundColor: AppColors.bg(context),
-          body: _Body(vm: vm, onResetToday: () => HomePageViewModel.resetToday(store)),
+          body: _Body(
+            vm: vm,
+            onResetToday: () => HomePageViewModel.resetToday(store),
+            initialTabIndex: store.state.navigationState.homeTabIndex,
+          ),
         );
       },
     );
@@ -36,9 +41,10 @@ class HomePage extends StatelessWidget {
 }
 
 class _Body extends StatefulWidget {
-  const _Body({required this.vm, required this.onResetToday});
+  const _Body({required this.vm, required this.onResetToday, required this.initialTabIndex});
   final HomePageViewModel vm;
   final VoidCallback onResetToday;
+  final int initialTabIndex;
 
   @override
   State<_Body> createState() => _BodyState();
@@ -54,7 +60,17 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _gridTabController = CustomTabController(length: 2, vsync: this);
+    _committedGridTabIndex = widget.initialTabIndex;
+    _gridTabController = CustomTabController(
+      length: 2,
+      vsync: this,
+      initialIndex: widget.initialTabIndex,
+    );
+    if (widget.initialTabIndex == 1) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _zoomableGridKey.currentState?.jumpToYearView();
+      });
+    }
   }
 
   @override
@@ -76,6 +92,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
     if (index != _committedGridTabIndex) {
       SensorialFeedback.navigationChanged();
       _committedGridTabIndex = index;
+      StoreProvider.of<AppState>(context).dispatch(SetHomeTabIndexAction(index));
     }
     if (index == 0) {
       _zoomableGridKey.currentState?.animateToWeekView();

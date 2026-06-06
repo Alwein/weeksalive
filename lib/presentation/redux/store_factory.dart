@@ -1,5 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
+import 'package:weeksalive/data/navigation/navigation_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
@@ -11,6 +12,7 @@ import 'package:weeksalive/presentation/redux/app_reducer.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_middleware.dart';
 import 'package:weeksalive/presentation/redux/day/day_middleware.dart';
+import 'package:weeksalive/presentation/redux/navigation/navigation_middleware.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_middleware.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_middleware.dart';
 import 'package:weeksalive/presentation/redux/streak/streak_middleware.dart';
@@ -22,6 +24,7 @@ class StoreFactory {
   final RemoteConfigRepository remoteConfigRepository;
   final UserRepository userRepository;
   final ThemeRepository themeRepository;
+  final NavigationRepository navigationRepository;
   final PushNotificationRepository pushNotificationRepository;
   final PurchaseRepository purchaseRepository;
   final StreakRepository streakRepository;
@@ -32,6 +35,7 @@ class StoreFactory {
     required this.remoteConfigRepository,
     required this.userRepository,
     required this.themeRepository,
+    required this.navigationRepository,
     required this.pushNotificationRepository,
     required this.purchaseRepository,
     required this.streakRepository,
@@ -47,6 +51,7 @@ class StoreFactory {
         BootstrapMiddleware().call,
         UserMiddleware(userRepository: userRepository).call,
         ThemeMiddleware(themeRepository: themeRepository).call,
+        NavigationMiddleware(navigationRepository: navigationRepository).call,
         PushNotificationMiddleware(pushNotificationRepository: pushNotificationRepository).call,
         PurchaseMiddleware(purchaseRepository: purchaseRepository).call,
         StreakMiddleware(streakRepository: streakRepository).call,

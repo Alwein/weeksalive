@@ -55,6 +55,7 @@ class CustomTabController extends TabController {
   CustomTabController({
     required super.length,
     required super.vsync,
+    super.initialIndex,
   });
 
   @override

@@ -134,6 +134,13 @@ class ZoomableLifeGridViewState extends State<ZoomableLifeGridView> with TickerP
     await WidgetsBinding.instance.endOfFrame;
   }
 
+  void jumpToYearView() {
+    _snapController.stop();
+    setState(() {
+      _zoomProgress = 1.0;
+    });
+  }
+
   /// Computes the day-of-year index for [date], or -1 if it is not in the
   /// current civil year / out of range.
   int _dayIndexForDate(DateTime date) {
