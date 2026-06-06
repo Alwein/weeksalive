@@ -130,7 +130,11 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
           ),
         ),
         const SizedBox(height: Margins.spacingBase),
-        HomeWeekCalendar(vm: widget.vm),
+        HomeWeekCalendar(
+          vm: widget.vm,
+          onTodayTap: _onTodayTap,
+          onPastDayTap: _onPastDayTap,
+        ),
         const SizedBox(height: Margins.spacingBase),
         Expanded(
           child: ZoomableLifeGridView(

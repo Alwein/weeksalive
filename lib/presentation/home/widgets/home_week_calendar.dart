@@ -7,9 +7,16 @@ import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/home/view_model/home_page_view_model.dart';
 
 class HomeWeekCalendar extends StatelessWidget {
-  const HomeWeekCalendar({super.key, required this.vm});
+  const HomeWeekCalendar({
+    super.key,
+    required this.vm,
+    required this.onTodayTap,
+    required this.onPastDayTap,
+  });
 
   final HomePageViewModel vm;
+  final VoidCallback onTodayTap;
+  final ValueChanged<DateTime> onPastDayTap;
 
   List<DateTime> _weekDays(DateTime today, int weekStartDay) {
     final offset = (today.weekday - weekStartDay) % 7;
@@ -32,10 +39,13 @@ class HomeWeekCalendar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: days.map((day) {
+          final isToday = day == todayNormalized;
+          final isFuture = day.isAfter(todayNormalized);
           return _DayCell(
+            onTap: isFuture ? null : () => isToday ? onTodayTap() : onPastDayTap(day),
             dayName: _shortName(day),
             dayNumber: day.day,
-            isToday: day == todayNormalized,
+            isToday: isToday,
             isRecorded: vm.recordedDays.contains(day),
           );
         }).toList(),
@@ -50,34 +60,39 @@ class _DayCell extends StatelessWidget {
     required this.dayNumber,
     required this.isToday,
     required this.isRecorded,
+    this.onTap,
   });
 
   final String dayName;
   final int dayNumber;
   final bool isToday;
   final bool isRecorded;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(Margins.spacingS),
-      decoration: BoxDecoration(
-        color: AppColors.bg(context),
-        borderRadius: BorderRadius.circular(300),
-        border: isToday ? Border.all(color: AppColors.strokeColor(context), width: 1) : null,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            dayName,
-            style: TextStyles.primaryXsBold.copyWith(
-              color: isToday ? AppColors.content(context) : AppColors.contentSoft(context),
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(Margins.spacingS),
+        decoration: BoxDecoration(
+          color: AppColors.bg(context),
+          borderRadius: BorderRadius.circular(300),
+          border: isToday ? Border.all(color: AppColors.strokeColor(context), width: 1) : null,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              dayName,
+              style: TextStyles.primaryXsBold.copyWith(
+                color: isToday ? AppColors.content(context) : AppColors.contentSoft(context),
+              ),
             ),
-          ),
-          const SizedBox(height: Margins.spacingXs / 2),
-          _DayIndicator(isToday: isToday, isRecorded: isRecorded, dayNumber: dayNumber),
-        ],
+            const SizedBox(height: Margins.spacingXs / 2),
+            _DayIndicator(isToday: isToday, isRecorded: isRecorded, dayNumber: dayNumber),
+          ],
+        ),
       ),
     );
   }

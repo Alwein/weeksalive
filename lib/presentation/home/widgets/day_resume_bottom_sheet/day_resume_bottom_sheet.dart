@@ -175,6 +175,7 @@ class _CardEntry extends StatelessWidget {
           _DayHeader(
             circleSize: _sizeLevelToCircleSize(entry.sizeLevel),
             dayCount: viewModel.dayCount,
+            date: entry.date,
           ),
           _DaySection(
             index: '01',
@@ -214,9 +215,10 @@ class _CardEntry extends StatelessWidget {
 }
 
 class _DayHeader extends StatelessWidget {
-  const _DayHeader({required this.circleSize, required this.dayCount});
+  const _DayHeader({required this.circleSize, required this.dayCount, required this.date});
   final int dayCount;
   final double circleSize;
+  final DateTime date;
 
   @override
   Widget build(BuildContext context) {
@@ -237,7 +239,7 @@ class _DayHeader extends StatelessWidget {
                   softColor: AppColors.contentSoftOnSoft(context),
                 ),
                 const SizedBox(height: Margins.spacingXs),
-                Texts.primaryLargeBold(TimeUtils.formatDate(context, DateTime.now())),
+                Texts.primaryLargeBold(TimeUtils.formatDate(context, date)),
               ],
             ),
           ),
