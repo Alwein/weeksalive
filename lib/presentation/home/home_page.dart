@@ -16,6 +16,7 @@ import 'package:weeksalive/presentation/onboarding/widgets/custom_tab_bar.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/navigation/navigation_actions.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
+import 'package:weeksalive/presentation/widgets/apparition_animation.dart';
 import 'package:weeksalive/presentation/widgets/zoomable_life_grid_view.dart';
 
 class HomePage extends StatelessWidget {
@@ -149,42 +150,44 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
           });
         }
       },
-      builder: (context, _) => Column(
-        children: [
-          SizedBox(height: MediaQuery.paddingOf(context).top),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
-            child: HomeAppBar(
-              key: _appBarKey,
+      builder: (context, _) => ApparitionAnimation(
+        child: Column(
+          children: [
+            SizedBox(height: MediaQuery.paddingOf(context).top),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
+              child: HomeAppBar(
+                key: _appBarKey,
+                vm: widget.vm,
+                tabController: _gridTabController,
+                onResetToday: widget.onResetToday,
+              ),
+            ),
+            const SizedBox(height: Margins.spacingBase),
+            HomeWeekCalendar(
               vm: widget.vm,
+              onTodayTap: _onTodayTap,
+              onPastDayTap: _onPastDayTap,
+            ),
+            const SizedBox(height: Margins.spacingBase),
+            Expanded(
+              child: ZoomableLifeGridView(
+                key: _zoomableGridKey,
+                grid: widget.vm.lifeWeekGrid,
+                padding: const EdgeInsets.only(left: Margins.spacingL, right: Margins.spacingL),
+                onYearModeCommitted: _onGridYearModeCommitted,
+                onPastDayTap: (date, entry) => _onPastDayTap(date),
+              ),
+            ),
+            _BottomBar(
+              streakCount: widget.vm.streakCount,
+              isTodayDone: widget.vm.isTodayDone,
               tabController: _gridTabController,
-              onResetToday: widget.onResetToday,
+              onTabTap: _onGridTabTapped,
+              onTodayTap: _onTodayTap,
             ),
-          ),
-          const SizedBox(height: Margins.spacingBase),
-          HomeWeekCalendar(
-            vm: widget.vm,
-            onTodayTap: _onTodayTap,
-            onPastDayTap: _onPastDayTap,
-          ),
-          const SizedBox(height: Margins.spacingBase),
-          Expanded(
-            child: ZoomableLifeGridView(
-              key: _zoomableGridKey,
-              grid: widget.vm.lifeWeekGrid,
-              padding: const EdgeInsets.only(left: Margins.spacingL, right: Margins.spacingL),
-              onYearModeCommitted: _onGridYearModeCommitted,
-              onPastDayTap: (date, entry) => _onPastDayTap(date),
-            ),
-          ),
-          _BottomBar(
-            streakCount: widget.vm.streakCount,
-            isTodayDone: widget.vm.isTodayDone,
-            tabController: _gridTabController,
-            onTabTap: _onGridTabTapped,
-            onTodayTap: _onTodayTap,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
