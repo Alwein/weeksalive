@@ -67,3 +67,13 @@ extension UserExtension on User {
     );
   }
 }
+
+extension UserUtils on User {
+  int dayNumber(DateTime date) {
+    final dateOfBirth = this.dateOfBirth;
+    final targetDay = DateTime(date.year, date.month, date.day);
+    final birthDay = DateTime(dateOfBirth.year, dateOfBirth.month, dateOfBirth.day);
+    final diff = targetDay.difference(birthDay).inDays;
+    return diff < 0 ? 1 : diff + 1;
+  }
+}

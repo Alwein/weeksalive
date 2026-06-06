@@ -20,17 +20,8 @@ abstract class DayFormViewModel with _$DayFormViewModel {
       _ => null,
     };
     return DayFormViewModel(
-      dayCount: _dayNumber(user, date).toString(),
+      dayCount: user?.dayNumber(date).toString() ?? '-',
       existingEntry: store.state.dayState.entryFor(date),
     );
   }
-}
-
-int _dayNumber(User? user, DateTime date) {
-  final dateOfBirth = user?.dateOfBirth;
-  if (dateOfBirth == null) return 1;
-  final targetDay = DateTime(date.year, date.month, date.day);
-  final birthDay = DateTime(dateOfBirth.year, dateOfBirth.month, dateOfBirth.day);
-  final diff = targetDay.difference(birthDay).inDays;
-  return diff < 0 ? 1 : diff + 1;
 }

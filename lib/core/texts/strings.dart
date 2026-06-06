@@ -14,6 +14,7 @@ class Strings {
   static String get continueString => tr('continue');
   static String get editName => "Edit name";
   static String get editList => "Edit list";
+  static String get edit => "Edit";
 
   // weeksalive
 
@@ -290,7 +291,7 @@ class Strings {
   // day form
   static String get feelingSectionQuestion => "How did you feel today?";
   static String get meaningSectionQuestion => "How meaningful was your time today?";
-  static String get newExperienceSectionQuestion => "Did you try something new today?";
+  static String get newExperienceSectionQuestion => "Something new today? A food, a place, an activity, a person…";
   static String get livingIntentionsSectionQuestion => "Did your actions reflect your weekly intentions?";
   static String get livingIntentionsSectionValueNone => "None";
   static String get livingIntentionsSectionEditLabel => "Edit weekly intentions";

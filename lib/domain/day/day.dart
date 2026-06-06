@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 
 class LeaveATrace {
@@ -31,6 +33,14 @@ enum AverageFeeling {
     okey => Strings.feelingSectionValueOkay,
     good => Strings.feelingSectionValueGood,
     great => Strings.feelingSectionValueGreat,
+  };
+
+  IconData get icon => switch (this) {
+    rough => MingCuteIcons.mgc_sad_line,
+    low => MingCuteIcons.mgc_confused_line,
+    okey => MingCuteIcons.mgc_meh_line,
+    good => MingCuteIcons.mgc_emoji_line,
+    great => MingCuteIcons.mgc_happy_line,
   };
 }
 

@@ -18,6 +18,7 @@ import 'package:weeksalive/domain/weekly_intent/weekly_intent.dart';
 import 'package:weeksalive/presentation/day_form/day_form_controller.dart';
 import 'package:weeksalive/presentation/day_form/day_form_sheet.dart';
 import 'package:weeksalive/presentation/day_form/day_form_view_model.dart';
+import 'package:weeksalive/presentation/home/widgets/day_summaries.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/day/day_actions.dart';
@@ -174,7 +175,7 @@ class DayFormContentState extends State<DayFormContent> {
             isExpanded: _expanded == _DaySectionId.feeling,
             isAnswered: _controller.averageFeeling != null,
             onTap: () => _toggleExpanded(_DaySectionId.feeling),
-            summary: _controller.averageFeeling != null ? _FeelingSummary(value: _controller.averageFeeling!) : null,
+            summary: _controller.averageFeeling != null ? FeelingSummary(value: _controller.averageFeeling!) : null,
             child: _FeelingSelector(
               value: _controller.averageFeeling,
               onChanged: (v) {
@@ -190,7 +191,7 @@ class DayFormContentState extends State<DayFormContent> {
             isExpanded: _expanded == _DaySectionId.meaning,
             isAnswered: _controller.meaningScore != null,
             onTap: () => _toggleExpanded(_DaySectionId.meaning),
-            summary: _controller.meaningScore != null ? _MeaningSummary(value: _controller.meaningScore!) : null,
+            summary: _controller.meaningScore != null ? MeaningSummary(value: _controller.meaningScore!) : null,
             child: _MeaningSelector(
               value: _controller.meaningScore,
               onChanged: (v) {
@@ -207,7 +208,7 @@ class DayFormContentState extends State<DayFormContent> {
             isAnswered: _controller.hasNewExperience != null,
             onTap: () => _toggleExpanded(_DaySectionId.newExperience),
             summary: _controller.hasNewExperience != null
-                ? _NewExperienceSummary(value: _controller.hasNewExperience!)
+                ? NewExperienceSummary(value: _controller.hasNewExperience!)
                 : null,
             child: _NewExperienceSelector(
               value: _controller.hasNewExperience,
@@ -225,7 +226,7 @@ class DayFormContentState extends State<DayFormContent> {
             isAnswered: _controller.livingIntentions.isNotEmpty,
             onTap: () => _toggleExpanded(_DaySectionId.intention),
             summary: _controller.livingIntentions.isNotEmpty
-                ? _LivingIntentionsSummary(selectedIds: _controller.livingIntentions)
+                ? LivingIntentionsSummary(selectedIds: _controller.livingIntentions)
                 : null,
             child: _LivingIntentionsSelector(
               value: _controller.livingIntentions,
@@ -417,7 +418,7 @@ class _FeelingSelector extends StatelessWidget {
                 child: _SquareChip(
                   selected: value == f,
                   onTap: () => onChanged(f),
-                  icon: _feelingIcon(f),
+                  icon: f.icon,
                   label: f.label,
                 ),
               ),
@@ -426,14 +427,6 @@ class _FeelingSelector extends StatelessWidget {
       ],
     );
   }
-
-  static IconData _feelingIcon(AverageFeeling feeling) => switch (feeling) {
-    AverageFeeling.rough => MingCuteIcons.mgc_sad_line,
-    AverageFeeling.low => MingCuteIcons.mgc_confused_line,
-    AverageFeeling.okey => MingCuteIcons.mgc_meh_line,
-    AverageFeeling.good => MingCuteIcons.mgc_emoji_line,
-    AverageFeeling.great => MingCuteIcons.mgc_happy_line,
-  };
 }
 
 class _MeaningSelector extends StatelessWidget {
@@ -460,7 +453,7 @@ class _MeaningSelector extends StatelessWidget {
                 child: _SquareChip(
                   selected: value == m,
                   onTap: () => onChanged(m),
-                  iconBuilder: (color) => _MeaningBars(filled: m.filledBars, color: color),
+                  iconBuilder: (color) => MeaningBars(filled: m.filledBars, color: color),
                   label: m.label,
                 ),
               ),
@@ -617,104 +610,6 @@ class _PillChip extends StatelessWidget {
   }
 }
 
-class _MeaningBars extends StatelessWidget {
-  const _MeaningBars({required this.filled, required this.color, this.size = Dimens.iconSizeBase});
-
-  final int filled;
-  final Color color;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    const totalBars = 5;
-    const baseHeight = 6.0;
-    const heightStep = 4.0;
-
-    return Transform.scale(
-      scale: size / Dimens.iconSizeBase,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          for (int i = 0; i < totalBars; i++) ...[
-            if (i < filled) ...[
-              if (i > 0) const SizedBox(width: 3),
-              Container(
-                width: 3,
-                height: baseHeight + heightStep * i,
-                decoration: BoxDecoration(
-                  color: i < filled ? color : color.withValues(alpha: 0.25),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ],
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _FeelingSummary extends StatelessWidget {
-  const _FeelingSummary({required this.value});
-
-  final AverageFeeling value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          _FeelingSelector._feelingIcon(value),
-          size: Dimens.iconSizeXs,
-          color: AppColors.content(context),
-        ),
-        const SizedBox(width: Margins.spacingS),
-        Text(
-          value.label,
-          style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
-        ),
-      ],
-    );
-  }
-}
-
-class _MeaningSummary extends StatelessWidget {
-  const _MeaningSummary({required this.value});
-
-  final MeaningScore value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _MeaningBars(filled: value.filledBars, color: AppColors.content(context), size: Dimens.iconSizeXs),
-        const SizedBox(width: Margins.spacingS),
-        Text(
-          value.label,
-          style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
-        ),
-      ],
-    );
-  }
-}
-
-class _NewExperienceSummary extends StatelessWidget {
-  const _NewExperienceSummary({required this.value});
-
-  final bool value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      value ? Strings.newExperienceSectionValueYes : Strings.newExperienceSectionValueNo,
-      style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
-    );
-  }
-}
-
 class _LivingIntentionsSelector extends StatelessWidget {
   const _LivingIntentionsSelector({
     required this.value,
@@ -783,28 +678,6 @@ class _LivingIntentionsSelector extends StatelessWidget {
               ),
             ),
           ],
-        );
-      },
-    );
-  }
-}
-
-class _LivingIntentionsSummary extends StatelessWidget {
-  const _LivingIntentionsSummary({required this.selectedIds});
-
-  final Set<String> selectedIds;
-
-  @override
-  Widget build(BuildContext context) {
-    return StoreConnector<AppState, List<WeeklyIntent>>(
-      converter: (store) => store.state.weeklyIntentState.availableIntents,
-      builder: (context, intents) {
-        final labels = selectedIds.map((id) => intents.firstWhere((i) => i.id == id).label).join(', ');
-        return Text(
-          labels,
-          style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
         );
       },
     );

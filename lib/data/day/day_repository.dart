@@ -2,17 +2,21 @@ import 'dart:convert';
 
 import 'package:drift/drift.dart';
 import 'package:weeksalive/data/day/app_database.dart';
+import 'package:weeksalive/data/day/image_storage.dart';
 import 'package:weeksalive/domain/day/day.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
 
 class DayRepository {
   final AppDatabase _db;
+  final ImageStorage _imageStorage;
 
-  DayRepository({required AppDatabase database}) : _db = database;
+  DayRepository({required AppDatabase database, ImageStorage? imageStorage})
+      : _db = database,
+        _imageStorage = imageStorage ?? LocalImageStorage();
 
   Future<List<DayEntry>> getAll() async {
     final rows = await _db.select(_db.days).get();
-    return rows.map(_toEntry).toList();
+    return Future.wait(rows.map(_toEntry));
   }
 
   Future<DayEntry?> getByDate(DateTime date) async {
@@ -23,7 +27,11 @@ class DayRepository {
   }
 
   Future<void> upsert(DayEntry entry) async {
-    await _db.into(_db.days).insertOnConflictUpdate(_toCompanion(entry));
+    final savedFileNames = await _saveNewImages(entry.leaveATrace.imagePaths);
+    final updatedEntry = entry.copyWith(
+      leaveATrace: entry.leaveATrace.copyWith(imagePaths: savedFileNames),
+    );
+    await _db.into(_db.days).insertOnConflictUpdate(_toCompanion(updatedEntry));
   }
 
   Future<void> delete(DateTime date) async {
@@ -31,16 +39,41 @@ class DayRepository {
     await (_db.delete(_db.days)..where((t) => t.date.equals(normalized))).go();
   }
 
-  DayEntry _toEntry(Day row) {
+  /// Saves any new images (absolute paths) and returns the stable file name list.
+  /// Already-saved file names (no path separator) are kept as-is.
+  Future<List<String>> _saveNewImages(List<String> paths) async {
+    return Future.wait(
+      paths.map((path) async {
+        if (_isFileName(path)) return path;
+        return _imageStorage.save(path);
+      }),
+    );
+  }
+
+  /// A stored value is a bare file name (no directory separator).
+  bool _isFileName(String value) => !value.contains('/');
+
+  Future<DayEntry> _toEntry(Day row) async {
+    final fileNames =
+        (jsonDecode(row.leaveATraceImagePaths) as List<dynamic>).map((e) => e as String).toList();
+
+    final resolvedPaths = await Future.wait(
+      fileNames.map((name) async {
+        if (_isFileName(name)) return _imageStorage.resolve(name);
+        return name;
+      }),
+    );
+
     return DayEntry(
       date: row.date,
       averageFeeling: _enumByName(AverageFeeling.values, row.averageFeeling),
       meaningScore: _enumByName(MeaningScore.values, row.meaningScore),
       hasNewExperience: row.hasNewExperience,
-      livingIntentionIds: (jsonDecode(row.livingIntentionIds) as List<dynamic>).map((e) => e as String).toList(),
+      livingIntentionIds:
+          (jsonDecode(row.livingIntentionIds) as List<dynamic>).map((e) => e as String).toList(),
       leaveATrace: LeaveATrace(
         text: row.leaveATraceText,
-        imagePaths: (jsonDecode(row.leaveATraceImagePaths) as List<dynamic>).map((e) => e as String).toList(),
+        imagePaths: resolvedPaths,
       ),
       sizeLevel: row.sizeLevel,
     );
