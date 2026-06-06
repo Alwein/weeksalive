@@ -300,6 +300,7 @@ class _YearDayGridLayer extends StatelessWidget {
                       emptyStrokeColor: strokeColor,
                       fillColor: fillColor,
                       pastEmptyColor: pastEmptyColor,
+                      todayEmptyColor: AppColors.accentOrange,
                       filledCount: totalDays,
                       fillSizes: fillSizes,
                       padding: padding,
@@ -359,13 +360,18 @@ class _YearDayGridLayer extends StatelessWidget {
   }
 
   /// One entry per day of the year.
+  /// - `-3` means "today with no record" (drawn filled with [AppColors.accentOrange]).
   /// - `-2` means "past day with no record" (drawn filled with [AppColors.bgSoft]).
   /// - `-1` means "future day with no record" (drawn as an empty circle).
   /// - `[0, 4]` is the recorded size level.
   static List<int> _fillSizesForYear(DayState dayState, DateTime now, int totalDays) {
     final year = now.year;
     final todayIndex = dayOfYearIndex(now);
-    final sizes = List<int>.generate(totalDays, (i) => i < todayIndex ? -2 : -1);
+    final sizes = List<int>.generate(totalDays, (i) {
+      if (i < todayIndex) return -2;
+      if (i == todayIndex) return -3;
+      return -1;
+    });
     for (final entry in dayState.entries.values) {
       if (entry.date.year != year) continue;
       final dayOfYear = dayOfYearIndex(entry.date);
