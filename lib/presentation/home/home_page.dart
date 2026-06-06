@@ -140,7 +140,6 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
             padding: const EdgeInsets.only(left: Margins.spacingL, right: Margins.spacingL),
             onYearModeCommitted: _onGridYearModeCommitted,
             onPastDayTap: _onPastDayTap,
-            onTodayTap: (_) => _onTodayTap(),
           ),
         ),
         _BottomBar(

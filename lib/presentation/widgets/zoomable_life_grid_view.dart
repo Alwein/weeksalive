@@ -20,7 +20,6 @@ class ZoomableLifeGridView extends StatefulWidget {
     this.padding = EdgeInsets.zero,
     this.onYearModeCommitted,
     this.onPastDayTap,
-    this.onTodayTap,
   });
 
   final LifeWeekGrid grid;
@@ -33,9 +32,6 @@ class ZoomableLifeGridView extends StatefulWidget {
   /// Called when a past day cell is tapped in the year view, with its date and
   /// the recorded entry (null when the day has no record).
   final void Function(DateTime date, DayEntry? entry)? onPastDayTap;
-
-  /// Called when today's cell is tapped in the year view.
-  final ValueChanged<DateTime>? onTodayTap;
 
   /// Pinch scale delta multiplier (tuned on device).
   /// Higher = less finger spread needed to cross the full 0→1 range (~scale 1.4 at 2.5).
@@ -235,7 +231,6 @@ class ZoomableLifeGridViewState extends State<ZoomableLifeGridView> with TickerP
                   appearIndex: _appearIndex,
                   appearProgress: _appearProgress,
                   onPastDayTap: widget.onPastDayTap,
-                  onTodayTap: widget.onTodayTap,
                 ),
               ),
             ),
@@ -252,14 +247,12 @@ class _YearDayGridLayer extends StatelessWidget {
     this.appearIndex = -1,
     this.appearProgress = 1.0,
     this.onPastDayTap,
-    this.onTodayTap,
   });
 
   final EdgeInsets padding;
   final int appearIndex;
   final double appearProgress;
   final void Function(DateTime date, DayEntry? entry)? onPastDayTap;
-  final ValueChanged<DateTime>? onTodayTap;
 
   @override
   Widget build(BuildContext context) {
@@ -359,10 +352,8 @@ class _YearDayGridLayer extends StatelessWidget {
     final todayIndex = dayOfYearIndex(now);
     final date = dateForDayOfYear(now.year, index);
 
-    if (index < todayIndex) {
+    if (index <= todayIndex) {
       onPastDayTap?.call(date, dayState.entryFor(date));
-    } else if (index == todayIndex) {
-      onTodayTap?.call(date);
     }
     // Future days: do nothing.
   }
