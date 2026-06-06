@@ -12,8 +12,9 @@ class PushNotificationRepository {
 
   static const _channelId = 'weeksalive_daily';
   static const _channelName = 'Daily reminders';
+  static const dailyReminderPayload = 'daily_reminder';
 
-  Future<void> initialize() async {
+  Future<void> initialize({void Function()? onNotificationTap}) async {
     tz.initializeTimeZones();
     final timezoneName = await FlutterTimezone.getLocalTimezone();
     tz.setLocalLocation(tz.getLocation(timezoneName));
@@ -25,8 +26,18 @@ class PushNotificationRepository {
       requestSoundPermission: false,
     );
     const settings = InitializationSettings(android: androidSettings, iOS: iosSettings);
-    await _plugin.initialize(settings: settings);
+    await _plugin.initialize(
+      settings: settings,
+      onDidReceiveNotificationResponse: onNotificationTap != null
+          ? (NotificationResponse response) {
+              if (response.payload == dailyReminderPayload) onNotificationTap();
+            }
+          : null,
+    );
   }
+
+  Future<NotificationAppLaunchDetails?> getNotificationAppLaunchDetails() =>
+      _plugin.getNotificationAppLaunchDetails();
 
   Future<bool> requestNotificationPermission() async {
     if (Platform.isIOS) {
@@ -53,6 +64,7 @@ class PushNotificationRepository {
         id: i,
         title: Strings.dailyNotificationTitle,
         body: Strings.dailyNotificationBody,
+        payload: dailyReminderPayload,
         scheduledDate: scheduledDate,
         notificationDetails: const NotificationDetails(
           android: AndroidNotificationDetails(

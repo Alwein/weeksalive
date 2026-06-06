@@ -9,6 +9,7 @@ import 'package:redux/redux.dart';
 import 'package:weeksalive/app_purchase_config.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
 import 'package:weeksalive/presentation/redux/store.dart';
 
 import 'firebase_options.dart';
@@ -26,7 +27,8 @@ Future<Store<AppState>> initializeApp() async {
 
   await initializeDateFormatting();
 
-  await PushNotificationRepository().initialize();
+  final pushNotificationRepository = PushNotificationRepository();
+  await pushNotificationRepository.initialize();
 
   final remoteConfig = await _remoteConfig();
 
@@ -34,7 +36,21 @@ Future<Store<AppState>> initializeApp() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  final store = await initializeReduxStore(remoteConfig);
+  final store = await initializeReduxStore(remoteConfig, pushNotificationRepository: pushNotificationRepository);
+
+  // Re-initialize with tap callback now that the store is available.
+  // This handles warm-start taps (app in background).
+  await pushNotificationRepository.initialize(
+    onNotificationTap: () => store.dispatch(const NotificationTappedAction()),
+  );
+
+  // Handle cold-start taps: app was launched by tapping a notification.
+  final launchDetails = await pushNotificationRepository.getNotificationAppLaunchDetails();
+  if (launchDetails != null &&
+      launchDetails.didNotificationLaunchApp &&
+      launchDetails.notificationResponse?.payload == PushNotificationRepository.dailyReminderPayload) {
+    store.dispatch(const NotificationTappedAction());
+  }
 
   return store;
 }

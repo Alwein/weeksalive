@@ -16,8 +16,9 @@ import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/store_factory.dart';
 
 Future<Store<AppState>> initializeReduxStore(
-  FirebaseRemoteConfig? firebaseRemoteConfig,
-) async {
+  FirebaseRemoteConfig? firebaseRemoteConfig, {
+  PushNotificationRepository? pushNotificationRepository,
+}) async {
   final crashlyticsRepository = CrashlyticsRepositoryImpl();
   final sharedPreferences = await SharedPreferences.getInstance();
   final appDatabase = AppDatabase();
@@ -26,7 +27,7 @@ Future<Store<AppState>> initializeReduxStore(
     remoteConfigRepository: RemoteConfigRepository(crashlyticsRepository: crashlyticsRepository),
     userRepository: UserRepository(preferences: sharedPreferences),
     themeRepository: ThemeRepository(preferences: sharedPreferences),
-    pushNotificationRepository: PushNotificationRepository(),
+    pushNotificationRepository: pushNotificationRepository ?? PushNotificationRepository(),
     purchaseRepository: PurchaseRepository(dotenv: dotenv),
     streakRepository: StreakRepository(preferences: sharedPreferences),
     weeklyIntentRepository: WeeklyIntentRepository(preferences: sharedPreferences),
