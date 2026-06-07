@@ -3,8 +3,6 @@ import 'package:redux/redux.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/domain/life_week_grid.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
-import 'package:weeksalive/presentation/redux/day/day_actions.dart';
-import 'package:weeksalive/presentation/redux/streak/streak_actions.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
 
 part 'home_page_view_model.freezed.dart';
@@ -15,8 +13,10 @@ abstract class HomePageViewModel with _$HomePageViewModel {
     required String userName,
     required int streakCount,
     required LifeWeekGrid lifeWeekGrid,
+
     /// ISO weekday (1 = Monday … 7 = Sunday) at which the week starts.
     @Default(DateTime.monday) int weekStartDay,
+
     /// Set of dates (normalized to midnight) that have been recorded.
     @Default({}) Set<DateTime> recordedDays,
     @Default(false) bool isTodayDone,
@@ -32,11 +32,6 @@ abstract class HomePageViewModel with _$HomePageViewModel {
       recordedDays: recordedDays,
       isTodayDone: recordedDays.contains(normalizeDay(DateTime.now())),
     );
-  }
-
-  static void resetToday(Store<AppState> store) {
-    store.dispatch(DeleteDayAction(DateTime.now()));
-    store.dispatch(const SetStreakCountAction(0));
   }
 }
 

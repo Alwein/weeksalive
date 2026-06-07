@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:purchases_flutter/models/customer_info_wrapper.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
+import 'package:weeksalive/data/navigation/navigation_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
@@ -57,6 +58,13 @@ class MockStreakRepository extends Mock implements StreakRepository {
   MockStreakRepository() {
     when(() => getStreakCount()).thenAnswer((_) async => 0);
     when(() => setStreakCount(any())).thenAnswer((_) async {});
+  }
+}
+
+class MockNavigationRepository extends Mock implements NavigationRepository {
+  MockNavigationRepository() {
+    when(() => getHomeTabIndex()).thenAnswer((_) async => 0);
+    when(() => setHomeTabIndex(any())).thenAnswer((_) async {});
   }
 }
 

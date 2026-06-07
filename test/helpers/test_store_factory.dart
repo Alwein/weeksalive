@@ -1,5 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
+import 'package:weeksalive/data/navigation/navigation_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
@@ -19,6 +20,7 @@ class TestStoreFactory {
   PurchaseRepository purchaseRepository = MockPurchaseRepository();
   ThemeRepository themeRepository = MockThemeRepository();
   StreakRepository streakRepository = MockStreakRepository();
+  NavigationRepository navigationRepository = MockNavigationRepository();
 
   /// Not wired into the test store by default to prevent async dispatch
   /// interference with other middleware bootstrap tests. Use the isolated
@@ -36,6 +38,7 @@ class TestStoreFactory {
       streakRepository: streakRepository,
       weeklyIntentRepository: weeklyIntentRepository,
       dayRepository: dayRepository,
+      navigationRepository: navigationRepository,
     ).createStore(initialState: initialState);
   }
 }

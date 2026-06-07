@@ -32,7 +32,6 @@ class HomePage extends StatelessWidget {
           backgroundColor: AppColors.bg(context),
           body: _Body(
             vm: vm,
-            onResetToday: () => HomePageViewModel.resetToday(store),
             initialTabIndex: store.state.navigationState.homeTabIndex,
           ),
         );
@@ -42,9 +41,8 @@ class HomePage extends StatelessWidget {
 }
 
 class _Body extends StatefulWidget {
-  const _Body({required this.vm, required this.onResetToday, required this.initialTabIndex});
+  const _Body({required this.vm, required this.initialTabIndex});
   final HomePageViewModel vm;
-  final VoidCallback onResetToday;
   final int initialTabIndex;
 
   @override
@@ -160,7 +158,6 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
                 key: _appBarKey,
                 vm: widget.vm,
                 tabController: _gridTabController,
-                onResetToday: widget.onResetToday,
               ),
             ),
             const SizedBox(height: Margins.spacingBase),

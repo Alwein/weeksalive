@@ -9,13 +9,13 @@ import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/domain/life_week_grid.dart';
 import 'package:weeksalive/presentation/home/view_model/home_page_view_model.dart';
 import 'package:weeksalive/presentation/home/widgets/fire_rive_player.dart';
+import 'package:weeksalive/presentation/profile/profile_page.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class HomeAppBar extends StatefulWidget {
-  const HomeAppBar({super.key, required this.vm, required this.tabController, required this.onResetToday});
+  const HomeAppBar({super.key, required this.vm, required this.tabController});
   final HomePageViewModel vm;
   final TabController tabController;
-  final VoidCallback onResetToday;
 
   static const Duration streakHoldDuration = Duration(seconds: 1);
   static const Duration streakTransitionDuration = Duration(milliseconds: 350);
@@ -90,7 +90,7 @@ class HomeAppBarState extends State<HomeAppBar> with SingleTickerProviderStateMi
                 fireAnimation: _fireController,
               ),
               const SizedBox(width: Margins.spacingS),
-              _ProfileButton(onResetToday: widget.onResetToday),
+              const _ProfileButton(),
             ],
           ),
         ],
@@ -215,8 +215,7 @@ class _StreaksButton extends StatelessWidget {
 }
 
 class _ProfileButton extends StatelessWidget {
-  const _ProfileButton({required this.onResetToday});
-  final VoidCallback onResetToday;
+  const _ProfileButton();
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +228,7 @@ class _ProfileButton extends StatelessWidget {
         backgroundColor: AppColors.bgSoft(context),
         surfaceTintColor: Colors.transparent,
       ),
-      onPressed: onResetToday,
+      onPressed: () => Navigator.of(context).push(ProfilePage.route()),
       icon: Icon(MingCuteIcons.mgc_user_4_fill, color: AppColors.content(context)),
     );
   }
