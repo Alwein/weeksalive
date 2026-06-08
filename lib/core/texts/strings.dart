@@ -357,4 +357,14 @@ class Strings {
   // day resume bottom sheet
   static String get dayResumeBottomSheetEmptySubtitle => "No entry for this day.";
   static String get startTracking => "Start tracking";
+
+  // profile page
+  static String get profilePageTitle => "Profile";
+  static String get profilePageBorn => "BORN";
+  static String get profilePageAge => "AGE";
+  static String get profilePageLifespan => "LIFESPAN";
+  static String get profilePageGender => "GENDER";
+  static String profilePageLifespanValue(int lifespan) => "$lifespan years";
+  static String get profilePageYearsAhead => "YEARS AHEAD";
+  static String get profilePagePersonalInformations => "Personal informations";
 }

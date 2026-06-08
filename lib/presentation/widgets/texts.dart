@@ -43,6 +43,7 @@ class Texts {
     int? maxLines,
     TextOverflow? overflow,
     bool? softWrap,
+    Color? color,
   }) {
     return _StyledText(
       text: text,
@@ -51,6 +52,7 @@ class Texts {
       maxLines: maxLines,
       overflow: overflow,
       softWrap: softWrap,
+      color: color,
     );
   }
 

@@ -9,3 +9,10 @@ sealed class UserState with _$UserState {
   const factory UserState.success(User? user) = UserStateSuccess;
   const factory UserState.error(String message) = UserStateError;
 }
+
+extension UserStateExt on UserState {
+  User? get userOrNull => switch (this) {
+    UserStateSuccess(:final user) => user,
+    _ => null,
+  };
+}
