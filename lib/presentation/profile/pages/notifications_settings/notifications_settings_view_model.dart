@@ -2,7 +2,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:redux/redux.dart';
 import 'package:weeksalive/domain/notifications/notification_slots.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
-import 'package:weeksalive/presentation/redux/user/user_state.dart';
 
 part 'notifications_settings_view_model.freezed.dart';
 
@@ -15,9 +14,7 @@ abstract class NotificationsSettingsViewModel with _$NotificationsSettingsViewMo
   }) = _NotificationsSettingsViewModel;
 
   factory NotificationsSettingsViewModel.create(Store<AppState> store) {
-    final slots = NotificationSlots.fromNotificationTimes(
-      store.state.userState.userOrNull?.notificationTimes ?? const [],
-    );
+    final slots = store.state.pushNotificationState.slots;
 
     return NotificationsSettingsViewModel(
       notificationsEnabled: store.state.pushNotificationState.pushNotificationEnabled,

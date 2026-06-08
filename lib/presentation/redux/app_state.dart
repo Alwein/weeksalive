@@ -34,7 +34,7 @@ abstract class AppState with _$AppState {
       streakState: const StreakState(),
       weeklyIntentState: WeeklyIntentState.initial(),
       dayState: DayState.initial(),
-      pushNotificationState: const PushNotificationState(),
+      pushNotificationState: PushNotificationState(),
       navigationState: const NavigationState(),
     );
   }

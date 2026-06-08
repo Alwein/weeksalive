@@ -179,7 +179,7 @@ class Strings {
 
   static String get onboardingWeekBeginTitle => "When do you prefer the week to begin?";
   static String get onboardingWeekBeginSubtitle => "When a new dot is added to your life grid.";
-  static String get onboardingWeekBeginMonday => "On every monday";
+  static String get onboardingWeekBeginMonday => "Default (every Monday)";
   static String onboardingWeekBeginBirthday(String weekday) => "On your birth day (every $weekday)";
   static String get onboardingWeekBeginCustom => "Custom";
   static String get onboardingWeekBeginFooter => "You can change this anytime.";
@@ -384,4 +384,5 @@ class Strings {
 
   // notifications settings page
   static String get notificationsSettingsPageTitle => "Notifications";
+  static String get notificationsSettingsPageDailySlots => "Daily check-in";
 }

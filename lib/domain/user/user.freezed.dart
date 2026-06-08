@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$User {
 
- String get id; String get name; DateTime get dateOfBirth; Gender get gender; int get lifespan; List<TimeOfDay> get notificationTimes; DateTime get createdAt;/// ISO weekday (1 = Monday … 7 = Sunday).
+ String get id; String get name; DateTime get dateOfBirth; Gender get gender; int get lifespan; DateTime get createdAt;/// ISO weekday (1 = Monday … 7 = Sunday).
  int get weekStartDay;
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
@@ -26,16 +26,16 @@ $UserCopyWith<User> get copyWith => _$UserCopyWithImpl<User>(this as User, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is User&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.dateOfBirth, dateOfBirth) || other.dateOfBirth == dateOfBirth)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.lifespan, lifespan) || other.lifespan == lifespan)&&const DeepCollectionEquality().equals(other.notificationTimes, notificationTimes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.weekStartDay, weekStartDay) || other.weekStartDay == weekStartDay));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is User&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.dateOfBirth, dateOfBirth) || other.dateOfBirth == dateOfBirth)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.lifespan, lifespan) || other.lifespan == lifespan)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.weekStartDay, weekStartDay) || other.weekStartDay == weekStartDay));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,dateOfBirth,gender,lifespan,const DeepCollectionEquality().hash(notificationTimes),createdAt,weekStartDay);
+int get hashCode => Object.hash(runtimeType,id,name,dateOfBirth,gender,lifespan,createdAt,weekStartDay);
 
 @override
 String toString() {
-  return 'User(id: $id, name: $name, dateOfBirth: $dateOfBirth, gender: $gender, lifespan: $lifespan, notificationTimes: $notificationTimes, createdAt: $createdAt, weekStartDay: $weekStartDay)';
+  return 'User(id: $id, name: $name, dateOfBirth: $dateOfBirth, gender: $gender, lifespan: $lifespan, createdAt: $createdAt, weekStartDay: $weekStartDay)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $UserCopyWith<$Res>  {
   factory $UserCopyWith(User value, $Res Function(User) _then) = _$UserCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, DateTime dateOfBirth, Gender gender, int lifespan, List<TimeOfDay> notificationTimes, DateTime createdAt, int weekStartDay
+ String id, String name, DateTime dateOfBirth, Gender gender, int lifespan, DateTime createdAt, int weekStartDay
 });
 
 
@@ -63,15 +63,14 @@ class _$UserCopyWithImpl<$Res>
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? dateOfBirth = null,Object? gender = null,Object? lifespan = null,Object? notificationTimes = null,Object? createdAt = null,Object? weekStartDay = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? dateOfBirth = null,Object? gender = null,Object? lifespan = null,Object? createdAt = null,Object? weekStartDay = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,dateOfBirth: null == dateOfBirth ? _self.dateOfBirth : dateOfBirth // ignore: cast_nullable_to_non_nullable
 as DateTime,gender: null == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
 as Gender,lifespan: null == lifespan ? _self.lifespan : lifespan // ignore: cast_nullable_to_non_nullable
-as int,notificationTimes: null == notificationTimes ? _self.notificationTimes : notificationTimes // ignore: cast_nullable_to_non_nullable
-as List<TimeOfDay>,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,weekStartDay: null == weekStartDay ? _self.weekStartDay : weekStartDay // ignore: cast_nullable_to_non_nullable
 as int,
   ));
@@ -158,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  DateTime dateOfBirth,  Gender gender,  int lifespan,  List<TimeOfDay> notificationTimes,  DateTime createdAt,  int weekStartDay)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  DateTime dateOfBirth,  Gender gender,  int lifespan,  DateTime createdAt,  int weekStartDay)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
-return $default(_that.id,_that.name,_that.dateOfBirth,_that.gender,_that.lifespan,_that.notificationTimes,_that.createdAt,_that.weekStartDay);case _:
+return $default(_that.id,_that.name,_that.dateOfBirth,_that.gender,_that.lifespan,_that.createdAt,_that.weekStartDay);case _:
   return orElse();
 
 }
@@ -179,10 +178,10 @@ return $default(_that.id,_that.name,_that.dateOfBirth,_that.gender,_that.lifespa
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  DateTime dateOfBirth,  Gender gender,  int lifespan,  List<TimeOfDay> notificationTimes,  DateTime createdAt,  int weekStartDay)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  DateTime dateOfBirth,  Gender gender,  int lifespan,  DateTime createdAt,  int weekStartDay)  $default,) {final _that = this;
 switch (_that) {
 case _User():
-return $default(_that.id,_that.name,_that.dateOfBirth,_that.gender,_that.lifespan,_that.notificationTimes,_that.createdAt,_that.weekStartDay);case _:
+return $default(_that.id,_that.name,_that.dateOfBirth,_that.gender,_that.lifespan,_that.createdAt,_that.weekStartDay);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +198,10 @@ return $default(_that.id,_that.name,_that.dateOfBirth,_that.gender,_that.lifespa
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  DateTime dateOfBirth,  Gender gender,  int lifespan,  List<TimeOfDay> notificationTimes,  DateTime createdAt,  int weekStartDay)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  DateTime dateOfBirth,  Gender gender,  int lifespan,  DateTime createdAt,  int weekStartDay)?  $default,) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
-return $default(_that.id,_that.name,_that.dateOfBirth,_that.gender,_that.lifespan,_that.notificationTimes,_that.createdAt,_that.weekStartDay);case _:
+return $default(_that.id,_that.name,_that.dateOfBirth,_that.gender,_that.lifespan,_that.createdAt,_that.weekStartDay);case _:
   return null;
 
 }
@@ -214,7 +213,7 @@ return $default(_that.id,_that.name,_that.dateOfBirth,_that.gender,_that.lifespa
 
 
 class _User implements User {
-  const _User({required this.id, required this.name, required this.dateOfBirth, required this.gender, required this.lifespan, required final  List<TimeOfDay> notificationTimes, required this.createdAt, this.weekStartDay = DateTime.monday}): _notificationTimes = notificationTimes;
+  const _User({required this.id, required this.name, required this.dateOfBirth, required this.gender, required this.lifespan, required this.createdAt, this.weekStartDay = DateTime.monday});
   
 
 @override final  String id;
@@ -222,13 +221,6 @@ class _User implements User {
 @override final  DateTime dateOfBirth;
 @override final  Gender gender;
 @override final  int lifespan;
- final  List<TimeOfDay> _notificationTimes;
-@override List<TimeOfDay> get notificationTimes {
-  if (_notificationTimes is EqualUnmodifiableListView) return _notificationTimes;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_notificationTimes);
-}
-
 @override final  DateTime createdAt;
 /// ISO weekday (1 = Monday … 7 = Sunday).
 @override@JsonKey() final  int weekStartDay;
@@ -243,16 +235,16 @@ _$UserCopyWith<_User> get copyWith => __$UserCopyWithImpl<_User>(this, _$identit
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _User&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.dateOfBirth, dateOfBirth) || other.dateOfBirth == dateOfBirth)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.lifespan, lifespan) || other.lifespan == lifespan)&&const DeepCollectionEquality().equals(other._notificationTimes, _notificationTimes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.weekStartDay, weekStartDay) || other.weekStartDay == weekStartDay));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _User&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.dateOfBirth, dateOfBirth) || other.dateOfBirth == dateOfBirth)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.lifespan, lifespan) || other.lifespan == lifespan)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.weekStartDay, weekStartDay) || other.weekStartDay == weekStartDay));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,dateOfBirth,gender,lifespan,const DeepCollectionEquality().hash(_notificationTimes),createdAt,weekStartDay);
+int get hashCode => Object.hash(runtimeType,id,name,dateOfBirth,gender,lifespan,createdAt,weekStartDay);
 
 @override
 String toString() {
-  return 'User(id: $id, name: $name, dateOfBirth: $dateOfBirth, gender: $gender, lifespan: $lifespan, notificationTimes: $notificationTimes, createdAt: $createdAt, weekStartDay: $weekStartDay)';
+  return 'User(id: $id, name: $name, dateOfBirth: $dateOfBirth, gender: $gender, lifespan: $lifespan, createdAt: $createdAt, weekStartDay: $weekStartDay)';
 }
 
 
@@ -263,7 +255,7 @@ abstract mixin class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   factory _$UserCopyWith(_User value, $Res Function(_User) _then) = __$UserCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, DateTime dateOfBirth, Gender gender, int lifespan, List<TimeOfDay> notificationTimes, DateTime createdAt, int weekStartDay
+ String id, String name, DateTime dateOfBirth, Gender gender, int lifespan, DateTime createdAt, int weekStartDay
 });
 
 
@@ -280,15 +272,14 @@ class __$UserCopyWithImpl<$Res>
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? dateOfBirth = null,Object? gender = null,Object? lifespan = null,Object? notificationTimes = null,Object? createdAt = null,Object? weekStartDay = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? dateOfBirth = null,Object? gender = null,Object? lifespan = null,Object? createdAt = null,Object? weekStartDay = null,}) {
   return _then(_User(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,dateOfBirth: null == dateOfBirth ? _self.dateOfBirth : dateOfBirth // ignore: cast_nullable_to_non_nullable
 as DateTime,gender: null == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
 as Gender,lifespan: null == lifespan ? _self.lifespan : lifespan // ignore: cast_nullable_to_non_nullable
-as int,notificationTimes: null == notificationTimes ? _self._notificationTimes : notificationTimes // ignore: cast_nullable_to_non_nullable
-as List<TimeOfDay>,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,weekStartDay: null == weekStartDay ? _self.weekStartDay : weekStartDay // ignore: cast_nullable_to_non_nullable
 as int,
   ));

@@ -10,6 +10,7 @@ import 'package:weeksalive/app_purchase_config.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weeksalive/presentation/redux/store.dart';
 
 import 'firebase_options.dart';
@@ -27,7 +28,8 @@ Future<Store<AppState>> initializeApp() async {
 
   await initializeDateFormatting();
 
-  final pushNotificationRepository = PushNotificationRepository();
+  final sharedPreferences = await SharedPreferences.getInstance();
+  final pushNotificationRepository = PushNotificationRepository(preferences: sharedPreferences);
   await pushNotificationRepository.initialize();
 
   final remoteConfig = await _remoteConfig();

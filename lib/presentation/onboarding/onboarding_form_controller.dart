@@ -73,6 +73,7 @@ class OnboardingFormController extends ChangeNotifier {
   );
 
   NotificationSlots _slots = NotificationSlots.onboardingInitial();
+  NotificationSlots get slots => _slots;
   NotificationSlotState get slot1 => _slots.slot1;
   NotificationSlotState get slot2 => _slots.slot2;
 
@@ -182,12 +183,10 @@ class OnboardingFormController extends ChangeNotifier {
     final name = _name;
     final dateOfBirth = _dateOfBirth;
     final gender = _gender;
-    final times = notificationTimes;
 
     if (name == null || name.isEmpty) return null;
     if (dateOfBirth == null) return null;
     if (gender == null) return null;
-    if (times.isEmpty) return null;
 
     return User(
       id: id,
@@ -195,7 +194,6 @@ class OnboardingFormController extends ChangeNotifier {
       dateOfBirth: dateOfBirth,
       gender: gender,
       lifespan: _lifespan,
-      notificationTimes: times,
       createdAt: createdAt,
       weekStartDay: _weekStartDay,
     );

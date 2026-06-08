@@ -11,6 +11,7 @@ import 'package:weeksalive/data/theme/theme_repository.dart';
 import 'package:weeksalive/data/user/user_repository.dart';
 import 'package:weeksalive/data/weekly_intent/weekly_intent_repository.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
+import 'package:weeksalive/domain/notifications/notification_slots.dart';
 import 'package:weeksalive/domain/user/user.dart';
 import 'package:weeksalive/domain/weekly_intent/weekly_intent.dart';
 
@@ -32,8 +33,12 @@ class MockRemoteConfigRepository extends Mock implements RemoteConfigRepository 
 class MockPushNotificationRepository extends Mock implements PushNotificationRepository {
   MockPushNotificationRepository() {
     registerFallbackValue(<TimeOfDay>[]);
+    registerFallbackValue(NotificationSlots.defaults());
     when(() => areNotificationsEnabled()).thenAnswer((_) async => false);
     when(() => requestNotificationPermission()).thenAnswer((_) async => true);
+    when(() => getNotificationSlots()).thenAnswer((_) async => NotificationSlots.defaults());
+    when(() => setNotificationSlots(any())).thenAnswer((_) async {});
+    when(() => clearNotificationSlots()).thenAnswer((_) async {});
     when(() => scheduleNotifications(any())).thenAnswer((_) async {});
   }
 }

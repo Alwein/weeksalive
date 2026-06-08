@@ -6,8 +6,10 @@ import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/domain/notifications/notification_slots.dart';
 import 'package:weeksalive/presentation/profile/pages/notifications_settings/notifications_settings_view_model.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
 import 'package:weeksalive/presentation/widgets/notification_slot_card.dart';
 import 'package:weeksalive/presentation/widgets/primary_appbar.dart';
+import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class NotificationsSettingsPage extends StatelessWidget {
   const NotificationsSettingsPage({super.key});
@@ -52,6 +54,13 @@ class _NotificationsSettingsBodyState extends State<_NotificationsSettingsBody> 
     );
   }
 
+  void _updateSlots(NotificationSlots slots) {
+    setState(() => _slots = slots);
+    StoreProvider.of<AppState>(context, listen: false).dispatch(
+      UpdateNotificationSettingsAction(slots),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -60,24 +69,29 @@ class _NotificationsSettingsBodyState extends State<_NotificationsSettingsBody> 
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: Margins.spacingBase),
+          Texts.primaryRegularMedium(
+            Strings.notificationsSettingsPageDailySlots,
+            color: AppColors.contentSoft(context),
+          ),
+          const SizedBox(height: Margins.spacingBase),
           NotificationSlotCard(
             slot: _slots.slot1,
-            onToggle: (value) => setState(() {
-              _slots = _slots.copyWith(slot1: _slots.slot1.copyWith(enabled: value));
-            }),
-            onTimeChanged: (time) => setState(() {
-              _slots = _slots.copyWith(slot1: _slots.slot1.copyWith(time: time, enabled: true));
-            }),
+            onToggle: (value) => _updateSlots(
+              _slots.copyWith(slot1: _slots.slot1.copyWith(enabled: value)),
+            ),
+            onTimeChanged: (time) => _updateSlots(
+              _slots.copyWith(slot1: _slots.slot1.copyWith(time: time, enabled: true)),
+            ),
           ),
           const SizedBox(height: Margins.spacingS),
           NotificationSlotCard(
             slot: _slots.slot2,
-            onToggle: (value) => setState(() {
-              _slots = _slots.copyWith(slot2: _slots.slot2.copyWith(enabled: value));
-            }),
-            onTimeChanged: (time) => setState(() {
-              _slots = _slots.copyWith(slot2: _slots.slot2.copyWith(time: time, enabled: true));
-            }),
+            onToggle: (value) => _updateSlots(
+              _slots.copyWith(slot2: _slots.slot2.copyWith(enabled: value)),
+            ),
+            onTimeChanged: (time) => _updateSlots(
+              _slots.copyWith(slot2: _slots.slot2.copyWith(time: time, enabled: true)),
+            ),
           ),
         ],
       ),

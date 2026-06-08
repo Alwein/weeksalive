@@ -12,12 +12,20 @@ class NotificationSlotState {
       enabled: enabled ?? this.enabled,
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is NotificationSlotState &&
+          other.time.hour == time.hour &&
+          other.time.minute == time.minute &&
+          other.enabled == enabled;
+
+  @override
+  int get hashCode => Object.hash(time.hour, time.minute, enabled);
 }
 
 /// Two configurable daily notification slots.
-///
-/// The [User] model only stores enabled times as a flat list. This class
-/// provides the bidirectional mapping between that list and two UI slots.
 class NotificationSlots {
   static const defaultSlot1Time = TimeOfDay(hour: 18, minute: 0);
   static const defaultSlot2Time = TimeOfDay(hour: 21, minute: 0);
@@ -84,6 +92,39 @@ class NotificationSlots {
       slot2: slot2 ?? this.slot2,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'slot1': _slotToJson(slot1),
+    'slot2': _slotToJson(slot2),
+  };
+
+  factory NotificationSlots.fromJson(Map<String, dynamic> json) {
+    return NotificationSlots(
+      slot1: _slotFromJson(json['slot1'] as Map<String, dynamic>),
+      slot2: _slotFromJson(json['slot2'] as Map<String, dynamic>),
+    );
+  }
+
+  static Map<String, dynamic> _slotToJson(NotificationSlotState slot) => {
+    'hour': slot.time.hour,
+    'minute': slot.time.minute,
+    'enabled': slot.enabled,
+  };
+
+  static NotificationSlotState _slotFromJson(Map<String, dynamic> json) {
+    return NotificationSlotState(
+      time: TimeOfDay(hour: json['hour'] as int, minute: json['minute'] as int),
+      enabled: json['enabled'] as bool,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is NotificationSlots && other.slot1 == slot1 && other.slot2 == slot2;
+
+  @override
+  int get hashCode => Object.hash(slot1, slot2);
 
   static bool _matches(TimeOfDay a, TimeOfDay b) => a.hour == b.hour && a.minute == b.minute;
 

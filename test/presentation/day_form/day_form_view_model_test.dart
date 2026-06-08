@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weeksalive/domain/user/user.dart';
 import 'package:weeksalive/presentation/day_form/day_form_view_model.dart';
@@ -22,7 +21,6 @@ void main() {
           dateOfBirth: dateOfBirth,
           gender: Gender.male,
           lifespan: 90,
-          notificationTimes: const [TimeOfDay(hour: 9, minute: 0)],
           createdAt: DateTime(2024, 1, 1),
         );
 

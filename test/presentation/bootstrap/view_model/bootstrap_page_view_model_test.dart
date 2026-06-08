@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weeksalive/domain/user/user.dart';
 import 'package:weeksalive/presentation/bootstrap/view_model/bootstrap_page_view_model.dart';
@@ -41,7 +40,6 @@ void main() {
         dateOfBirth: DateTime(1990, 1, 1),
         gender: Gender.male,
         lifespan: 90,
-        notificationTimes: const [TimeOfDay(hour: 9, minute: 0)],
         createdAt: DateTime(2024, 1, 1),
       );
       final viewModel = buildViewModel(userState: UserState.success(user));

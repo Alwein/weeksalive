@@ -11,5 +11,14 @@ PushNotificationState pushNotificationReducer(PushNotificationState state, dynam
   if (action is PushNotificationEnabledLoadedAction) {
     return state.copyWith(pushNotificationEnabled: action.pushNotificationEnabled);
   }
+  if (action is NotificationSettingsLoadedAction) {
+    return state.copyWith(slots: action.slots);
+  }
+  if (action is PushNotificationBootstrapLoadedAction) {
+    return state.copyWith(
+      pushNotificationEnabled: action.pushNotificationEnabled,
+      slots: action.slots,
+    );
+  }
   return state;
 }

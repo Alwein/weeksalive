@@ -1,44 +1,86 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:weeksalive/domain/notifications/notification_slots.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
 import 'package:weeksalive/presentation/redux/user/user_actions.dart';
 
-import '../../../fixtures/user_fixtures.dart';
 import '../../../helpers/matchers.dart';
 import '../../../helpers/store_tester.dart';
 import '../../../helpers/test_app_state.dart';
+import '../../../helpers/test_store_factory.dart';
 import '../../../mocks.dart';
+
+Future<void> _dispatchBootstrapAndWaitForMiddleware() async {
+  await Future<void>.delayed(const Duration(milliseconds: 50));
+}
 
 void main() {
   group('BootstrapAction', () {
-    late StoreTester storeTester;
-    final pushRepo = MockPushNotificationRepository();
+    late MockPushNotificationRepository pushRepo;
+    late TestStoreFactory factory;
 
-    setUp(() => storeTester = StoreTester());
+    setUp(() {
+      pushRepo = MockPushNotificationRepository();
+      factory = TestStoreFactory()..pushNotificationRepository = pushRepo;
+    });
 
-    test('loads pushNotificationEnabled from the repository', () {
+    test('loads push notification state from the repository', () async {
       when(() => pushRepo.areNotificationsEnabled()).thenAnswer((_) async => true);
 
-      storeTester.givenStore(
-        initialAppState(),
-        configure: (f) => f.pushNotificationRepository = pushRepo,
+      final store = factory.initializeReduxStore(initialAppState());
+      await store.dispatch(BootstrapAction());
+      await _dispatchBootstrapAndWaitForMiddleware();
+
+      expect(store.state.pushNotificationState.pushNotificationEnabled, isTrue);
+      expect(store.state.pushNotificationState.slots, NotificationSlots.defaults());
+
+      store.teardown();
+    });
+
+    test('loads notification slots from the repository', () async {
+      const slots = NotificationSlots(
+        slot1: NotificationSlotState(time: TimeOfDay(hour: 8, minute: 0), enabled: true),
+        slot2: NotificationSlotState(time: TimeOfDay(hour: 20, minute: 30), enabled: false),
       );
+      when(() => pushRepo.getNotificationSlots()).thenAnswer((_) async => slots);
 
-      storeTester.whenDispatching(() => BootstrapAction());
+      final store = factory.initializeReduxStore(initialAppState());
+      await store.dispatch(BootstrapAction());
+      await _dispatchBootstrapAndWaitForMiddleware();
 
-      storeTester.thenExpectStatesInOrder([
-        stateWith((s) => s.pushNotificationState.pushNotificationEnabled, isTrue),
-      ]);
+      expect(store.state.pushNotificationState.slots, slots);
+
+      store.teardown();
+    });
+
+    test('schedules notifications on bootstrap', () async {
+      const slots = NotificationSlots(
+        slot1: NotificationSlotState(time: TimeOfDay(hour: 8, minute: 0), enabled: true),
+        slot2: NotificationSlotState(time: TimeOfDay(hour: 21, minute: 0), enabled: false),
+      );
+      when(() => pushRepo.getNotificationSlots()).thenAnswer((_) async => slots);
+
+      final store = factory.initializeReduxStore(initialAppState());
+      await store.dispatch(BootstrapAction());
+      await _dispatchBootstrapAndWaitForMiddleware();
+
+      final captured = verify(() => pushRepo.scheduleNotifications(captureAny())).captured.single as List<TimeOfDay>;
+      expect(captured, [const TimeOfDay(hour: 8, minute: 0)]);
+
+      store.teardown();
     });
   });
 
   group('RequestNotificationPermissionAction', () {
     late StoreTester storeTester;
-    final pushRepo = MockPushNotificationRepository();
+    late MockPushNotificationRepository pushRepo;
 
-    setUp(() => storeTester = StoreTester());
+    setUp(() {
+      storeTester = StoreTester();
+      pushRepo = MockPushNotificationRepository();
+    });
 
     test('calls requestNotificationPermission on the repository', () async {
       when(() => pushRepo.requestNotificationPermission()).thenAnswer((_) async => true);
@@ -86,86 +128,108 @@ void main() {
     });
   });
 
-  group('SetUserAction — notification scheduling', () {
+  group('UpdateNotificationSettingsAction', () {
     late StoreTester storeTester;
-    final pushRepo = MockPushNotificationRepository();
+    late MockPushNotificationRepository pushRepo;
 
-    setUp(() => storeTester = StoreTester());
+    setUp(() {
+      storeTester = StoreTester();
+      pushRepo = MockPushNotificationRepository();
+    });
 
-    test('schedules notifications with the user notificationTimes on SetUserAction', () async {
-      final times = [const TimeOfDay(hour: 8, minute: 0), const TimeOfDay(hour: 20, minute: 30)];
-      final user = userFixture(notificationTimes: times);
-
-      when(() => pushRepo.scheduleNotifications(any())).thenAnswer((_) async {});
+    test('persists and schedules notifications with the new slots', () async {
+      const slots = NotificationSlots(
+        slot1: NotificationSlotState(time: TimeOfDay(hour: 8, minute: 0), enabled: true),
+        slot2: NotificationSlotState(time: TimeOfDay(hour: 20, minute: 30), enabled: true),
+      );
 
       storeTester.givenStore(
         initialAppState(),
         configure: (f) => f.pushNotificationRepository = pushRepo,
       );
 
-      storeTester.whenDispatching(() => SetUserAction(user));
+      storeTester.whenDispatching(() => const UpdateNotificationSettingsAction(slots));
 
       await storeTester.thenExpectNothing();
 
+      verify(() => pushRepo.setNotificationSlots(slots)).called(1);
       final captured = verify(() => pushRepo.scheduleNotifications(captureAny())).captured.single as List<TimeOfDay>;
-      expect(captured, times);
+      expect(captured, slots.toNotificationTimes());
     });
 
-    test('schedules notifications once per SetUserAction dispatch', () async {
-      final user = userFixture();
-      when(() => pushRepo.scheduleNotifications(any())).thenAnswer((_) async {});
+    test('updates state with the new slots', () {
+      const slots = NotificationSlots(
+        slot1: NotificationSlotState(time: TimeOfDay(hour: 9, minute: 15), enabled: true),
+        slot2: NotificationSlotState(time: TimeOfDay(hour: 21, minute: 0), enabled: false),
+      );
 
       storeTester.givenStore(
         initialAppState(),
         configure: (f) => f.pushNotificationRepository = pushRepo,
       );
 
-      storeTester.whenDispatching(() => SetUserAction(user));
+      storeTester.whenDispatching(() => const UpdateNotificationSettingsAction(slots));
 
-      await storeTester.thenExpectNothing();
-
-      verify(() => pushRepo.scheduleNotifications(any())).called(1);
-    });
-
-    test('reschedules with new times when SetUserAction is dispatched a second time', () async {
-      final firstTimes = [const TimeOfDay(hour: 9, minute: 0)];
-      final secondTimes = [const TimeOfDay(hour: 18, minute: 0), const TimeOfDay(hour: 21, minute: 0)];
-
-      when(() => pushRepo.scheduleNotifications(any())).thenAnswer((_) async {});
-
-      storeTester.givenStore(
-        initialAppState(),
-        configure: (f) => f.pushNotificationRepository = pushRepo,
-      );
-
-      storeTester.whenDispatchingAll([
-        () => SetUserAction(userFixture(notificationTimes: firstTimes)),
-        () => SetUserAction(userFixture(notificationTimes: secondTimes)),
+      storeTester.thenExpectStatesInOrder([
+        stateWith((s) => s.pushNotificationState.slots, slots),
       ]);
-
-      await storeTester.thenExpectNothing();
-
-      final calls = verify(() => pushRepo.scheduleNotifications(captureAny())).captured;
-      expect(calls, hasLength(2));
-      expect(calls[0], firstTimes);
-      expect(calls[1], secondTimes);
     });
 
-    test('schedules with empty list when user has no notification times', () async {
-      final user = userFixture(notificationTimes: []);
-      when(() => pushRepo.scheduleNotifications(any())).thenAnswer((_) async {});
+    test('schedules with empty list when all slots are disabled', () async {
+      const slots = NotificationSlots(
+        slot1: NotificationSlotState(time: TimeOfDay(hour: 18, minute: 0), enabled: false),
+        slot2: NotificationSlotState(time: TimeOfDay(hour: 21, minute: 0), enabled: false),
+      );
 
       storeTester.givenStore(
         initialAppState(),
         configure: (f) => f.pushNotificationRepository = pushRepo,
       );
 
-      storeTester.whenDispatching(() => SetUserAction(user));
+      storeTester.whenDispatching(() => const UpdateNotificationSettingsAction(slots));
 
       await storeTester.thenExpectNothing();
 
       final captured = verify(() => pushRepo.scheduleNotifications(captureAny())).captured.single as List<TimeOfDay>;
       expect(captured, isEmpty);
+    });
+  });
+
+  group('ClearUserAction', () {
+    late StoreTester storeTester;
+    late MockPushNotificationRepository pushRepo;
+
+    setUp(() {
+      storeTester = StoreTester();
+      pushRepo = MockPushNotificationRepository();
+    });
+
+    test('clears notification slots and cancels scheduled notifications', () async {
+      storeTester.givenStore(
+        initialAppState(),
+        configure: (f) => f.pushNotificationRepository = pushRepo,
+      );
+
+      storeTester.whenDispatching(() => const ClearUserAction());
+
+      await storeTester.thenExpectNothing();
+
+      verify(() => pushRepo.clearNotificationSlots()).called(1);
+      final captured = verify(() => pushRepo.scheduleNotifications(captureAny())).captured.single as List<TimeOfDay>;
+      expect(captured, isEmpty);
+    });
+
+    test('resets notification slots in state', () {
+      storeTester.givenStore(
+        initialAppState(),
+        configure: (f) => f.pushNotificationRepository = pushRepo,
+      );
+
+      storeTester.whenDispatching(() => const ClearUserAction());
+
+      storeTester.thenExpectStatesInOrder([
+        stateWith((s) => s.pushNotificationState.slots, NotificationSlots.defaults()),
+      ]);
     });
   });
 }

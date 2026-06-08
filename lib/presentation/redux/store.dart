@@ -29,7 +29,7 @@ Future<Store<AppState>> initializeReduxStore(
     userRepository: UserRepository(preferences: sharedPreferences),
     themeRepository: ThemeRepository(preferences: sharedPreferences),
     navigationRepository: NavigationRepository(preferences: sharedPreferences),
-    pushNotificationRepository: pushNotificationRepository ?? PushNotificationRepository(),
+    pushNotificationRepository: pushNotificationRepository ?? PushNotificationRepository(preferences: sharedPreferences),
     purchaseRepository: PurchaseRepository(dotenv: dotenv),
     streakRepository: StreakRepository(preferences: sharedPreferences),
     weeklyIntentRepository: WeeklyIntentRepository(preferences: sharedPreferences),

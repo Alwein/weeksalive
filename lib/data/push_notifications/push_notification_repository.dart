@@ -1,16 +1,23 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/domain/notifications/notification_slots.dart';
 
 class PushNotificationRepository {
+  PushNotificationRepository({SharedPreferences? preferences}) : _preferences = preferences;
+
+  final SharedPreferences? _preferences;
   final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
 
   static const _channelId = 'weeksalive_daily';
+  static const _notificationSlotsKey = 'notification_slots';
   static const _channelName = 'Daily reminders';
   static const dailyReminderPayload = 'daily_reminder';
 
@@ -53,6 +60,20 @@ class PushNotificationRepository {
       return result ?? false;
     }
     return true;
+  }
+
+  Future<NotificationSlots> getNotificationSlots() async {
+    final json = _preferences?.getString(_notificationSlotsKey);
+    if (json == null) return NotificationSlots.defaults();
+    return NotificationSlots.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  }
+
+  Future<void> setNotificationSlots(NotificationSlots slots) async {
+    await _preferences?.setString(_notificationSlotsKey, jsonEncode(slots.toJson()));
+  }
+
+  Future<void> clearNotificationSlots() async {
+    await _preferences?.remove(_notificationSlotsKey);
   }
 
   Future<bool> requestNotificationPermission() async {

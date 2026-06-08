@@ -25,12 +25,12 @@ $NotificationsSettingsViewModelCopyWith<NotificationsSettingsViewModel> get copy
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationsSettingsViewModel&&(identical(other.notificationsEnabled, notificationsEnabled) || other.notificationsEnabled == notificationsEnabled)&&(identical(other.dailySlot1, dailySlot1) || other.dailySlot1 == dailySlot1)&&(identical(other.dailySlot2, dailySlot2) || other.dailySlot2 == dailySlot2));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationsSettingsViewModel&&(identical(other.notificationsEnabled, notificationsEnabled) || other.notificationsEnabled == notificationsEnabled)&&const DeepCollectionEquality().equals(other.dailySlot1, dailySlot1)&&const DeepCollectionEquality().equals(other.dailySlot2, dailySlot2));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,notificationsEnabled,dailySlot1,dailySlot2);
+int get hashCode => Object.hash(runtimeType,notificationsEnabled,const DeepCollectionEquality().hash(dailySlot1),const DeepCollectionEquality().hash(dailySlot2));
 
 @override
 String toString() {
@@ -62,11 +62,11 @@ class _$NotificationsSettingsViewModelCopyWithImpl<$Res>
 
 /// Create a copy of NotificationsSettingsViewModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? notificationsEnabled = null,Object? dailySlot1 = null,Object? dailySlot2 = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? notificationsEnabled = null,Object? dailySlot1 = freezed,Object? dailySlot2 = freezed,}) {
   return _then(_self.copyWith(
 notificationsEnabled: null == notificationsEnabled ? _self.notificationsEnabled : notificationsEnabled // ignore: cast_nullable_to_non_nullable
-as bool,dailySlot1: null == dailySlot1 ? _self.dailySlot1 : dailySlot1 // ignore: cast_nullable_to_non_nullable
-as NotificationSlotState,dailySlot2: null == dailySlot2 ? _self.dailySlot2 : dailySlot2 // ignore: cast_nullable_to_non_nullable
+as bool,dailySlot1: freezed == dailySlot1 ? _self.dailySlot1 : dailySlot1 // ignore: cast_nullable_to_non_nullable
+as NotificationSlotState,dailySlot2: freezed == dailySlot2 ? _self.dailySlot2 : dailySlot2 // ignore: cast_nullable_to_non_nullable
 as NotificationSlotState,
   ));
 }
@@ -225,12 +225,12 @@ _$NotificationsSettingsViewModelCopyWith<_NotificationsSettingsViewModel> get co
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationsSettingsViewModel&&(identical(other.notificationsEnabled, notificationsEnabled) || other.notificationsEnabled == notificationsEnabled)&&(identical(other.dailySlot1, dailySlot1) || other.dailySlot1 == dailySlot1)&&(identical(other.dailySlot2, dailySlot2) || other.dailySlot2 == dailySlot2));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationsSettingsViewModel&&(identical(other.notificationsEnabled, notificationsEnabled) || other.notificationsEnabled == notificationsEnabled)&&const DeepCollectionEquality().equals(other.dailySlot1, dailySlot1)&&const DeepCollectionEquality().equals(other.dailySlot2, dailySlot2));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,notificationsEnabled,dailySlot1,dailySlot2);
+int get hashCode => Object.hash(runtimeType,notificationsEnabled,const DeepCollectionEquality().hash(dailySlot1),const DeepCollectionEquality().hash(dailySlot2));
 
 @override
 String toString() {
@@ -262,11 +262,11 @@ class __$NotificationsSettingsViewModelCopyWithImpl<$Res>
 
 /// Create a copy of NotificationsSettingsViewModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? notificationsEnabled = null,Object? dailySlot1 = null,Object? dailySlot2 = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? notificationsEnabled = null,Object? dailySlot1 = freezed,Object? dailySlot2 = freezed,}) {
   return _then(_NotificationsSettingsViewModel(
 notificationsEnabled: null == notificationsEnabled ? _self.notificationsEnabled : notificationsEnabled // ignore: cast_nullable_to_non_nullable
-as bool,dailySlot1: null == dailySlot1 ? _self.dailySlot1 : dailySlot1 // ignore: cast_nullable_to_non_nullable
-as NotificationSlotState,dailySlot2: null == dailySlot2 ? _self.dailySlot2 : dailySlot2 // ignore: cast_nullable_to_non_nullable
+as bool,dailySlot1: freezed == dailySlot1 ? _self.dailySlot1 : dailySlot1 // ignore: cast_nullable_to_non_nullable
+as NotificationSlotState,dailySlot2: freezed == dailySlot2 ? _self.dailySlot2 : dailySlot2 // ignore: cast_nullable_to_non_nullable
 as NotificationSlotState,
   ));
 }

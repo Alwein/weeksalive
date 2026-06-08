@@ -11,6 +11,7 @@ import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_steps.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_progress_bar.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
 import 'package:weeksalive/presentation/redux/user/user_actions.dart';
 import 'package:weeksalive/presentation/redux/weekly_intent/weekly_intent_actions.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
@@ -61,20 +62,18 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   void _submit() {
+    if (_controller.notificationTimes.isEmpty) return;
+
     final user = _controller.buildUser(
       id: const Uuid().v4(),
       createdAt: DateTime.now(),
     );
     if (user == null) return;
 
-    StoreProvider.of<AppState>(context, listen: false).dispatch(
-      SetUserAction(user),
-    );
-
-    StoreProvider.of<AppState>(
-      context,
-      listen: false,
-    ).dispatch(SetWeeklyIntentSelectionAction(_controller.selectedIntentIds.toList()));
+    final store = StoreProvider.of<AppState>(context, listen: false);
+    store.dispatch(SetUserAction(user));
+    store.dispatch(UpdateNotificationSettingsAction(_controller.slots));
+    store.dispatch(SetWeeklyIntentSelectionAction(_controller.selectedIntentIds.toList()));
   }
 
   @override
