@@ -378,5 +378,4 @@ class Strings {
   static String get editProfilePageDateOfBirth => "Date of birth";
   static String get editProfilePageGender => "Gender";
   static String get editProfilePageLifespan => "Lifespan";
-  static String get value => "Value";
 }

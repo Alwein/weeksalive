@@ -44,6 +44,8 @@ class EditProfileFormController extends ChangeNotifier {
       _gender != originalGender ||
       _lifespan != originalLifespan;
 
+  bool get canSave => _name.isNotEmpty;
+
   void setName(String value) {
     final trimmed = value.trim();
     if (_name == trimmed) return;

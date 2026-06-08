@@ -19,7 +19,7 @@ import 'package:weeksalive/presentation/widgets/primary_appbar.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/show_custom_date_picker.dart';
 
-class EditProfilePage extends StatelessWidget {
+class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
 
   static Route<void> route() {
@@ -27,6 +27,19 @@ class EditProfilePage extends StatelessWidget {
       fullscreenDialog: true,
       builder: (context) => const EditProfilePage(),
     );
+  }
+
+  @override
+  State<EditProfilePage> createState() => _EditProfilePageState();
+}
+
+class _EditProfilePageState extends State<EditProfilePage> {
+  EditProfileFormController? _controller;
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
   }
 
   @override
@@ -38,13 +51,13 @@ class EditProfilePage extends StatelessWidget {
         converter: (store) => store.state.userState.userOrNull,
         builder: (context, user) {
           if (user == null) return const SizedBox.shrink();
-          final controller = EditProfileFormController(
+          _controller ??= EditProfileFormController(
             originalName: user.name,
             originalDateOfBirth: user.dateOfBirth,
             originalGender: user.gender,
             originalLifespan: user.lifespan,
           );
-          return _Form(controller: controller);
+          return _Form(controller: _controller!);
         },
       ),
     );
@@ -122,7 +135,7 @@ class _FormState extends State<_Form> {
           const _SectionDivider(),
           PrimaryButton(
             text: Strings.saveChanges,
-            onPressed: _controller.isDirty ? _saveChanges : null,
+            onPressed: _controller.canSave && _controller.isDirty ? _saveChanges : null,
           ),
         ],
       ),
@@ -231,13 +244,22 @@ class _DateOfBirthInput extends StatefulWidget {
 }
 
 class _DateOfBirthInputState extends State<_DateOfBirthInput> {
-  final TextEditingController _textController = TextEditingController();
+  late DateTime _selectedDate;
+  late final TextEditingController _textController;
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _textController.text = formatToInput(widget.initialValue);
-    });
+    _selectedDate = widget.initialValue;
+    _textController = TextEditingController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_textController.text.isEmpty) {
+      _textController.text = formatToInput(_selectedDate);
+    }
   }
 
   @override
@@ -249,14 +271,14 @@ class _DateOfBirthInputState extends State<_DateOfBirthInput> {
   void selectDate() async {
     final newDate = await showCustomDatePicker(
       context,
-      initialDate: widget.initialValue,
+      initialDate: _selectedDate,
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
     );
     if (newDate != null) {
+      setState(() => _selectedDate = newDate);
       widget.onChanged(newDate);
       _textController.text = formatToInput(newDate);
-      setState(() {});
     }
   }
 
@@ -362,7 +384,7 @@ class _LifespanInputState extends State<_LifespanInput> {
     return LifespanSlider(
       value: _value,
       min: widget.min,
-      label: Strings.value,
+      label: null,
       onChanged: (v) {
         setState(() => _value = v);
         widget.onChanged(v);
