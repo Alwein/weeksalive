@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 import 'package:rive_native/rive_native.dart' as rive_native;
-import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
-import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/rive_theme_mixin.dart';
+import 'package:weeksalive/presentation/widgets/lifespan_slider.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 base class _LifespanScrubController extends RiveWidgetController {
@@ -184,9 +183,10 @@ class _Step10LifespanContentState extends State<_Step10LifespanContent> with Riv
                 children: [
                   Texts.xlBold(Strings.onboarding08Title),
                   const SizedBox(height: Margins.spacingM),
-                  _LifespanSlider(
+                  LifespanSlider(
                     value: controller.lifespan,
                     min: controller.currentAge,
+                    label: Strings.onboarding08LifespanLabel,
                     onChanged: (v) {
                       controller.setLifespan(v);
                       _onSliderChanged(v);
@@ -211,61 +211,6 @@ class _Step10LifespanContentState extends State<_Step10LifespanContent> with Riv
           ),
         ],
       ),
-    );
-  }
-}
-
-class _LifespanSlider extends StatefulWidget {
-  const _LifespanSlider({required this.value, required this.min, required this.onChanged});
-
-  final int value;
-  final int min;
-  final ValueChanged<int> onChanged;
-
-  @override
-  State<_LifespanSlider> createState() => _LifespanSliderState();
-}
-
-class _LifespanSliderState extends State<_LifespanSlider> {
-  static const int _max = 130;
-
-  int? _lastSoundValue;
-
-  void _handleChanged(double v) {
-    final rounded = v.round();
-    if (rounded != _lastSoundValue) {
-      _lastSoundValue = rounded;
-      SensorialFeedback.sliderChanged();
-    }
-    widget.onChanged(rounded);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final effectiveMin = widget.min.clamp(0, _max - 1);
-    final effectiveValue = widget.value.clamp(effectiveMin, _max);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Expanded(child: Texts.primaryMedium(Strings.onboarding08LifespanLabel)),
-            Texts.primaryMedium('$effectiveValue years'),
-          ],
-        ),
-        const SizedBox(height: Margins.spacingM),
-        Slider(
-          padding: EdgeInsets.zero,
-          min: effectiveMin.toDouble(),
-          max: _max.toDouble(),
-          divisions: _max - effectiveMin,
-          value: effectiveValue.toDouble(),
-          onChanged: _handleChanged,
-          thumbColor: AppColors.content(context),
-          activeColor: AppColors.content(context),
-          inactiveColor: AppColors.bgSoft(context),
-        ),
-      ],
     );
   }
 }

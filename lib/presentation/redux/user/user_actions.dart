@@ -13,3 +13,17 @@ class UserLoadedAction {
   final User? user;
   const UserLoadedAction(this.user);
 }
+
+class UpdateUserAction {
+  final String name;
+  final DateTime dateOfBirth;
+  final Gender gender;
+  final int lifespan;
+
+  const UpdateUserAction({
+    required this.name,
+    required this.dateOfBirth,
+    required this.gender,
+    required this.lifespan,
+  });
+}

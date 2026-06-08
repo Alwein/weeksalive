@@ -15,6 +15,7 @@ class Strings {
   static String get editName => "Edit name";
   static String get editList => "Edit list";
   static String get edit => "Edit";
+  static String get saveChanges => "Save changes";
 
   // weeksalive
 
@@ -366,5 +367,16 @@ class Strings {
   static String get profilePageGender => "GENDER";
   static String profilePageLifespanValue(int lifespan) => "$lifespan years";
   static String get profilePageYearsAhead => "YEARS AHEAD";
-  static String get profilePagePersonalInformations => "Personal informations";
+  static String get profilePagePreferences => "PREFERENCES";
+  static String get profilePageNotifications => "Notifications";
+  static String get profilePageWeeklyIntentions => "Weekly intentions";
+  static String get profilePageWeekBegin => "Week begin";
+
+  // edit profile page
+  static String get editProfilePageTitle => "Edit profile";
+  static String get editProfilePageName => "Name";
+  static String get editProfilePageDateOfBirth => "Date of birth";
+  static String get editProfilePageGender => "Gender";
+  static String get editProfilePageLifespan => "Lifespan";
+  static String get value => "Value";
 }

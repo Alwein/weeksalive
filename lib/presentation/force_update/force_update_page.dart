@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/app_links.dart';
@@ -7,7 +8,6 @@ import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/widgets/primary_appbar.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ForceUpdatePage extends StatelessWidget {
   const ForceUpdatePage({super.key});
@@ -15,7 +15,7 @@ class ForceUpdatePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const PrimaryAppBar(),
+      appBar: PrimaryAppBar(title: Strings.appName),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(Margins.spacingM),
@@ -47,7 +47,7 @@ class ForceUpdatePage extends StatelessWidget {
               PrimaryButton(
                 text: Strings.forceUpdateButton,
                 onPressed: () async => await _openStore(),
-              )
+              ),
             ],
           ),
         ),

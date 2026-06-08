@@ -73,10 +73,10 @@ class _DayCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(300),
       child: Container(
         padding: const EdgeInsets.all(Margins.spacingS),
         decoration: BoxDecoration(
-          color: AppColors.bg(context),
           borderRadius: BorderRadius.circular(300),
           border: isToday ? Border.all(color: AppColors.strokeColor(context), width: 1) : null,
         ),

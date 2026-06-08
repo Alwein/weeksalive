@@ -8,8 +8,10 @@ import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
+import 'package:weeksalive/presentation/profile/pages/edit_profile_form.dart';
 import 'package:weeksalive/presentation/profile/profile_page_view_model.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/widgets/primary_appbar.dart';
 import 'package:weeksalive/presentation/widgets/secondary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
@@ -27,22 +29,21 @@ class ProfilePage extends StatelessWidget {
       builder: (context, viewModel) {
         return Scaffold(
           backgroundColor: AppColors.bg(context),
-          appBar: AppBar(
-            backgroundColor: AppColors.bg(context),
-            leading: const CloseButton(),
-            title: Texts.hugeBold(Strings.profilePageTitle),
-            centerTitle: false,
-          ),
-          body: Padding(
-            padding: const EdgeInsetsGeometry.symmetric(horizontal: Margins.spacingM),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: Margins.spacingM),
-                Texts.primaryLargeBold(Strings.profilePagePersonalInformations, color: AppColors.contentSoft(context)),
-                const SizedBox(height: Margins.spacingBase),
-                _ProfileCard(viewModel: viewModel),
-              ],
+          appBar: PrimaryAppBar(title: Strings.profilePageTitle),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsetsGeometry.symmetric(horizontal: Margins.spacingM),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: Margins.spacingBase),
+                  _ProfileCard(viewModel: viewModel),
+                  const SizedBox(height: Margins.spacingM),
+                  Texts.primaryRegularMedium(Strings.profilePagePreferences, color: AppColors.contentSoft(context)),
+                  const SizedBox(height: Margins.spacingBase),
+                  const _PreferencesCard(),
+                ],
+              ),
             ),
           ),
         );
@@ -57,20 +58,15 @@ class _ProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(Dimens.radiusL),
-        border: Border.all(color: AppColors.strokeColor(context), width: Dimens.strokeWidthS),
-      ),
-      clipBehavior: Clip.hardEdge,
+    return _ProfileCardContainer(
       child: Column(
         children: [
           _ProfileCardHeader(userName: viewModel.userName),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+            padding: const EdgeInsets.symmetric(horizontal: Margins.spacingBase),
             child: Column(
               children: [
-                const SizedBox(height: Margins.spacingM),
+                const SizedBox(height: Margins.spacingBase),
                 IntrinsicHeight(
                   child: Row(
                     spacing: Margins.spacingBase,
@@ -95,28 +91,28 @@ class _ProfileCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: Margins.spacingM),
+                const SizedBox(height: Margins.spacingBase),
                 const SmallDivider(width: double.infinity),
-                const SizedBox(height: Margins.spacingM),
+                const SizedBox(height: Margins.spacingBase),
                 _HorizontalCardSection(
                   title: Strings.profilePageBorn,
                   value: TimeUtils.formatDate(context, viewModel.dateOfBirth),
                 ),
-                const SizedBox(height: Margins.spacingM),
+                const SizedBox(height: Margins.spacingBase),
                 const SmallDivider(width: double.infinity),
-                const SizedBox(height: Margins.spacingM),
+                const SizedBox(height: Margins.spacingBase),
                 _HorizontalCardSection(
                   title: Strings.profilePageLifespan,
                   value: Strings.profilePageLifespanValue(viewModel.lifespan),
                 ),
-                const SizedBox(height: Margins.spacingM),
+                const SizedBox(height: Margins.spacingBase),
                 const SmallDivider(width: double.infinity),
-                const SizedBox(height: Margins.spacingM),
+                const SizedBox(height: Margins.spacingBase),
                 _HorizontalCardSection(
                   title: Strings.profilePageGender,
                   value: viewModel.gender.titleCase,
                 ),
-                const SizedBox(height: Margins.spacingM),
+                const SizedBox(height: Margins.spacingBase),
               ],
             ),
           ),
@@ -194,11 +190,102 @@ class _ProfileCardHeader extends StatelessWidget {
             backgroundColor: AppColors.bg(context),
             text: Strings.edit,
             icon: MingCuteIcons.mgc_pencil_line,
-            onPressed: () {
-              // TODO: Push to edit profile page
-            },
+            onPressed: () => Navigator.push(context, EditProfilePage.route()),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ProfileCardContainer extends StatelessWidget {
+  const _ProfileCardContainer({required this.child});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(Dimens.radiusL),
+        border: Border.all(color: AppColors.strokeColor(context), width: Dimens.strokeWidthS),
+      ),
+      clipBehavior: Clip.hardEdge,
+      child: child,
+    );
+  }
+}
+
+class _PreferencesCard extends StatelessWidget {
+  const _PreferencesCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return _ProfileCardContainer(
+      child: Column(
+        children: [
+          _PreferencesButton(
+            title: Strings.profilePageNotifications,
+            value: "On", // TODO:
+            onTap: () {
+              // TODO: Push to notifications page
+            },
+            icon: MingCuteIcons.mgc_right_line,
+          ),
+          const SmallDivider(width: double.infinity),
+          _PreferencesButton(
+            title: Strings.profilePageWeeklyIntentions,
+            value: "EXPLORE, CONNECT", // TODO:
+            onTap: () {
+              // TODO: Push to weekly intentions page
+            },
+            icon: MingCuteIcons.mgc_right_line,
+          ),
+          const SmallDivider(width: double.infinity),
+          _PreferencesButton(
+            title: Strings.profilePageWeekBegin,
+            value: "Monday", // TODO:
+            onTap: () {
+              // TODO: Push to week begin page
+            },
+            icon: MingCuteIcons.mgc_right_line,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PreferencesButton extends StatelessWidget {
+  const _PreferencesButton({required this.title, this.value, required this.onTap, this.icon});
+  final String title;
+  final String? value;
+  final VoidCallback? onTap;
+  final IconData? icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(Dimens.radiusL),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(Margins.spacingBase),
+          child: Row(
+            children: [
+              Expanded(
+                child: Texts.primaryBold(title),
+              ),
+              if (value != null)
+                Texts.primaryMediumSoft(
+                  context,
+                  value!,
+                ),
+              const SizedBox(width: Margins.spacingS),
+              if (icon != null) Icon(icon),
+            ],
+          ),
+        ),
       ),
     );
   }

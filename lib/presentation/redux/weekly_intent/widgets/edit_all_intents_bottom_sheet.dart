@@ -86,7 +86,7 @@ class _EditAllIntentsSheetState extends State<EditAllIntentsSheet> {
                         filled: true,
                         fillColor: AppColors.bgSoft(context),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(Dimens.radiusBase),
                           borderSide: BorderSide.none,
                         ),
                         contentPadding: const EdgeInsets.symmetric(
@@ -94,7 +94,6 @@ class _EditAllIntentsSheetState extends State<EditAllIntentsSheet> {
                           vertical: Margins.spacingBase,
                         ),
                       ),
-                      onSubmitted: (_) {},
                     ),
                   ),
                   const SizedBox(width: Margins.spacingS),

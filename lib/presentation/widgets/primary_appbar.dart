@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
-import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const PrimaryAppBar({super.key});
+  const PrimaryAppBar({super.key, required this.title});
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      centerTitle: true,
-      title: Texts.xlBold(Strings.appName),
+      centerTitle: false,
+      title: Texts.hugeBold(title),
       backgroundColor: AppColors.bg(context),
       surfaceTintColor: Colors.transparent,
     );

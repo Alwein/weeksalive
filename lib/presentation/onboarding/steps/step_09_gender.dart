@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
-import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
-import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/domain/user/user.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/rive_theme_mixin.dart';
+import 'package:weeksalive/presentation/widgets/gender_picker.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step09Gender extends OnboardingStep {
@@ -119,21 +118,12 @@ class _Step09GenderContentState extends State<_Step09GenderContent> with RiveThe
                         Strings.onboarding07Subtitle,
                       ),
                       const SizedBox(height: Margins.spacingM),
-                      Row(
-                        spacing: Margins.spacingBase,
-                        children: [
-                          for (final g in Gender.values)
-                            Expanded(
-                              child: _GenderChip(
-                                label: g.titleCase,
-                                selected: controller.gender == g,
-                                onTap: () {
-                                  controller.setGender(g);
-                                  _applyGender(g);
-                                },
-                              ),
-                            ),
-                        ],
+                      GenderPicker(
+                        selectedGender: controller.gender,
+                        onGenderSelected: (g) {
+                          controller.setGender(g);
+                          _applyGender(g);
+                        },
                       ),
                       const SizedBox(height: Margins.spacingM),
                     ],
@@ -143,45 +133,6 @@ class _Step09GenderContentState extends State<_Step09GenderContent> with RiveThe
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _GenderChip extends StatelessWidget {
-  const _GenderChip({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final bgColor = selected ? AppColors.content(context) : AppColors.bgSoft(context);
-    final fgColor = selected ? AppColors.contentMuted(context) : AppColors.contentSoftOnSoft(context);
-
-    return GestureDetector(
-      onTap: () {
-        SensorialFeedback.selectionChanged();
-        onTap();
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(vertical: Margins.spacingM),
-        decoration: BoxDecoration(
-          color: bgColor,
-          borderRadius: BorderRadius.circular(Margins.spacingBase),
-        ),
-        alignment: Alignment.center,
-        child: Texts.primaryMedium(
-          label,
-          color: fgColor,
-        ),
       ),
     );
   }
