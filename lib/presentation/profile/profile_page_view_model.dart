@@ -15,6 +15,7 @@ abstract class ProfilePageViewModel with _$ProfilePageViewModel {
     required int age,
     required int yearsAhead,
     required Gender gender,
+    required bool notificationsEnabled,
   }) = _ProfilePageViewModel;
 
   factory ProfilePageViewModel.create(Store<AppState> store, DateTime now) {
@@ -28,6 +29,7 @@ abstract class ProfilePageViewModel with _$ProfilePageViewModel {
       age: _userAge(user, now),
       yearsAhead: lifespan - age,
       gender: user?.gender ?? Gender.other,
+      notificationsEnabled: store.state.pushNotificationState.pushNotificationEnabled,
     );
   }
 }

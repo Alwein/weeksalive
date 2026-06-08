@@ -9,7 +9,7 @@ import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/domain/user/user.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
-import 'package:weeksalive/presentation/profile/pages/edit_profile_form_controller.dart';
+import 'package:weeksalive/presentation/profile/pages/edit_profile/edit_profile_form_controller.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_actions.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';

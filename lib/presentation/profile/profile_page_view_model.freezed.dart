@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProfilePageViewModel {
 
- String get userName; DateTime get dateOfBirth; int get lifespan; int get age; int get yearsAhead; Gender get gender;
+ String get userName; DateTime get dateOfBirth; int get lifespan; int get age; int get yearsAhead; Gender get gender; bool get notificationsEnabled;
 /// Create a copy of ProfilePageViewModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ProfilePageViewModelCopyWith<ProfilePageViewModel> get copyWith => _$ProfilePag
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfilePageViewModel&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.dateOfBirth, dateOfBirth) || other.dateOfBirth == dateOfBirth)&&(identical(other.lifespan, lifespan) || other.lifespan == lifespan)&&(identical(other.age, age) || other.age == age)&&(identical(other.yearsAhead, yearsAhead) || other.yearsAhead == yearsAhead)&&(identical(other.gender, gender) || other.gender == gender));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfilePageViewModel&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.dateOfBirth, dateOfBirth) || other.dateOfBirth == dateOfBirth)&&(identical(other.lifespan, lifespan) || other.lifespan == lifespan)&&(identical(other.age, age) || other.age == age)&&(identical(other.yearsAhead, yearsAhead) || other.yearsAhead == yearsAhead)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.notificationsEnabled, notificationsEnabled) || other.notificationsEnabled == notificationsEnabled));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userName,dateOfBirth,lifespan,age,yearsAhead,gender);
+int get hashCode => Object.hash(runtimeType,userName,dateOfBirth,lifespan,age,yearsAhead,gender,notificationsEnabled);
 
 @override
 String toString() {
-  return 'ProfilePageViewModel(userName: $userName, dateOfBirth: $dateOfBirth, lifespan: $lifespan, age: $age, yearsAhead: $yearsAhead, gender: $gender)';
+  return 'ProfilePageViewModel(userName: $userName, dateOfBirth: $dateOfBirth, lifespan: $lifespan, age: $age, yearsAhead: $yearsAhead, gender: $gender, notificationsEnabled: $notificationsEnabled)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ProfilePageViewModelCopyWith<$Res>  {
   factory $ProfilePageViewModelCopyWith(ProfilePageViewModel value, $Res Function(ProfilePageViewModel) _then) = _$ProfilePageViewModelCopyWithImpl;
 @useResult
 $Res call({
- String userName, DateTime dateOfBirth, int lifespan, int age, int yearsAhead, Gender gender
+ String userName, DateTime dateOfBirth, int lifespan, int age, int yearsAhead, Gender gender, bool notificationsEnabled
 });
 
 
@@ -62,7 +62,7 @@ class _$ProfilePageViewModelCopyWithImpl<$Res>
 
 /// Create a copy of ProfilePageViewModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? userName = null,Object? dateOfBirth = null,Object? lifespan = null,Object? age = null,Object? yearsAhead = null,Object? gender = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? userName = null,Object? dateOfBirth = null,Object? lifespan = null,Object? age = null,Object? yearsAhead = null,Object? gender = null,Object? notificationsEnabled = null,}) {
   return _then(_self.copyWith(
 userName: null == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
 as String,dateOfBirth: null == dateOfBirth ? _self.dateOfBirth : dateOfBirth // ignore: cast_nullable_to_non_nullable
@@ -70,7 +70,8 @@ as DateTime,lifespan: null == lifespan ? _self.lifespan : lifespan // ignore: ca
 as int,age: null == age ? _self.age : age // ignore: cast_nullable_to_non_nullable
 as int,yearsAhead: null == yearsAhead ? _self.yearsAhead : yearsAhead // ignore: cast_nullable_to_non_nullable
 as int,gender: null == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
-as Gender,
+as Gender,notificationsEnabled: null == notificationsEnabled ? _self.notificationsEnabled : notificationsEnabled // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -155,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String userName,  DateTime dateOfBirth,  int lifespan,  int age,  int yearsAhead,  Gender gender)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String userName,  DateTime dateOfBirth,  int lifespan,  int age,  int yearsAhead,  Gender gender,  bool notificationsEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProfilePageViewModel() when $default != null:
-return $default(_that.userName,_that.dateOfBirth,_that.lifespan,_that.age,_that.yearsAhead,_that.gender);case _:
+return $default(_that.userName,_that.dateOfBirth,_that.lifespan,_that.age,_that.yearsAhead,_that.gender,_that.notificationsEnabled);case _:
   return orElse();
 
 }
@@ -176,10 +177,10 @@ return $default(_that.userName,_that.dateOfBirth,_that.lifespan,_that.age,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String userName,  DateTime dateOfBirth,  int lifespan,  int age,  int yearsAhead,  Gender gender)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String userName,  DateTime dateOfBirth,  int lifespan,  int age,  int yearsAhead,  Gender gender,  bool notificationsEnabled)  $default,) {final _that = this;
 switch (_that) {
 case _ProfilePageViewModel():
-return $default(_that.userName,_that.dateOfBirth,_that.lifespan,_that.age,_that.yearsAhead,_that.gender);case _:
+return $default(_that.userName,_that.dateOfBirth,_that.lifespan,_that.age,_that.yearsAhead,_that.gender,_that.notificationsEnabled);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +197,10 @@ return $default(_that.userName,_that.dateOfBirth,_that.lifespan,_that.age,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String userName,  DateTime dateOfBirth,  int lifespan,  int age,  int yearsAhead,  Gender gender)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String userName,  DateTime dateOfBirth,  int lifespan,  int age,  int yearsAhead,  Gender gender,  bool notificationsEnabled)?  $default,) {final _that = this;
 switch (_that) {
 case _ProfilePageViewModel() when $default != null:
-return $default(_that.userName,_that.dateOfBirth,_that.lifespan,_that.age,_that.yearsAhead,_that.gender);case _:
+return $default(_that.userName,_that.dateOfBirth,_that.lifespan,_that.age,_that.yearsAhead,_that.gender,_that.notificationsEnabled);case _:
   return null;
 
 }
@@ -211,7 +212,7 @@ return $default(_that.userName,_that.dateOfBirth,_that.lifespan,_that.age,_that.
 
 
 class _ProfilePageViewModel implements ProfilePageViewModel {
-  const _ProfilePageViewModel({required this.userName, required this.dateOfBirth, required this.lifespan, required this.age, required this.yearsAhead, required this.gender});
+  const _ProfilePageViewModel({required this.userName, required this.dateOfBirth, required this.lifespan, required this.age, required this.yearsAhead, required this.gender, required this.notificationsEnabled});
   
 
 @override final  String userName;
@@ -220,6 +221,7 @@ class _ProfilePageViewModel implements ProfilePageViewModel {
 @override final  int age;
 @override final  int yearsAhead;
 @override final  Gender gender;
+@override final  bool notificationsEnabled;
 
 /// Create a copy of ProfilePageViewModel
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +233,16 @@ _$ProfilePageViewModelCopyWith<_ProfilePageViewModel> get copyWith => __$Profile
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProfilePageViewModel&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.dateOfBirth, dateOfBirth) || other.dateOfBirth == dateOfBirth)&&(identical(other.lifespan, lifespan) || other.lifespan == lifespan)&&(identical(other.age, age) || other.age == age)&&(identical(other.yearsAhead, yearsAhead) || other.yearsAhead == yearsAhead)&&(identical(other.gender, gender) || other.gender == gender));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProfilePageViewModel&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.dateOfBirth, dateOfBirth) || other.dateOfBirth == dateOfBirth)&&(identical(other.lifespan, lifespan) || other.lifespan == lifespan)&&(identical(other.age, age) || other.age == age)&&(identical(other.yearsAhead, yearsAhead) || other.yearsAhead == yearsAhead)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.notificationsEnabled, notificationsEnabled) || other.notificationsEnabled == notificationsEnabled));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userName,dateOfBirth,lifespan,age,yearsAhead,gender);
+int get hashCode => Object.hash(runtimeType,userName,dateOfBirth,lifespan,age,yearsAhead,gender,notificationsEnabled);
 
 @override
 String toString() {
-  return 'ProfilePageViewModel(userName: $userName, dateOfBirth: $dateOfBirth, lifespan: $lifespan, age: $age, yearsAhead: $yearsAhead, gender: $gender)';
+  return 'ProfilePageViewModel(userName: $userName, dateOfBirth: $dateOfBirth, lifespan: $lifespan, age: $age, yearsAhead: $yearsAhead, gender: $gender, notificationsEnabled: $notificationsEnabled)';
 }
 
 
@@ -251,7 +253,7 @@ abstract mixin class _$ProfilePageViewModelCopyWith<$Res> implements $ProfilePag
   factory _$ProfilePageViewModelCopyWith(_ProfilePageViewModel value, $Res Function(_ProfilePageViewModel) _then) = __$ProfilePageViewModelCopyWithImpl;
 @override @useResult
 $Res call({
- String userName, DateTime dateOfBirth, int lifespan, int age, int yearsAhead, Gender gender
+ String userName, DateTime dateOfBirth, int lifespan, int age, int yearsAhead, Gender gender, bool notificationsEnabled
 });
 
 
@@ -268,7 +270,7 @@ class __$ProfilePageViewModelCopyWithImpl<$Res>
 
 /// Create a copy of ProfilePageViewModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? userName = null,Object? dateOfBirth = null,Object? lifespan = null,Object? age = null,Object? yearsAhead = null,Object? gender = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? userName = null,Object? dateOfBirth = null,Object? lifespan = null,Object? age = null,Object? yearsAhead = null,Object? gender = null,Object? notificationsEnabled = null,}) {
   return _then(_ProfilePageViewModel(
 userName: null == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
 as String,dateOfBirth: null == dateOfBirth ? _self.dateOfBirth : dateOfBirth // ignore: cast_nullable_to_non_nullable
@@ -276,7 +278,8 @@ as DateTime,lifespan: null == lifespan ? _self.lifespan : lifespan // ignore: ca
 as int,age: null == age ? _self.age : age // ignore: cast_nullable_to_non_nullable
 as int,yearsAhead: null == yearsAhead ? _self.yearsAhead : yearsAhead // ignore: cast_nullable_to_non_nullable
 as int,gender: null == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
-as Gender,
+as Gender,notificationsEnabled: null == notificationsEnabled ? _self.notificationsEnabled : notificationsEnabled // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

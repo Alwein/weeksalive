@@ -8,7 +8,8 @@ import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
-import 'package:weeksalive/presentation/profile/pages/edit_profile_form.dart';
+import 'package:weeksalive/presentation/profile/pages/edit_profile/edit_profile_form.dart';
+import 'package:weeksalive/presentation/profile/pages/notifications_settings/notifications_settings_page.dart';
 import 'package:weeksalive/presentation/profile/profile_page_view_model.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/widgets/primary_appbar.dart';
@@ -41,7 +42,7 @@ class ProfilePage extends StatelessWidget {
                   const SizedBox(height: Margins.spacingM),
                   Texts.primaryRegularMedium(Strings.profilePagePreferences, color: AppColors.contentSoft(context)),
                   const SizedBox(height: Margins.spacingBase),
-                  const _PreferencesCard(),
+                  _PreferencesCard(viewModel: viewModel),
                 ],
               ),
             ),
@@ -216,7 +217,8 @@ class _ProfileCardContainer extends StatelessWidget {
 }
 
 class _PreferencesCard extends StatelessWidget {
-  const _PreferencesCard();
+  const _PreferencesCard({required this.viewModel});
+  final ProfilePageViewModel viewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -225,10 +227,10 @@ class _PreferencesCard extends StatelessWidget {
         children: [
           _PreferencesButton(
             title: Strings.profilePageNotifications,
-            value: "On", // TODO:
-            onTap: () {
-              // TODO: Push to notifications page
-            },
+            value: viewModel.notificationsEnabled
+                ? Strings.profilePageNotificationsEnabled
+                : Strings.profilePageNotificationsDisabled,
+            onTap: () => Navigator.push(context, NotificationsSettingsPage.route()),
             icon: MingCuteIcons.mgc_right_line,
           ),
           const SmallDivider(width: double.infinity),
@@ -243,7 +245,7 @@ class _PreferencesCard extends StatelessWidget {
           const SmallDivider(width: double.infinity),
           _PreferencesButton(
             title: Strings.profilePageWeekBegin,
-            value: "Monday", // TODO:
+            value: "MONDAY", // TODO:
             onTap: () {
               // TODO: Push to week begin page
             },
@@ -277,9 +279,9 @@ class _PreferencesButton extends StatelessWidget {
                 child: Texts.primaryBold(title),
               ),
               if (value != null)
-                Texts.primaryMediumSoft(
-                  context,
+                Texts.primaryXsMedium(
                   value!,
+                  color: AppColors.contentSoft(context),
                 ),
               const SizedBox(width: Margins.spacingS),
               if (icon != null) Icon(icon),

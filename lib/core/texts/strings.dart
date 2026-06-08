@@ -372,10 +372,16 @@ class Strings {
   static String get profilePageWeeklyIntentions => "Weekly intentions";
   static String get profilePageWeekBegin => "Week begin";
 
+  static String get profilePageNotificationsEnabled => "ON";
+  static String get profilePageNotificationsDisabled => "OFF";
+
   // edit profile page
   static String get editProfilePageTitle => "Edit profile";
   static String get editProfilePageName => "Name";
   static String get editProfilePageDateOfBirth => "Date of birth";
   static String get editProfilePageGender => "Gender";
   static String get editProfilePageLifespan => "Lifespan";
+
+  // notifications settings page
+  static String get notificationsSettingsPageTitle => "Notifications";
 }

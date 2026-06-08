@@ -1,21 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/domain/life_week_grid.dart';
+import 'package:weeksalive/domain/notifications/notification_slots.dart';
 import 'package:weeksalive/domain/user/user.dart';
-
-class NotificationSlotState {
-  final TimeOfDay time;
-  final bool enabled;
-
-  const NotificationSlotState({required this.time, required this.enabled});
-
-  NotificationSlotState copyWith({TimeOfDay? time, bool? enabled}) {
-    return NotificationSlotState(
-      time: time ?? this.time,
-      enabled: enabled ?? this.enabled,
-    );
-  }
-}
 
 class OnboardingFormController extends ChangeNotifier {
   OnboardingFormController({required this.totalSteps}) : pageController = PageController();
@@ -85,22 +72,11 @@ class OnboardingFormController extends ChangeNotifier {
     weekStartDay: _weekStartDay,
   );
 
-  NotificationSlotState _slot1 = const NotificationSlotState(
-    time: TimeOfDay(hour: 18, minute: 0),
-    enabled: false,
-  );
-  NotificationSlotState get slot1 => _slot1;
+  NotificationSlots _slots = NotificationSlots.onboardingInitial();
+  NotificationSlotState get slot1 => _slots.slot1;
+  NotificationSlotState get slot2 => _slots.slot2;
 
-  NotificationSlotState _slot2 = const NotificationSlotState(
-    time: TimeOfDay(hour: 21, minute: 0),
-    enabled: true,
-  );
-  NotificationSlotState get slot2 => _slot2;
-
-  List<TimeOfDay> get notificationTimes => [
-    if (_slot1.enabled) _slot1.time,
-    if (_slot2.enabled) _slot2.time,
-  ];
+  List<TimeOfDay> get notificationTimes => _slots.toNotificationTimes();
 
   void setName(String value) {
     final trimmed = value.trim();
@@ -149,22 +125,22 @@ class OnboardingFormController extends ChangeNotifier {
   }
 
   void toggleSlot1(bool value) {
-    _slot1 = _slot1.copyWith(enabled: value);
+    _slots = _slots.copyWith(slot1: _slots.slot1.copyWith(enabled: value));
     notifyListeners();
   }
 
   void toggleSlot2(bool value) {
-    _slot2 = _slot2.copyWith(enabled: value);
+    _slots = _slots.copyWith(slot2: _slots.slot2.copyWith(enabled: value));
     notifyListeners();
   }
 
   void setSlot1Time(TimeOfDay time) {
-    _slot1 = _slot1.copyWith(time: time, enabled: true);
+    _slots = _slots.copyWith(slot1: _slots.slot1.copyWith(time: time, enabled: true));
     notifyListeners();
   }
 
   void setSlot2Time(TimeOfDay time) {
-    _slot2 = _slot2.copyWith(time: time, enabled: true);
+    _slots = _slots.copyWith(slot2: _slots.slot2.copyWith(time: time, enabled: true));
     notifyListeners();
   }
 

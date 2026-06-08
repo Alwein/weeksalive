@@ -32,6 +32,7 @@ class MockRemoteConfigRepository extends Mock implements RemoteConfigRepository 
 class MockPushNotificationRepository extends Mock implements PushNotificationRepository {
   MockPushNotificationRepository() {
     registerFallbackValue(<TimeOfDay>[]);
+    when(() => areNotificationsEnabled()).thenAnswer((_) async => false);
     when(() => requestNotificationPermission()).thenAnswer((_) async => true);
     when(() => scheduleNotifications(any())).thenAnswer((_) async {});
   }

@@ -39,6 +39,22 @@ class PushNotificationRepository {
   Future<NotificationAppLaunchDetails?> getNotificationAppLaunchDetails() =>
       _plugin.getNotificationAppLaunchDetails();
 
+  Future<bool> areNotificationsEnabled() async {
+    if (Platform.isIOS) {
+      final options = await _plugin
+          .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+          ?.checkPermissions();
+      return options?.isEnabled ?? false;
+    }
+    if (Platform.isAndroid) {
+      final bool? result = await _plugin
+          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+          ?.areNotificationsEnabled();
+      return result ?? false;
+    }
+    return true;
+  }
+
   Future<bool> requestNotificationPermission() async {
     if (Platform.isIOS) {
       final bool? result = await _plugin

@@ -8,5 +8,8 @@ PushNotificationState pushNotificationReducer(PushNotificationState state, dynam
   if (action is ClearNotificationTapAction) {
     return state.copyWith(pendingOpenDayForm: false);
   }
+  if (action is PushNotificationEnabledLoadedAction) {
+    return state.copyWith(pushNotificationEnabled: action.pushNotificationEnabled);
+  }
   return state;
 }

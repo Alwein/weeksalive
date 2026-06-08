@@ -1,10 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
-import 'package:weeksalive/core/styles/margins.dart';
-import 'package:weeksalive/core/texts/strings.dart';
-import 'package:weeksalive/presentation/widgets/primary_button.dart';
 
 Future<DateTime?> showCustomDatePicker(
   BuildContext context, {
@@ -50,59 +46,4 @@ Future<DateTime?> showCustomDatePicker(
       );
     },
   );
-}
-
-Future<TimeOfDay?> showCustomCupertinoTimePicker(
-  BuildContext context, {
-  required TimeOfDay initialTime,
-}) async {
-  Duration selectedDuration = Duration(hours: initialTime.hour, minutes: initialTime.minute);
-
-  TimeOfDay? result = await showCupertinoModalPopup<TimeOfDay>(
-    context: context,
-    builder: (BuildContext context) {
-      return Container(
-        height: 300,
-        decoration: BoxDecoration(
-          color: AppColors.bg(context),
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(Dimens.radiusL),
-            topRight: Radius.circular(Dimens.radiusL),
-          ),
-        ),
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM, vertical: Margins.spacingS),
-                child: PrimaryButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(
-                      TimeOfDay(
-                        hour: selectedDuration.inHours,
-                        minute: selectedDuration.inMinutes % 60,
-                      ),
-                    );
-                  },
-                  text: Strings.done,
-                ),
-              ),
-            ),
-            Expanded(
-              child: CupertinoTimerPicker(
-                mode: CupertinoTimerPickerMode.hm,
-                initialTimerDuration: selectedDuration,
-                onTimerDurationChanged: (Duration newDuration) {
-                  selectedDuration = newDuration;
-                },
-              ),
-            ),
-          ],
-        ),
-      );
-    },
-  );
-
-  return result;
 }

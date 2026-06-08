@@ -1,15 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
 import 'package:weeksalive/presentation/redux/user/user_actions.dart';
 
 import '../../../fixtures/user_fixtures.dart';
+import '../../../helpers/matchers.dart';
 import '../../../helpers/store_tester.dart';
 import '../../../helpers/test_app_state.dart';
 import '../../../mocks.dart';
 
 void main() {
+  group('BootstrapAction', () {
+    late StoreTester storeTester;
+    final pushRepo = MockPushNotificationRepository();
+
+    setUp(() => storeTester = StoreTester());
+
+    test('loads pushNotificationEnabled from the repository', () {
+      when(() => pushRepo.areNotificationsEnabled()).thenAnswer((_) async => true);
+
+      storeTester.givenStore(
+        initialAppState(),
+        configure: (f) => f.pushNotificationRepository = pushRepo,
+      );
+
+      storeTester.whenDispatching(() => BootstrapAction());
+
+      storeTester.thenExpectStatesInOrder([
+        stateWith((s) => s.pushNotificationState.pushNotificationEnabled, isTrue),
+      ]);
+    });
+  });
+
   group('RequestNotificationPermissionAction', () {
     late StoreTester storeTester;
     final pushRepo = MockPushNotificationRepository();
@@ -31,7 +55,22 @@ void main() {
       verify(() => pushRepo.requestNotificationPermission()).called(1);
     });
 
-    test('does not throw when permission is denied', () async {
+    test('updates pushNotificationEnabled when permission is granted', () {
+      when(() => pushRepo.requestNotificationPermission()).thenAnswer((_) async => true);
+
+      storeTester.givenStore(
+        initialAppState(),
+        configure: (f) => f.pushNotificationRepository = pushRepo,
+      );
+
+      storeTester.whenDispatching(() => const RequestNotificationPermissionAction());
+
+      storeTester.thenExpectStatesInOrder([
+        stateWith((s) => s.pushNotificationState.pushNotificationEnabled, isTrue),
+      ]);
+    });
+
+    test('updates pushNotificationEnabled when permission is denied', () {
       when(() => pushRepo.requestNotificationPermission()).thenAnswer((_) async => false);
 
       storeTester.givenStore(
@@ -41,9 +80,9 @@ void main() {
 
       storeTester.whenDispatching(() => const RequestNotificationPermissionAction());
 
-      await storeTester.thenExpectNothing();
-
-      verify(() => pushRepo.requestNotificationPermission()).called(1);
+      storeTester.thenExpectStatesInOrder([
+        stateWith((s) => s.pushNotificationState.pushNotificationEnabled, isFalse),
+      ]);
     });
   });
 
