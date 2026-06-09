@@ -7,6 +7,7 @@ import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/presentation/onboarding/onboarding_page.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/profile/pages/edit_profile/edit_profile_form.dart';
 import 'package:weeksalive/presentation/profile/pages/notifications_settings/notifications_settings_page.dart';
@@ -249,6 +250,12 @@ class _PreferencesCard extends StatelessWidget {
             onTap: () {
               // TODO: Push to week begin page
             },
+            icon: MingCuteIcons.mgc_right_line,
+          ),
+          const SmallDivider(width: double.infinity),
+          _PreferencesButton(
+            title: "Replay onboarding",
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const OnboardingPage())),
             icon: MingCuteIcons.mgc_right_line,
           ),
         ],

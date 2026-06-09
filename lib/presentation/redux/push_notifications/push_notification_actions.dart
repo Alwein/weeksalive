@@ -36,3 +36,11 @@ class NotificationTappedAction {
 class ClearNotificationTapAction {
   const ClearNotificationTapAction();
 }
+
+class OpenNotificationSettingsAction {
+  const OpenNotificationSettingsAction();
+}
+
+class RefreshNotificationPermissionAction {
+  const RefreshNotificationPermissionAction();
+}

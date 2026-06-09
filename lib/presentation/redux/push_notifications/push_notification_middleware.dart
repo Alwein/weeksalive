@@ -36,6 +36,15 @@ class PushNotificationMiddleware extends MiddlewareClass<AppState> {
       store.dispatch(PushNotificationEnabledLoadedAction(pushNotificationEnabled));
     }
 
+    if (action is RefreshNotificationPermissionAction) {
+      final pushNotificationEnabled = await pushNotificationRepository.areNotificationsEnabled();
+      store.dispatch(PushNotificationEnabledLoadedAction(pushNotificationEnabled));
+    }
+
+    if (action is OpenNotificationSettingsAction) {
+      await pushNotificationRepository.openAppSettings();
+    }
+
     if (action is UpdateNotificationSettingsAction) {
       await pushNotificationRepository.setNotificationSlots(action.slots);
       store.dispatch(NotificationSettingsLoadedAction(action.slots));

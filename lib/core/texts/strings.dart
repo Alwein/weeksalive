@@ -385,4 +385,7 @@ class Strings {
   // notifications settings page
   static String get notificationsSettingsPageTitle => "Notifications";
   static String get notificationsSettingsPageDailySlots => "Daily check-in";
+  static String get notificationsSettingsPageDisabledMessage =>
+      "Push notifications are disabled on your device. Enable them in your phone settings to receive daily reminders.";
+  static String get notificationsSettingsPageOpenSettings => "Open settings";
 }

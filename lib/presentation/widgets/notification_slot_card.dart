@@ -12,12 +12,14 @@ import 'package:weeksalive/presentation/widgets/show_custom_time_picker.dart';
 class NotificationSlotCard extends StatelessWidget {
   const NotificationSlotCard({
     super.key,
+    this.enabled = true,
     required this.slot,
     required this.onToggle,
     required this.onTimeChanged,
     this.label,
   });
 
+  final bool enabled;
   final NotificationSlotState slot;
   final ValueChanged<bool> onToggle;
   final ValueChanged<TimeOfDay> onTimeChanged;
@@ -38,55 +40,61 @@ class NotificationSlotCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _pickTime(context),
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: Margins.spacingBase,
-          vertical: Margins.spacingBase,
-        ),
-        decoration: BoxDecoration(
-          color: AppColors.bgSoft(context),
-          borderRadius: BorderRadius.circular(Dimens.radiusBase),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label ?? Strings.onboarding20CheckIn,
-                    style: TextStyles.primarySmallBold.copyWith(
-                      color: AppColors.contentSoftOnSoft(context),
-                    ),
-                  ),
-                  const SizedBox(height: Margins.spacingXs),
-                  Row(
+    return Opacity(
+      opacity: enabled ? 1.0 : 0.5,
+      child: IgnorePointer(
+        ignoring: !enabled,
+        child: GestureDetector(
+          onTap: () => _pickTime(context),
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Margins.spacingBase,
+              vertical: Margins.spacingBase,
+            ),
+            decoration: BoxDecoration(
+              color: AppColors.bgSoft(context),
+              borderRadius: BorderRadius.circular(Dimens.radiusBase),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        _formatTime(slot.time),
-                        style: TextStyles.primaryLargeBold.copyWith(
-                          color: AppColors.content(context),
+                        label ?? Strings.onboarding20CheckIn,
+                        style: TextStyles.primarySmallBold.copyWith(
+                          color: AppColors.contentSoftOnSoft(context),
                         ),
                       ),
-                      const SizedBox(width: Margins.spacingS),
-                      Icon(
-                        MingCuteIcons.mgc_pencil_line,
-                        size: Dimens.iconSizeXs,
-                        color: AppColors.contentSoft(context),
+                      const SizedBox(height: Margins.spacingXs),
+                      Row(
+                        children: [
+                          Text(
+                            _formatTime(slot.time),
+                            style: TextStyles.primaryLargeBold.copyWith(
+                              color: AppColors.content(context),
+                            ),
+                          ),
+                          const SizedBox(width: Margins.spacingS),
+                          Icon(
+                            MingCuteIcons.mgc_pencil_line,
+                            size: Dimens.iconSizeXs,
+                            color: AppColors.contentSoft(context),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+                CupertinoSwitch(
+                  value: slot.enabled,
+                  onChanged: onToggle,
+                  activeTrackColor: AppColors.greenSuccess,
+                ),
+              ],
             ),
-            CupertinoSwitch(
-              value: slot.enabled,
-              onChanged: onToggle,
-              activeTrackColor: AppColors.greenSuccess,
-            ),
-          ],
+          ),
         ),
       ),
     );

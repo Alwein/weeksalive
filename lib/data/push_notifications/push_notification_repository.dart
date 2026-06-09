@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -75,6 +76,8 @@ class PushNotificationRepository {
   Future<void> clearNotificationSlots() async {
     await _preferences?.remove(_notificationSlotsKey);
   }
+
+  Future<void> openAppSettings() => AppSettings.openAppSettings();
 
   Future<bool> requestNotificationPermission() async {
     if (Platform.isIOS) {

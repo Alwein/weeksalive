@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
+import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/domain/notifications/notification_slots.dart';
@@ -9,6 +11,7 @@ import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
 import 'package:weeksalive/presentation/widgets/notification_slot_card.dart';
 import 'package:weeksalive/presentation/widgets/primary_appbar.dart';
+import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class NotificationsSettingsPage extends StatelessWidget {
@@ -42,16 +45,32 @@ class _NotificationsSettingsBody extends StatefulWidget {
   State<_NotificationsSettingsBody> createState() => _NotificationsSettingsBodyState();
 }
 
-class _NotificationsSettingsBodyState extends State<_NotificationsSettingsBody> {
+class _NotificationsSettingsBodyState extends State<_NotificationsSettingsBody> with WidgetsBindingObserver {
   late NotificationSlots _slots;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _slots = NotificationSlots(
       slot1: widget.viewModel.dailySlot1,
       slot2: widget.viewModel.dailySlot2,
     );
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      StoreProvider.of<AppState>(context, listen: false).dispatch(
+        const RefreshNotificationPermissionAction(),
+      );
+    }
   }
 
   void _updateSlots(NotificationSlots slots) {
@@ -69,12 +88,21 @@ class _NotificationsSettingsBodyState extends State<_NotificationsSettingsBody> 
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: Margins.spacingBase),
+          if (!widget.viewModel.notificationsEnabled) ...[
+            _NotificationsDisabledBanner(
+              onOpenSettings: () => StoreProvider.of<AppState>(context, listen: false).dispatch(
+                const OpenNotificationSettingsAction(),
+              ),
+            ),
+            const SizedBox(height: Margins.spacingBase),
+          ],
           Texts.primaryRegularMedium(
             Strings.notificationsSettingsPageDailySlots,
             color: AppColors.contentSoft(context),
           ),
           const SizedBox(height: Margins.spacingBase),
           NotificationSlotCard(
+            enabled: widget.viewModel.notificationsEnabled,
             slot: _slots.slot1,
             onToggle: (value) => _updateSlots(
               _slots.copyWith(slot1: _slots.slot1.copyWith(enabled: value)),
@@ -85,6 +113,7 @@ class _NotificationsSettingsBodyState extends State<_NotificationsSettingsBody> 
           ),
           const SizedBox(height: Margins.spacingS),
           NotificationSlotCard(
+            enabled: widget.viewModel.notificationsEnabled,
             slot: _slots.slot2,
             onToggle: (value) => _updateSlots(
               _slots.copyWith(slot2: _slots.slot2.copyWith(enabled: value)),
@@ -94,6 +123,46 @@ class _NotificationsSettingsBodyState extends State<_NotificationsSettingsBody> 
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _NotificationsDisabledBanner extends StatelessWidget {
+  const _NotificationsDisabledBanner({required this.onOpenSettings});
+
+  final VoidCallback onOpenSettings;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(Margins.spacingM),
+      decoration: BoxDecoration(
+        color: AppColors.redWarning.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(Dimens.radiusBase),
+        border: Border.all(color: AppColors.redWarning.withValues(alpha: 0.25)),
+      ),
+      child: Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Icon(
+              MingCuteIcons.mgc_notification_off_line,
+              color: AppColors.redWarning,
+              size: Dimens.iconSizeM,
+            ),
+            const SizedBox(height: Margins.spacingM),
+            Texts.primaryRegularMedium(
+              Strings.notificationsSettingsPageDisabledMessage,
+              color: AppColors.content(context),
+            ),
+            const SizedBox(height: Margins.spacingM),
+            PrimaryButton(
+              text: Strings.notificationsSettingsPageOpenSettings,
+              onPressed: onOpenSettings,
+            ),
+          ],
+        ),
       ),
     );
   }

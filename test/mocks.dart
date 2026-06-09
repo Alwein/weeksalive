@@ -40,6 +40,7 @@ class MockPushNotificationRepository extends Mock implements PushNotificationRep
     when(() => setNotificationSlots(any())).thenAnswer((_) async {});
     when(() => clearNotificationSlots()).thenAnswer((_) async {});
     when(() => scheduleNotifications(any())).thenAnswer((_) async {});
+    when(() => openAppSettings()).thenAnswer((_) async {});
   }
 }
 
