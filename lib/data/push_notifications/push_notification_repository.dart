@@ -44,8 +44,7 @@ class PushNotificationRepository {
     );
   }
 
-  Future<NotificationAppLaunchDetails?> getNotificationAppLaunchDetails() =>
-      _plugin.getNotificationAppLaunchDetails();
+  Future<NotificationAppLaunchDetails?> getNotificationAppLaunchDetails() => _plugin.getNotificationAppLaunchDetails();
 
   Future<bool> areNotificationsEnabled() async {
     if (Platform.isIOS) {

@@ -104,7 +104,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
     DayResumeBottomSheet.show(context, date: date);
   }
 
-  Future<void> _onTodayTap() async {
+  Future<void> _openTodayForm() async {
     final result = await DayForm.showBottomSheet(
       context,
       DateTime.now(),
@@ -134,19 +134,26 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
 
   void _onNotificationTap() {
     StoreProvider.of<AppState>(context).dispatch(const ClearNotificationTapAction());
-    _onTodayTap();
+    _openTodayForm();
+  }
+
+  void _scheduleNotificationTap() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _onNotificationTap();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, bool>(
       converter: (store) => store.state.pushNotificationState.pendingOpenDayForm,
+      // onWillChange is not called on first build (flutter_redux 0.10+), so cold-start
+      // taps that set pendingOpenDayForm before HomePage mounts need onInitialBuild.
+      onInitialBuild: (pending) {
+        if (pending) _scheduleNotificationTap();
+      },
       onWillChange: (previous, next) {
-        if (next && !(previous ?? false)) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) _onNotificationTap();
-          });
-        }
+        if (next && previous == false) _scheduleNotificationTap();
       },
       builder: (context, _) => ApparitionAnimation(
         child: Column(
@@ -163,7 +170,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
             const SizedBox(height: Margins.spacingBase),
             HomeWeekCalendar(
               vm: widget.vm,
-              onTodayTap: _onTodayTap,
+              onTodayTap: _openTodayForm,
               onPastDayTap: _onPastDayTap,
             ),
             const SizedBox(height: Margins.spacingBase),
@@ -181,7 +188,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
               isTodayDone: widget.vm.isTodayDone,
               tabController: _gridTabController,
               onTabTap: _onGridTabTapped,
-              onTodayTap: _onTodayTap,
+              onTodayTap: _openTodayForm,
             ),
           ],
         ),
