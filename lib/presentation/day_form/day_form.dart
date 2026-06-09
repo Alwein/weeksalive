@@ -356,22 +356,30 @@ class _DaySection extends StatelessWidget {
                 ),
                 const SizedBox(width: Margins.spacingS),
                 Expanded(
+                  flex: 2,
                   child: Text(
                     title,
                     style: TextStyles.primaryMediumBold.copyWith(color: titleColor),
                   ),
                 ),
-                if (!isExpanded && summary != null) ...[
-                  summary!,
-                  const SizedBox(width: Margins.spacingBase),
-                ],
-                isExpanded
-                    ? const SizedBox.shrink()
-                    : Icon(
-                        MingCuteIcons.mgc_down_line,
-                        size: Dimens.iconSizeS,
-                        color: AppColors.contentSoft(context),
-                      ),
+                Flexible(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      if (!isExpanded && summary != null) ...[
+                        Flexible(child: summary!),
+                        const SizedBox(width: Margins.spacingBase),
+                      ],
+                      isExpanded
+                          ? const SizedBox.shrink()
+                          : Icon(
+                              MingCuteIcons.mgc_down_line,
+                              size: Dimens.iconSizeS,
+                              color: AppColors.contentSoft(context),
+                            ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

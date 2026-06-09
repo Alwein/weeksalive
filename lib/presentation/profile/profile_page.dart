@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
-import 'package:weeksalive/core/l10n/time_utils.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
-import 'package:weeksalive/presentation/onboarding/onboarding_page.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/profile/pages/edit_profile/edit_profile_form.dart';
 import 'package:weeksalive/presentation/profile/pages/notifications_settings/notifications_settings_page.dart';
+import 'package:weeksalive/presentation/profile/pages/theme_picker/theme_picker_page.dart';
 import 'package:weeksalive/presentation/profile/pages/week_begin/week_begin_page.dart';
 import 'package:weeksalive/presentation/profile/profile_page_view_model.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/weekly_intent/widgets/edit_weekly_intent_bottom_sheet.dart';
 import 'package:weeksalive/presentation/widgets/primary_appbar.dart';
 import 'package:weeksalive/presentation/widgets/secondary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
@@ -27,8 +27,9 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context).toString();
     return StoreConnector<AppState, ProfilePageViewModel>(
-      converter: (store) => ProfilePageViewModel.create(store, DateTime.now()),
+      converter: (store) => ProfilePageViewModel.create(store, DateTime.now(), locale: locale),
       builder: (context, viewModel) {
         return Scaffold(
           backgroundColor: AppColors.bg(context),
@@ -78,7 +79,7 @@ class _ProfileCard extends StatelessWidget {
                       Expanded(
                         child: _VerticalCardSection(
                           title: Strings.profilePageAge,
-                          value: viewModel.age.toString(),
+                          value: viewModel.age,
                         ),
                       ),
                       Container(
@@ -88,7 +89,7 @@ class _ProfileCard extends StatelessWidget {
                       Expanded(
                         child: _VerticalCardSection(
                           title: Strings.profilePageYearsAhead,
-                          value: viewModel.yearsAhead.toString(),
+                          value: viewModel.yearsAhead,
                         ),
                       ),
                     ],
@@ -99,21 +100,21 @@ class _ProfileCard extends StatelessWidget {
                 const SizedBox(height: Margins.spacingBase),
                 _HorizontalCardSection(
                   title: Strings.profilePageBorn,
-                  value: TimeUtils.formatDate(context, viewModel.dateOfBirth),
+                  value: viewModel.dateOfBirth,
                 ),
                 const SizedBox(height: Margins.spacingBase),
                 const SmallDivider(width: double.infinity),
                 const SizedBox(height: Margins.spacingBase),
                 _HorizontalCardSection(
                   title: Strings.profilePageLifespan,
-                  value: Strings.profilePageLifespanValue(viewModel.lifespan),
+                  value: viewModel.lifespan,
                 ),
                 const SizedBox(height: Margins.spacingBase),
                 const SmallDivider(width: double.infinity),
                 const SizedBox(height: Margins.spacingBase),
                 _HorizontalCardSection(
                   title: Strings.profilePageGender,
-                  value: viewModel.gender.titleCase,
+                  value: viewModel.gender,
                 ),
                 const SizedBox(height: Margins.spacingBase),
               ],
@@ -229,32 +230,29 @@ class _PreferencesCard extends StatelessWidget {
         children: [
           _PreferencesButton(
             title: Strings.profilePageNotifications,
-            value: viewModel.notificationsEnabled
-                ? Strings.profilePageNotificationsEnabled
-                : Strings.profilePageNotificationsDisabled,
+            value: viewModel.notificationsEnabled,
             onTap: () => Navigator.push(context, NotificationsSettingsPage.route()),
             icon: MingCuteIcons.mgc_right_line,
           ),
           const SmallDivider(width: double.infinity),
           _PreferencesButton(
             title: Strings.profilePageWeekBegin,
-            value: Strings.weekdayFullNames[(viewModel.weekStartDay - 1).clamp(0, 6)],
+            value: viewModel.weekStartDay,
             onTap: () => Navigator.push(context, WeekBeginPage.route()),
             icon: MingCuteIcons.mgc_right_line,
           ),
           const SmallDivider(width: double.infinity),
           _PreferencesButton(
             title: Strings.profilePageWeeklyIntentions,
-            value: "EXPLORE, CONNECT", // TODO:
-            onTap: () {
-              // TODO: Push to weekly intentions page
-            },
+            value: viewModel.weeklyIntents,
+            onTap: () => EditWeeklyIntentBottomSheet.show(context),
             icon: MingCuteIcons.mgc_right_line,
           ),
           const SmallDivider(width: double.infinity),
           _PreferencesButton(
-            title: "Replay onboarding",
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const OnboardingPage())),
+            title: Strings.profilePageTheme,
+            value: viewModel.theme,
+            onTap: () => ThemePickerPage.show(context),
             icon: MingCuteIcons.mgc_right_line,
           ),
         ],
@@ -282,15 +280,27 @@ class _PreferencesButton extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
+                flex: 2,
                 child: Texts.primaryBold(title),
               ),
-              if (value != null)
-                Texts.primaryXsMedium(
-                  value!,
-                  color: AppColors.contentSoft(context),
+              Flexible(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if (value != null)
+                      Flexible(
+                        child: Texts.primaryXsMedium(
+                          value!,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          color: AppColors.contentSoft(context),
+                        ),
+                      ),
+                    const SizedBox(width: Margins.spacingS),
+                    if (icon != null) Icon(icon),
+                  ],
                 ),
-              const SizedBox(width: Margins.spacingS),
-              if (icon != null) Icon(icon),
+              ),
             ],
           ),
         ),

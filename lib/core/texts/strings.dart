@@ -372,6 +372,7 @@ class Strings {
   static String get profilePagePreferences => "PREFERENCES";
   static String get profilePageNotifications => "Notifications";
   static String get profilePageWeeklyIntentions => "Weekly intentions";
+  static String get profilePageTheme => "Theme";
   static String get profilePageWeekBegin => "Week begin";
 
   static String get profilePageNotificationsEnabled => "ON";
