@@ -384,6 +384,9 @@ class Strings {
   static String get editProfilePageGender => "Gender";
   static String get editProfilePageLifespan => "Lifespan";
 
+  // week begin page
+  static String get weekBeginPageTitle => "Week begin";
+
   // notifications settings page
   static String get notificationsSettingsPageTitle => "Notifications";
   static String get notificationsSettingsPageDailySlots => "Daily check-in";

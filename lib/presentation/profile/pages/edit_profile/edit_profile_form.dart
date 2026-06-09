@@ -150,6 +150,7 @@ class _FormState extends State<_Form> {
         dateOfBirth: _controller.dateOfBirth,
         gender: _controller.gender,
         lifespan: _controller.lifespan,
+        weekStartDay: StoreProvider.of<AppState>(context).state.userState.userOrNull?.weekStartDay ?? DateTime.monday,
       ),
     );
     Navigator.pop(context);

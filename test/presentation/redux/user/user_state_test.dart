@@ -91,6 +91,7 @@ void main() {
             dateOfBirth: newDateOfBirth,
             gender: newGender,
             lifespan: newLifespan,
+            weekStartDay: user.weekStartDay,
           ),
         );
 
@@ -133,6 +134,7 @@ void main() {
             dateOfBirth: newDateOfBirth,
             gender: newGender,
             lifespan: newLifespan,
+            weekStartDay: user.weekStartDay,
           ),
         );
 
@@ -166,6 +168,7 @@ void main() {
             dateOfBirth: DateTime(1985, 3, 20),
             gender: Gender.male,
             lifespan: 85,
+            weekStartDay: DateTime.monday,
           ),
         );
 

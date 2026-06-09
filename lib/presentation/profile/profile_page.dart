@@ -11,6 +11,7 @@ import 'package:weeksalive/presentation/onboarding/onboarding_page.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/profile/pages/edit_profile/edit_profile_form.dart';
 import 'package:weeksalive/presentation/profile/pages/notifications_settings/notifications_settings_page.dart';
+import 'package:weeksalive/presentation/profile/pages/week_begin/week_begin_page.dart';
 import 'package:weeksalive/presentation/profile/profile_page_view_model.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/widgets/primary_appbar.dart';
@@ -236,19 +237,17 @@ class _PreferencesCard extends StatelessWidget {
           ),
           const SmallDivider(width: double.infinity),
           _PreferencesButton(
-            title: Strings.profilePageWeeklyIntentions,
-            value: "EXPLORE, CONNECT", // TODO:
-            onTap: () {
-              // TODO: Push to weekly intentions page
-            },
+            title: Strings.profilePageWeekBegin,
+            value: Strings.weekdayFullNames[(viewModel.weekStartDay - 1).clamp(0, 6)],
+            onTap: () => Navigator.push(context, WeekBeginPage.route()),
             icon: MingCuteIcons.mgc_right_line,
           ),
           const SmallDivider(width: double.infinity),
           _PreferencesButton(
-            title: Strings.profilePageWeekBegin,
-            value: "MONDAY", // TODO:
+            title: Strings.profilePageWeeklyIntentions,
+            value: "EXPLORE, CONNECT", // TODO:
             onTap: () {
-              // TODO: Push to week begin page
+              // TODO: Push to weekly intentions page
             },
             icon: MingCuteIcons.mgc_right_line,
           ),

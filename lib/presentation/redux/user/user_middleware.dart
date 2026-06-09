@@ -33,6 +33,7 @@ class UserMiddleware extends MiddlewareClass<AppState> {
         dateOfBirth: action.dateOfBirth,
         gender: action.gender,
         lifespan: action.lifespan,
+        weekStartDay: action.weekStartDay,
       );
       await userRepository.setUser(updatedUser);
       store.dispatch(UserLoadedAction(updatedUser));

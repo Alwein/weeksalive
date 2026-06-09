@@ -16,6 +16,7 @@ abstract class ProfilePageViewModel with _$ProfilePageViewModel {
     required int yearsAhead,
     required Gender gender,
     required bool notificationsEnabled,
+    required int weekStartDay,
   }) = _ProfilePageViewModel;
 
   factory ProfilePageViewModel.create(Store<AppState> store, DateTime now) {
@@ -30,6 +31,7 @@ abstract class ProfilePageViewModel with _$ProfilePageViewModel {
       yearsAhead: lifespan - age,
       gender: user?.gender ?? Gender.other,
       notificationsEnabled: store.state.pushNotificationState.pushNotificationEnabled,
+      weekStartDay: user?.weekStartDay ?? DateTime.monday,
     );
   }
 }
