@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NotificationsSettingsViewModel {
 
- bool get notificationsEnabled; NotificationSlotState get dailySlot1; NotificationSlotState get dailySlot2;
+ bool get notificationsEnabled; NotificationSlotState get dailySlot1; NotificationSlotState get dailySlot2; NotificationSlotState get weeklySummarySlot; int get weekStartDay;
 /// Create a copy of NotificationsSettingsViewModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $NotificationsSettingsViewModelCopyWith<NotificationsSettingsViewModel> get copy
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationsSettingsViewModel&&(identical(other.notificationsEnabled, notificationsEnabled) || other.notificationsEnabled == notificationsEnabled)&&const DeepCollectionEquality().equals(other.dailySlot1, dailySlot1)&&const DeepCollectionEquality().equals(other.dailySlot2, dailySlot2));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationsSettingsViewModel&&(identical(other.notificationsEnabled, notificationsEnabled) || other.notificationsEnabled == notificationsEnabled)&&(identical(other.dailySlot1, dailySlot1) || other.dailySlot1 == dailySlot1)&&(identical(other.dailySlot2, dailySlot2) || other.dailySlot2 == dailySlot2)&&(identical(other.weeklySummarySlot, weeklySummarySlot) || other.weeklySummarySlot == weeklySummarySlot)&&(identical(other.weekStartDay, weekStartDay) || other.weekStartDay == weekStartDay));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,notificationsEnabled,const DeepCollectionEquality().hash(dailySlot1),const DeepCollectionEquality().hash(dailySlot2));
+int get hashCode => Object.hash(runtimeType,notificationsEnabled,dailySlot1,dailySlot2,weeklySummarySlot,weekStartDay);
 
 @override
 String toString() {
-  return 'NotificationsSettingsViewModel(notificationsEnabled: $notificationsEnabled, dailySlot1: $dailySlot1, dailySlot2: $dailySlot2)';
+  return 'NotificationsSettingsViewModel(notificationsEnabled: $notificationsEnabled, dailySlot1: $dailySlot1, dailySlot2: $dailySlot2, weeklySummarySlot: $weeklySummarySlot, weekStartDay: $weekStartDay)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $NotificationsSettingsViewModelCopyWith<$Res>  {
   factory $NotificationsSettingsViewModelCopyWith(NotificationsSettingsViewModel value, $Res Function(NotificationsSettingsViewModel) _then) = _$NotificationsSettingsViewModelCopyWithImpl;
 @useResult
 $Res call({
- bool notificationsEnabled, NotificationSlotState dailySlot1, NotificationSlotState dailySlot2
+ bool notificationsEnabled, NotificationSlotState dailySlot1, NotificationSlotState dailySlot2, NotificationSlotState weeklySummarySlot, int weekStartDay
 });
 
 
@@ -62,12 +62,14 @@ class _$NotificationsSettingsViewModelCopyWithImpl<$Res>
 
 /// Create a copy of NotificationsSettingsViewModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? notificationsEnabled = null,Object? dailySlot1 = freezed,Object? dailySlot2 = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? notificationsEnabled = null,Object? dailySlot1 = null,Object? dailySlot2 = null,Object? weeklySummarySlot = null,Object? weekStartDay = null,}) {
   return _then(_self.copyWith(
 notificationsEnabled: null == notificationsEnabled ? _self.notificationsEnabled : notificationsEnabled // ignore: cast_nullable_to_non_nullable
-as bool,dailySlot1: freezed == dailySlot1 ? _self.dailySlot1 : dailySlot1 // ignore: cast_nullable_to_non_nullable
-as NotificationSlotState,dailySlot2: freezed == dailySlot2 ? _self.dailySlot2 : dailySlot2 // ignore: cast_nullable_to_non_nullable
-as NotificationSlotState,
+as bool,dailySlot1: null == dailySlot1 ? _self.dailySlot1 : dailySlot1 // ignore: cast_nullable_to_non_nullable
+as NotificationSlotState,dailySlot2: null == dailySlot2 ? _self.dailySlot2 : dailySlot2 // ignore: cast_nullable_to_non_nullable
+as NotificationSlotState,weeklySummarySlot: null == weeklySummarySlot ? _self.weeklySummarySlot : weeklySummarySlot // ignore: cast_nullable_to_non_nullable
+as NotificationSlotState,weekStartDay: null == weekStartDay ? _self.weekStartDay : weekStartDay // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 
@@ -152,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool notificationsEnabled,  NotificationSlotState dailySlot1,  NotificationSlotState dailySlot2)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool notificationsEnabled,  NotificationSlotState dailySlot1,  NotificationSlotState dailySlot2,  NotificationSlotState weeklySummarySlot,  int weekStartDay)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NotificationsSettingsViewModel() when $default != null:
-return $default(_that.notificationsEnabled,_that.dailySlot1,_that.dailySlot2);case _:
+return $default(_that.notificationsEnabled,_that.dailySlot1,_that.dailySlot2,_that.weeklySummarySlot,_that.weekStartDay);case _:
   return orElse();
 
 }
@@ -173,10 +175,10 @@ return $default(_that.notificationsEnabled,_that.dailySlot1,_that.dailySlot2);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool notificationsEnabled,  NotificationSlotState dailySlot1,  NotificationSlotState dailySlot2)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool notificationsEnabled,  NotificationSlotState dailySlot1,  NotificationSlotState dailySlot2,  NotificationSlotState weeklySummarySlot,  int weekStartDay)  $default,) {final _that = this;
 switch (_that) {
 case _NotificationsSettingsViewModel():
-return $default(_that.notificationsEnabled,_that.dailySlot1,_that.dailySlot2);case _:
+return $default(_that.notificationsEnabled,_that.dailySlot1,_that.dailySlot2,_that.weeklySummarySlot,_that.weekStartDay);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -193,10 +195,10 @@ return $default(_that.notificationsEnabled,_that.dailySlot1,_that.dailySlot2);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool notificationsEnabled,  NotificationSlotState dailySlot1,  NotificationSlotState dailySlot2)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool notificationsEnabled,  NotificationSlotState dailySlot1,  NotificationSlotState dailySlot2,  NotificationSlotState weeklySummarySlot,  int weekStartDay)?  $default,) {final _that = this;
 switch (_that) {
 case _NotificationsSettingsViewModel() when $default != null:
-return $default(_that.notificationsEnabled,_that.dailySlot1,_that.dailySlot2);case _:
+return $default(_that.notificationsEnabled,_that.dailySlot1,_that.dailySlot2,_that.weeklySummarySlot,_that.weekStartDay);case _:
   return null;
 
 }
@@ -208,12 +210,14 @@ return $default(_that.notificationsEnabled,_that.dailySlot1,_that.dailySlot2);ca
 
 
 class _NotificationsSettingsViewModel implements NotificationsSettingsViewModel {
-  const _NotificationsSettingsViewModel({required this.notificationsEnabled, required this.dailySlot1, required this.dailySlot2});
+  const _NotificationsSettingsViewModel({required this.notificationsEnabled, required this.dailySlot1, required this.dailySlot2, required this.weeklySummarySlot, required this.weekStartDay});
   
 
 @override final  bool notificationsEnabled;
 @override final  NotificationSlotState dailySlot1;
 @override final  NotificationSlotState dailySlot2;
+@override final  NotificationSlotState weeklySummarySlot;
+@override final  int weekStartDay;
 
 /// Create a copy of NotificationsSettingsViewModel
 /// with the given fields replaced by the non-null parameter values.
@@ -225,16 +229,16 @@ _$NotificationsSettingsViewModelCopyWith<_NotificationsSettingsViewModel> get co
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationsSettingsViewModel&&(identical(other.notificationsEnabled, notificationsEnabled) || other.notificationsEnabled == notificationsEnabled)&&const DeepCollectionEquality().equals(other.dailySlot1, dailySlot1)&&const DeepCollectionEquality().equals(other.dailySlot2, dailySlot2));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationsSettingsViewModel&&(identical(other.notificationsEnabled, notificationsEnabled) || other.notificationsEnabled == notificationsEnabled)&&(identical(other.dailySlot1, dailySlot1) || other.dailySlot1 == dailySlot1)&&(identical(other.dailySlot2, dailySlot2) || other.dailySlot2 == dailySlot2)&&(identical(other.weeklySummarySlot, weeklySummarySlot) || other.weeklySummarySlot == weeklySummarySlot)&&(identical(other.weekStartDay, weekStartDay) || other.weekStartDay == weekStartDay));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,notificationsEnabled,const DeepCollectionEquality().hash(dailySlot1),const DeepCollectionEquality().hash(dailySlot2));
+int get hashCode => Object.hash(runtimeType,notificationsEnabled,dailySlot1,dailySlot2,weeklySummarySlot,weekStartDay);
 
 @override
 String toString() {
-  return 'NotificationsSettingsViewModel(notificationsEnabled: $notificationsEnabled, dailySlot1: $dailySlot1, dailySlot2: $dailySlot2)';
+  return 'NotificationsSettingsViewModel(notificationsEnabled: $notificationsEnabled, dailySlot1: $dailySlot1, dailySlot2: $dailySlot2, weeklySummarySlot: $weeklySummarySlot, weekStartDay: $weekStartDay)';
 }
 
 
@@ -245,7 +249,7 @@ abstract mixin class _$NotificationsSettingsViewModelCopyWith<$Res> implements $
   factory _$NotificationsSettingsViewModelCopyWith(_NotificationsSettingsViewModel value, $Res Function(_NotificationsSettingsViewModel) _then) = __$NotificationsSettingsViewModelCopyWithImpl;
 @override @useResult
 $Res call({
- bool notificationsEnabled, NotificationSlotState dailySlot1, NotificationSlotState dailySlot2
+ bool notificationsEnabled, NotificationSlotState dailySlot1, NotificationSlotState dailySlot2, NotificationSlotState weeklySummarySlot, int weekStartDay
 });
 
 
@@ -262,12 +266,14 @@ class __$NotificationsSettingsViewModelCopyWithImpl<$Res>
 
 /// Create a copy of NotificationsSettingsViewModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? notificationsEnabled = null,Object? dailySlot1 = freezed,Object? dailySlot2 = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? notificationsEnabled = null,Object? dailySlot1 = null,Object? dailySlot2 = null,Object? weeklySummarySlot = null,Object? weekStartDay = null,}) {
   return _then(_NotificationsSettingsViewModel(
 notificationsEnabled: null == notificationsEnabled ? _self.notificationsEnabled : notificationsEnabled // ignore: cast_nullable_to_non_nullable
-as bool,dailySlot1: freezed == dailySlot1 ? _self.dailySlot1 : dailySlot1 // ignore: cast_nullable_to_non_nullable
-as NotificationSlotState,dailySlot2: freezed == dailySlot2 ? _self.dailySlot2 : dailySlot2 // ignore: cast_nullable_to_non_nullable
-as NotificationSlotState,
+as bool,dailySlot1: null == dailySlot1 ? _self.dailySlot1 : dailySlot1 // ignore: cast_nullable_to_non_nullable
+as NotificationSlotState,dailySlot2: null == dailySlot2 ? _self.dailySlot2 : dailySlot2 // ignore: cast_nullable_to_non_nullable
+as NotificationSlotState,weeklySummarySlot: null == weeklySummarySlot ? _self.weeklySummarySlot : weeklySummarySlot // ignore: cast_nullable_to_non_nullable
+as NotificationSlotState,weekStartDay: null == weekStartDay ? _self.weekStartDay : weekStartDay // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

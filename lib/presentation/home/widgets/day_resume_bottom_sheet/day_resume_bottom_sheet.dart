@@ -56,7 +56,7 @@ class _EmptyDayContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
+      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,

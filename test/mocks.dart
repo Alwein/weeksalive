@@ -34,12 +34,18 @@ class MockPushNotificationRepository extends Mock implements PushNotificationRep
   MockPushNotificationRepository() {
     registerFallbackValue(<TimeOfDay>[]);
     registerFallbackValue(NotificationSlots.defaults());
+    registerFallbackValue(const WeeklySummarySchedule(time: TimeOfDay(hour: 21, minute: 0), weekStartDay: DateTime.monday));
     when(() => areNotificationsEnabled()).thenAnswer((_) async => false);
     when(() => requestNotificationPermission()).thenAnswer((_) async => true);
     when(() => getNotificationSlots()).thenAnswer((_) async => NotificationSlots.defaults());
     when(() => setNotificationSlots(any())).thenAnswer((_) async {});
     when(() => clearNotificationSlots()).thenAnswer((_) async {});
-    when(() => scheduleNotifications(any())).thenAnswer((_) async {});
+    when(
+      () => scheduleAllNotifications(
+        dailyTimes: any(named: 'dailyTimes'),
+        weeklySummary: any(named: 'weeklySummary'),
+      ),
+    ).thenAnswer((_) async {});
     when(() => openAppSettings()).thenAnswer((_) async {});
   }
 }

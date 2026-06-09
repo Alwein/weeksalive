@@ -7,6 +7,7 @@ User userFixture({
   Gender gender = Gender.female,
   int lifespan = 90,
   DateTime? createdAt,
+  int weekStartDay = DateTime.monday,
 }) {
   return User(
     id: id,
@@ -15,5 +16,6 @@ User userFixture({
     gender: gender,
     lifespan: lifespan,
     createdAt: createdAt ?? DateTime(2024, 1, 1),
+    weekStartDay: weekStartDay,
   );
 }

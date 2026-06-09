@@ -43,15 +43,17 @@ Future<Store<AppState>> initializeApp() async {
   // Re-initialize with tap callback now that the store is available.
   // This handles warm-start taps (app in background).
   await pushNotificationRepository.initialize(
-    onNotificationTap: () => store.dispatch(const NotificationTappedAction()),
+    onNotificationTap: (payload) => store.dispatch(NotificationTappedAction(payload)),
   );
 
   // Handle cold-start taps: app was launched by tapping a notification.
   final launchDetails = await pushNotificationRepository.getNotificationAppLaunchDetails();
+  final launchPayload = launchDetails?.notificationResponse?.payload;
   if (launchDetails != null &&
       launchDetails.didNotificationLaunchApp &&
-      launchDetails.notificationResponse?.payload == PushNotificationRepository.dailyReminderPayload) {
-    store.dispatch(const NotificationTappedAction());
+      (launchPayload == PushNotificationRepository.dailyReminderPayload ||
+          launchPayload == PushNotificationRepository.weeklySummaryPayload)) {
+    store.dispatch(NotificationTappedAction(launchPayload!));
   }
 
   return store;

@@ -55,6 +55,7 @@ class _NotificationsSettingsBodyState extends State<_NotificationsSettingsBody> 
     _slots = NotificationSlots(
       slot1: widget.viewModel.dailySlot1,
       slot2: widget.viewModel.dailySlot2,
+      weeklySummary: widget.viewModel.weeklySummarySlot,
     );
   }
 
@@ -104,6 +105,7 @@ class _NotificationsSettingsBodyState extends State<_NotificationsSettingsBody> 
           NotificationSlotCard(
             enabled: widget.viewModel.notificationsEnabled,
             slot: _slots.slot1,
+            label: Strings.notificationsSettingsPageDailySlot1,
             onToggle: (value) => _updateSlots(
               _slots.copyWith(slot1: _slots.slot1.copyWith(enabled: value)),
             ),
@@ -115,11 +117,31 @@ class _NotificationsSettingsBodyState extends State<_NotificationsSettingsBody> 
           NotificationSlotCard(
             enabled: widget.viewModel.notificationsEnabled,
             slot: _slots.slot2,
+            label: Strings.notificationsSettingsPageDailySlot2,
             onToggle: (value) => _updateSlots(
               _slots.copyWith(slot2: _slots.slot2.copyWith(enabled: value)),
             ),
             onTimeChanged: (time) => _updateSlots(
               _slots.copyWith(slot2: _slots.slot2.copyWith(time: time, enabled: true)),
+            ),
+          ),
+          const SizedBox(height: Margins.spacingL),
+          Texts.primaryRegularMedium(
+            Strings.notificationsSettingsPageWeeklySlot,
+            color: AppColors.contentSoft(context),
+          ),
+          const SizedBox(height: Margins.spacingBase),
+          NotificationSlotCard(
+            enabled: widget.viewModel.notificationsEnabled,
+            slot: _slots.weeklySummary,
+            label: Strings.notificationsSettingsPageWeeklySlotDay(
+              Strings.weekdayFullNames[(widget.viewModel.weekStartDay - 1).clamp(0, 6)],
+            ),
+            onToggle: (value) => _updateSlots(
+              _slots.copyWith(weeklySummary: _slots.weeklySummary.copyWith(enabled: value)),
+            ),
+            onTimeChanged: (time) => _updateSlots(
+              _slots.copyWith(weeklySummary: _slots.weeklySummary.copyWith(time: time, enabled: true)),
             ),
           ),
         ],
@@ -142,27 +164,25 @@ class _NotificationsDisabledBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(Dimens.radiusBase),
         border: Border.all(color: AppColors.redWarning.withValues(alpha: 0.25)),
       ),
-      child: Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Icon(
-              MingCuteIcons.mgc_notification_off_line,
-              color: AppColors.redWarning,
-              size: Dimens.iconSizeM,
-            ),
-            const SizedBox(height: Margins.spacingM),
-            Texts.primaryRegularMedium(
-              Strings.notificationsSettingsPageDisabledMessage,
-              color: AppColors.content(context),
-            ),
-            const SizedBox(height: Margins.spacingM),
-            PrimaryButton(
-              text: Strings.notificationsSettingsPageOpenSettings,
-              onPressed: onOpenSettings,
-            ),
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Icon(
+            MingCuteIcons.mgc_notification_off_line,
+            color: AppColors.redWarning,
+            size: Dimens.iconSizeM,
+          ),
+          const SizedBox(height: Margins.spacingM),
+          Texts.primaryRegularMedium(
+            Strings.notificationsSettingsPageDisabledMessage,
+            color: AppColors.content(context),
+          ),
+          const SizedBox(height: Margins.spacingM),
+          PrimaryButton(
+            text: Strings.notificationsSettingsPageOpenSettings,
+            onPressed: onOpenSettings,
+          ),
+        ],
       ),
     );
   }

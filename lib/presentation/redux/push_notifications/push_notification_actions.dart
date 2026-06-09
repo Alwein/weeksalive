@@ -30,7 +30,8 @@ class PushNotificationEnabledLoadedAction {
 }
 
 class NotificationTappedAction {
-  const NotificationTappedAction();
+  final String payload;
+  const NotificationTappedAction(this.payload);
 }
 
 class ClearNotificationTapAction {

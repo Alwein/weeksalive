@@ -25,24 +25,39 @@ class NotificationSlotState {
   int get hashCode => Object.hash(time.hour, time.minute, enabled);
 }
 
-/// Two configurable daily notification slots.
+class WeeklySummarySchedule {
+  const WeeklySummarySchedule({required this.time, required this.weekStartDay});
+
+  final TimeOfDay time;
+  final int weekStartDay;
+}
+
+/// Configurable daily and weekly notification slots.
 class NotificationSlots {
   static const defaultSlot1Time = TimeOfDay(hour: 18, minute: 0);
   static const defaultSlot2Time = TimeOfDay(hour: 21, minute: 0);
+  static const defaultWeeklySummaryTime = TimeOfDay(hour: 21, minute: 0);
 
   final NotificationSlotState slot1;
   final NotificationSlotState slot2;
+  final NotificationSlotState weeklySummary;
 
-  const NotificationSlots({required this.slot1, required this.slot2});
+  const NotificationSlots({
+    required this.slot1,
+    required this.slot2,
+    required this.weeklySummary,
+  });
 
   factory NotificationSlots.defaults() => const NotificationSlots(
     slot1: NotificationSlotState(time: defaultSlot1Time, enabled: false),
     slot2: NotificationSlotState(time: defaultSlot2Time, enabled: false),
+    weeklySummary: NotificationSlotState(time: defaultWeeklySummaryTime, enabled: false),
   );
 
   factory NotificationSlots.onboardingInitial() => const NotificationSlots(
     slot1: NotificationSlotState(time: defaultSlot1Time, enabled: false),
     slot2: NotificationSlotState(time: defaultSlot2Time, enabled: true),
+    weeklySummary: NotificationSlotState(time: defaultWeeklySummaryTime, enabled: true),
   );
 
   factory NotificationSlots.fromNotificationTimes(List<TimeOfDay> times) {
@@ -65,7 +80,7 @@ class NotificationSlots {
       } else {
         slot2 = slot2.copyWith(time: time, enabled: true);
       }
-      return NotificationSlots(slot1: slot1, slot2: slot2);
+      return NotificationSlots(slot1: slot1, slot2: slot2, weeklySummary: defaults.weeklySummary);
     }
 
     if (!slot1.enabled && remaining.isNotEmpty) {
@@ -75,7 +90,7 @@ class NotificationSlots {
       slot2 = slot2.copyWith(time: remaining.removeAt(0), enabled: true);
     }
 
-    return NotificationSlots(slot1: slot1, slot2: slot2);
+    return NotificationSlots(slot1: slot1, slot2: slot2, weeklySummary: defaults.weeklySummary);
   }
 
   List<TimeOfDay> toNotificationTimes() => [
@@ -83,25 +98,34 @@ class NotificationSlots {
     if (slot2.enabled) slot2.time,
   ];
 
+  WeeklySummarySchedule? weeklySummarySchedule(int weekStartDay) {
+    if (!weeklySummary.enabled) return null;
+    return WeeklySummarySchedule(time: weeklySummary.time, weekStartDay: weekStartDay);
+  }
+
   NotificationSlots copyWith({
     NotificationSlotState? slot1,
     NotificationSlotState? slot2,
+    NotificationSlotState? weeklySummary,
   }) {
     return NotificationSlots(
       slot1: slot1 ?? this.slot1,
       slot2: slot2 ?? this.slot2,
+      weeklySummary: weeklySummary ?? this.weeklySummary,
     );
   }
 
   Map<String, dynamic> toJson() => {
     'slot1': _slotToJson(slot1),
     'slot2': _slotToJson(slot2),
+    'weeklySummary': _slotToJson(weeklySummary),
   };
 
   factory NotificationSlots.fromJson(Map<String, dynamic> json) {
     return NotificationSlots(
       slot1: _slotFromJson(json['slot1'] as Map<String, dynamic>),
       slot2: _slotFromJson(json['slot2'] as Map<String, dynamic>),
+      weeklySummary: _slotFromJson(json['weeklySummary'] as Map<String, dynamic>),
     );
   }
 
@@ -121,10 +145,13 @@ class NotificationSlots {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is NotificationSlots && other.slot1 == slot1 && other.slot2 == slot2;
+      other is NotificationSlots &&
+          other.slot1 == slot1 &&
+          other.slot2 == slot2 &&
+          other.weeklySummary == weeklySummary;
 
   @override
-  int get hashCode => Object.hash(slot1, slot2);
+  int get hashCode => Object.hash(slot1, slot2, weeklySummary);
 
   static bool _matches(TimeOfDay a, TimeOfDay b) => a.hour == b.hour && a.minute == b.minute;
 

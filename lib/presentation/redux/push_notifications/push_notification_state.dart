@@ -1,23 +1,29 @@
 import 'package:weeksalive/domain/notifications/notification_slots.dart';
 
+enum PendingNotificationTarget {
+  none,
+  dayForm,
+  weeklySummary,
+}
+
 class PushNotificationState {
   PushNotificationState({
-    this.pendingOpenDayForm = false,
+    this.pendingNavigation = PendingNotificationTarget.none,
     this.pushNotificationEnabled = false,
     NotificationSlots? slots,
   }) : slots = slots ?? NotificationSlots.defaults();
 
-  final bool pendingOpenDayForm;
+  final PendingNotificationTarget pendingNavigation;
   final bool pushNotificationEnabled;
   final NotificationSlots slots;
 
   PushNotificationState copyWith({
-    bool? pendingOpenDayForm,
+    PendingNotificationTarget? pendingNavigation,
     bool? pushNotificationEnabled,
     NotificationSlots? slots,
   }) {
     return PushNotificationState(
-      pendingOpenDayForm: pendingOpenDayForm ?? this.pendingOpenDayForm,
+      pendingNavigation: pendingNavigation ?? this.pendingNavigation,
       pushNotificationEnabled: pushNotificationEnabled ?? this.pushNotificationEnabled,
       slots: slots ?? this.slots,
     );

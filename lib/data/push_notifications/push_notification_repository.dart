@@ -17,12 +17,16 @@ class PushNotificationRepository {
   final SharedPreferences? _preferences;
   final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
 
-  static const _channelId = 'weeksalive_daily';
+  static const _dailyChannelId = 'weeksalive_daily';
+  static const _weeklyChannelId = 'weeksalive_weekly';
   static const _notificationSlotsKey = 'notification_slots';
-  static const _channelName = 'Daily reminders';
+  static const _dailyChannelName = 'Daily reminders';
+  static const _weeklyChannelName = 'Weekly recap';
   static const dailyReminderPayload = 'daily_reminder';
+  static const weeklySummaryPayload = 'weekly_summary';
+  static const _weeklyNotificationId = 10;
 
-  Future<void> initialize({void Function()? onNotificationTap}) async {
+  Future<void> initialize({void Function(String payload)? onNotificationTap}) async {
     tz.initializeTimeZones();
     final timezoneName = await FlutterTimezone.getLocalTimezone();
     tz.setLocalLocation(tz.getLocation(timezoneName));
@@ -38,7 +42,10 @@ class PushNotificationRepository {
       settings: settings,
       onDidReceiveNotificationResponse: onNotificationTap != null
           ? (NotificationResponse response) {
-              if (response.payload == dailyReminderPayload) onNotificationTap();
+              final payload = response.payload;
+              if (payload == dailyReminderPayload || payload == weeklySummaryPayload) {
+                onNotificationTap(payload!);
+              }
             }
           : null,
     );
@@ -92,11 +99,14 @@ class PushNotificationRepository {
     return true;
   }
 
-  Future<void> scheduleNotifications(List<TimeOfDay> times) async {
+  Future<void> scheduleAllNotifications({
+    required List<TimeOfDay> dailyTimes,
+    WeeklySummarySchedule? weeklySummary,
+  }) async {
     await _plugin.cancelAll();
 
-    for (int i = 0; i < times.length; i++) {
-      final time = times[i];
+    for (int i = 0; i < dailyTimes.length; i++) {
+      final time = dailyTimes[i];
       final scheduledDate = _nextInstanceOf(time.hour, time.minute);
 
       await _plugin.zonedSchedule(
@@ -107,8 +117,8 @@ class PushNotificationRepository {
         scheduledDate: scheduledDate,
         notificationDetails: const NotificationDetails(
           android: AndroidNotificationDetails(
-            _channelId,
-            _channelName,
+            _dailyChannelId,
+            _dailyChannelName,
             importance: Importance.high,
             priority: Priority.high,
           ),
@@ -122,6 +132,38 @@ class PushNotificationRepository {
         matchDateTimeComponents: DateTimeComponents.time,
       );
     }
+
+    if (weeklySummary != null) {
+      final time = weeklySummary.time;
+      final scheduledDate = _nextInstanceOfWeekday(
+        weeklySummary.weekStartDay,
+        time.hour,
+        time.minute,
+      );
+
+      await _plugin.zonedSchedule(
+        id: _weeklyNotificationId,
+        title: Strings.weeklySummaryNotificationTitle,
+        body: Strings.weeklySummaryNotificationBody,
+        payload: weeklySummaryPayload,
+        scheduledDate: scheduledDate,
+        notificationDetails: const NotificationDetails(
+          android: AndroidNotificationDetails(
+            _weeklyChannelId,
+            _weeklyChannelName,
+            importance: Importance.high,
+            priority: Priority.high,
+          ),
+          iOS: DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: false,
+            presentSound: true,
+          ),
+        ),
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+      );
+    }
   }
 
   tz.TZDateTime _nextInstanceOf(int hour, int minute) {
@@ -129,6 +171,23 @@ class PushNotificationRepository {
     var scheduled = tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
     if (scheduled.isBefore(now)) {
       scheduled = scheduled.add(const Duration(days: 1));
+    }
+    return scheduled;
+  }
+
+  tz.TZDateTime _nextInstanceOfWeekday(int weekday, int hour, int minute) {
+    final now = tz.TZDateTime.now(tz.local);
+    var scheduled = tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
+    while (scheduled.weekday != weekday || scheduled.isBefore(now)) {
+      scheduled = scheduled.add(const Duration(days: 1));
+      scheduled = tz.TZDateTime(
+        tz.local,
+        scheduled.year,
+        scheduled.month,
+        scheduled.day,
+        hour,
+        minute,
+      );
     }
     return scheduled;
   }

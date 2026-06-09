@@ -5,6 +5,7 @@ import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
 import 'package:weeksalive/presentation/redux/user/user_actions.dart';
+import 'package:weeksalive/presentation/redux/user/user_state.dart';
 
 class PushNotificationMiddleware extends MiddlewareClass<AppState> {
   final PushNotificationRepository pushNotificationRepository;
@@ -28,7 +29,7 @@ class PushNotificationMiddleware extends MiddlewareClass<AppState> {
           slots: slots,
         ),
       );
-      await pushNotificationRepository.scheduleNotifications(slots.toNotificationTimes());
+      await _reschedule(store);
     }
 
     if (action is RequestNotificationPermissionAction) {
@@ -48,14 +49,31 @@ class PushNotificationMiddleware extends MiddlewareClass<AppState> {
     if (action is UpdateNotificationSettingsAction) {
       await pushNotificationRepository.setNotificationSlots(action.slots);
       store.dispatch(NotificationSettingsLoadedAction(action.slots));
-      await pushNotificationRepository.scheduleNotifications(action.slots.toNotificationTimes());
+      await _reschedule(store);
+    }
+
+    if (action is UserLoadedAction) {
+      await _reschedule(store);
     }
 
     if (action is ClearUserAction) {
       await pushNotificationRepository.clearNotificationSlots();
       final defaults = NotificationSlots.defaults();
       store.dispatch(NotificationSettingsLoadedAction(defaults));
-      await pushNotificationRepository.scheduleNotifications([]);
+      await pushNotificationRepository.scheduleAllNotifications(
+        dailyTimes: [],
+        weeklySummary: null,
+      );
     }
+  }
+
+  Future<void> _reschedule(Store<AppState> store) async {
+    final slots = store.state.pushNotificationState.slots;
+    final weekStartDay = store.state.userState.userOrNull?.weekStartDay ?? DateTime.monday;
+
+    await pushNotificationRepository.scheduleAllNotifications(
+      dailyTimes: slots.toNotificationTimes(),
+      weeklySummary: slots.weeklySummarySchedule(weekStartDay),
+    );
   }
 }

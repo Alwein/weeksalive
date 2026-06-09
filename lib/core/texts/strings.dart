@@ -176,6 +176,8 @@ class Strings {
   static String get onboardingNotificationSubtitle => "Time for your daily check-in.";
   static String get dailyNotificationTitle => "Make this day count";
   static String get dailyNotificationBody => "It's time to check in";
+  static String get weeklySummaryNotificationTitle => "Your week in review";
+  static String get weeklySummaryNotificationBody => "A new week begins — see how last week went";
 
   static String get onboardingWeekBeginTitle => "When do you prefer the week to begin?";
   static String get onboardingWeekBeginSubtitle => "When a new dot is added to your life grid.";
@@ -385,6 +387,10 @@ class Strings {
   // notifications settings page
   static String get notificationsSettingsPageTitle => "Notifications";
   static String get notificationsSettingsPageDailySlots => "Daily check-in";
+  static String get notificationsSettingsPageWeeklySlot => "Weekly recap";
+  static String get notificationsSettingsPageDailySlot1 => "Daily check-in 1";
+  static String get notificationsSettingsPageDailySlot2 => "Daily check-in 2";
+  static String notificationsSettingsPageWeeklySlotDay(String weekday) => "Every $weekday";
   static String get notificationsSettingsPageDisabledMessage =>
       "Push notifications are disabled on your device. Enable them in your phone settings to receive daily reminders.";
   static String get notificationsSettingsPageOpenSettings => "Open settings";

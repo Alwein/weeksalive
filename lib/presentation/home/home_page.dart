@@ -16,6 +16,8 @@ import 'package:weeksalive/presentation/onboarding/widgets/custom_tab_bar.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/navigation/navigation_actions.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
+import 'package:weeksalive/presentation/redux/push_notifications/push_notification_state.dart';
+import 'package:weeksalive/presentation/weekly_summary/weekly_summary.dart';
 import 'package:weeksalive/presentation/widgets/apparition_animation.dart';
 import 'package:weeksalive/presentation/widgets/zoomable_life_grid_view.dart';
 
@@ -132,28 +134,35 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
     }
   }
 
-  void _onNotificationTap() {
+  void _onNotificationTap(PendingNotificationTarget target) {
     StoreProvider.of<AppState>(context).dispatch(const ClearNotificationTapAction());
-    _openTodayForm();
+    switch (target) {
+      case PendingNotificationTarget.dayForm:
+        _openTodayForm();
+      case PendingNotificationTarget.weeklySummary:
+        WeeklySummaryPage.show(context);
+      case PendingNotificationTarget.none:
+        break;
+    }
   }
 
-  void _scheduleNotificationTap() {
+  void _scheduleNotificationTap(PendingNotificationTarget target) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _onNotificationTap();
+      if (mounted) _onNotificationTap(target);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, bool>(
-      converter: (store) => store.state.pushNotificationState.pendingOpenDayForm,
-      // onWillChange is not called on first build (flutter_redux 0.10+), so cold-start
-      // taps that set pendingOpenDayForm before HomePage mounts need onInitialBuild.
-      onInitialBuild: (pending) {
-        if (pending) _scheduleNotificationTap();
+    return StoreConnector<AppState, PendingNotificationTarget>(
+      converter: (store) => store.state.pushNotificationState.pendingNavigation,
+      onInitialBuild: (target) {
+        if (target != PendingNotificationTarget.none) _scheduleNotificationTap(target);
       },
       onWillChange: (previous, next) {
-        if (next && previous == false) _scheduleNotificationTap();
+        if (next != PendingNotificationTarget.none && previous == PendingNotificationTarget.none) {
+          _scheduleNotificationTap(next);
+        }
       },
       builder: (context, _) => ApparitionAnimation(
         child: Column(
