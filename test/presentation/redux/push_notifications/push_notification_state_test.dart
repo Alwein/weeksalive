@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
+import 'package:weeksalive/domain/notifications/notification_payloads.dart';
 import 'package:weeksalive/domain/notifications/notification_slots.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
@@ -273,7 +273,7 @@ void main() {
       storeTester.givenStore(initialAppState());
 
       storeTester.whenDispatching(
-        () => const NotificationTappedAction(PushNotificationRepository.weeklySummaryPayload),
+        () => const NotificationTappedAction(NotificationPayloads.weeklySummary),
       );
 
       storeTester.thenExpectStatesInOrder([
@@ -289,7 +289,7 @@ void main() {
       storeTester.givenStore(initialAppState());
 
       storeTester.whenDispatching(
-        () => const NotificationTappedAction(PushNotificationRepository.dailyReminderPayload),
+        () => const NotificationTappedAction(NotificationPayloads.dailyReminder),
       );
 
       storeTester.thenExpectStatesInOrder([

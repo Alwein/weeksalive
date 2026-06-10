@@ -1,12 +1,12 @@
-import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
+import 'package:weeksalive/domain/notifications/notification_payloads.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_state.dart';
 
 PushNotificationState pushNotificationReducer(PushNotificationState state, dynamic action) {
   if (action is NotificationTappedAction) {
     final target = switch (action.payload) {
-      PushNotificationRepository.dailyReminderPayload => PendingNotificationTarget.dayForm,
-      PushNotificationRepository.weeklySummaryPayload => PendingNotificationTarget.weeklySummary,
+      NotificationPayloads.dailyReminder => PendingNotificationTarget.dayForm,
+      NotificationPayloads.weeklySummary => PendingNotificationTarget.weeklySummary,
       _ => PendingNotificationTarget.none,
     };
     return state.copyWith(pendingNavigation: target);

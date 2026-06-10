@@ -7,14 +7,22 @@ import 'package:jiffy/jiffy.dart';
 import 'package:redux/redux.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
+import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/presentation/bootstrap/bootstrap_page.dart';
+import 'package:weeksalive/presentation/push_notifications/push_notification_navigation_handler.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/widgets/app_background_scale.dart';
 import 'package:weeksalive/presentation/widgets/notch_logo.dart';
 
 class App extends StatefulWidget {
   final Store<AppState> store;
-  const App({super.key, required this.store});
+  final PushNotificationRepository pushNotificationRepository;
+
+  const App({
+    super.key,
+    required this.store,
+    required this.pushNotificationRepository,
+  });
 
   @override
   State<App> createState() => _AppState();
@@ -22,49 +30,56 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   final _backgroundScaleController = AppBackgroundScaleController();
+  final _navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
     return StoreProvider<AppState>(
       store: widget.store,
       child: StoreConnector<AppState, ThemeMode>(
         converter: (store) => store.state.themeState.themeMode,
-        builder: (context, themeMode) => MaterialApp(
-          title: 'WeeksAlive',
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          navigatorObservers: [
-            FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
-            HapticNavigatorObserver(),
-          ],
-          themeMode: themeMode,
-          builder: (context, child) {
-            Jiffy.setLocale(Localizations.localeOf(context).languageCode);
-            return HiddenLogo(
-              body: AppBackgroundScaleScope(
-                notifier: _backgroundScaleController,
-                child: AnimatedBuilder(
-                  animation: _backgroundScaleController,
-                  child: child!,
-                  builder: (context, child) => AnimatedScale(
-                    scale: _backgroundScaleController.scale,
-                    duration: AnimationDurations.base,
-                    curve: Curves.easeOutSine,
-                    child: child,
+        builder: (context, themeMode) => PushNotificationNavigationHandler(
+          navigatorKey: _navigatorKey,
+          pushNotificationRepository: widget.pushNotificationRepository,
+          child: MaterialApp(
+            navigatorKey: _navigatorKey,
+            title: 'WeeksAlive',
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
+            navigatorObservers: [
+              FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+              HapticNavigatorObserver(),
+            ],
+            themeMode: themeMode,
+            builder: (context, child) {
+              Jiffy.setLocale(Localizations.localeOf(context).languageCode);
+              return HiddenLogo(
+                body: AppBackgroundScaleScope(
+                  notifier: _backgroundScaleController,
+                  child: AnimatedBuilder(
+                    animation: _backgroundScaleController,
+                    child: child!,
+                    builder: (context, child) => AnimatedScale(
+                      scale: _backgroundScaleController.scale,
+                      duration: AnimationDurations.base,
+                      curve: Curves.easeOutSine,
+                      child: child,
+                    ),
                   ),
                 ),
-              ),
-              notchBuilder: (context, size) => NotchLogo(size: size),
-              dynamicIslandBuilder: (context, size) => NotchLogo(size: size),
-            );
-          },
-          theme: ThemeData(
-            brightness: Brightness.light,
+                notchBuilder: (context, size) => NotchLogo(size: size),
+                dynamicIslandBuilder: (context, size) => NotchLogo(size: size),
+              );
+            },
+            theme: ThemeData(
+              brightness: Brightness.light,
+            ),
+            darkTheme: ThemeData(
+              brightness: Brightness.dark,
+            ),
+            home: const BootstrapPage(),
           ),
-          darkTheme: ThemeData(
-            brightness: Brightness.dark,
-          ),
-          home: const BootstrapPage(),
         ),
       ),
     );

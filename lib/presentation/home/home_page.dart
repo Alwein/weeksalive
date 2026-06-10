@@ -15,9 +15,6 @@ import 'package:weeksalive/presentation/home/widgets/home_week_calendar.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/custom_tab_bar.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/navigation/navigation_actions.dart';
-import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
-import 'package:weeksalive/presentation/redux/push_notifications/push_notification_state.dart';
-import 'package:weeksalive/presentation/weekly_summary/weekly_summary.dart';
 import 'package:weeksalive/presentation/widgets/apparition_animation.dart';
 import 'package:weeksalive/presentation/widgets/zoomable_life_grid_view.dart';
 
@@ -134,37 +131,9 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
     }
   }
 
-  void _onNotificationTap(PendingNotificationTarget target) {
-    StoreProvider.of<AppState>(context).dispatch(const ClearNotificationTapAction());
-    switch (target) {
-      case PendingNotificationTarget.dayForm:
-        _openTodayForm();
-      case PendingNotificationTarget.weeklySummary:
-        WeeklySummaryPage.show(context);
-      case PendingNotificationTarget.none:
-        break;
-    }
-  }
-
-  void _scheduleNotificationTap(PendingNotificationTarget target) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _onNotificationTap(target);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, PendingNotificationTarget>(
-      converter: (store) => store.state.pushNotificationState.pendingNavigation,
-      onInitialBuild: (target) {
-        if (target != PendingNotificationTarget.none) _scheduleNotificationTap(target);
-      },
-      onWillChange: (previous, next) {
-        if (next != PendingNotificationTarget.none && previous == PendingNotificationTarget.none) {
-          _scheduleNotificationTap(next);
-        }
-      },
-      builder: (context, _) => ApparitionAnimation(
+    return ApparitionAnimation(
         child: Column(
           children: [
             SizedBox(height: MediaQuery.paddingOf(context).top),
@@ -201,7 +170,6 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
             ),
           ],
         ),
-      ),
     );
   }
 }
