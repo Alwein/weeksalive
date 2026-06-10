@@ -6,6 +6,7 @@ import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/domain/notifications/notification_slots.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/profile/pages/notifications_settings/notifications_settings_view_model.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
@@ -97,9 +98,8 @@ class _NotificationsSettingsBodyState extends State<_NotificationsSettingsBody> 
             ),
             const SizedBox(height: Margins.spacingBase),
           ],
-          Texts.primaryRegularMedium(
+          Texts.primaryMediumBold(
             Strings.notificationsSettingsPageDailySlots,
-            color: AppColors.contentSoft(context),
           ),
           const SizedBox(height: Margins.spacingBase),
           NotificationSlotCard(
@@ -125,10 +125,11 @@ class _NotificationsSettingsBodyState extends State<_NotificationsSettingsBody> 
               _slots.copyWith(slot2: _slots.slot2.copyWith(time: time, enabled: true)),
             ),
           ),
-          const SizedBox(height: Margins.spacingL),
-          Texts.primaryRegularMedium(
+          const SizedBox(height: Margins.spacingM),
+          const SmallDivider(width: double.infinity),
+          const SizedBox(height: Margins.spacingM),
+          Texts.primaryMediumBold(
             Strings.notificationsSettingsPageWeeklySlot,
-            color: AppColors.contentSoft(context),
           ),
           const SizedBox(height: Margins.spacingBase),
           NotificationSlotCard(

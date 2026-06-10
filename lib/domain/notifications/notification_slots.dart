@@ -36,7 +36,7 @@ class WeeklySummarySchedule {
 class NotificationSlots {
   static const defaultSlot1Time = TimeOfDay(hour: 18, minute: 0);
   static const defaultSlot2Time = TimeOfDay(hour: 21, minute: 0);
-  static const defaultWeeklySummaryTime = TimeOfDay(hour: 21, minute: 0);
+  static const defaultWeeklySummaryTime = TimeOfDay(hour: 9, minute: 0);
 
   final NotificationSlotState slot1;
   final NotificationSlotState slot2;
