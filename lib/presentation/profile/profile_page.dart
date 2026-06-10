@@ -229,13 +229,6 @@ class _PreferencesCard extends StatelessWidget {
       child: Column(
         children: [
           _PreferencesButton(
-            title: Strings.profilePageNotifications,
-            value: viewModel.notificationsEnabled,
-            onTap: () => Navigator.push(context, NotificationsSettingsPage.route()),
-            icon: MingCuteIcons.mgc_right_line,
-          ),
-          const SmallDivider(width: double.infinity),
-          _PreferencesButton(
             title: Strings.profilePageWeekBegin,
             value: viewModel.weekStartDay,
             onTap: () => Navigator.push(context, WeekBeginPage.route()),
@@ -246,6 +239,13 @@ class _PreferencesCard extends StatelessWidget {
             title: Strings.profilePageWeeklyIntentions,
             value: viewModel.weeklyIntents,
             onTap: () => EditWeeklyIntentBottomSheet.show(context),
+            icon: MingCuteIcons.mgc_right_line,
+          ),
+          const SmallDivider(width: double.infinity),
+          _PreferencesButton(
+            title: Strings.profilePageNotifications,
+            value: viewModel.notificationsEnabled,
+            onTap: () => Navigator.push(context, NotificationsSettingsPage.route()),
             icon: MingCuteIcons.mgc_right_line,
           ),
           const SmallDivider(width: double.infinity),

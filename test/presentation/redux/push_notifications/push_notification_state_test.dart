@@ -7,6 +7,7 @@ import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_actions.dart';
+import 'package:weeksalive/presentation/redux/user/user_state.dart';
 
 import '../../../fixtures/user_fixtures.dart';
 import '../../../helpers/matchers.dart';
@@ -225,6 +226,55 @@ void main() {
       ).captured;
       expect(captured[0], isEmpty);
       expect(captured[1], isNull);
+    });
+  });
+
+  group('UpdateUserAction', () {
+    late StoreTester storeTester;
+    late MockPushNotificationRepository pushRepo;
+
+    setUp(() {
+      storeTester = StoreTester();
+      pushRepo = MockPushNotificationRepository();
+    });
+
+    test('reschedules weekly summary when weekStartDay changes', () async {
+      const slots = NotificationSlots(
+        slot1: NotificationSlotState(time: TimeOfDay(hour: 18, minute: 0), enabled: false),
+        slot2: NotificationSlotState(time: TimeOfDay(hour: 21, minute: 0), enabled: false),
+        weeklySummary: NotificationSlotState(time: TimeOfDay(hour: 10, minute: 30), enabled: true),
+      );
+      final user = userFixture(weekStartDay: DateTime.monday);
+
+      storeTester.givenStore(
+        initialAppState().copyWith(
+          userState: UserState.success(user),
+          pushNotificationState: initialAppState().pushNotificationState.copyWith(slots: slots),
+        ),
+        configure: (f) => f.pushNotificationRepository = pushRepo,
+      );
+
+      storeTester.whenDispatching(
+        () => UpdateUserAction(
+          name: user.name,
+          dateOfBirth: user.dateOfBirth,
+          gender: user.gender,
+          lifespan: user.lifespan,
+          weekStartDay: DateTime.sunday,
+        ),
+      );
+
+      await storeTester.thenExpectNothing();
+
+      final captured = verify(
+        () => pushRepo.scheduleAllNotifications(
+          dailyTimes: captureAny(named: 'dailyTimes'),
+          weeklySummary: captureAny(named: 'weeklySummary'),
+        ),
+      ).captured;
+      final weekly = captured[1] as WeeklySummarySchedule;
+      expect(weekly.weekStartDay, DateTime.sunday);
+      expect(weekly.time, const TimeOfDay(hour: 10, minute: 30));
     });
   });
 

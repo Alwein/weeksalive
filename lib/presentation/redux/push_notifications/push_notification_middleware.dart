@@ -52,6 +52,13 @@ class PushNotificationMiddleware extends MiddlewareClass<AppState> {
       await _reschedule(store);
     }
 
+    if (action is UpdateUserAction) {
+      final previousWeekStartDay = store.state.userState.userOrNull?.weekStartDay;
+      if (previousWeekStartDay != null && previousWeekStartDay != action.weekStartDay) {
+        await _reschedule(store, weekStartDay: action.weekStartDay);
+      }
+    }
+
     if (action is UserLoadedAction) {
       await _reschedule(store);
     }
@@ -67,13 +74,14 @@ class PushNotificationMiddleware extends MiddlewareClass<AppState> {
     }
   }
 
-  Future<void> _reschedule(Store<AppState> store) async {
+  Future<void> _reschedule(Store<AppState> store, {int? weekStartDay}) async {
     final slots = store.state.pushNotificationState.slots;
-    final weekStartDay = store.state.userState.userOrNull?.weekStartDay ?? DateTime.monday;
+    final effectiveWeekStartDay =
+        weekStartDay ?? store.state.userState.userOrNull?.weekStartDay ?? DateTime.monday;
 
     await pushNotificationRepository.scheduleAllNotifications(
       dailyTimes: slots.toNotificationTimes(),
-      weeklySummary: slots.weeklySummarySchedule(weekStartDay),
+      weeklySummary: slots.weeklySummarySchedule(effectiveWeekStartDay),
     );
   }
 }
