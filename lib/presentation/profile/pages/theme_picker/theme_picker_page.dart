@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:weeksalive/core/styles/margins.dart';
+import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/widgets/show_custom_bottom_sheet.dart';
+import 'package:weeksalive/presentation/widgets/texts.dart';
 import 'package:weeksalive/presentation/widgets/theme_picker.dart';
 
 class ThemePickerPage extends StatelessWidget {
@@ -15,12 +17,15 @@ class ThemePickerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: Margins.spacingM),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ThemePicker(),
-          SizedBox(height: Margins.spacingM),
+          Texts.xlBold(Strings.profilePageTheme),
+          const SizedBox(height: Margins.spacingBase),
+          const ThemePicker(showTitle: false),
+          const SizedBox(height: Margins.spacingM),
         ],
       ),
     );

@@ -11,7 +11,8 @@ import 'package:weeksalive/presentation/redux/theme/theme_actions.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class ThemePicker extends StatelessWidget {
-  const ThemePicker({super.key});
+  const ThemePicker({super.key, this.showTitle = true});
+  final bool showTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +22,10 @@ class ThemePicker extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Texts.primaryMediumSoft(context, Strings.themePickerTitle),
-          const SizedBox(height: Margins.spacingS),
+          if (showTitle) ...[
+            Texts.primaryMediumSoft(context, Strings.themePickerTitle),
+            const SizedBox(height: Margins.spacingS),
+          ],
           Row(
             spacing: Margins.spacingBase,
             children: [
