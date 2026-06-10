@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$WeeklySummaryPageViewModel {
 
- int get weekNumber; String get weekDates; AverageFeeling get lastWeekAverageFeeling; double get lastWeekAverageFeelingScore; double get lastWeekAverageMeaningScore; int get lastWeekNewExperiencesCount; List<(int, String)> get lastWeekLivingIntentions; List<(String dayLabel, int? sizeLevel)> get lastWeekDaySizes; List<String> get lastWeekImagePaths;
+ int get weekNumber; String get weekDates; AverageFeeling? get lastWeekAverageFeeling; double get lastWeekAverageFeelingScore; double get lastWeekAverageMeaningScore; int get lastWeekNewExperiencesCount; List<(int, String)> get lastWeekLivingIntentions; List<(String dayLabel, int? sizeLevel)> get lastWeekDaySizes; List<String> get lastWeekImagePaths;
 /// Create a copy of WeeklySummaryPageViewModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $WeeklySummaryPageViewModelCopyWith<$Res>  {
   factory $WeeklySummaryPageViewModelCopyWith(WeeklySummaryPageViewModel value, $Res Function(WeeklySummaryPageViewModel) _then) = _$WeeklySummaryPageViewModelCopyWithImpl;
 @useResult
 $Res call({
- int weekNumber, String weekDates, AverageFeeling lastWeekAverageFeeling, double lastWeekAverageFeelingScore, double lastWeekAverageMeaningScore, int lastWeekNewExperiencesCount, List<(int, String)> lastWeekLivingIntentions, List<(String dayLabel, int? sizeLevel)> lastWeekDaySizes, List<String> lastWeekImagePaths
+ int weekNumber, String weekDates, AverageFeeling? lastWeekAverageFeeling, double lastWeekAverageFeelingScore, double lastWeekAverageMeaningScore, int lastWeekNewExperiencesCount, List<(int, String)> lastWeekLivingIntentions, List<(String dayLabel, int? sizeLevel)> lastWeekDaySizes, List<String> lastWeekImagePaths
 });
 
 
@@ -62,12 +62,12 @@ class _$WeeklySummaryPageViewModelCopyWithImpl<$Res>
 
 /// Create a copy of WeeklySummaryPageViewModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? weekNumber = null,Object? weekDates = null,Object? lastWeekAverageFeeling = null,Object? lastWeekAverageFeelingScore = null,Object? lastWeekAverageMeaningScore = null,Object? lastWeekNewExperiencesCount = null,Object? lastWeekLivingIntentions = null,Object? lastWeekDaySizes = null,Object? lastWeekImagePaths = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? weekNumber = null,Object? weekDates = null,Object? lastWeekAverageFeeling = freezed,Object? lastWeekAverageFeelingScore = null,Object? lastWeekAverageMeaningScore = null,Object? lastWeekNewExperiencesCount = null,Object? lastWeekLivingIntentions = null,Object? lastWeekDaySizes = null,Object? lastWeekImagePaths = null,}) {
   return _then(_self.copyWith(
 weekNumber: null == weekNumber ? _self.weekNumber : weekNumber // ignore: cast_nullable_to_non_nullable
 as int,weekDates: null == weekDates ? _self.weekDates : weekDates // ignore: cast_nullable_to_non_nullable
-as String,lastWeekAverageFeeling: null == lastWeekAverageFeeling ? _self.lastWeekAverageFeeling : lastWeekAverageFeeling // ignore: cast_nullable_to_non_nullable
-as AverageFeeling,lastWeekAverageFeelingScore: null == lastWeekAverageFeelingScore ? _self.lastWeekAverageFeelingScore : lastWeekAverageFeelingScore // ignore: cast_nullable_to_non_nullable
+as String,lastWeekAverageFeeling: freezed == lastWeekAverageFeeling ? _self.lastWeekAverageFeeling : lastWeekAverageFeeling // ignore: cast_nullable_to_non_nullable
+as AverageFeeling?,lastWeekAverageFeelingScore: null == lastWeekAverageFeelingScore ? _self.lastWeekAverageFeelingScore : lastWeekAverageFeelingScore // ignore: cast_nullable_to_non_nullable
 as double,lastWeekAverageMeaningScore: null == lastWeekAverageMeaningScore ? _self.lastWeekAverageMeaningScore : lastWeekAverageMeaningScore // ignore: cast_nullable_to_non_nullable
 as double,lastWeekNewExperiencesCount: null == lastWeekNewExperiencesCount ? _self.lastWeekNewExperiencesCount : lastWeekNewExperiencesCount // ignore: cast_nullable_to_non_nullable
 as int,lastWeekLivingIntentions: null == lastWeekLivingIntentions ? _self.lastWeekLivingIntentions : lastWeekLivingIntentions // ignore: cast_nullable_to_non_nullable
@@ -158,7 +158,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int weekNumber,  String weekDates,  AverageFeeling lastWeekAverageFeeling,  double lastWeekAverageFeelingScore,  double lastWeekAverageMeaningScore,  int lastWeekNewExperiencesCount,  List<(int, String)> lastWeekLivingIntentions,  List<(String dayLabel, int? sizeLevel)> lastWeekDaySizes,  List<String> lastWeekImagePaths)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int weekNumber,  String weekDates,  AverageFeeling? lastWeekAverageFeeling,  double lastWeekAverageFeelingScore,  double lastWeekAverageMeaningScore,  int lastWeekNewExperiencesCount,  List<(int, String)> lastWeekLivingIntentions,  List<(String dayLabel, int? sizeLevel)> lastWeekDaySizes,  List<String> lastWeekImagePaths)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _WeeklySummaryPageViewModel() when $default != null:
 return $default(_that.weekNumber,_that.weekDates,_that.lastWeekAverageFeeling,_that.lastWeekAverageFeelingScore,_that.lastWeekAverageMeaningScore,_that.lastWeekNewExperiencesCount,_that.lastWeekLivingIntentions,_that.lastWeekDaySizes,_that.lastWeekImagePaths);case _:
@@ -179,7 +179,7 @@ return $default(_that.weekNumber,_that.weekDates,_that.lastWeekAverageFeeling,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int weekNumber,  String weekDates,  AverageFeeling lastWeekAverageFeeling,  double lastWeekAverageFeelingScore,  double lastWeekAverageMeaningScore,  int lastWeekNewExperiencesCount,  List<(int, String)> lastWeekLivingIntentions,  List<(String dayLabel, int? sizeLevel)> lastWeekDaySizes,  List<String> lastWeekImagePaths)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int weekNumber,  String weekDates,  AverageFeeling? lastWeekAverageFeeling,  double lastWeekAverageFeelingScore,  double lastWeekAverageMeaningScore,  int lastWeekNewExperiencesCount,  List<(int, String)> lastWeekLivingIntentions,  List<(String dayLabel, int? sizeLevel)> lastWeekDaySizes,  List<String> lastWeekImagePaths)  $default,) {final _that = this;
 switch (_that) {
 case _WeeklySummaryPageViewModel():
 return $default(_that.weekNumber,_that.weekDates,_that.lastWeekAverageFeeling,_that.lastWeekAverageFeelingScore,_that.lastWeekAverageMeaningScore,_that.lastWeekNewExperiencesCount,_that.lastWeekLivingIntentions,_that.lastWeekDaySizes,_that.lastWeekImagePaths);case _:
@@ -199,7 +199,7 @@ return $default(_that.weekNumber,_that.weekDates,_that.lastWeekAverageFeeling,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int weekNumber,  String weekDates,  AverageFeeling lastWeekAverageFeeling,  double lastWeekAverageFeelingScore,  double lastWeekAverageMeaningScore,  int lastWeekNewExperiencesCount,  List<(int, String)> lastWeekLivingIntentions,  List<(String dayLabel, int? sizeLevel)> lastWeekDaySizes,  List<String> lastWeekImagePaths)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int weekNumber,  String weekDates,  AverageFeeling? lastWeekAverageFeeling,  double lastWeekAverageFeelingScore,  double lastWeekAverageMeaningScore,  int lastWeekNewExperiencesCount,  List<(int, String)> lastWeekLivingIntentions,  List<(String dayLabel, int? sizeLevel)> lastWeekDaySizes,  List<String> lastWeekImagePaths)?  $default,) {final _that = this;
 switch (_that) {
 case _WeeklySummaryPageViewModel() when $default != null:
 return $default(_that.weekNumber,_that.weekDates,_that.lastWeekAverageFeeling,_that.lastWeekAverageFeelingScore,_that.lastWeekAverageMeaningScore,_that.lastWeekNewExperiencesCount,_that.lastWeekLivingIntentions,_that.lastWeekDaySizes,_that.lastWeekImagePaths);case _:
@@ -219,7 +219,7 @@ class _WeeklySummaryPageViewModel implements WeeklySummaryPageViewModel {
 
 @override final  int weekNumber;
 @override final  String weekDates;
-@override final  AverageFeeling lastWeekAverageFeeling;
+@override final  AverageFeeling? lastWeekAverageFeeling;
 @override final  double lastWeekAverageFeelingScore;
 @override final  double lastWeekAverageMeaningScore;
 @override final  int lastWeekNewExperiencesCount;
@@ -275,7 +275,7 @@ abstract mixin class _$WeeklySummaryPageViewModelCopyWith<$Res> implements $Week
   factory _$WeeklySummaryPageViewModelCopyWith(_WeeklySummaryPageViewModel value, $Res Function(_WeeklySummaryPageViewModel) _then) = __$WeeklySummaryPageViewModelCopyWithImpl;
 @override @useResult
 $Res call({
- int weekNumber, String weekDates, AverageFeeling lastWeekAverageFeeling, double lastWeekAverageFeelingScore, double lastWeekAverageMeaningScore, int lastWeekNewExperiencesCount, List<(int, String)> lastWeekLivingIntentions, List<(String dayLabel, int? sizeLevel)> lastWeekDaySizes, List<String> lastWeekImagePaths
+ int weekNumber, String weekDates, AverageFeeling? lastWeekAverageFeeling, double lastWeekAverageFeelingScore, double lastWeekAverageMeaningScore, int lastWeekNewExperiencesCount, List<(int, String)> lastWeekLivingIntentions, List<(String dayLabel, int? sizeLevel)> lastWeekDaySizes, List<String> lastWeekImagePaths
 });
 
 
@@ -292,12 +292,12 @@ class __$WeeklySummaryPageViewModelCopyWithImpl<$Res>
 
 /// Create a copy of WeeklySummaryPageViewModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? weekNumber = null,Object? weekDates = null,Object? lastWeekAverageFeeling = null,Object? lastWeekAverageFeelingScore = null,Object? lastWeekAverageMeaningScore = null,Object? lastWeekNewExperiencesCount = null,Object? lastWeekLivingIntentions = null,Object? lastWeekDaySizes = null,Object? lastWeekImagePaths = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? weekNumber = null,Object? weekDates = null,Object? lastWeekAverageFeeling = freezed,Object? lastWeekAverageFeelingScore = null,Object? lastWeekAverageMeaningScore = null,Object? lastWeekNewExperiencesCount = null,Object? lastWeekLivingIntentions = null,Object? lastWeekDaySizes = null,Object? lastWeekImagePaths = null,}) {
   return _then(_WeeklySummaryPageViewModel(
 weekNumber: null == weekNumber ? _self.weekNumber : weekNumber // ignore: cast_nullable_to_non_nullable
 as int,weekDates: null == weekDates ? _self.weekDates : weekDates // ignore: cast_nullable_to_non_nullable
-as String,lastWeekAverageFeeling: null == lastWeekAverageFeeling ? _self.lastWeekAverageFeeling : lastWeekAverageFeeling // ignore: cast_nullable_to_non_nullable
-as AverageFeeling,lastWeekAverageFeelingScore: null == lastWeekAverageFeelingScore ? _self.lastWeekAverageFeelingScore : lastWeekAverageFeelingScore // ignore: cast_nullable_to_non_nullable
+as String,lastWeekAverageFeeling: freezed == lastWeekAverageFeeling ? _self.lastWeekAverageFeeling : lastWeekAverageFeeling // ignore: cast_nullable_to_non_nullable
+as AverageFeeling?,lastWeekAverageFeelingScore: null == lastWeekAverageFeelingScore ? _self.lastWeekAverageFeelingScore : lastWeekAverageFeelingScore // ignore: cast_nullable_to_non_nullable
 as double,lastWeekAverageMeaningScore: null == lastWeekAverageMeaningScore ? _self.lastWeekAverageMeaningScore : lastWeekAverageMeaningScore // ignore: cast_nullable_to_non_nullable
 as double,lastWeekNewExperiencesCount: null == lastWeekNewExperiencesCount ? _self.lastWeekNewExperiencesCount : lastWeekNewExperiencesCount // ignore: cast_nullable_to_non_nullable
 as int,lastWeekLivingIntentions: null == lastWeekLivingIntentions ? _self._lastWeekLivingIntentions : lastWeekLivingIntentions // ignore: cast_nullable_to_non_nullable

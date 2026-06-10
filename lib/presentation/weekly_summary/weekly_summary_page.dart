@@ -176,7 +176,7 @@ class _AverageFeeling extends StatelessWidget {
           children: [
             Expanded(child: _feelingRow(context, viewModel.lastWeekAverageFeelingScore)),
             const SizedBox(width: Margins.spacingS),
-            FeelingSummary(value: viewModel.lastWeekAverageFeeling),
+            if (viewModel.lastWeekAverageFeeling != null) FeelingSummary(value: viewModel.lastWeekAverageFeeling!),
           ],
         ),
       ],

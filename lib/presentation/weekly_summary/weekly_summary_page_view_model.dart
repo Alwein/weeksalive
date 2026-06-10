@@ -16,7 +16,7 @@ abstract class WeeklySummaryPageViewModel with _$WeeklySummaryPageViewModel {
   const factory WeeklySummaryPageViewModel({
     required int weekNumber,
     required String weekDates,
-    required AverageFeeling lastWeekAverageFeeling,
+    required AverageFeeling? lastWeekAverageFeeling,
     required double lastWeekAverageFeelingScore,
     required double lastWeekAverageMeaningScore,
     required int lastWeekNewExperiencesCount,
@@ -88,9 +88,9 @@ String _formatWeekDateRange(DateTime start, DateTime end) {
   return '${start.day} $startMonth ${start.year} - ${end.day} $endMonth ${end.year}';
 }
 
-AverageFeeling _averageFeeling(List<DayEntry> entries) {
+AverageFeeling? _averageFeeling(List<DayEntry> entries) {
   final feelings = entries.map((entry) => entry.averageFeeling).whereType<AverageFeeling>().toList();
-  if (feelings.isEmpty) return AverageFeeling.okey;
+  if (feelings.isEmpty) return null;
 
   final averageIndex = feelings.map((feeling) => feeling.index).reduce((a, b) => a + b) / feelings.length;
   return AverageFeeling.values[averageIndex.round().clamp(0, AverageFeeling.values.length - 1)];
@@ -133,8 +133,7 @@ List<(int, String)> _livingIntentions(Store<AppState> store, List<DayEntry> entr
 
 List<(String, int?)> _weekDaySizes(Store<AppState> store, List<DateTime> days) {
   return [
-    for (final day in days)
-      (Strings.homePageDayLabels[day.weekday - 1], store.state.dayState.entryFor(day)?.sizeLevel),
+    for (final day in days) (Strings.homePageDayLabels[day.weekday - 1], store.state.dayState.entryFor(day)?.sizeLevel),
   ];
 }
 
