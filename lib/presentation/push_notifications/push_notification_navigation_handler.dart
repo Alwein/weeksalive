@@ -7,7 +7,8 @@ import 'package:weeksalive/presentation/day_form/day_form.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_state.dart';
-import 'package:weeksalive/presentation/weekly_summary/weekly_summary.dart';
+import 'package:weeksalive/presentation/redux/weekly_summary/weekly_summary_actions.dart';
+import 'package:weeksalive/presentation/weekly_summary/weekly_summary_page.dart';
 
 class PushNotificationNavigationHandler extends StatefulWidget {
   const PushNotificationNavigationHandler({
@@ -60,10 +61,18 @@ class _PushNotificationNavigationHandlerState extends State<PushNotificationNavi
       case PendingNotificationTarget.dayForm:
         DayForm.showBottomSheet(navigatorContext, DateTime.now());
       case PendingNotificationTarget.weeklySummary:
-        WeeklySummaryPage.show(navigatorContext);
+        _showWeeklySummary(store, navigatorContext);
       case PendingNotificationTarget.none:
         break;
     }
+  }
+
+  void _showWeeklySummary(Store<AppState> store, BuildContext navigatorContext) {
+    store.dispatch(const ClearWeeklySummaryRequestAction());
+    WeeklySummaryPage.show(
+      navigatorContext,
+      onDismissed: () => store.dispatch(const WeeklySummaryCompletedAction()),
+    );
   }
 
   void _schedulePendingNavigation(Store<AppState> store, PendingNotificationTarget target) {
@@ -73,23 +82,72 @@ class _PushNotificationNavigationHandlerState extends State<PushNotificationNavi
     });
   }
 
+  void _handlePendingWeeklySummary(Store<AppState> store, bool pendingShow) {
+    if (!pendingShow && (1 == 1)) return;
+    if (store.state.pushNotificationState.pendingNavigation != PendingNotificationTarget.none) {
+      return;
+    }
+
+    final navigatorContext = widget.navigatorKey.currentContext;
+    if (navigatorContext == null) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _showWeeklySummary(store, navigatorContext);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, PendingNotificationTarget>(
-      converter: (store) => store.state.pushNotificationState.pendingNavigation,
-      onInitialBuild: (target) {
-        if (target != PendingNotificationTarget.none) {
-          final store = StoreProvider.of<AppState>(context);
-          _schedulePendingNavigation(store, target);
+    return StoreConnector<AppState, _StartupModalViewModel>(
+      converter: _StartupModalViewModel.fromStore,
+      onInitialBuild: (viewModel) {
+        final store = StoreProvider.of<AppState>(context);
+        if (viewModel.pendingNavigation != PendingNotificationTarget.none) {
+          _schedulePendingNavigation(store, viewModel.pendingNavigation);
+        } else if (viewModel.pendingWeeklySummary) {
+          _handlePendingWeeklySummary(store, true);
         }
       },
       onWillChange: (previous, next) {
-        if (next != PendingNotificationTarget.none && previous == PendingNotificationTarget.none) {
-          final store = StoreProvider.of<AppState>(context);
-          _schedulePendingNavigation(store, next);
+        final store = StoreProvider.of<AppState>(context);
+        if (next.pendingNavigation != PendingNotificationTarget.none &&
+            previous?.pendingNavigation == PendingNotificationTarget.none) {
+          _schedulePendingNavigation(store, next.pendingNavigation);
+        } else if (next.pendingWeeklySummary &&
+            previous?.pendingWeeklySummary != true &&
+            next.pendingNavigation == PendingNotificationTarget.none) {
+          _handlePendingWeeklySummary(store, true);
         }
       },
       builder: (context, _) => widget.child,
     );
   }
+}
+
+class _StartupModalViewModel {
+  const _StartupModalViewModel({
+    required this.pendingNavigation,
+    required this.pendingWeeklySummary,
+  });
+
+  final PendingNotificationTarget pendingNavigation;
+  final bool pendingWeeklySummary;
+
+  static _StartupModalViewModel fromStore(Store<AppState> store) {
+    return _StartupModalViewModel(
+      pendingNavigation: store.state.pushNotificationState.pendingNavigation,
+      pendingWeeklySummary: store.state.weeklySummaryState.pendingShow,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is _StartupModalViewModel &&
+          other.pendingNavigation == pendingNavigation &&
+          other.pendingWeeklySummary == pendingWeeklySummary;
+
+  @override
+  int get hashCode => Object.hash(pendingNavigation, pendingWeeklySummary);
 }

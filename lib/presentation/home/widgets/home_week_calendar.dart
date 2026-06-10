@@ -4,6 +4,7 @@ import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/domain/weekly_calendar.dart';
 import 'package:weeksalive/presentation/home/view_model/home_page_view_model.dart';
 
 class HomeWeekCalendar extends StatelessWidget {
@@ -18,12 +19,6 @@ class HomeWeekCalendar extends StatelessWidget {
   final VoidCallback onTodayTap;
   final ValueChanged<DateTime> onPastDayTap;
 
-  List<DateTime> _weekDays(DateTime today, int weekStartDay) {
-    final offset = (today.weekday - weekStartDay) % 7;
-    final start = DateTime(today.year, today.month, today.day - offset);
-    return List.generate(7, (i) => start.add(Duration(days: i)));
-  }
-
   String _shortName(DateTime date) {
     return Strings.weekdayShortNames[date.weekday - 1];
   }
@@ -32,7 +27,7 @@ class HomeWeekCalendar extends StatelessWidget {
   Widget build(BuildContext context) {
     final today = DateTime.now();
     final todayNormalized = DateTime(today.year, today.month, today.day);
-    final days = _weekDays(todayNormalized, vm.weekStartDay);
+    final days = WeeklyCalendar.weekDays(todayNormalized, vm.weekStartDay);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),

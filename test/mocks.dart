@@ -10,6 +10,7 @@ import 'package:weeksalive/data/streak/streak_repository.dart';
 import 'package:weeksalive/data/theme/theme_repository.dart';
 import 'package:weeksalive/data/user/user_repository.dart';
 import 'package:weeksalive/data/weekly_intent/weekly_intent_repository.dart';
+import 'package:weeksalive/data/weekly_summary/weekly_summary_repository.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/domain/notifications/notification_slots.dart';
 import 'package:weeksalive/domain/user/user.dart';
@@ -78,6 +79,13 @@ class MockNavigationRepository extends Mock implements NavigationRepository {
   MockNavigationRepository() {
     when(() => getHomeTabIndex()).thenAnswer((_) async => 0);
     when(() => setHomeTabIndex(any())).thenAnswer((_) async {});
+  }
+}
+
+class MockWeeklySummaryRepository extends Mock implements WeeklySummaryRepository {
+  MockWeeklySummaryRepository() {
+    when(() => getLastCompletedWeekKey()).thenAnswer((_) => Future.sync(() => null));
+    when(() => setLastCompletedWeekKey(any())).thenAnswer((_) => Future.sync(() {}));
   }
 }
 

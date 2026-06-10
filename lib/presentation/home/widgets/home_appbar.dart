@@ -10,6 +10,7 @@ import 'package:weeksalive/domain/life_week_grid.dart';
 import 'package:weeksalive/presentation/home/view_model/home_page_view_model.dart';
 import 'package:weeksalive/presentation/home/widgets/fire_rive_player.dart';
 import 'package:weeksalive/presentation/profile/profile_page.dart';
+import 'package:weeksalive/presentation/weekly_summary/weekly_summary_page.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class HomeAppBar extends StatefulWidget {
@@ -178,7 +179,9 @@ class _StreaksButton extends StatelessWidget {
         backgroundColor: AppColors.bgSoft(context),
         surfaceTintColor: Colors.transparent,
       ),
-      onPressed: () {},
+      onPressed: () {
+        WeeklySummaryPage.show(context);
+      },
       child: Row(
         children: [
           SizedBox(

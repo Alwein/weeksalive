@@ -201,6 +201,7 @@ class Strings {
     'Saturday',
     'Sunday',
   ];
+
   static List<String> get weekdayShortNames => ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
 
   static String get onboarding21Title => "Your life, always in sight.";
@@ -398,4 +399,29 @@ class Strings {
   static String get notificationsSettingsPageDisabledMessage =>
       "Push notifications are disabled on your device. Enable them in your phone settings to receive daily reminders.";
   static String get notificationsSettingsPageOpenSettings => "Open settings";
+
+  // weekly summary page
+  static List<String> get monthNames => [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  static String get weeklySummaryPageTitle => "Week complete";
+  static String get weeklySummaryPageSubtitle => "One dot has been added to your life grid.";
+  static String get weeklySummaryPageAverageFeeling => "AVERAGE FEELING";
+  static String get weeklySummaryPageMeaningScore => "MEANING SCORE";
+  static String get weeklySummaryPageNewExperiences => "NEW EXPERIENCES";
+  static String get weeklySummaryPageLivingIntentions => "LIVING INTENTIONS";
+  static String get weeklySummaryPageRegularity => "REGULARITY";
+  static String get weeklySummaryPageSeeMore => "Start a new week";
 }

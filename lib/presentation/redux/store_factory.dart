@@ -8,6 +8,7 @@ import 'package:weeksalive/data/streak/streak_repository.dart';
 import 'package:weeksalive/data/theme/theme_repository.dart';
 import 'package:weeksalive/data/user/user_repository.dart';
 import 'package:weeksalive/data/weekly_intent/weekly_intent_repository.dart';
+import 'package:weeksalive/data/weekly_summary/weekly_summary_repository.dart';
 import 'package:weeksalive/presentation/redux/app_reducer.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_middleware.dart';
@@ -19,6 +20,7 @@ import 'package:weeksalive/presentation/redux/streak/streak_middleware.dart';
 import 'package:weeksalive/presentation/redux/theme/theme_middleware.dart';
 import 'package:weeksalive/presentation/redux/user/user_middleware.dart';
 import 'package:weeksalive/presentation/redux/weekly_intent/weekly_intent_middleware.dart';
+import 'package:weeksalive/presentation/redux/weekly_summary/weekly_summary_middleware.dart';
 
 class StoreFactory {
   final RemoteConfigRepository remoteConfigRepository;
@@ -29,6 +31,7 @@ class StoreFactory {
   final PurchaseRepository purchaseRepository;
   final StreakRepository streakRepository;
   final WeeklyIntentRepository weeklyIntentRepository;
+  final WeeklySummaryRepository weeklySummaryRepository;
   final DayRepository dayRepository;
 
   StoreFactory({
@@ -40,6 +43,7 @@ class StoreFactory {
     required this.purchaseRepository,
     required this.streakRepository,
     required this.weeklyIntentRepository,
+    required this.weeklySummaryRepository,
     required this.dayRepository,
   });
 
@@ -56,6 +60,7 @@ class StoreFactory {
         PurchaseMiddleware(purchaseRepository: purchaseRepository).call,
         StreakMiddleware(streakRepository: streakRepository).call,
         WeeklyIntentMiddleware(weeklyIntentRepository: weeklyIntentRepository).call,
+        WeeklySummaryMiddleware(weeklySummaryRepository: weeklySummaryRepository).call,
         DayMiddleware(dayRepository: dayRepository).call,
       ],
     );

@@ -46,6 +46,7 @@ class ProfilePage extends StatelessWidget {
                   Texts.primaryRegularMedium(Strings.profilePagePreferences, color: AppColors.contentSoft(context)),
                   const SizedBox(height: Margins.spacingBase),
                   _PreferencesCard(viewModel: viewModel),
+                  const SizedBox(height: Margins.spacingBase),
                 ],
               ),
             ),

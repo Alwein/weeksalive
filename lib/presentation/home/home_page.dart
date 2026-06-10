@@ -15,6 +15,7 @@ import 'package:weeksalive/presentation/home/widgets/home_week_calendar.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/custom_tab_bar.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/navigation/navigation_actions.dart';
+import 'package:weeksalive/presentation/redux/weekly_summary/weekly_summary_actions.dart';
 import 'package:weeksalive/presentation/widgets/apparition_animation.dart';
 import 'package:weeksalive/presentation/widgets/zoomable_life_grid_view.dart';
 
@@ -69,6 +70,10 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
         _zoomableGridKey.currentState?.jumpToYearView();
       });
     }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      StoreProvider.of<AppState>(context, listen: false).dispatch(const CheckWeeklySummaryAction());
+    });
   }
 
   @override
