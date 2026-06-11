@@ -10,5 +10,5 @@ class AppLinks {
   static const String leaveAReviewUrl = 'https://play.google.com/store/apps/details?id=TODO:';
 
   static const String featureRequestEmail = "contact@weeksalive.com"; // TODO: verifier sur zoho
-  static const String supportEmail = "contact@weeksalive.com"; // TODO: verifier sur zoho
+  static const String supportEmail = "support@weeksalive.com"; // TODO: verifier sur zoho
 }
