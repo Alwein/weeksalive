@@ -371,10 +371,18 @@ class Strings {
   static String profilePageLifespanValue(int lifespan) => "$lifespan years";
   static String get profilePageYearsAhead => "YEARS AHEAD";
   static String get profilePagePreferences => "PREFERENCES";
+  static String get profilePageGetInTouch => "GET IN TOUCH";
+  static String get profilePageApplication => "APPLICATION";
   static String get profilePageNotifications => "Notifications";
   static String get profilePageWeeklyIntentions => "Weekly intentions";
   static String get profilePageTheme => "Theme";
   static String get profilePageWeekBegin => "Week begin";
+  static String get profilePageRateTheApp => "Rate the app";
+  static String get profilePageSuggestAFeature => "Suggest a feature";
+  static String get profilePageReportABug => "Report a bug";
+
+  static String get profilePageTermsOfService => "Terms of service";
+  static String get profilePagePrivacyPolicy => "Privacy policy";
 
   static String get profilePageNotificationsEnabled => "ON";
   static String get profilePageNotificationsDisabled => "OFF";
@@ -424,4 +432,10 @@ class Strings {
   static String get weeklySummaryPageLivingIntentions => "LIVING INTENTIONS";
   static String get weeklySummaryPageRegularity => "REGULARITY";
   static String get weeklySummaryPageSeeMore => "Start a new week";
+
+  static String get suggestAFeatureSubject => "[EN] Suggest a feature - WeeksAlive";
+  static String get suggestAFeatureBody => "Hi, I have a suggestion for WeeksAlive:\n\n";
+
+  static String get reportABugSubject => "[EN] Report a bug - WeeksAlive";
+  static String get reportABugBody => "Hi, I have a bug report for WeeksAlive:\n\n";
 }

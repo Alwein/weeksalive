@@ -1,11 +1,16 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
+import 'package:weeksalive/core/texts/app_links.dart';
 import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/core/utils/mail_handler.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/profile/pages/edit_profile/edit_profile_form.dart';
 import 'package:weeksalive/presentation/profile/pages/notifications_settings/notifications_settings_page.dart';
@@ -34,22 +39,38 @@ class ProfilePage extends StatelessWidget {
         return Scaffold(
           backgroundColor: AppColors.bg(context),
           appBar: PrimaryAppBar(title: Strings.profilePageTitle),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsetsGeometry.symmetric(horizontal: Margins.spacingM),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: Margins.spacingBase),
-                  _ProfileCard(viewModel: viewModel),
-                  const SizedBox(height: Margins.spacingM),
-                  Texts.primaryRegularMedium(Strings.profilePagePreferences, color: AppColors.contentSoft(context)),
-                  const SizedBox(height: Margins.spacingBase),
-                  _PreferencesCard(viewModel: viewModel),
-                  const SizedBox(height: Margins.spacingBase),
-                ],
-              ),
-            ),
+          body: FutureBuilder<PackageInfo>(
+            future: PackageInfo.fromPlatform(),
+            builder: (context, data) {
+              final version = data.data?.version ?? 'x.x.x';
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsetsGeometry.symmetric(horizontal: Margins.spacingM),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: Margins.spacingBase),
+                      _ProfileCard(viewModel: viewModel),
+                      const SizedBox(height: Margins.spacingM),
+                      Texts.primaryRegularMedium(Strings.profilePagePreferences, color: AppColors.contentSoft(context)),
+                      const SizedBox(height: Margins.spacingBase),
+                      _PreferencesCard(viewModel: viewModel),
+                      const SizedBox(height: Margins.spacingM),
+                      Texts.primaryRegularMedium(Strings.profilePageGetInTouch, color: AppColors.contentSoft(context)),
+                      const SizedBox(height: Margins.spacingBase),
+                      _GetInTouchCard(viewModel: viewModel, version: version),
+                      const SizedBox(height: Margins.spacingM),
+                      Texts.primaryRegularMedium(Strings.profilePageApplication, color: AppColors.contentSoft(context)),
+                      const SizedBox(height: Margins.spacingBase),
+                      _ApplicationCard(viewModel: viewModel),
+                      const SizedBox(height: Margins.spacingL),
+                      _VersionNumber(version: version),
+                      const SizedBox(height: Margins.spacingL),
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
         );
       },
@@ -298,7 +319,7 @@ class _PreferencesButton extends StatelessWidget {
                         ),
                       ),
                     const SizedBox(width: Margins.spacingS),
-                    if (icon != null) Icon(icon),
+                    if (icon != null) Icon(icon, color: AppColors.content(context), size: Dimens.iconSizeS),
                   ],
                 ),
               ),
@@ -306,6 +327,94 @@ class _PreferencesButton extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _GetInTouchCard extends StatelessWidget {
+  const _GetInTouchCard({required this.viewModel, required this.version});
+  final ProfilePageViewModel viewModel;
+  final String version;
+
+  @override
+  Widget build(BuildContext context) {
+    return _ProfileCardContainer(
+      child: Column(
+        children: [
+          _PreferencesButton(
+            title: Strings.profilePageRateTheApp,
+            onTap: () {
+              final url = switch (defaultTargetPlatform) {
+                TargetPlatform.iOS => AppLinks.iosAppStoreUrlReview,
+                TargetPlatform.android => AppLinks.androidAppStoreUrlReview,
+                _ => throw UnsupportedError('Unsupported platform'),
+              };
+              launchUrl(Uri.parse(url));
+            },
+            icon: MingCuteIcons.mgc_external_link_line,
+          ),
+          const SmallDivider(width: double.infinity),
+          _PreferencesButton(
+            title: Strings.profilePageSuggestAFeature,
+            onTap: () => MailHandler.sendEmail(
+              email: AppLinks.featureRequestEmail,
+              subject: "${Strings.suggestAFeatureSubject} $version",
+              body: Strings.suggestAFeatureBody,
+            ),
+            icon: MingCuteIcons.mgc_mail_line,
+          ),
+          const SmallDivider(width: double.infinity),
+          _PreferencesButton(
+            title: Strings.profilePageReportABug,
+            onTap: () => MailHandler.sendEmail(
+              email: AppLinks.supportEmail,
+              subject: "${Strings.reportABugSubject} $version",
+              body: Strings.reportABugBody,
+            ),
+            icon: MingCuteIcons.mgc_mail_line,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ApplicationCard extends StatelessWidget {
+  const _ApplicationCard({required this.viewModel});
+  final ProfilePageViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return _ProfileCardContainer(
+      child: Column(
+        children: [
+          _PreferencesButton(
+            title: Strings.profilePageTermsOfService,
+            onTap: () => launchUrl(Uri.parse(AppLinks.terms)),
+            icon: MingCuteIcons.mgc_external_link_line,
+          ),
+          const SmallDivider(width: double.infinity),
+          _PreferencesButton(
+            title: Strings.profilePagePrivacyPolicy,
+            onTap: () => launchUrl(Uri.parse(AppLinks.privacy)),
+            icon: MingCuteIcons.mgc_external_link_line,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _VersionNumber extends StatelessWidget {
+  const _VersionNumber({required this.version});
+  final String version;
+
+  @override
+  Widget build(BuildContext context) {
+    return Texts.primaryRegularMedium(
+      version,
+      color: AppColors.contentSoft(context),
+      textAlign: TextAlign.center,
     );
   }
 }
