@@ -108,7 +108,7 @@ class _WeeklyIntentForm extends StatelessWidget {
 class WeeklyIntentFormController extends ChangeNotifier {
   WeeklyIntentFormController({
     Iterable<String> initialSelectedIds = const [],
-    this.maxSelections = 3,
+    this.maxSelections = 10,
   }) : _selectedIntentIds = {...initialSelectedIds};
 
   final int maxSelections;
