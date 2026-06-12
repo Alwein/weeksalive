@@ -13,7 +13,6 @@ import 'package:weeksalive/domain/theme/theme_unlock_condition.dart';
 import 'package:weeksalive/domain/theme/theme_unlock_rules.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/theme/theme_actions.dart';
-import 'package:weeksalive/presentation/widgets/show_custom_bottom_sheet.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 enum ThemePickerScope { onboarding, all }
@@ -82,7 +81,6 @@ class _ThemeGrid extends StatelessWidget {
         locked: !viewModel.unlockedThemes.contains(themes[index]),
         onTap: () {
           if (!viewModel.unlockedThemes.contains(themes[index])) {
-            _showLockedSheet(context);
             return;
           }
           _selectTheme(context, themes[index]);
@@ -95,25 +93,6 @@ class _ThemeGrid extends StatelessWidget {
 void _selectTheme(BuildContext context, AppThemeId themeId) {
   SensorialFeedback.selectionChanged();
   StoreProvider.of<AppState>(context).dispatch(SetAppThemeAction(themeId));
-}
-
-// TODO: Review this
-Future<void> _showLockedSheet(BuildContext context) {
-  return showCustomBottomSheet<void>(
-    context,
-    (sheetContext) => Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Texts.xlBold(Strings.themeLockedTitle),
-          const SizedBox(height: Margins.spacingBase),
-          Texts.primaryMediumSoft(sheetContext, Strings.themeLockedMessage),
-          const SizedBox(height: Margins.spacingM),
-        ],
-      ),
-    ),
-  );
 }
 
 extension AppThemeIdLabels on AppThemeId {

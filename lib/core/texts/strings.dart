@@ -291,11 +291,8 @@ class Strings {
   static String get themeLavande => "Lavande";
   static String get themeTerracotta => "Terracotta";
   static String get themeArdoise => "Ardoise";
-  static String get themeLockedTitle => "Theme locked";
-  static String get themeLockedMessage => "Keep using WeeksAlive to unlock this theme.";
   static String themeLockedStreakHint(int days) => "$days-day streak";
   static String get themeSelectedLabel => "SELECTED";
-  static String get themeLockedLabel => "LOCKED";
 
   // Home page
   static String homePageTitle(String userName) => "$userName's life";
