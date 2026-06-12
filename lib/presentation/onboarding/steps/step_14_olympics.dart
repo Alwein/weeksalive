@@ -73,7 +73,7 @@ class Step14Olympics extends OnboardingStep {
                         ],
                       ),
                       animationDurationMs: 1000,
-                      highlightColor: AppColors.accentPurple,
+                      highlightColor: AppColors.accentPurple(context),
                     ),
                   ),
                   const SizedBox(height: Margins.spacingM),

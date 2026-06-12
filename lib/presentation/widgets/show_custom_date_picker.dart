@@ -26,7 +26,7 @@ Future<DateTime?> showCustomDatePicker(
             secondary: AppColors.contentSoftOnSoft(context),
             onSecondary: AppColors.contentMuted(context),
             surfaceTint: Colors.transparent,
-            error: AppColors.redWarning,
+            error: AppColors.redWarning(context),
             onError: Colors.white,
           ),
           textButtonTheme: TextButtonThemeData(

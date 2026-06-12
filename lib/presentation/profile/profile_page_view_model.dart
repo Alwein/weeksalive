@@ -47,7 +47,7 @@ abstract class ProfilePageViewModel with _$ProfilePageViewModel {
           : Strings.profilePageNotificationsDisabled,
       weekStartDay: Strings.weekdayFullNames[((user?.weekStartDay ?? DateTime.monday) - 1).clamp(0, 6)],
       weeklyIntents: selectedWeeklyIntents,
-      theme: ThemeOption.values.firstWhere((e) => e.themeMode == store.state.themeState.themeMode).label,
+      theme: store.state.themeState.selectedTheme.label,
     );
   }
 }

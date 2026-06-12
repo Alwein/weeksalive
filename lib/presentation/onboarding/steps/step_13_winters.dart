@@ -61,7 +61,7 @@ class Step13Winters extends OnboardingStep {
                         ],
                       ),
                       animationDurationMs: 1000,
-                      highlightColor: AppColors.accentMint,
+                      highlightColor: AppColors.accentMint(context),
                     ),
                   ),
                   const SizedBox(height: Margins.spacingM),

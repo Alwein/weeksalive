@@ -160,7 +160,7 @@ class _OnboardingAppBar extends StatelessWidget {
             duration: AnimationDurations.short,
             firstChild: const SizedBox(height: 48.0), // IconButton height is 48.0
             secondChild: IconButton(
-              icon: const Icon(Icons.arrow_back),
+              icon: Icon(Icons.arrow_back, color: AppColors.content(context)),
               onPressed: () {
                 FocusScope.of(context).unfocus();
                 controller.goPrevious();

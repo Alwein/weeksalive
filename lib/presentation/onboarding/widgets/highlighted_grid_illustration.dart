@@ -15,7 +15,7 @@ class HighlightedGridIllustration extends StatefulWidget {
     this.caption,
     this.animationDurationMs = 3000,
     this.delayMs = 200,
-    this.highlightColor = AppColors.accentOrange,
+    this.highlightColor,
   });
 
   final int totalWeeks;
@@ -23,7 +23,7 @@ class HighlightedGridIllustration extends StatefulWidget {
   final List<int> highlightedDots;
   final int animationDurationMs;
   final int delayMs;
-  final Color highlightColor;
+  final Color? highlightColor;
   final Widget? caption;
 
   @override
@@ -99,7 +99,7 @@ class _HighlightedGridIllustrationState extends State<HighlightedGridIllustratio
                     padding: const EdgeInsets.only(top: Margins.spacingS),
                     revealProgress: 1.0,
                     highlightedDots: widget.highlightedDots,
-                    highlightColor: widget.highlightColor,
+                    highlightColor: widget.highlightColor ?? AppColors.accentOrange(context),
                     highlightRevealProgress: _controller.value,
                   ),
                 ),

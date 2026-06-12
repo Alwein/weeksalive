@@ -90,7 +90,7 @@ class NotificationSlotCard extends StatelessWidget {
                 CupertinoSwitch(
                   value: slot.enabled,
                   onChanged: onToggle,
-                  activeTrackColor: AppColors.greenSuccess,
+                  activeTrackColor: AppColors.greenSuccess(context),
                 ),
               ],
             ),

@@ -1,11 +1,20 @@
-import 'package:flutter/material.dart';
+import 'package:weeksalive/core/styles/app_theme_id.dart';
 
-class SetThemeModeAction {
-  final ThemeMode themeMode;
-  const SetThemeModeAction(this.themeMode);
+class SetAppThemeAction {
+  final AppThemeId themeId;
+  const SetAppThemeAction(this.themeId);
 }
 
-class ThemeModeLoadedAction {
-  final ThemeMode themeMode;
-  const ThemeModeLoadedAction(this.themeMode);
+class AppThemeLoadedAction {
+  final AppThemeId selectedTheme;
+  final Set<AppThemeId> unlockedThemes;
+  const AppThemeLoadedAction({
+    required this.selectedTheme,
+    required this.unlockedThemes,
+  });
+}
+
+class ThemesUnlockedAction {
+  final Set<AppThemeId> unlockedThemes;
+  const ThemesUnlockedAction(this.unlockedThemes);
 }

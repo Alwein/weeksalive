@@ -11,6 +11,7 @@ import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/app_links.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/mail_handler.dart';
+import 'package:weeksalive/presentation/onboarding/onboarding_page.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/profile/pages/edit_profile/edit_profile_form.dart';
 import 'package:weeksalive/presentation/profile/pages/notifications_settings/notifications_settings_page.dart';
@@ -204,7 +205,13 @@ class _ProfileCardHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacingBase, vertical: Margins.spacingS),
-      color: AppColors.bgSoft(context),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(Dimens.radiusL - Dimens.strokeWidthS),
+          topRight: Radius.circular(Dimens.radiusL - Dimens.strokeWidthS),
+        ),
+        color: AppColors.bgSoft(context),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -399,6 +406,14 @@ class _ApplicationCard extends StatelessWidget {
             onTap: () => launchUrl(Uri.parse(AppLinks.privacy)),
             icon: MingCuteIcons.mgc_external_link_line,
           ),
+          if (kDebugMode) ...[
+            const SmallDivider(width: double.infinity),
+            _PreferencesButton(
+              title: "Show onboarding",
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const OnboardingPage())),
+              icon: MingCuteIcons.mgc_right_line,
+            ),
+          ],
         ],
       ),
     );

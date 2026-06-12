@@ -81,7 +81,6 @@ class _PlanCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(Dimens.radiusL),
         border: Border.all(color: AppColors.strokeColor(context), width: Dimens.strokeWidthS),
       ),
-      clipBehavior: Clip.hardEdge,
       child: const OnboardingStaggeredColumn(
         children: [
           _PlanHeader(),
@@ -105,7 +104,13 @@ class _PlanHeader extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(Margins.spacingBase),
-      color: AppColors.bgSoft(context),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(Dimens.radiusL - Dimens.strokeWidthS),
+          topRight: Radius.circular(Dimens.radiusL - Dimens.strokeWidthS),
+        ),
+        color: AppColors.bgSoft(context),
+      ),
       child: Texts.primaryLargeBold(Strings.onboarding24PlanHeader(controller.name ?? "")),
     );
   }

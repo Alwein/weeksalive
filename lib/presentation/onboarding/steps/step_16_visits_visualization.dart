@@ -88,7 +88,6 @@ class _GridIllustration extends StatefulWidget {
 class _GridIllustrationState extends State<_GridIllustration> with SingleTickerProviderStateMixin {
   static const _kColumns = 52;
   static const _kDotSpacing = 2.0;
-  static const _kHighlightColor = AppColors.accentOrange;
   static const _kAnimationDurationMs = 5000;
   static const _kAnimationDuration = Duration(milliseconds: _kAnimationDurationMs);
 
@@ -177,7 +176,7 @@ class _GridIllustrationState extends State<_GridIllustration> with SingleTickerP
                     padding: const EdgeInsets.only(top: Margins.spacingS),
                     revealProgress: 1.0,
                     highlightedDots: _highlightedDots,
-                    highlightColor: _kHighlightColor,
+                    highlightColor: AppColors.accentOrange(context),
                     highlightRevealProgress: _controller.value,
                   ),
                 ),

@@ -4,6 +4,7 @@ import 'package:weeksalive/presentation/onboarding/steps/step_02_life_feels_long
 import 'package:weeksalive/presentation/onboarding/steps/step_03_life_in_weeks.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_04_make_it_count.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_05_build_your_grid.dart';
+import 'package:weeksalive/presentation/onboarding/steps/step_05b_theme_picker.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_06_name.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_07_date_of_birth.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_08_week_begin.dart';
@@ -38,6 +39,7 @@ const List<OnboardingStep> kOnboardingSteps = <OnboardingStep>[
   Step03LifeInWeeks(),
   Step04MakeItCount(),
   Step05BuildYourGrid(),
+  Step05bThemePicker(),
   Step06Name(),
   Step07DateOfBirth(),
   Step08WeekBegin(),

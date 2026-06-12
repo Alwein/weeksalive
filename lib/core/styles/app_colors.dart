@@ -1,50 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:weeksalive/core/styles/app_colors_extension.dart';
 
 class AppColors {
-  static Color content(BuildContext context) => context.isDarkMode ? contentDark : contentLight;
-  static Color contentMuted(BuildContext context) => context.isDarkMode ? contentLight : contentDark;
-  static const contentDark = Color(0xFFFFFFFF);
-  static const contentLight = Color(0xFF090909);
+  static Color content(BuildContext context) => context.appColors.tokens.content;
+  static Color contentMuted(BuildContext context) => context.appColors.tokens.contentMuted;
+  static Color contentSoft(BuildContext context) => context.appColors.tokens.contentSoft;
+  static Color contentExtraSoft(BuildContext context) => context.appColors.tokens.contentExtraSoft;
+  static Color contentSoftOnSoft(BuildContext context) => context.appColors.tokens.contentSoftOnSoft;
+  static Color bg(BuildContext context) => context.appColors.tokens.bg;
+  static Color bgSoft(BuildContext context) => context.appColors.tokens.bgSoft;
+  static Color strokeColor(BuildContext context) => context.appColors.tokens.strokeColor;
+  static Color redWarning(BuildContext context) => context.appColors.tokens.redWarning;
+  static Color greenSuccess(BuildContext context) => context.appColors.tokens.greenSuccess;
+  static Color blueInfo(BuildContext context) => context.appColors.tokens.blueInfo;
+  static Color accentOrange(BuildContext context) => context.appColors.tokens.accentOrange;
+  static Color accentMint(BuildContext context) => context.appColors.tokens.accentMint;
+  static Color accentPurple(BuildContext context) => context.appColors.tokens.accentPurple;
 
-  static Color contentSoft(BuildContext context) => context.isDarkMode ? contentDarkSoft : contentLightSoft;
-  static const contentDarkSoft = Color(0xFF8E8E8E);
-  static const contentLightSoft = Color(0xFF949494);
-
-  static Color contentExtraSoft(BuildContext context) =>
-      context.isDarkMode ? contentDarkExtraSoft : contentLightExtraSoft;
-  static const contentDarkExtraSoft = Color(0xFF333232);
-  static const contentLightExtraSoft = Color(0xFFCFCFCF);
-
-  static Color contentSoftOnSoft(BuildContext context) =>
-      context.isDarkMode ? contentDarkSoftOnSoft : contentLightSoftOnSoft;
-  static const contentDarkSoftOnSoft = Color(0xFFA3A3A3);
-  static const contentLightSoftOnSoft = Color(0xFF6E6E6E);
-
-  static Color bg(BuildContext context) => context.isDarkMode ? bgDark : bgLight;
-  static const bgDark = Color(0xFF090909);
-  static const bgLight = Color(0xFFFFFFFF);
-
-  static Color scaffoldBg(BuildContext context) => context.isDarkMode ? const Color(0xFF141414) : bgLightSoft;
-
-  static Color bgSoft(BuildContext context) => context.isDarkMode ? bgDarkSoft : bgLightSoft;
-  static const bgDarkSoft = Color(0xFF333333);
-  static const bgLightSoft = Color(0xFFF2F2F3);
-
-  static Color widgetBg(BuildContext context) => context.isDarkMode ? Colors.black : Colors.white;
-  static Color widgetContent(Brightness brightness) => brightness == Brightness.dark ? Colors.white : Colors.black;
-
-  static Color strokeColor(BuildContext context) =>
-      context.isDarkMode ? const Color(0xFF383838) : const Color(0xFFEBEBEB);
-
-  // Inf Colorormation
-  static const redWarning = Color(0xFFFF5C5C);
-  static const greenSuccess = Color(0xFF43C59E);
-  static const blueInfo = Color(0xFF007AFF);
-  static const accentOrange = Color(0xFFFF8D28);
-  static const accentMint = Color(0xFF00C8B3);
-  static const accentPurple = Color(0xFFCB30E0);
-}
-
-extension on BuildContext {
-  bool get isDarkMode => Theme.of(this).brightness == Brightness.dark;
+  static Color widgetContent(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black;
 }

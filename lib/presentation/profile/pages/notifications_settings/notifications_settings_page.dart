@@ -161,16 +161,16 @@ class _NotificationsDisabledBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(Margins.spacingM),
       decoration: BoxDecoration(
-        color: AppColors.redWarning.withValues(alpha: 0.08),
+        color: AppColors.redWarning(context).withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(Dimens.radiusBase),
-        border: Border.all(color: AppColors.redWarning.withValues(alpha: 0.25)),
+        border: Border.all(color: AppColors.redWarning(context).withValues(alpha: 0.25)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Icon(
+          Icon(
             MingCuteIcons.mgc_notification_off_line,
-            color: AppColors.redWarning,
+            color: AppColors.redWarning(context),
             size: Dimens.iconSizeM,
           ),
           const SizedBox(height: Margins.spacingM),

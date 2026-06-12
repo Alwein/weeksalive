@@ -128,8 +128,8 @@ class _DayIndicator extends StatelessWidget {
           child: Container(
             width: 12,
             height: 12,
-            decoration: const BoxDecoration(
-              color: AppColors.accentOrange,
+            decoration: BoxDecoration(
+              color: AppColors.accentOrange(context),
               shape: BoxShape.circle,
             ),
           ),

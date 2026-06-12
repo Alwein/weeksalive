@@ -114,7 +114,10 @@ class _UserNameTitle extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(Strings.homePageTitle(userName), style: TextStyles.primarySemiBold),
+        Text(
+          Strings.homePageTitle(userName),
+          style: TextStyles.primarySemiBold.copyWith(color: AppColors.content(context)),
+        ),
         const SizedBox(height: Margins.spacingXs),
         Texts.primaryXsCounter(
           context,
@@ -135,7 +138,7 @@ class _YearGridTitle extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(year, style: TextStyles.primarySemiBold),
+        Text(year, style: TextStyles.primarySemiBold.copyWith(color: AppColors.content(context))),
         const SizedBox(height: Margins.spacingXs),
         Texts.primaryXsCounter(
           context,
@@ -173,6 +176,7 @@ class _StreaksButton extends StatelessWidget {
           horizontal: Margins.spacingBase,
           vertical: Margins.spacingS,
         ),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(200))),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         foregroundColor: AppColors.content(context),
         textStyle: TextStyles.primaryRegularBold,
@@ -190,7 +194,10 @@ class _StreaksButton extends StatelessWidget {
             child: Stack(
               children: [
                 Center(
-                  child: Icon(MingCuteIcons.mgc_fire_fill, color: AppColors.content(context)),
+                  child: Icon(
+                    MingCuteIcons.mgc_fire_fill,
+                    color: AppColors.content(context),
+                  ),
                 ),
                 if (showFire)
                   OverflowBox(
@@ -222,9 +229,10 @@ class _ProfileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
+    return TextButton(
       style: IconButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: Margins.spacingS, vertical: Margins.spacingS),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(200))),
         minimumSize: Size.zero,
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         foregroundColor: AppColors.content(context),
@@ -232,7 +240,11 @@ class _ProfileButton extends StatelessWidget {
         surfaceTintColor: Colors.transparent,
       ),
       onPressed: () => Navigator.of(context).push(ProfilePage.route()),
-      icon: Icon(MingCuteIcons.mgc_user_4_fill, color: AppColors.content(context)),
+      child: Icon(
+        MingCuteIcons.mgc_user_4_fill,
+        color: AppColors.content(context),
+        size: Dimens.iconSizeBase,
+      ),
     );
   }
 }

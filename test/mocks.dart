@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:purchases_flutter/models/customer_info_wrapper.dart';
+import 'package:weeksalive/core/styles/app_theme_id.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
 import 'package:weeksalive/data/navigation/navigation_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
@@ -35,7 +36,9 @@ class MockPushNotificationRepository extends Mock implements PushNotificationRep
   MockPushNotificationRepository() {
     registerFallbackValue(<TimeOfDay>[]);
     registerFallbackValue(NotificationSlots.defaults());
-    registerFallbackValue(const WeeklySummarySchedule(time: TimeOfDay(hour: 21, minute: 0), weekStartDay: DateTime.monday));
+    registerFallbackValue(
+      const WeeklySummarySchedule(time: TimeOfDay(hour: 21, minute: 0), weekStartDay: DateTime.monday),
+    );
     when(() => areNotificationsEnabled()).thenAnswer((_) async => false);
     when(() => requestNotificationPermission()).thenAnswer((_) async => true);
     when(() => getNotificationSlots()).thenAnswer((_) async => NotificationSlots.defaults());
@@ -64,7 +67,12 @@ class MockPurchaseRepository extends Mock implements PurchaseRepository {
 
 class MockThemeRepository extends Mock implements ThemeRepository {
   MockThemeRepository() {
-    when(() => getThemeMode()).thenAnswer((_) async => ThemeMode.system);
+    registerFallbackValue(AppThemeId.system);
+    registerFallbackValue(<AppThemeId>{AppThemeId.system});
+    when(() => getSelectedTheme()).thenAnswer((_) async => AppThemeId.system);
+    when(() => getUnlockedThemes()).thenAnswer((_) async => AppThemeId.alwaysUnlocked.toSet());
+    when(() => setSelectedTheme(any())).thenAnswer((_) async {});
+    when(() => setUnlockedThemes(any())).thenAnswer((_) async {});
   }
 }
 

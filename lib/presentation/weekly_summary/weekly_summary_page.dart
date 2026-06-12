@@ -145,7 +145,13 @@ class _CardHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacingBase, vertical: Margins.spacingS),
-      color: AppColors.bgSoft(context),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(Dimens.radiusL - Dimens.strokeWidthS),
+          topRight: Radius.circular(Dimens.radiusL - Dimens.strokeWidthS),
+        ),
+        color: AppColors.bgSoft(context),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

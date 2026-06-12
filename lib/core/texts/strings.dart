@@ -86,6 +86,10 @@ class Strings {
 
   static String get iAmReady => "I\u2019m ready";
 
+  static String get onboardingThemePickerTitle => "Choose your theme.";
+  static String get onboardingThemePickerSubtitle =>
+      "Pick the look that feels most like you. You can always change it later.";
+
   static String get onboarding04Title => "Let's build your own grid.";
   static String get onboarding04Subtitle =>
       "Your grid is unique.\nIt starts the day you were born, and it belongs to no one else.";
@@ -280,6 +284,18 @@ class Strings {
   static String get themeSystem => "System";
   static String get themeLight => "Light";
   static String get themeDark => "Dark";
+  static String get themePetale => "Pétale";
+  static String get themePivoine => "Pivoine";
+  static String get themeCafe => "Café";
+  static String get themeMatcha => "Matcha";
+  static String get themeLavande => "Lavande";
+  static String get themeTerracotta => "Terracotta";
+  static String get themeArdoise => "Ardoise";
+  static String get themeLockedTitle => "Theme locked";
+  static String get themeLockedMessage => "Keep using WeeksAlive to unlock this theme.";
+  static String themeLockedStreakHint(int days) => "$days-day streak";
+  static String get themeSelectedLabel => "SELECTED";
+  static String get themeLockedLabel => "LOCKED";
 
   // Home page
   static String homePageTitle(String userName) => "$userName's life";

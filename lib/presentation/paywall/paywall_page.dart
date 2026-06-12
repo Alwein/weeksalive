@@ -258,7 +258,7 @@ class _FooterSection extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: Margins.spacingBase),
                     child: Text(
                       errorMessage!,
-                      style: TextStyles.primarySmallBold.copyWith(color: AppColors.redWarning),
+                      style: TextStyles.primarySmallBold.copyWith(color: AppColors.redWarning(context)),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -394,13 +394,13 @@ class _TimelineRow extends StatelessWidget {
         child: Icon(item.icon, size: Dimens.iconSizeXs, color: AppColors.bg(context)),
       );
     } else if (item.isActive) {
-      dotColor = AppColors.accentOrange;
+      dotColor = AppColors.accentOrange(context);
       dotWidget = Container(
         width: dotSize,
         height: dotSize,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: AppColors.accentOrange,
+          color: AppColors.accentOrange(context),
         ),
         child: Icon(item.icon, size: Dimens.iconSizeXs, color: Colors.white),
       );

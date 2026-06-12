@@ -25,10 +25,10 @@ class ForceUpdatePage extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.error,
                     size: 32,
-                    color: AppColors.redWarning,
+                    color: AppColors.redWarning(context),
                   ),
                   const SizedBox(width: Margins.spacingBase),
                   Expanded(

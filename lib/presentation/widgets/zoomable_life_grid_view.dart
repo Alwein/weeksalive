@@ -307,7 +307,7 @@ class _YearDayGridLayer extends StatelessWidget {
                       emptyStrokeColor: strokeColor,
                       fillColor: fillColor,
                       pastEmptyColor: pastEmptyColor,
-                      todayEmptyColor: AppColors.accentOrange,
+                      todayEmptyColor: AppColors.accentOrange(context),
                       filledCount: totalDays,
                       fillSizes: fillSizes,
                       padding: padding,

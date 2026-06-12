@@ -127,7 +127,7 @@ class _YearGridIllustrationState extends State<YearGridIllustration> with Single
                     fillSizes: _fillSizes,
                     fillColor: AppColors.content(context),
                     emptyStrokeColor: strokeColor,
-                    highlightColor: AppColors.accentOrange,
+                    highlightColor: AppColors.accentOrange(context),
                     revealProgress: _controller.value,
                   ),
                 ),

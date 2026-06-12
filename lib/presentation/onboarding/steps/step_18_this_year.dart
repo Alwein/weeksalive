@@ -56,7 +56,7 @@ class Step18ThisYear extends OnboardingStep {
                         ],
                       ),
                       animationDurationMs: 1000,
-                      highlightColor: AppColors.accentOrange,
+                      highlightColor: AppColors.accentOrange(context),
                     ),
                   ),
                   const SizedBox(height: Margins.spacingM),
