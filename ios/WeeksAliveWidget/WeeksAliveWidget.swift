@@ -145,6 +145,23 @@ private struct WidgetFooter: View {
     }
 }
 
+// MARK: - Widget background (iOS 17+ uses containerBackground for Liquid Glass / tinted)
+
+/// On iOS 17+ the background must go through `containerBackground` so the system
+/// can apply Liquid Glass, tinting, or other rendering effects. On iOS 16 we fall
+/// back to a plain `.background` modifier.
+private struct WidgetBackgroundModifier: ViewModifier {
+    let color: Color
+
+    func body(content: Content) -> some View {
+        if #available(iOS 17.0, *) {
+            content.containerBackground(color, for: .widget)
+        } else {
+            content.background(color)
+        }
+    }
+}
+
 // MARK: - Life Grid drawing
 
 /// A grid of uniform dots: the first [filled] cells use [activeColor], the rest
@@ -207,6 +224,7 @@ private struct LifeDotGrid: View {
 private struct LifeGridWidgetContent: View {
     @Environment(\.widgetFamily) private var family
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.widgetRenderingMode) private var renderingMode
 
     /// Formats a fraction as a percentage with one decimal (e.g. `37.4%`).
     private func percent(_ filled: Int, _ total: Int) -> String {
@@ -221,6 +239,11 @@ private struct LifeGridWidgetContent: View {
             let isSmall = family == .systemSmall
             let total = isSmall ? payload.totalYears : payload.totalWeeks
             let filled = isSmall ? payload.livedYears : payload.livedWeeks
+            let bgColor = Color(hex: palette.bg)
+            // In tinted/accented mode iOS maps every color to a variant of the
+            // tint, so bgSoft would render as an opaque tinted dot. Use .clear
+            // instead so unfilled cells are transparent and the glass shines through.
+            let inactiveColor = renderingMode == .accented ? Color(hex: palette.content).opacity(0.3) : Color(hex: palette.bgSoft)
 
             VStack(alignment: .leading, spacing: 8) {
                 LifeDotGrid(
@@ -228,20 +251,20 @@ private struct LifeGridWidgetContent: View {
                     filled: filled,
                     spacing: isSmall ? 3 : 1.5,
                     activeColor: Color(hex: palette.content),
-                    inactiveColor: Color(hex: palette.bgSoft)
+                    inactiveColor: inactiveColor
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
 
                 WidgetFooter(
                     label: "Life",
-                    value: percent(filled, total),
+                    value: percent(payload.livedWeeks, payload.totalWeeks),
                     labelColor: Color(hex: palette.contentSoft),
                     valueColor: Color(hex: palette.contentSoft)
                 )
             }
-            .padding(12)
+            .padding(20)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color(hex: palette.bg))
+            .modifier(WidgetBackgroundModifier(color: bgColor))
         } else {
             Color(UIColor.systemBackground)
         }
@@ -328,19 +351,25 @@ private struct YearDotGrid: View {
 
 private struct YearGridWidgetContent: View {
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.widgetRenderingMode) private var renderingMode
+    @Environment(\.widgetFamily) private var family
 
     var body: some View {
         if let payload = decodePayload(YearGridPayload.self, forKey: "year_grid_json") {
             let palette = colorScheme == .dark ? payload.dark : payload.light
+            let bgColor = Color(hex: palette.bg)
+            // Same as LifeGrid: past empty days should be invisible in tinted mode.
+            let pastEmptyColor = renderingMode == .accented ? Color(hex: palette.content).opacity(0.3) : Color(hex: palette.bgSoft)
+            let dotSpacing: CGFloat = family == .systemMedium ? 1.5 : 3
 
             VStack(alignment: .leading, spacing: 8) {
                 YearDotGrid(
                     totalDays: payload.totalDays,
                     sizes: payload.sizes,
-                    spacing: 3,
+                    spacing: dotSpacing,
                     fillColor: Color(hex: palette.content),
                     strokeColor: Color(hex: palette.strokeColor),
-                    pastEmptyColor: Color(hex: palette.bgSoft),
+                    pastEmptyColor: pastEmptyColor,
                     todayEmptyColor: Color(hex: palette.accentOrange)
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -352,9 +381,9 @@ private struct YearGridWidgetContent: View {
                     valueColor: Color(hex: palette.contentSoft)
                 )
             }
-            .padding(12)
+            .padding(20)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color(hex: palette.bg))
+            .modifier(WidgetBackgroundModifier(color: bgColor))
         } else {
             Color(UIColor.systemBackground)
         }
@@ -391,11 +420,7 @@ struct LifeGridWidget: Widget {
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: WidgetProvider()) { _ in
-            if #available(iOS 17.0, *) {
-                LifeGridWidgetContent().containerBackground(.clear, for: .widget)
-            } else {
-                LifeGridWidgetContent()
-            }
+            LifeGridWidgetContent()
         }
         .configurationDisplayName("Grille de vie")
         .description("Votre vie en un coup d'oeil.")
@@ -411,11 +436,7 @@ struct YearGridWidget: Widget {
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: WidgetProvider()) { _ in
-            if #available(iOS 17.0, *) {
-                YearGridWidgetContent().containerBackground(.clear, for: .widget)
-            } else {
-                YearGridWidgetContent()
-            }
+            YearGridWidgetContent()
         }
         .configurationDisplayName("Grille année")
         .description("Votre année en cours, jour par jour.")
