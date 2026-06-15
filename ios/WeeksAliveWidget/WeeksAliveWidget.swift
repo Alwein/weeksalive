@@ -262,7 +262,7 @@ private struct LifeGridWidgetContent: View {
                     valueColor: Color(hex: palette.contentSoft)
                 )
             }
-            .padding(20)
+            .padding(16)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .modifier(WidgetBackgroundModifier(color: bgColor))
         } else {
@@ -381,7 +381,7 @@ private struct YearGridWidgetContent: View {
                     valueColor: Color(hex: palette.contentSoft)
                 )
             }
-            .padding(20)
+            .padding(16)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .modifier(WidgetBackgroundModifier(color: bgColor))
         } else {
