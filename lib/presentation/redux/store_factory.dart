@@ -1,5 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
+import 'package:weeksalive/data/home_widget/home_widget_service.dart';
 import 'package:weeksalive/data/navigation/navigation_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
@@ -14,6 +15,7 @@ import 'package:weeksalive/presentation/redux/app_reducer.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_middleware.dart';
 import 'package:weeksalive/presentation/redux/day/day_middleware.dart';
+import 'package:weeksalive/presentation/redux/home_widget/home_widget_middleware.dart';
 import 'package:weeksalive/presentation/redux/navigation/navigation_middleware.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_middleware.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_middleware.dart';
@@ -35,6 +37,7 @@ class StoreFactory {
   final WeeklySummaryRepository weeklySummaryRepository;
   final DayRepository dayRepository;
   final ThemeUnlockService themeUnlockService;
+  final HomeWidgetService homeWidgetService;
 
   StoreFactory({
     required this.remoteConfigRepository,
@@ -48,7 +51,9 @@ class StoreFactory {
     required this.weeklySummaryRepository,
     required this.dayRepository,
     ThemeUnlockService? themeUnlockService,
-  }) : themeUnlockService = themeUnlockService ?? const ThemeUnlockService();
+    HomeWidgetService? homeWidgetService,
+  })  : themeUnlockService = themeUnlockService ?? const ThemeUnlockService(),
+        homeWidgetService = homeWidgetService ?? HomeWidgetService();
 
   Store<AppState> createStore({AppState? initialState}) {
     return Store<AppState>(
@@ -67,6 +72,7 @@ class StoreFactory {
         StreakMiddleware(streakRepository: streakRepository).call,
         WeeklyIntentMiddleware(weeklyIntentRepository: weeklyIntentRepository).call,
         WeeklySummaryMiddleware(weeklySummaryRepository: weeklySummaryRepository).call,
+        HomeWidgetMiddleware(homeWidgetService: homeWidgetService).call,
         DayMiddleware(dayRepository: dayRepository).call,
       ],
     );

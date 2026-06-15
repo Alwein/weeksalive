@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
@@ -30,7 +31,10 @@ class Step17ButAddLife extends OnboardingStep {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Texts.xlBoldSoft(context, Strings.onboardingButAddLifeTitle1),
-                    Text(Strings.onboardingButAddLifeBut, style: TextStyles.primaryXxlBold),
+                    Text(
+                      Strings.onboardingButAddLifeBut,
+                      style: TextStyles.primaryXxlBold.copyWith(color: AppColors.content(context)),
+                    ),
                     Texts.xlBold(Strings.onboardingButAddLifeTitle2),
                   ],
                 ),

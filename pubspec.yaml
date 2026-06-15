@@ -64,6 +64,7 @@ dependencies:
   smooth_sheets: ^1.0.2
   flutter_image_compress: ^2.4.0
   app_settings: ^7.0.0
+  home_widget: ^0.7.0
 
 dev_dependencies:
   flutter_test:

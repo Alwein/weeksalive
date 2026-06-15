@@ -1,5 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
+import 'package:weeksalive/data/home_widget/home_widget_service.dart';
 import 'package:weeksalive/data/navigation/navigation_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
@@ -30,6 +31,7 @@ class TestStoreFactory {
   WeeklyIntentRepository weeklyIntentRepository = MockWeeklyIntentRepository();
   WeeklySummaryRepository weeklySummaryRepository = MockWeeklySummaryRepository();
   DayRepository dayRepository = MockDayRepository();
+  HomeWidgetService homeWidgetService = FakeHomeWidgetService();
 
   Store<AppState> initializeReduxStore(AppState initialState) {
     return StoreFactory(
@@ -44,6 +46,7 @@ class TestStoreFactory {
       dayRepository: dayRepository,
       navigationRepository: navigationRepository,
       themeUnlockService: const ThemeUnlockService(),
+      homeWidgetService: homeWidgetService,
     ).createStore(initialState: initialState);
   }
 }

@@ -11,16 +11,26 @@
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		550DAFA04F7E09FAC5DB9B83 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53CAA585CE043D73E38D6B55 /* Pods_Runner.framework */; };
+		5B567AF732F64E04A43B9090 /* WeeksAliveWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4A8A453FECDBAB7F1ED0BF25 /* WeeksAliveWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		7AE145B82F9D5A6300F0D860 /* weeksalive_composer.icon in Resources */ = {isa = PBXBuildFile; fileRef = 7AE145B72F9D5A6300F0D860 /* weeksalive_composer.icon */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		A44F04215415556AF1AB4399 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 973A596AA8DC27A0D10EB498 /* Pods_RunnerTests.framework */; };
+		A95531DC5E2C1DFFB862F5DC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 863D059FF981C26FCE4C0086 /* Foundation.framework */; };
+		C7EE6F2F8A0FCEFEACB2E8D3 /* WeeksAliveWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2AE87A5FAE93125E9A1E5D /* WeeksAliveWidget.swift */; };
 		E6E56D1473BA9CD7DF043F9F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EEDBD54A5B668101DD0AB1B4 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1AAFA56CD35C99552434627F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AF2E0786F30AF534738260CB;
+			remoteInfo = WeeksAliveWidget;
+		};
 		331C8085294A63A400263BE5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
@@ -31,6 +41,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		7A4B8134E37154CE7D0B457B /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				5B567AF732F64E04A43B9090 /* WeeksAliveWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -44,12 +65,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		02103C5A2F813478BB0D71A9 /* WeeksAliveWidget.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = WeeksAliveWidget.xcconfig; path = Flutter/WeeksAliveWidget.xcconfig; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		483453036E6E108EFE5F3F1A /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
+		4A8A453FECDBAB7F1ED0BF25 /* WeeksAliveWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WeeksAliveWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		4AEEEC73004703EFCBAA419A /* WeeksAliveWidget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; name = WeeksAliveWidget.entitlements; path = WeeksAliveWidget/WeeksAliveWidget.entitlements; sourceTree = "<group>"; };
 		53CAA585CE043D73E38D6B55 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -57,6 +81,8 @@
 		7AE145B72F9D5A6300F0D860 /* weeksalive_composer.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = weeksalive_composer.icon; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		81FDFF55F1B3CF867CA71865 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
+		863D059FF981C26FCE4C0086 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		8B2AE87A5FAE93125E9A1E5D /* WeeksAliveWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WeeksAliveWidget.swift; path = WeeksAliveWidget/WeeksAliveWidget.swift; sourceTree = "<group>"; };
 		973A596AA8DC27A0D10EB498 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
@@ -66,12 +92,21 @@
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AB1D92A87D4239B805DA50BE /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
+		AC95548DEDD119803DFDC135 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = WeeksAliveWidget/Info.plist; sourceTree = "<group>"; };
 		CB9468FE3D850621BAC1B5CD /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
 		CD88BA09C9EFA9D98D4479EA /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		EEDBD54A5B668101DD0AB1B4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4359E929455ED99D3555605C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A95531DC5E2C1DFFB862F5DC /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8D5D0BC86E1896288C714795 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -91,6 +126,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E693B81E5107822366E86EE /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				863D059FF981C26FCE4C0086 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
 		331C8082294A63A400263BE5 /* RunnerTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -104,6 +147,7 @@
 			children = (
 				53CAA585CE043D73E38D6B55 /* Pods_Runner.framework */,
 				973A596AA8DC27A0D10EB498 /* Pods_RunnerTests.framework */,
+				0E693B81E5107822366E86EE /* iOS */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -115,6 +159,7 @@
 				9740EEB21CF90195004384FC /* Debug.xcconfig */,
 				7AFA3C8E1D35360C0083082E /* Release.xcconfig */,
 				9740EEB31CF90195004384FC /* Generated.xcconfig */,
+				02103C5A2F813478BB0D71A9 /* WeeksAliveWidget.xcconfig */,
 			);
 			name = Flutter;
 			sourceTree = "<group>";
@@ -129,6 +174,7 @@
 				A29D8AFBD8D4A61253DF635D /* Pods */,
 				66906F61222E618661096614 /* Frameworks */,
 				EEDBD54A5B668101DD0AB1B4 /* GoogleService-Info.plist */,
+				B47CA9B3A77C541576DABE68 /* WeeksAliveWidget */,
 			);
 			sourceTree = "<group>";
 		};
@@ -137,6 +183,7 @@
 			children = (
 				97C146EE1CF9000F007C117D /* Runner.app */,
 				331C8081294A63A400263BE5 /* RunnerTests.xctest */,
+				4A8A453FECDBAB7F1ED0BF25 /* WeeksAliveWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -170,6 +217,16 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		B47CA9B3A77C541576DABE68 /* WeeksAliveWidget */ = {
+			isa = PBXGroup;
+			children = (
+				8B2AE87A5FAE93125E9A1E5D /* WeeksAliveWidget.swift */,
+				AC95548DEDD119803DFDC135 /* Info.plist */,
+				4AEEEC73004703EFCBAA419A /* WeeksAliveWidget.entitlements */,
+			);
+			name = WeeksAliveWidget;
+			sourceTree = SOURCE_ROOT;
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -202,6 +259,7 @@
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
+				7A4B8134E37154CE7D0B457B /* Embed Foundation Extensions */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				18380912C38C71C0CD566B38 /* [CP] Embed Pods Frameworks */,
 				F5061955FCDA616C5DBAB0B1 /* [CP] Copy Pods Resources */,
@@ -210,11 +268,29 @@
 			buildRules = (
 			);
 			dependencies = (
+				D9DADBA59A8E86050F8F612D /* PBXTargetDependency */,
 			);
 			name = Runner;
 			productName = Runner;
 			productReference = 97C146EE1CF9000F007C117D /* Runner.app */;
 			productType = "com.apple.product-type.application";
+		};
+		AF2E0786F30AF534738260CB /* WeeksAliveWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D218CFDEE304AAA0A80037D6 /* Build configuration list for PBXNativeTarget "WeeksAliveWidget" */;
+			buildPhases = (
+				67E19F772DC26333A2449025 /* Sources */,
+				4359E929455ED99D3555605C /* Frameworks */,
+				BED01ACDE009DEDA543E90E2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WeeksAliveWidget;
+			productName = WeeksAliveWidget;
+			productReference = 4A8A453FECDBAB7F1ED0BF25 /* WeeksAliveWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -251,6 +327,7 @@
 			targets = (
 				97C146ED1CF9000F007C117D /* Runner */,
 				331C8080294A63A400263BE5 /* RunnerTests */,
+				AF2E0786F30AF534738260CB /* WeeksAliveWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -273,6 +350,13 @@
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
 				E6E56D1473BA9CD7DF043F9F /* GoogleService-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BED01ACDE009DEDA543E90E2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -417,6 +501,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		67E19F772DC26333A2449025 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C7EE6F2F8A0FCEFEACB2E8D3 /* WeeksAliveWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		97C146EA1CF9000F007C117D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -433,6 +525,12 @@
 			isa = PBXTargetDependency;
 			target = 97C146ED1CF9000F007C117D /* Runner */;
 			targetProxy = 331C8085294A63A400263BE5 /* PBXContainerItemProxy */;
+		};
+		D9DADBA59A8E86050F8F612D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = WeeksAliveWidget;
+			target = AF2E0786F30AF534738260CB /* WeeksAliveWidget */;
+			targetProxy = 1AAFA56CD35C99552434627F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -514,6 +612,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = weeksalive_composer;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = XA8VKF93HG;
 				ENABLE_BITCODE = NO;
@@ -580,6 +679,67 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Runner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Runner";
 			};
 			name = Profile;
+		};
+		4FEE353B870460951BA66B7C /* Profile */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 02103C5A2F813478BB0D71A9 /* WeeksAliveWidget.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = WeeksAliveWidget/WeeksAliveWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = XA8VKF93HG;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = WeeksAliveWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.weeksalive.WeeksAliveWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Profile;
+		};
+		916CA550F37E964C40F3F424 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 02103C5A2F813478BB0D71A9 /* WeeksAliveWidget.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = WeeksAliveWidget/WeeksAliveWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = XA8VKF93HG;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = WeeksAliveWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.weeksalive.WeeksAliveWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
 		};
 		97C147031CF9000F007C117D /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -698,6 +858,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = weeksalive_composer;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = XA8VKF93HG;
 				ENABLE_BITCODE = NO;
@@ -722,6 +883,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = weeksalive_composer;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = XA8VKF93HG;
 				ENABLE_BITCODE = NO;
@@ -736,6 +898,37 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		A3872B4242E33A29D56E262F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 02103C5A2F813478BB0D71A9 /* WeeksAliveWidget.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = WeeksAliveWidget/WeeksAliveWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = XA8VKF93HG;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = WeeksAliveWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.weeksalive.WeeksAliveWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
@@ -768,6 +961,16 @@
 				97C147061CF9000F007C117D /* Debug */,
 				97C147071CF9000F007C117D /* Release */,
 				249021D4217E4FDB00AE95B9 /* Profile */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D218CFDEE304AAA0A80037D6 /* Build configuration list for PBXNativeTarget "WeeksAliveWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A3872B4242E33A29D56E262F /* Release */,
+				916CA550F37E964C40F3F424 /* Debug */,
+				4FEE353B870460951BA66B7C /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

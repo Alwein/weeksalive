@@ -13,6 +13,7 @@ import 'package:weeksalive/data/push_notifications/push_notification_repository.
 import 'package:weeksalive/presentation/bootstrap/bootstrap_page.dart';
 import 'package:weeksalive/presentation/push_notifications/push_notification_navigation_handler.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/home_widget/home_widget_actions.dart';
 import 'package:weeksalive/presentation/widgets/app_background_scale.dart';
 import 'package:weeksalive/presentation/widgets/notch_logo.dart';
 
@@ -30,9 +31,33 @@ class App extends StatefulWidget {
   State<App> createState() => _AppState();
 }
 
-class _AppState extends State<App> {
+class _AppState extends State<App> with WidgetsBindingObserver {
   final _backgroundScaleController = AppBackgroundScaleController();
   final _navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    // Refresh the home widgets both when returning to the app (so they reflect
+    // changes made elsewhere) and when leaving it (so the latest in-app changes
+    // are pushed before the app is backgrounded/closed).
+    if (state == AppLifecycleState.resumed ||
+        state == AppLifecycleState.paused) {
+      widget.store.dispatch(const RefreshHomeWidgetsAction());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

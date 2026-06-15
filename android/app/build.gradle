@@ -5,6 +5,7 @@ plugins {
     id 'com.google.firebase.crashlytics'
     // END: FlutterFire Configuration
     id "kotlin-android"
+    id "org.jetbrains.kotlin.plugin.compose"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
@@ -15,6 +16,7 @@ android {
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -23,12 +25,16 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8
     }
 
+    buildFeatures {
+        compose = true
+    }
+
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.weeksalive"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        minSdk = 26
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -45,4 +51,22 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
+
+    // Jetpack Glance: native (Compose-style) home-screen widgets.
+    implementation 'androidx.glance:glance-appwidget:1.1.1'
+}
+
+// home_widget 0.7.x pulls in newer AndroidX artifacts that require a higher
+// Android Gradle Plugin. Force versions compatible with AGP 8.6.0.
+configurations.all {
+    resolutionStrategy {
+        force 'androidx.core:core:1.13.1'
+        force 'androidx.core:core-ktx:1.13.1'
+        force 'androidx.activity:activity:1.9.3'
+        force 'androidx.activity:activity-ktx:1.9.3'
+    }
 }

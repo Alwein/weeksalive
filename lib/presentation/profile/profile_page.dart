@@ -406,7 +406,7 @@ class _ApplicationCard extends StatelessWidget {
             onTap: () => launchUrl(Uri.parse(AppLinks.privacy)),
             icon: MingCuteIcons.mgc_external_link_line,
           ),
-          if (kDebugMode) ...[
+          if (kDebugMode || 1 == 1) ...[
             const SmallDivider(width: double.infinity),
             _PreferencesButton(
               title: "Show onboarding",

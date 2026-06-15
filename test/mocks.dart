@@ -3,6 +3,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:purchases_flutter/models/customer_info_wrapper.dart';
 import 'package:weeksalive/core/styles/app_theme_id.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
+import 'package:weeksalive/data/home_widget/home_widget_service.dart';
 import 'package:weeksalive/data/navigation/navigation_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
@@ -123,4 +124,15 @@ class MockDayRepository extends Mock implements DayRepository {
     when(() => getByDate(any())).thenAnswer((_) => Future.sync(() => null));
     when(() => upsert(any())).thenAnswer((_) => Future.sync(() {}));
   }
+}
+
+/// No-op home widget service used in tests so that no platform-channel calls
+/// (and no async dispatch) happen while the Redux store is being torn down.
+class FakeHomeWidgetService extends Fake implements HomeWidgetService {
+  @override
+  Future<void> updateAll({
+    required User? user,
+    required Iterable<DayEntry> entries,
+    required AppThemeId selectedTheme,
+  }) async {}
 }

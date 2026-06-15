@@ -1,0 +1,7 @@
+// Base configuration for the WeeksAliveWidget extension target.
+// Including Flutter's Generated.xcconfig makes FLUTTER_BUILD_NAME and
+// FLUTTER_BUILD_NUMBER available so the extension Info.plist resolves
+// CFBundleShortVersionString / CFBundleVersion. Without this, the appex
+// ships with empty version strings and the simulator/device install fails
+// with "Invalid placeholder attributes".
+#include? "Generated.xcconfig"
