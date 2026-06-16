@@ -389,6 +389,9 @@ class Strings {
   static String get profilePageNotifications => "Notifications";
   static String get profilePageWeeklyIntentions => "Weekly intentions";
   static String get profilePageTheme => "Theme";
+  static String get profilePageWallpaper => "Wallpaper";
+  static String get profilePageWallpaperConfigured => "ON";
+  static String get profilePageWallpaperNotConfigured => "OFF";
   static String get profilePageWeekBegin => "Week begin";
   static String get profilePageRateTheApp => "Rate the app";
   static String get profilePageSuggestAFeature => "Suggest a feature";
@@ -451,4 +454,53 @@ class Strings {
 
   static String get reportABugSubject => "[EN] Report a bug - WeeksAlive";
   static String get reportABugBody => "Hi, I have a bug report for WeeksAlive:\n\n";
+
+  // wallpaper editor
+  static String get wallpaperPageTitle => "Wallpaper";
+  static String get wallpaperGridSectionTitle => "Grid";
+  static String get wallpaperGridLife => "Life";
+  static String get wallpaperGridYear => "Year";
+  static String get wallpaperAppearanceSectionTitle => "Appearance";
+  static String get wallpaperBrightness => "Brightness";
+  static String get wallpaperBrightnessLight => "Light";
+  static String get wallpaperBrightnessDark => "Dark";
+  static String get wallpaperBackgroundSectionTitle => "Background";
+  static String get wallpaperBackgroundSolid => "Solid";
+  static String get wallpaperBackgroundGradient => "Gradient";
+  static String get wallpaperBackgroundImage => "Image";
+  static String get wallpaperPickImage => "Pick image";
+  static String get wallpaperChangeImage => "Change image";
+  static String get wallpaperImageOpacity => "Opacity";
+  static String get wallpaperImageBlur => "Blur";
+  static String get wallpaperGridColor => "Grid color";
+  static String get wallpaperInstall => "Activate wallpaper";
+  static String get wallpaperUpdate => "Update wallpaper";
+  static String get wallpaperSetupTitle => "Automatic updates";
+  static String get wallpaperSetupSubtitle =>
+      "Set up once (~2 min), then your lock screen updates automatically.";
+  static String get wallpaperSetupShortcutTitle => "1. Create the shortcut";
+  static String get wallpaperSetupShortcutBody =>
+      "In Shortcuts, add Get Wallpaper (WeeksAlive), then Set Wallpaper Photo (lock screen only). Disable Show Preview and Crop to Subject.";
+  static String get wallpaperSetupAutomationTitle => "2. Create a daily automation";
+  static String get wallpaperSetupAutomationBodyLife =>
+      "In Shortcuts → Automations: Time of Day, weekly (e.g. Monday 6 AM), Run Immediately, then select the WeeksAlive shortcut.";
+  static String get wallpaperSetupAutomationBodyYear =>
+      "In Shortcuts → Automations: Time of Day, daily (e.g. 6 AM), Run Immediately, then select the WeeksAlive shortcut.";
+  static String get wallpaperSetupTestTitle => "3. Test it";
+  static String get wallpaperSetupTestButton => "Run shortcut now";
+  static String get wallpaperOpenShortcuts => "Open Shortcuts";
+  static String get wallpaperIosHelpTitle => "Almost done";
+  static String get wallpaperIosHelpBody =>
+      "Your wallpaper image is ready. Follow these steps to update your lock screen automatically.";
+  static String get wallpaperIosHelpStep1 => "Open the Shortcuts app.";
+  static String get wallpaperIosHelpStep2 =>
+      "Create a shortcut with Get Wallpaper, then Set Wallpaper Photo (lock screen only).";
+  static String get wallpaperIosHelpStep3 =>
+      "Create an Automation → Time of Day → Run Immediately.";
+  static String get wallpaperIosHelpStep4 => "Select the WeeksAlive shortcut as the action.";
+  static String get wallpaperIosHelpStep5 =>
+      "In Set Wallpaper: disable Show Preview and Crop to Subject.";
+  static String get wallpaperIosHelpNote =>
+      "The app keeps your wallpaper image up to date. The automation only needs to run the shortcut.";
+  static String get wallpaperViewSetupGuide => "Setup guide";
 }

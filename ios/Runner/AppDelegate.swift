@@ -17,6 +17,11 @@ import flutter_local_notifications
     }
 
     GeneratedPluginRegistrant.register(with: self)
+
+    if let controller = window?.rootViewController as? FlutterViewController {
+      WallpaperPlugin.register(with: controller.registrar(forPlugin: "WallpaperPlugin")!)
+    }
+
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }

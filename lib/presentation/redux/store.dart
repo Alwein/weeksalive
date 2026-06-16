@@ -12,6 +12,7 @@ import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
 import 'package:weeksalive/data/streak/streak_repository.dart';
 import 'package:weeksalive/data/theme/theme_repository.dart';
 import 'package:weeksalive/data/user/user_repository.dart';
+import 'package:weeksalive/data/wallpaper/wallpaper_config_repository.dart';
 import 'package:weeksalive/data/weekly_intent/weekly_intent_repository.dart';
 import 'package:weeksalive/data/weekly_summary/weekly_summary_repository.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
@@ -36,6 +37,7 @@ Future<Store<AppState>> initializeReduxStore(
     weeklyIntentRepository: WeeklyIntentRepository(preferences: sharedPreferences),
     weeklySummaryRepository: WeeklySummaryRepository(preferences: sharedPreferences),
     dayRepository: DayRepository(database: appDatabase),
+    wallpaperConfigRepository: WallpaperConfigRepository(preferences: sharedPreferences),
   ).createStore();
 
   return reduxStore;

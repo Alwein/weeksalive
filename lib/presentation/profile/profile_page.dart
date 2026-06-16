@@ -18,6 +18,7 @@ import 'package:weeksalive/presentation/profile/pages/notifications_settings/not
 import 'package:weeksalive/presentation/profile/pages/theme_picker/theme_picker_page.dart';
 import 'package:weeksalive/presentation/profile/pages/week_begin/week_begin_page.dart';
 import 'package:weeksalive/presentation/profile/profile_page_view_model.dart';
+import 'package:weeksalive/presentation/wallpaper/wallpaper_editor_page.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/weekly_intent/widgets/edit_weekly_intent_bottom_sheet.dart';
 import 'package:weeksalive/presentation/widgets/primary_appbar.dart';
@@ -282,6 +283,13 @@ class _PreferencesCard extends StatelessWidget {
             title: Strings.profilePageTheme,
             value: viewModel.theme,
             onTap: () => ThemePickerPage.show(context),
+            icon: MingCuteIcons.mgc_right_line,
+          ),
+          const SmallDivider(width: double.infinity),
+          _PreferencesButton(
+            title: Strings.profilePageWallpaper,
+            value: viewModel.wallpaperStatus,
+            onTap: () => WallpaperEditorPage.show(context),
             icon: MingCuteIcons.mgc_right_line,
           ),
         ],

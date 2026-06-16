@@ -14,6 +14,7 @@ import 'package:weeksalive/presentation/bootstrap/bootstrap_page.dart';
 import 'package:weeksalive/presentation/push_notifications/push_notification_navigation_handler.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/home_widget/home_widget_actions.dart';
+import 'package:weeksalive/presentation/redux/wallpaper/wallpaper_actions.dart';
 import 'package:weeksalive/presentation/widgets/app_background_scale.dart';
 import 'package:weeksalive/presentation/widgets/notch_logo.dart';
 
@@ -56,6 +57,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed ||
         state == AppLifecycleState.paused) {
       widget.store.dispatch(const RefreshHomeWidgetsAction());
+      widget.store.dispatch(const RefreshWallpaperAction());
     }
   }
 

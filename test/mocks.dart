@@ -11,7 +11,9 @@ import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
 import 'package:weeksalive/data/streak/streak_repository.dart';
 import 'package:weeksalive/data/theme/theme_repository.dart';
 import 'package:weeksalive/data/user/user_repository.dart';
+import 'package:weeksalive/data/wallpaper/wallpaper_config_repository.dart';
 import 'package:weeksalive/data/weekly_intent/weekly_intent_repository.dart';
+import 'package:weeksalive/domain/wallpaper/wallpaper_config.dart';
 import 'package:weeksalive/data/weekly_summary/weekly_summary_repository.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/domain/notifications/notification_slots.dart';
@@ -135,4 +137,12 @@ class FakeHomeWidgetService extends Fake implements HomeWidgetService {
     required Iterable<DayEntry> entries,
     required AppThemeId selectedTheme,
   }) async {}
+}
+
+class MockWallpaperConfigRepository extends Mock implements WallpaperConfigRepository {
+  MockWallpaperConfigRepository() {
+    registerFallbackValue(const WallpaperConfig());
+    when(() => getConfig()).thenReturn(const WallpaperConfig());
+    when(() => setConfig(any())).thenAnswer((_) async {});
+  }
 }

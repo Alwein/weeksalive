@@ -12,15 +12,21 @@
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		550DAFA04F7E09FAC5DB9B83 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53CAA585CE043D73E38D6B55 /* Pods_Runner.framework */; };
 		5B567AF732F64E04A43B9090 /* WeeksAliveWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4A8A453FECDBAB7F1ED0BF25 /* WeeksAliveWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		69FD3C63A3EF5AF0FBB801C2 /* WallpaperPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 479D9F056F34F457AAC6C6B4 /* WallpaperPlugin.swift */; };
+		725751896FD82B9B94B8FE53 /* WeeksAliveShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5C9EAE7A079B3FD00392BA /* WeeksAliveShortcuts.swift */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		7AE145B82F9D5A6300F0D860 /* weeksalive_composer.icon in Resources */ = {isa = PBXBuildFile; fileRef = 7AE145B72F9D5A6300F0D860 /* weeksalive_composer.icon */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		A44F04215415556AF1AB4399 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 973A596AA8DC27A0D10EB498 /* Pods_RunnerTests.framework */; };
+		A8B2E22819CF9E69C21AE0D5 /* WeeksAliveWallpaperIntent.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AC79654F0C1057D1BFCDCF7A /* WeeksAliveWallpaperIntent.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A95531DC5E2C1DFFB862F5DC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 863D059FF981C26FCE4C0086 /* Foundation.framework */; };
+		AA7EEA4431B1003315D6ED98 /* GetWallpaperIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367B99939D449E42FA2F5C9A /* GetWallpaperIntent.swift */; };
+		B59DE5C0654368FD9AEEBEB3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 863D059FF981C26FCE4C0086 /* Foundation.framework */; };
 		C7EE6F2F8A0FCEFEACB2E8D3 /* WeeksAliveWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2AE87A5FAE93125E9A1E5D /* WeeksAliveWidget.swift */; };
 		E6E56D1473BA9CD7DF043F9F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EEDBD54A5B668101DD0AB1B4 /* GoogleService-Info.plist */; };
+		F205A4EE6CFCB33EBFC255E1 /* WeeksAliveWallpaperIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5208A55994708B17D276487 /* WeeksAliveWallpaperIntent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +44,13 @@
 			remoteGlobalIDString = 97C146ED1CF9000F007C117D;
 			remoteInfo = Runner;
 		};
+		B0AABD84A8F89A0E58711B55 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FFE17203E8247AA4B68590E3;
+			remoteInfo = WeeksAliveWallpaperIntent;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -48,6 +61,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				5B567AF732F64E04A43B9090 /* WeeksAliveWidget.appex in Embed Foundation Extensions */,
+				A8B2E22819CF9E69C21AE0D5 /* WeeksAliveWallpaperIntent.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -68,18 +82,24 @@
 		02103C5A2F813478BB0D71A9 /* WeeksAliveWidget.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = WeeksAliveWidget.xcconfig; path = Flutter/WeeksAliveWidget.xcconfig; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
+		18613D96A15E88BE426926B0 /* WeeksAliveWallpaperIntent.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = WeeksAliveWallpaperIntent.xcconfig; path = Flutter/WeeksAliveWallpaperIntent.xcconfig; sourceTree = "<group>"; };
+		268CF0C0EFEB48C05D872C8A /* WeeksAliveWallpaperIntent.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; name = WeeksAliveWallpaperIntent.entitlements; path = WeeksAliveWallpaperIntent/WeeksAliveWallpaperIntent.entitlements; sourceTree = "<group>"; };
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		367B99939D449E42FA2F5C9A /* GetWallpaperIntent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GetWallpaperIntent.swift; path = WeeksAliveWallpaperIntent/GetWallpaperIntent.swift; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
+		479D9F056F34F457AAC6C6B4 /* WallpaperPlugin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WallpaperPlugin.swift; sourceTree = "<group>"; };
 		483453036E6E108EFE5F3F1A /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		4A8A453FECDBAB7F1ED0BF25 /* WeeksAliveWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WeeksAliveWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		4AEEEC73004703EFCBAA419A /* WeeksAliveWidget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; name = WeeksAliveWidget.entitlements; path = WeeksAliveWidget/WeeksAliveWidget.entitlements; sourceTree = "<group>"; };
 		53CAA585CE043D73E38D6B55 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6DD4ABB907D174711E215D65 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = WeeksAliveWallpaperIntent/Info.plist; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7858FC8D60DA0E6F2E381361 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		7AE145B72F9D5A6300F0D860 /* weeksalive_composer.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = weeksalive_composer.icon; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
+		7D5C9EAE7A079B3FD00392BA /* WeeksAliveShortcuts.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WeeksAliveShortcuts.swift; path = WeeksAliveWallpaperIntent/WeeksAliveShortcuts.swift; sourceTree = "<group>"; };
 		81FDFF55F1B3CF867CA71865 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
 		863D059FF981C26FCE4C0086 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		8B2AE87A5FAE93125E9A1E5D /* WeeksAliveWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WeeksAliveWidget.swift; path = WeeksAliveWidget/WeeksAliveWidget.swift; sourceTree = "<group>"; };
@@ -92,7 +112,9 @@
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AB1D92A87D4239B805DA50BE /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
+		AC79654F0C1057D1BFCDCF7A /* WeeksAliveWallpaperIntent.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WeeksAliveWallpaperIntent.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC95548DEDD119803DFDC135 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = WeeksAliveWidget/Info.plist; sourceTree = "<group>"; };
+		B5208A55994708B17D276487 /* WeeksAliveWallpaperIntent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WeeksAliveWallpaperIntent.swift; path = WeeksAliveWallpaperIntent/WeeksAliveWallpaperIntent.swift; sourceTree = "<group>"; };
 		CB9468FE3D850621BAC1B5CD /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
 		CD88BA09C9EFA9D98D4479EA /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		EEDBD54A5B668101DD0AB1B4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -104,6 +126,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				A95531DC5E2C1DFFB862F5DC /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		705CAC84C0148DA657D21895 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B59DE5C0654368FD9AEEBEB3 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,6 +182,18 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		7DBB628D961FC1159A668CB0 /* WeeksAliveWallpaperIntent */ = {
+			isa = PBXGroup;
+			children = (
+				B5208A55994708B17D276487 /* WeeksAliveWallpaperIntent.swift */,
+				367B99939D449E42FA2F5C9A /* GetWallpaperIntent.swift */,
+				7D5C9EAE7A079B3FD00392BA /* WeeksAliveShortcuts.swift */,
+				6DD4ABB907D174711E215D65 /* Info.plist */,
+				268CF0C0EFEB48C05D872C8A /* WeeksAliveWallpaperIntent.entitlements */,
+			);
+			name = WeeksAliveWallpaperIntent;
+			sourceTree = SOURCE_ROOT;
+		};
 		9740EEB11CF90186004384FC /* Flutter */ = {
 			isa = PBXGroup;
 			children = (
@@ -160,6 +202,7 @@
 				7AFA3C8E1D35360C0083082E /* Release.xcconfig */,
 				9740EEB31CF90195004384FC /* Generated.xcconfig */,
 				02103C5A2F813478BB0D71A9 /* WeeksAliveWidget.xcconfig */,
+				18613D96A15E88BE426926B0 /* WeeksAliveWallpaperIntent.xcconfig */,
 			);
 			name = Flutter;
 			sourceTree = "<group>";
@@ -175,6 +218,7 @@
 				66906F61222E618661096614 /* Frameworks */,
 				EEDBD54A5B668101DD0AB1B4 /* GoogleService-Info.plist */,
 				B47CA9B3A77C541576DABE68 /* WeeksAliveWidget */,
+				7DBB628D961FC1159A668CB0 /* WeeksAliveWallpaperIntent */,
 			);
 			sourceTree = "<group>";
 		};
@@ -184,6 +228,7 @@
 				97C146EE1CF9000F007C117D /* Runner.app */,
 				331C8081294A63A400263BE5 /* RunnerTests.xctest */,
 				4A8A453FECDBAB7F1ED0BF25 /* WeeksAliveWidget.appex */,
+				AC79654F0C1057D1BFCDCF7A /* WeeksAliveWallpaperIntent.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -200,6 +245,7 @@
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
+				479D9F056F34F457AAC6C6B4 /* WallpaperPlugin.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -269,6 +315,7 @@
 			);
 			dependencies = (
 				D9DADBA59A8E86050F8F612D /* PBXTargetDependency */,
+				3173C0FBEDE8EAD47C9FA40E /* PBXTargetDependency */,
 			);
 			name = Runner;
 			productName = Runner;
@@ -290,6 +337,23 @@
 			name = WeeksAliveWidget;
 			productName = WeeksAliveWidget;
 			productReference = 4A8A453FECDBAB7F1ED0BF25 /* WeeksAliveWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		FFE17203E8247AA4B68590E3 /* WeeksAliveWallpaperIntent */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 54AEE4A8EBF30CD18791C64A /* Build configuration list for PBXNativeTarget "WeeksAliveWallpaperIntent" */;
+			buildPhases = (
+				6F16853BA388D620D476B3F5 /* Sources */,
+				705CAC84C0148DA657D21895 /* Frameworks */,
+				5B3465B20E8E5446925E74E9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WeeksAliveWallpaperIntent;
+			productName = WeeksAliveWallpaperIntent;
+			productReference = AC79654F0C1057D1BFCDCF7A /* WeeksAliveWallpaperIntent.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -328,12 +392,20 @@
 				97C146ED1CF9000F007C117D /* Runner */,
 				331C8080294A63A400263BE5 /* RunnerTests */,
 				AF2E0786F30AF534738260CB /* WeeksAliveWidget */,
+				FFE17203E8247AA4B68590E3 /* WeeksAliveWallpaperIntent */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		331C807F294A63A400263BE5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5B3465B20E8E5446925E74E9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -509,18 +581,35 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6F16853BA388D620D476B3F5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F205A4EE6CFCB33EBFC255E1 /* WeeksAliveWallpaperIntent.swift in Sources */,
+				AA7EEA4431B1003315D6ED98 /* GetWallpaperIntent.swift in Sources */,
+				725751896FD82B9B94B8FE53 /* WeeksAliveShortcuts.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		97C146EA1CF9000F007C117D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
+				69FD3C63A3EF5AF0FBB801C2 /* WallpaperPlugin.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3173C0FBEDE8EAD47C9FA40E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = WeeksAliveWallpaperIntent;
+			target = FFE17203E8247AA4B68590E3 /* WeeksAliveWallpaperIntent */;
+			targetProxy = B0AABD84A8F89A0E58711B55 /* PBXContainerItemProxy */;
+		};
 		331C8086294A63A400263BE5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 97C146ED1CF9000F007C117D /* Runner */;
@@ -554,6 +643,37 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		0A6378A49951F81755C42761 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 18613D96A15E88BE426926B0 /* WeeksAliveWallpaperIntent.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = WeeksAliveWallpaperIntent/WeeksAliveWallpaperIntent.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = XA8VKF93HG;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = WeeksAliveWallpaperIntent/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.weeksalive.WeeksAliveWallpaperIntent;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		249021D3217E4FDB00AE95B9 /* Profile */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -711,6 +831,37 @@
 			};
 			name = Profile;
 		};
+		569FDBB973C920BF560FDE85 /* Profile */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 18613D96A15E88BE426926B0 /* WeeksAliveWallpaperIntent.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = WeeksAliveWallpaperIntent/WeeksAliveWallpaperIntent.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = XA8VKF93HG;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = WeeksAliveWallpaperIntent/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.weeksalive.WeeksAliveWallpaperIntent;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Profile;
+		};
 		916CA550F37E964C40F3F424 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 02103C5A2F813478BB0D71A9 /* WeeksAliveWidget.xcconfig */;
@@ -731,6 +882,36 @@
 				);
 				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.weeksalive.WeeksAliveWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		926FC4F4B4A2515268FCA5F8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 18613D96A15E88BE426926B0 /* WeeksAliveWallpaperIntent.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = WeeksAliveWallpaperIntent/WeeksAliveWallpaperIntent.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = XA8VKF93HG;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = WeeksAliveWallpaperIntent/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.weeksalive.WeeksAliveWallpaperIntent;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -941,6 +1122,16 @@
 				331C8088294A63A400263BE5 /* Debug */,
 				331C8089294A63A400263BE5 /* Release */,
 				331C808A294A63A400263BE5 /* Profile */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		54AEE4A8EBF30CD18791C64A /* Build configuration list for PBXNativeTarget "WeeksAliveWallpaperIntent" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A6378A49951F81755C42761 /* Release */,
+				926FC4F4B4A2515268FCA5F8 /* Debug */,
+				569FDBB973C920BF560FDE85 /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

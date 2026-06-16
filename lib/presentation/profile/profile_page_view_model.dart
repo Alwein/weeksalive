@@ -22,6 +22,7 @@ abstract class ProfilePageViewModel with _$ProfilePageViewModel {
     required String weekStartDay,
     required String weeklyIntents,
     required String theme,
+    required String wallpaperStatus,
   }) = _ProfilePageViewModel;
 
   factory ProfilePageViewModel.create(Store<AppState> store, DateTime now, {required String locale}) {
@@ -48,6 +49,9 @@ abstract class ProfilePageViewModel with _$ProfilePageViewModel {
       weekStartDay: Strings.weekdayFullNames[((user?.weekStartDay ?? DateTime.monday) - 1).clamp(0, 6)],
       weeklyIntents: selectedWeeklyIntents,
       theme: store.state.themeState.selectedTheme.label,
+      wallpaperStatus: store.state.wallpaperState.config.enabled
+          ? Strings.profilePageWallpaperConfigured
+          : Strings.profilePageWallpaperNotConfigured,
     );
   }
 }

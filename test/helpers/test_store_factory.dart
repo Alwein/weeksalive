@@ -8,6 +8,7 @@ import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
 import 'package:weeksalive/data/streak/streak_repository.dart';
 import 'package:weeksalive/data/theme/theme_repository.dart';
 import 'package:weeksalive/data/user/user_repository.dart';
+import 'package:weeksalive/data/wallpaper/wallpaper_config_repository.dart';
 import 'package:weeksalive/data/weekly_intent/weekly_intent_repository.dart';
 import 'package:weeksalive/data/weekly_summary/weekly_summary_repository.dart';
 import 'package:weeksalive/domain/theme/theme_unlock_service.dart';
@@ -32,6 +33,7 @@ class TestStoreFactory {
   WeeklySummaryRepository weeklySummaryRepository = MockWeeklySummaryRepository();
   DayRepository dayRepository = MockDayRepository();
   HomeWidgetService homeWidgetService = FakeHomeWidgetService();
+  WallpaperConfigRepository wallpaperConfigRepository = MockWallpaperConfigRepository();
 
   Store<AppState> initializeReduxStore(AppState initialState) {
     return StoreFactory(
@@ -47,6 +49,7 @@ class TestStoreFactory {
       navigationRepository: navigationRepository,
       themeUnlockService: const ThemeUnlockService(),
       homeWidgetService: homeWidgetService,
+      wallpaperConfigRepository: wallpaperConfigRepository,
     ).createStore(initialState: initialState);
   }
 }

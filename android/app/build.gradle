@@ -58,6 +58,7 @@ dependencies {
 
     // Jetpack Glance: native (Compose-style) home-screen widgets.
     implementation 'androidx.glance:glance-appwidget:1.1.1'
+    implementation 'androidx.work:work-runtime-ktx:2.9.0'
 }
 
 // home_widget 0.7.x pulls in newer AndroidX artifacts that require a higher
