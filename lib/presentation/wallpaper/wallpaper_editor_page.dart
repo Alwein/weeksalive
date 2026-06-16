@@ -5,24 +5,31 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:weeksalive/core/styles/app_color_tokens.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
+import 'package:weeksalive/core/styles/app_theme_id.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
-import 'package:weeksalive/core/styles/themes/app_theme.dart';
 import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_background_mode.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_config.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_grid_data.dart';
+import 'package:weeksalive/domain/wallpaper/wallpaper_grid_tokens.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_grid_type.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/custom_tab_bar.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
 import 'package:weeksalive/presentation/redux/wallpaper/wallpaper_actions.dart';
 import 'package:weeksalive/presentation/wallpaper/wallpaper_setup_page.dart';
 import 'package:weeksalive/presentation/wallpaper/widgets/wallpaper_ios_help_sheet.dart';
 import 'package:weeksalive/presentation/wallpaper/widgets/wallpaper_preview.dart';
+import 'package:weeksalive/presentation/wallpaper/widgets/wallpaper_theme_picker.dart';
 import 'package:weeksalive/presentation/widgets/primary_appbar.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
+import 'package:weeksalive/presentation/widgets/segmented_chip_picker.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class WallpaperEditorPage extends StatefulWidget {
@@ -40,19 +47,43 @@ class WallpaperEditorPage extends StatefulWidget {
   State<WallpaperEditorPage> createState() => _WallpaperEditorPageState();
 }
 
-class _WallpaperEditorPageState extends State<WallpaperEditorPage> {
+class _WallpaperEditorPageState extends State<WallpaperEditorPage> with TickerProviderStateMixin {
+  static const double _tabHeight = 48.0;
+
   final _picker = ImagePicker();
   late WallpaperConfig _config;
+  late TabController _gridTabController;
   bool _pendingIosHelpSheet = false;
 
   @override
   void initState() {
     super.initState();
     _config = StoreProvider.of<AppState>(context, listen: false).state.wallpaperState.config;
+    _gridTabController = CustomTabController(
+      length: 2,
+      vsync: this,
+      initialIndex: _config.gridType == WallpaperGridType.life ? 0 : 1,
+    );
+  }
+
+  @override
+  void dispose() {
+    _gridTabController.dispose();
+    super.dispose();
+  }
+
+  AppThemeId _effectiveGridThemeId() => resolveWallpaperThemeId(_config);
+
+  void _syncTabControllers() {
+    final gridIndex = _config.gridType == WallpaperGridType.life ? 0 : 1;
+    if (_gridTabController.index != gridIndex) _gridTabController.index = gridIndex;
   }
 
   void _update(WallpaperConfig next, {bool persist = true, bool reRender = false}) {
-    setState(() => _config = next);
+    setState(() {
+      _config = next;
+      _syncTabControllers();
+    });
     if (persist) {
       StoreProvider.of<AppState>(context, listen: false).dispatch(
         SaveWallpaperConfigAction(next, reRender: reRender),
@@ -93,173 +124,325 @@ class _WallpaperEditorPageState extends State<WallpaperEditorPage> {
     }
   }
 
+  void _onGridTabTapped(int index) {
+    SensorialFeedback.navigationChanged();
+    _update(
+      _config.copyWith(
+        gridType: index == 0 ? WallpaperGridType.life : WallpaperGridType.year,
+      ),
+      reRender: _config.enabled,
+    );
+  }
+
+  void _removeImage() {
+    _update(
+      _config.copyWith(
+        backgroundMode: WallpaperBackgroundMode.solid,
+        backgroundImagePath: () => null,
+      ),
+      reRender: _config.enabled,
+    );
+  }
+
+  void _onGridThemeSelected(AppThemeId themeId) {
+    _update(
+      _config.copyWith(
+        gridThemeId: () => themeId,
+        gridColorArgb: () => null,
+        dark: switch (themeId) {
+          AppThemeId.dark => true,
+          AppThemeId.light => false,
+          _ => _config.dark,
+        },
+      ),
+      reRender: _config.enabled,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.bg(context),
-      appBar: PrimaryAppBar(title: Strings.wallpaperPageTitle),
-      body: StoreConnector<AppState, _InstallViewModel>(
-        converter: (store) => _InstallViewModel(
-          installing: store.state.wallpaperState.installing,
-          installSucceeded: store.state.wallpaperState.installSucceeded,
-        ),
-        onWillChange: (previous, current) => previous != current,
-        onDidChange: _onInstallStateChanged,
-        builder: (context, vm) {
-          final installing = vm.installing;
-          final store = StoreProvider.of<AppState>(context, listen: false);
-          final tokens = AppThemes.resolveTokens(
-            store.state.themeState.selectedTheme,
-            _config.dark ? Brightness.dark : Brightness.light,
-          );
-          final data = WallpaperGridData.build(
-            gridType: _config.gridType,
-            user: store.state.userState.userOrNull,
-            entries: store.state.dayState.entries.values,
-            at: DateTime.now(),
-          );
+    return StoreConnector<AppState, _InstallViewModel>(
+      converter: (store) => _InstallViewModel(
+        installing: store.state.wallpaperState.installing,
+        installSucceeded: store.state.wallpaperState.installSucceeded,
+      ),
+      onWillChange: (previous, current) => previous != current,
+      onDidChange: _onInstallStateChanged,
+      builder: (context, vm) {
+        final installing = vm.installing;
+        final store = StoreProvider.of<AppState>(context, listen: false);
+        final wallpaperTokens = resolveWallpaperGridTokens(_config);
+        final data = WallpaperGridData.build(
+          gridType: _config.gridType,
+          user: store.state.userState.userOrNull,
+          entries: store.state.dayState.entries.values,
+          at: DateTime.now(),
+        );
 
-          return Column(
+        return Scaffold(
+          backgroundColor: AppColors.bg(context),
+          appBar: PrimaryAppBar(
+            title: Strings.wallpaperPageTitle,
+            actions: [
+              _WallpaperAppBarAction(
+                onPressed: installing ? null : _install,
+                isLoading: installing,
+              ),
+            ],
+          ),
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              _PinnedPreviewPanel(
+                config: _config,
+                data: data,
+                tokens: wallpaperTokens,
+                gridTokens: wallpaperTokens,
+              ),
               Expanded(
                 child: SingleChildScrollView(
+                  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                   padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const SizedBox(height: Margins.spacingBase),
-                      Center(child: WallpaperPreview(config: _config, data: data, tokens: tokens)),
                       const SizedBox(height: Margins.spacingM),
-                      _SectionTitle(Strings.wallpaperGridSectionTitle),
-                      const SizedBox(height: Margins.spacingBase),
-                      _SegmentedRow(
-                        options: [
-                          (Strings.wallpaperGridLife, _config.gridType == WallpaperGridType.life),
-                          (Strings.wallpaperGridYear, _config.gridType == WallpaperGridType.year),
-                        ],
-                        onSelected: (index) => _update(
-                          _config.copyWith(
-                            gridType: index == 0 ? WallpaperGridType.life : WallpaperGridType.year,
-                          ),
-                          reRender: _config.enabled,
-                        ),
-                      ),
-                      const SizedBox(height: Margins.spacingM),
-                      _SectionTitle(Strings.wallpaperAppearanceSectionTitle),
-                      const SizedBox(height: Margins.spacingBase),
-                      _LabeledRow(
-                        label: Strings.wallpaperBrightness,
-                        child: _SegmentedRow(
-                          compact: true,
-                          options: [
-                            (Strings.wallpaperBrightnessLight, !_config.dark),
-                            (Strings.wallpaperBrightnessDark, _config.dark),
+                      _WallpaperSection(
+                        title: Strings.wallpaperGridSectionTitle,
+                        child: CustomTabBar(
+                          controller: _gridTabController,
+                          onTap: _onGridTabTapped,
+                          tabHeight: _tabHeight,
+                          tabs: [
+                            Tab(child: Text(Strings.wallpaperGridLife, style: TextStyles.primaryRegularBold)),
+                            Tab(child: Text(Strings.wallpaperGridYear, style: TextStyles.primaryRegularBold)),
                           ],
-                          onSelected: (index) => _update(
-                            _config.copyWith(dark: index == 1),
-                            reRender: _config.enabled,
-                          ),
                         ),
                       ),
-                      const SizedBox(height: Margins.spacingM),
-                      _SectionTitle(Strings.wallpaperBackgroundSectionTitle),
-                      const SizedBox(height: Margins.spacingBase),
-                      _SegmentedRow(
-                        options: [
-                          (Strings.wallpaperBackgroundSolid, _config.backgroundMode == WallpaperBackgroundMode.solid),
-                          (
-                            Strings.wallpaperBackgroundGradient,
-                            _config.backgroundMode == WallpaperBackgroundMode.gradient,
-                          ),
-                          (Strings.wallpaperBackgroundImage, _config.backgroundMode == WallpaperBackgroundMode.image),
-                        ],
-                        onSelected: (index) {
-                          final mode = switch (index) {
-                            0 => WallpaperBackgroundMode.solid,
-                            1 => WallpaperBackgroundMode.gradient,
-                            _ => WallpaperBackgroundMode.image,
-                          };
-                          if (mode == WallpaperBackgroundMode.image && _config.backgroundImagePath == null) {
-                            _update(_config.copyWith(backgroundMode: mode), reRender: _config.enabled);
-                            _pickImage();
-                          } else {
-                            _update(_config.copyWith(backgroundMode: mode), reRender: _config.enabled);
-                          }
-                        },
-                      ),
-                      if (_config.backgroundMode == WallpaperBackgroundMode.image) ...[
-                        const SizedBox(height: Margins.spacingBase),
-                        PrimaryButton(
-                          text: _config.backgroundImagePath == null
-                              ? Strings.wallpaperPickImage
-                              : Strings.wallpaperChangeImage,
-                          onPressed: _pickImage,
-                          backgroundColor: AppColors.bgSoft(context),
-                          textColor: AppColors.content(context),
+                      const _SectionDivider(),
+                      _WallpaperSection(
+                        title: Strings.wallpaperThemeSectionTitle,
+                        child: WallpaperThemePicker(
+                          selectedThemeId: _effectiveGridThemeId(),
+                          onSelected: _onGridThemeSelected,
                         ),
-                        const SizedBox(height: Margins.spacingBase),
-                        _SliderRow(
-                          label: Strings.wallpaperImageOpacity,
-                          value: _config.backgroundImageOpacity,
-                          onChanged: (v) => _update(_config.copyWith(backgroundImageOpacity: v), persist: false),
-                          onChangeEnd: (v) => _update(
+                      ),
+                      const _SectionDivider(),
+                      _WallpaperSection(
+                        title: Strings.wallpaperBackgroundImageSectionTitle,
+                        child: _BackgroundImageSection(
+                          config: _config,
+                          onPickImage: _pickImage,
+                          onRemoveImage: _removeImage,
+                          onOpacitySelected: (v) => _update(
                             _config.copyWith(backgroundImageOpacity: v),
                             reRender: _config.enabled,
                           ),
-                        ),
-                        _SliderRow(
-                          label: Strings.wallpaperImageBlur,
-                          value: _config.backgroundBlur,
-                          max: 20,
-                          onChanged: (v) => _update(_config.copyWith(backgroundBlur: v), persist: false),
-                          onChangeEnd: (v) => _update(
+                          onBlurSelected: (v) => _update(
                             _config.copyWith(backgroundBlur: v),
                             reRender: _config.enabled,
                           ),
                         ),
-                      ],
-                      const SizedBox(height: Margins.spacingM),
-                      _SectionTitle(Strings.wallpaperGridColor),
-                      const SizedBox(height: Margins.spacingBase),
-                      _ColorSwatchRow(
-                        selectedArgb: _config.gridColorArgb,
-                        onSelected: (argb) => _update(
-                          _config.copyWith(gridColorArgb: () => argb),
-                          reRender: _config.enabled,
-                        ),
                       ),
-                      const SizedBox(height: Margins.spacingL),
                       if (Platform.isIOS) ...[
+                        const _SectionDivider(),
                         PrimaryButton(
                           text: Strings.wallpaperViewSetupGuide,
                           onPressed: () => WallpaperSetupPage.show(context),
                           backgroundColor: AppColors.bgSoft(context),
                           textColor: AppColors.content(context),
                         ),
-                        const SizedBox(height: Margins.spacingL),
                       ],
+                      SizedBox(height: Margins.spacingM + MediaQuery.paddingOf(context).bottom),
                     ],
                   ),
                 ),
               ),
-              SafeArea(
-                top: false,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    Margins.spacingM,
-                    Margins.spacingBase,
-                    Margins.spacingM,
-                    Margins.spacingBase,
-                  ),
-                  child: PrimaryButton(
-                    text: _config.enabled ? Strings.wallpaperUpdate : Strings.wallpaperInstall,
-                    onPressed: installing ? null : _install,
-                  ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _BackgroundImageSection extends StatelessWidget {
+  const _BackgroundImageSection({
+    required this.config,
+    required this.onPickImage,
+    required this.onRemoveImage,
+    required this.onOpacitySelected,
+    required this.onBlurSelected,
+  });
+
+  final WallpaperConfig config;
+  final VoidCallback onPickImage;
+  final VoidCallback onRemoveImage;
+  final ValueChanged<double> onOpacitySelected;
+  final ValueChanged<double> onBlurSelected;
+
+  static const _previewSize = 88.0;
+  static const _opacityValues = [1.0, 0.75, 0.5];
+  static const _opacityLabels = ['100%', '75%', '50%'];
+  static const _blurValues = [0.0, 10.0, 20.0];
+  static const _blurLabels = ['0', '10', '20'];
+
+  bool get _hasImage {
+    final path = config.backgroundImagePath;
+    return path != null && File(path).existsSync();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (_hasImage) ...[
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _BackgroundImagePreview(
+                imagePath: config.backgroundImagePath!,
+                onRemove: onRemoveImage,
+                onTap: onPickImage,
+              ),
+              const SizedBox(width: Margins.spacingM),
+              Expanded(
+                child: PrimaryButton(
+                  text: Strings.wallpaperChangeImage,
+                  onPressed: onPickImage,
+                  backgroundColor: AppColors.bgSoft(context),
+                  textColor: AppColors.content(context),
                 ),
               ),
             ],
-          );
-        },
+          ),
+          const SizedBox(height: Margins.spacingM),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Texts.primaryMedium(Strings.wallpaperImageOpacity),
+              const SizedBox(height: Margins.spacingBase),
+              SegmentedChipPicker(
+                labels: _opacityLabels,
+                selectedIndex: _nearestIndex(_opacityValues, config.backgroundImageOpacity),
+                onSelected: (index) => onOpacitySelected(_opacityValues[index]),
+              ),
+            ],
+          ),
+          const SizedBox(height: Margins.spacingM),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Texts.primaryMedium(Strings.wallpaperImageBlur),
+              const SizedBox(height: Margins.spacingBase),
+              SegmentedChipPicker(
+                labels: _blurLabels,
+                selectedIndex: _nearestIndex(_blurValues, config.backgroundBlur),
+                onSelected: (index) => onBlurSelected(_blurValues[index]),
+              ),
+            ],
+          ),
+        ] else
+          GestureDetector(
+            onTap: onPickImage,
+            child: _EmptyImagePlaceholder(),
+          ),
+      ],
+    );
+  }
+
+  static int _nearestIndex(List<double> values, double current) {
+    var best = 0;
+    var bestDelta = double.infinity;
+    for (var i = 0; i < values.length; i++) {
+      final delta = (values[i] - current).abs();
+      if (delta < bestDelta) {
+        bestDelta = delta;
+        best = i;
+      }
+    }
+    return best;
+  }
+}
+
+class _EmptyImagePlaceholder extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: _BackgroundImageSection._previewSize,
+      decoration: BoxDecoration(
+        color: AppColors.bgSoft(context),
+        borderRadius: BorderRadius.circular(Dimens.radiusBase),
+        border: Border.all(color: AppColors.strokeColor(context), width: Dimens.strokeWidthS),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.add_photo_alternate_outlined, size: Dimens.iconSizeM, color: AppColors.contentSoft(context)),
+          const SizedBox(height: Margins.spacingS),
+          Texts.primaryMedium(Strings.wallpaperAddImage, color: AppColors.contentSoft(context)),
+        ],
+      ),
+    );
+  }
+}
+
+class _BackgroundImagePreview extends StatelessWidget {
+  const _BackgroundImagePreview({
+    required this.imagePath,
+    required this.onRemove,
+    required this.onTap,
+  });
+
+  final String imagePath;
+  final VoidCallback onRemove;
+  final VoidCallback onTap;
+
+  static const _size = 88.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: SizedBox(
+        width: _size,
+        height: _size,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(Dimens.radiusBase),
+              child: Image.file(
+                File(imagePath),
+                width: _size,
+                height: _size,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Positioned(
+              top: -6,
+              right: -6,
+              child: GestureDetector(
+                onTap: () {
+                  SensorialFeedback.selectionChanged();
+                  onRemove();
+                },
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: AppColors.content(context),
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.bg(context), width: Dimens.strokeWidthBase),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Icon(Icons.close, size: Dimens.iconSizeXs, color: AppColors.bg(context)),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -274,166 +457,111 @@ class _InstallViewModel {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is _InstallViewModel &&
-          installing == other.installing &&
-          installSucceeded == other.installSucceeded;
+      other is _InstallViewModel && installing == other.installing && installSucceeded == other.installSucceeded;
 
   @override
   int get hashCode => Object.hash(installing, installSucceeded);
 }
 
-class _SectionTitle extends StatelessWidget {
-  const _SectionTitle(this.title);
-  final String title;
+class _PinnedPreviewPanel extends StatelessWidget {
+  const _PinnedPreviewPanel({
+    required this.config,
+    required this.data,
+    required this.tokens,
+    required this.gridTokens,
+  });
+
+  final WallpaperConfig config;
+  final WallpaperGridData data;
+  final AppColorTokens tokens;
+  final AppColorTokens gridTokens;
+
+  static double _previewHeight(BuildContext context) {
+    final screenHeight = MediaQuery.sizeOf(context).height;
+    return (screenHeight * 0.30);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Texts.primaryRegularMedium(title, color: AppColors.contentSoft(context));
+    final previewHeight = _previewHeight(context);
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.bg(context),
+        border: Border(
+          bottom: BorderSide(color: AppColors.strokeColor(context)),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: Margins.spacingM,
+          vertical: Margins.spacingBase,
+        ),
+        child: Center(
+          child: WallpaperPreview(
+            config: config,
+            data: data,
+            tokens: tokens,
+            gridTokens: gridTokens,
+            maxHeight: previewHeight,
+          ),
+        ),
+      ),
+    );
   }
 }
 
-class _LabeledRow extends StatelessWidget {
-  const _LabeledRow({required this.label, required this.child});
-  final String label;
+class _WallpaperAppBarAction extends StatelessWidget {
+  const _WallpaperAppBarAction({
+    required this.onPressed,
+    required this.isLoading,
+  });
+
+  final VoidCallback? onPressed;
+  final bool isLoading;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: Margins.spacingS),
+      child: PrimaryButton(
+        onPressed: isLoading ? null : onPressed,
+        text: Strings.save,
+      ),
+    );
+  }
+}
+
+class _WallpaperSection extends StatelessWidget {
+  const _WallpaperSection({required this.title, required this.child});
+
+  final String title;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Expanded(child: Texts.primaryBold(label)),
+        Texts.primaryMediumBold(title),
+        const SizedBox(height: Margins.spacingBase),
         child,
       ],
     );
   }
 }
 
-class _SegmentedRow extends StatelessWidget {
-  const _SegmentedRow({required this.options, required this.onSelected, this.compact = false});
-
-  final List<(String, bool)> options;
-  final ValueChanged<int> onSelected;
-  final bool compact;
+class _SectionDivider extends StatelessWidget {
+  const _SectionDivider();
 
   @override
   Widget build(BuildContext context) {
-    final children = <Widget>[];
-    for (var i = 0; i < options.length; i++) {
-      final (label, selected) = options[i];
-      children.add(
-        Expanded(
-          child: GestureDetector(
-            onTap: () => onSelected(i),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(vertical: Margins.spacingS),
-              decoration: BoxDecoration(
-                color: selected ? AppColors.content(context) : Colors.transparent,
-                borderRadius: BorderRadius.circular(Dimens.radiusS),
-              ),
-              child: Text(
-                label,
-                textAlign: TextAlign.center,
-                style: TextStyles.primaryRegularBold.copyWith(
-                  color: selected ? AppColors.bg(context) : AppColors.contentSoft(context),
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    return Container(
-      width: compact ? 200 : double.infinity,
-      padding: const EdgeInsets.all(Margins.spacingXs),
-      decoration: BoxDecoration(
-        color: AppColors.bgSoft(context),
-        borderRadius: BorderRadius.circular(Dimens.radiusBase),
-      ),
-      child: Row(children: children),
-    );
-  }
-}
-
-class _SliderRow extends StatelessWidget {
-  const _SliderRow({
-    required this.label,
-    required this.value,
-    required this.onChanged,
-    required this.onChangeEnd,
-    this.max = 1.0,
-  });
-
-  final String label;
-  final double value;
-  final double max;
-  final ValueChanged<double> onChanged;
-  final ValueChanged<double> onChangeEnd;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
+    return const Column(
       children: [
-        SizedBox(width: 110, child: Texts.primaryRegularMedium(label)),
-        Expanded(
-          child: Slider(
-            value: value.clamp(0, max),
-            max: max,
-            activeColor: AppColors.content(context),
-            inactiveColor: AppColors.bgSoft(context),
-            onChanged: onChanged,
-            onChangeEnd: onChangeEnd,
-          ),
-        ),
+        SizedBox(height: Margins.spacingM),
+        SmallDivider(width: double.infinity),
+        SizedBox(height: Margins.spacingM),
       ],
-    );
-  }
-}
-
-class _ColorSwatchRow extends StatelessWidget {
-  const _ColorSwatchRow({required this.selectedArgb, required this.onSelected});
-
-  final int? selectedArgb;
-  final ValueChanged<int?> onSelected;
-
-  static const _palette = <int?>[
-    null,
-    0xFFFFFFFF,
-    0xFF000000,
-    0xFFE8A0B0,
-    0xFF5A8A68,
-    0xFFA87ED4,
-    0xFFC4614A,
-    0xFF4A7090,
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: Margins.spacingBase,
-      runSpacing: Margins.spacingBase,
-      children: _palette.map((argb) {
-        final selected = argb == selectedArgb;
-        final isThemeDefault = argb == null;
-        return GestureDetector(
-          onTap: () => onSelected(argb),
-          child: Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: isThemeDefault ? AppColors.content(context) : Color(argb),
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: selected ? AppColors.accentOrange(context) : AppColors.strokeColor(context),
-                width: selected ? Dimens.strokeWidthBase : Dimens.strokeWidthS,
-              ),
-            ),
-            child: isThemeDefault
-                ? Icon(Icons.auto_awesome, size: Dimens.iconSizeXs, color: AppColors.bg(context))
-                : null,
-          ),
-        );
-      }).toList(),
     );
   }
 }

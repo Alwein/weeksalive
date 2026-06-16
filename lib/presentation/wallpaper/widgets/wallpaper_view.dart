@@ -21,12 +21,18 @@ class WallpaperView extends StatelessWidget {
     required this.config,
     required this.data,
     required this.tokens,
+    this.gridTokens,
     required this.size,
   });
 
   final WallpaperConfig config;
   final WallpaperGridData data;
+
+  /// Color tokens for the background layer.
   final AppColorTokens tokens;
+
+  /// Color tokens for the grid. Falls back to [tokens] when null.
+  final AppColorTokens? gridTokens;
 
   /// Logical size (points) of the canvas. The grid is centered within safe
   /// insets so it stays clear of the clock / home indicator.
@@ -37,9 +43,14 @@ class WallpaperView extends StatelessWidget {
   static const _yearColumns = 15;
   static const _yearDotSpacing = 4.0;
 
-  Color get _gridColor => config.gridColor ?? tokens.content;
-  Color get _bgColor => config.backgroundColor ?? tokens.bg;
+  Color get _gridColor => config.gridColor ?? _gridTokens.content;
+  Color get _solidBgColor => config.backgroundColor ?? tokens.bg;
   Color get _bgColorSecondary => config.backgroundColorSecondary ?? tokens.bgSoft;
+
+  /// Backdrop shown behind a background image (opacity reveals this color).
+  Color get _imageBackdropColor => config.backgroundColor ?? const Color(0xFF000000);
+
+  AppColorTokens get _gridTokens => gridTokens ?? tokens;
 
   @override
   Widget build(BuildContext context) {
@@ -59,54 +70,97 @@ class WallpaperView extends StatelessWidget {
   Widget _buildBackground() {
     switch (config.backgroundMode) {
       case WallpaperBackgroundMode.solid:
-        return ColoredBox(color: _bgColor);
+        return ColoredBox(color: _solidBgColor);
       case WallpaperBackgroundMode.gradient:
         return DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [_bgColor, _bgColorSecondary],
+              colors: [_solidBgColor, _bgColorSecondary],
             ),
           ),
         );
       case WallpaperBackgroundMode.image:
         final path = config.backgroundImagePath;
         if (path == null || !File(path).existsSync()) {
-          return ColoredBox(color: _bgColor);
+          return ColoredBox(color: _solidBgColor);
         }
-        Widget image = Image.file(
-          File(path),
-          fit: BoxFit.cover,
-          width: size.width,
-          height: size.height,
-          opacity: AlwaysStoppedAnimation(config.backgroundImageOpacity.clamp(0.0, 1.0)),
-        );
-        if (config.backgroundBlur > 0) {
-          image = ImageFiltered(
-            imageFilter: ui.ImageFilter.blur(
-              sigmaX: config.backgroundBlur,
-              sigmaY: config.backgroundBlur,
-            ),
-            child: image,
-          );
-        }
-        return Stack(
-          fit: StackFit.expand,
-          children: [
-            ColoredBox(color: _bgColor),
-            image,
-          ],
-        );
+        return _buildImageBackground(path);
     }
   }
+
+  /// Bleed beyond the canvas so the blur kernel can sample real image pixels
+  /// at the edges instead of transparent/backdrop color (which causes halos).
+  static double _blurBleed(double sigma) => sigma > 0 ? sigma * 3 : 0;
+
+  Widget _buildImageBackground(String path) {
+    final opacity = config.backgroundImageOpacity.clamp(0.0, 1.0);
+    final blur = config.backgroundBlur;
+
+    if (blur <= 0) {
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          ColoredBox(color: _imageBackdropColor),
+          Opacity(
+            opacity: opacity,
+            child: Image.file(
+              File(path),
+              fit: BoxFit.cover,
+              width: size.width,
+              height: size.height,
+            ),
+          ),
+        ],
+      );
+    }
+
+    final bleed = _blurBleed(blur);
+    final expandedWidth = size.width + bleed * 2;
+    final expandedHeight = size.height + bleed * 2;
+
+    return Stack(
+      fit: StackFit.expand,
+      clipBehavior: Clip.hardEdge,
+      children: [
+        ColoredBox(color: _imageBackdropColor),
+        Positioned(
+          left: -bleed,
+          top: -bleed,
+          width: expandedWidth,
+          height: expandedHeight,
+          child: Opacity(
+            opacity: opacity,
+            child: ImageFiltered(
+              imageFilter: ui.ImageFilter.blur(
+                sigmaX: blur,
+                sigmaY: blur,
+                tileMode: TileMode.clamp,
+              ),
+              child: Image.file(
+                File(path),
+                fit: BoxFit.cover,
+                width: expandedWidth,
+                height: expandedHeight,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  static const _gridTopInsetFraction = 0.24;
+  static const _gridBottomInsetFraction = 0.12;
+  static const _gridHorizontalInsetFraction = 0.12;
 
   Widget _buildGrid() {
     // Reserve generous top/bottom margins so the grid avoids the lock-screen
     // clock and the home indicator. Tuned as fractions of the canvas height.
-    final topInset = size.height * 0.22;
-    final bottomInset = size.height * 0.12;
-    final horizontalInset = size.width * 0.12;
+    final topInset = size.height * _gridTopInsetFraction;
+    final bottomInset = size.height * _gridBottomInsetFraction;
+    final horizontalInset = size.width * _gridHorizontalInsetFraction;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(horizontalInset, topInset, horizontalInset, bottomInset),
@@ -151,7 +205,7 @@ class WallpaperView extends StatelessWidget {
       livedWeeks: data.livedWeeks,
       dotSpacing: _lifeDotSpacing,
       activeColor: _gridColor,
-      inactiveColor: tokens.bgSoft,
+      inactiveColor: _gridTokens.bgSoft,
       padding: EdgeInsets.zero,
     );
   }
@@ -161,10 +215,10 @@ class WallpaperView extends StatelessWidget {
       columns: _yearColumns,
       totalDays: data.totalDays,
       dotSpacing: _yearDotSpacing,
-      emptyStrokeColor: tokens.strokeColor,
+      emptyStrokeColor: _gridTokens.strokeColor,
       fillColor: _gridColor,
-      pastEmptyColor: tokens.bgSoft,
-      todayEmptyColor: tokens.accentOrange,
+      pastEmptyColor: _gridTokens.bgSoft,
+      todayEmptyColor: _gridTokens.accentOrange,
       filledCount: data.totalDays,
       fillSizes: data.yearFillSizes,
       padding: EdgeInsets.zero,

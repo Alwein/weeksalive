@@ -16,6 +16,7 @@ class Strings {
   static String get editList => "Edit list";
   static String get edit => "Edit";
   static String get saveChanges => "Save changes";
+  static String get save => "Save";
 
   // weeksalive
 
@@ -472,12 +473,15 @@ class Strings {
   static String get wallpaperChangeImage => "Change image";
   static String get wallpaperImageOpacity => "Opacity";
   static String get wallpaperImageBlur => "Blur";
-  static String get wallpaperGridColor => "Grid color";
+  static String get wallpaperThemeSectionTitle => "Theme";
+  static String get wallpaperBackgroundImageSectionTitle => "Background image";
+  static String get wallpaperAddImage => "Add image";
   static String get wallpaperInstall => "Activate wallpaper";
   static String get wallpaperUpdate => "Update wallpaper";
+  static String get wallpaperInstallAction => "Activate";
+  static String get wallpaperUpdateAction => "Update";
   static String get wallpaperSetupTitle => "Automatic updates";
-  static String get wallpaperSetupSubtitle =>
-      "Set up once (~2 min), then your lock screen updates automatically.";
+  static String get wallpaperSetupSubtitle => "Set up once (~2 min), then your lock screen updates automatically.";
   static String get wallpaperSetupShortcutTitle => "1. Create the shortcut";
   static String get wallpaperSetupShortcutBody =>
       "In Shortcuts, add Get Wallpaper (WeeksAlive), then Set Wallpaper Photo (lock screen only). Disable Show Preview and Crop to Subject.";
@@ -495,11 +499,9 @@ class Strings {
   static String get wallpaperIosHelpStep1 => "Open the Shortcuts app.";
   static String get wallpaperIosHelpStep2 =>
       "Create a shortcut with Get Wallpaper, then Set Wallpaper Photo (lock screen only).";
-  static String get wallpaperIosHelpStep3 =>
-      "Create an Automation → Time of Day → Run Immediately.";
+  static String get wallpaperIosHelpStep3 => "Create an Automation → Time of Day → Run Immediately.";
   static String get wallpaperIosHelpStep4 => "Select the WeeksAlive shortcut as the action.";
-  static String get wallpaperIosHelpStep5 =>
-      "In Set Wallpaper: disable Show Preview and Crop to Subject.";
+  static String get wallpaperIosHelpStep5 => "In Set Wallpaper: disable Show Preview and Crop to Subject.";
   static String get wallpaperIosHelpNote =>
       "The app keeps your wallpaper image up to date. The automation only needs to run the shortcut.";
   static String get wallpaperViewSetupGuide => "Setup guide";

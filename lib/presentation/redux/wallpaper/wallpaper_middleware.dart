@@ -1,15 +1,13 @@
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart' show Brightness, Size;
+import 'package:flutter/material.dart' show Size;
 import 'package:flutter/widgets.dart' show WidgetsBinding;
 import 'package:redux/redux.dart';
-import 'package:weeksalive/core/styles/app_color_tokens.dart';
-import 'package:weeksalive/core/styles/themes/app_theme.dart';
 import 'package:weeksalive/data/wallpaper/wallpaper_config_repository.dart';
 import 'package:weeksalive/data/wallpaper/wallpaper_installer.dart';
 import 'package:weeksalive/data/wallpaper/wallpaper_renderer.dart';
-import 'package:weeksalive/domain/wallpaper/wallpaper_config.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_grid_data.dart';
+import 'package:weeksalive/domain/wallpaper/wallpaper_grid_tokens.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/day/day_actions.dart';
@@ -78,13 +76,14 @@ class WallpaperMiddleware extends MiddlewareClass<AppState> {
         entries: store.state.dayState.entries.values,
         at: DateTime.now(),
       );
-      final tokens = _resolveTokens(store, config);
+      final wallpaperTokens = resolveWallpaperGridTokens(config);
       final (size, pixelRatio) = _screenMetrics();
 
       final rendered = await renderer.render(
         config: config,
         data: data,
-        tokens: tokens,
+        tokens: wallpaperTokens,
+        gridTokens: wallpaperTokens,
         logicalSize: size,
         pixelRatio: pixelRatio,
       );
@@ -115,11 +114,6 @@ class WallpaperMiddleware extends MiddlewareClass<AppState> {
         _dispatchSafe(store, WallpaperInstallCompletedAction(success: installSuccess));
       }
     }
-  }
-
-  AppColorTokens _resolveTokens(Store<AppState> store, WallpaperConfig config) {
-    final selected = store.state.themeState.selectedTheme;
-    return AppThemes.resolveTokens(selected, config.dark ? Brightness.dark : Brightness.light);
   }
 
   (Size, double) _screenMetrics() {

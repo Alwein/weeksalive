@@ -43,6 +43,7 @@ class WallpaperRenderer {
     required WallpaperConfig config,
     required WallpaperGridData data,
     required AppColorTokens tokens,
+    AppColorTokens? gridTokens,
     required Size logicalSize,
     required double pixelRatio,
   }) async {
@@ -50,6 +51,7 @@ class WallpaperRenderer {
       config: config,
       data: data,
       tokens: tokens,
+      gridTokens: gridTokens,
       logicalSize: logicalSize,
       pixelRatio: pixelRatio,
     );
@@ -61,6 +63,7 @@ class WallpaperRenderer {
     required WallpaperConfig config,
     required WallpaperGridData data,
     required AppColorTokens tokens,
+    AppColorTokens? gridTokens,
     required Size logicalSize,
     required double pixelRatio,
   }) async {
@@ -91,6 +94,7 @@ class WallpaperRenderer {
           config: config,
           data: data,
           tokens: tokens,
+          gridTokens: gridTokens,
           size: logicalSize,
         ),
       ),

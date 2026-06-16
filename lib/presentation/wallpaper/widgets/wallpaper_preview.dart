@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:weeksalive/core/styles/app_color_tokens.dart';
+import 'package:weeksalive/core/styles/app_colors.dart';
+import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_config.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_grid_data.dart';
 import 'package:weeksalive/presentation/wallpaper/widgets/wallpaper_view.dart';
@@ -11,42 +14,73 @@ class WallpaperPreview extends StatelessWidget {
     required this.config,
     required this.data,
     required this.tokens,
+    this.gridTokens,
     this.maxHeight = 420,
   });
 
   final WallpaperConfig config;
   final WallpaperGridData data;
   final AppColorTokens tokens;
+  final AppColorTokens? gridTokens;
   final double maxHeight;
+
+  static const _mockupReference = Size(402, 874);
+  static const _dateOverlayReference = Size(215, 116);
+  static const _dateOverlayTop = 80.0;
+  static const _dateOverlayAsset = 'assets/images/date_wallpaper.svg';
 
   @override
   Widget build(BuildContext context) {
     const phoneAspect = 390.0 / 844.0;
     final width = maxHeight * phoneAspect;
+    final height = maxHeight;
+    final overlayWidth = width * (_dateOverlayReference.width / _mockupReference.width);
+    final overlayHeight = height * (_dateOverlayReference.height / _mockupReference.height);
+    final overlayLeft = (width - overlayWidth) / 2;
+    final overlayTop = height * (_dateOverlayTop / _mockupReference.height);
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.15),
-            blurRadius: 24,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(Dimens.radiusL),
+        border: Border.all(
+          color: AppColors.strokeColor(context),
+          width: Dimens.strokeWidthBase,
+        ),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: SizedBox(
-          width: width,
-          height: maxHeight,
-          child: FittedBox(
-            fit: BoxFit.cover,
-            child: WallpaperView(
-              config: config,
-              data: data,
-              tokens: tokens,
-              size: const Size(390, 844),
+      child: Padding(
+        padding: const EdgeInsets.all(Dimens.strokeWidthBase),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(Dimens.radiusL - Dimens.strokeWidthBase),
+          child: SizedBox(
+            width: width,
+            height: height,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                FittedBox(
+                  fit: BoxFit.cover,
+                  child: WallpaperView(
+                    config: config,
+                    data: data,
+                    tokens: tokens,
+                    gridTokens: gridTokens,
+                    size: const Size(390, 844),
+                  ),
+                ),
+                Positioned(
+                  left: overlayLeft,
+                  top: overlayTop,
+                  width: overlayWidth,
+                  height: overlayHeight,
+                  child: IgnorePointer(
+                    child: SvgPicture.asset(
+                      _dateOverlayAsset,
+                      fit: BoxFit.fill,
+                      colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

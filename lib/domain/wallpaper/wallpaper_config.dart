@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart' show Color, immutable;
+import 'package:weeksalive/core/styles/app_theme_id.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_background_mode.dart';
+import 'package:weeksalive/domain/wallpaper/wallpaper_grid_tokens.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_grid_type.dart';
 
 /// User-tunable configuration for the auto-generated wallpaper.
@@ -15,12 +17,13 @@ class WallpaperConfig {
     this.gridType = WallpaperGridType.life,
     this.backgroundMode = WallpaperBackgroundMode.solid,
     this.gridColorArgb,
+    this.gridThemeId = wallpaperDefaultThemeId,
     this.backgroundColorArgb,
     this.backgroundColorSecondaryArgb,
     this.backgroundImagePath,
     this.backgroundImageOpacity = 1.0,
     this.backgroundBlur = 0.0,
-    this.dark = false,
+    this.dark = true,
     this.installedAtIso,
   });
 
@@ -32,6 +35,9 @@ class WallpaperConfig {
 
   /// Override for the grid dots color. Null = active theme `content`.
   final int? gridColorArgb;
+
+  /// Theme applied to the grid and solid background. Null/`system` resolve to [wallpaperDefaultThemeId].
+  final AppThemeId? gridThemeId;
 
   /// Override for the (primary) background color. Null = active theme `bg`.
   final int? backgroundColorArgb;
@@ -69,6 +75,7 @@ class WallpaperConfig {
     WallpaperGridType? gridType,
     WallpaperBackgroundMode? backgroundMode,
     int? Function()? gridColorArgb,
+    AppThemeId? Function()? gridThemeId,
     int? Function()? backgroundColorArgb,
     int? Function()? backgroundColorSecondaryArgb,
     String? Function()? backgroundImagePath,
@@ -82,6 +89,7 @@ class WallpaperConfig {
       gridType: gridType ?? this.gridType,
       backgroundMode: backgroundMode ?? this.backgroundMode,
       gridColorArgb: gridColorArgb != null ? gridColorArgb() : this.gridColorArgb,
+      gridThemeId: gridThemeId != null ? gridThemeId() : this.gridThemeId,
       backgroundColorArgb: backgroundColorArgb != null ? backgroundColorArgb() : this.backgroundColorArgb,
       backgroundColorSecondaryArgb: backgroundColorSecondaryArgb != null
           ? backgroundColorSecondaryArgb()
@@ -99,6 +107,7 @@ class WallpaperConfig {
     'gridType': gridType.storageKey,
     'backgroundMode': backgroundMode.storageKey,
     'gridColorArgb': gridColorArgb,
+    'gridThemeId': gridThemeId?.storageKey,
     'backgroundColorArgb': backgroundColorArgb,
     'backgroundColorSecondaryArgb': backgroundColorSecondaryArgb,
     'backgroundImagePath': backgroundImagePath,
@@ -108,12 +117,21 @@ class WallpaperConfig {
     'installedAtIso': installedAtIso,
   };
 
+  static AppThemeId? _parseGridThemeId(String? key) {
+    if (key == null) return null;
+    for (final id in AppThemeId.all) {
+      if (id.storageKey == key) return id;
+    }
+    return null;
+  }
+
   factory WallpaperConfig.fromJson(Map<String, dynamic> json) {
     return WallpaperConfig(
       enabled: json['enabled'] as bool? ?? false,
       gridType: WallpaperGridType.fromStorageKey(json['gridType'] as String?),
       backgroundMode: WallpaperBackgroundMode.fromStorageKey(json['backgroundMode'] as String?),
       gridColorArgb: json['gridColorArgb'] as int?,
+      gridThemeId: _parseGridThemeId(json['gridThemeId'] as String?) ?? wallpaperDefaultThemeId,
       backgroundColorArgb: json['backgroundColorArgb'] as int?,
       backgroundColorSecondaryArgb: json['backgroundColorSecondaryArgb'] as int?,
       backgroundImagePath: json['backgroundImagePath'] as String?,

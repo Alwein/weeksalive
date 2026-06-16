@@ -4,8 +4,9 @@ import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const PrimaryAppBar({super.key, required this.title});
+  const PrimaryAppBar({super.key, required this.title, this.actions});
   final String title;
+  final List<Widget>? actions;
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +18,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: AppColors.bg(context),
       surfaceTintColor: Colors.transparent,
       elevation: 0,
+      actions: actions,
       leading: IconButton(
         onPressed: () => Navigator.of(context).pop(),
         icon: Icon(
