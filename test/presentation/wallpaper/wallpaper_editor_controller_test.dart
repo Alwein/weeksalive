@@ -34,6 +34,17 @@ void main() {
       expect(controller.hasUnsavedChanges, isTrue);
       expect(persisted, hasLength(1));
       expect(persisted.single.config.gridType, WallpaperGridType.year);
+      expect(persisted.single.reRender, isFalse);
+    });
+
+    test('does not trigger wallpaper reRender while editing', () {
+      final controller = createController(initialConfig: const WallpaperConfig(enabled: true));
+
+      controller.setGridScale(1.2);
+      controller.setGridVerticalOffset(-0.05);
+
+      expect(persisted, hasLength(2));
+      expect(persisted.every((entry) => entry.reRender == false), isTrue);
     });
 
     test('markSaved clears dirty state', () {
@@ -57,6 +68,27 @@ void main() {
       expect(controller.config.gridThemeId, initial.gridThemeId);
       expect(controller.hasUnsavedChanges, isFalse);
       expect(persisted.last.config.gridType, WallpaperGridType.life);
+    });
+
+    test('persists grid layout adjustments', () {
+      final controller = createController();
+
+      controller.setGridScale(1.3);
+      controller.setGridVerticalOffset(-0.08);
+
+      expect(controller.config.gridScale, 1.3);
+      expect(controller.config.gridVerticalOffset, -0.08);
+      expect(persisted, hasLength(2));
+    });
+
+    test('clamps grid layout values to allowed range', () {
+      final controller = createController();
+
+      controller.setGridScale(2.0);
+      controller.setGridVerticalOffset(-1.0);
+
+      expect(controller.config.gridScale, WallpaperConfig.gridScaleMax);
+      expect(controller.config.gridVerticalOffset, WallpaperConfig.gridVerticalOffsetMin);
     });
   });
 }

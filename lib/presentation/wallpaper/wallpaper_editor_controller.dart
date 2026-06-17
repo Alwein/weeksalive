@@ -82,6 +82,21 @@ class WallpaperEditorController extends ChangeNotifier {
     _apply(_config.copyWith(gridOpacity: value));
   }
 
+  void setGridScale(double value) {
+    final clamped = value.clamp(WallpaperConfig.gridScaleMin, WallpaperConfig.gridScaleMax);
+    if (_config.gridScale == clamped) return;
+    _apply(_config.copyWith(gridScale: clamped));
+  }
+
+  void setGridVerticalOffset(double value) {
+    final clamped = value.clamp(
+      WallpaperConfig.gridVerticalOffsetMin,
+      WallpaperConfig.gridVerticalOffsetMax,
+    );
+    if (_config.gridVerticalOffset == clamped) return;
+    _apply(_config.copyWith(gridVerticalOffset: clamped));
+  }
+
   void markSaved() {
     _savedConfig = _config;
     _isDirty = false;
@@ -98,7 +113,8 @@ class WallpaperEditorController extends ChangeNotifier {
   void _apply(WallpaperConfig next, {bool persist = true}) {
     _config = next;
     _isDirty = true;
-    if (persist) _onPersist(next, reRender: _config.enabled);
+    // Preview is live in the editor; defer the heavy PNG render to install/save.
+    if (persist) _onPersist(next, reRender: false);
     notifyListeners();
   }
 }

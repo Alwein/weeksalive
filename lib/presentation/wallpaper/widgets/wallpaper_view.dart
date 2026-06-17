@@ -194,32 +194,37 @@ class WallpaperView extends StatelessWidget {
     final bottomInset = size.height * _gridBottomInsetFraction;
     final horizontalInset = size.width * _gridHorizontalInsetFraction;
 
-    return Padding(
-      padding: EdgeInsets.fromLTRB(horizontalInset, topInset, horizontalInset, bottomInset),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final painter = switch (data.gridType) {
-            WallpaperGridType.life => _lifePainter(constraints.maxWidth),
-            WallpaperGridType.year => _yearPainter(constraints.maxWidth),
-          };
-          final exactHeight = switch (data.gridType) {
-            WallpaperGridType.life => WeekGridPainter.computeHeight(
-              availableWidth: constraints.maxWidth,
-              totalWeeks: data.totalWeeks,
-              columns: _lifeColumns,
-              dotSpacing: _lifeDotSpacing,
-            ),
-            WallpaperGridType.year => YearGridPainter.computeHeight(
-              availableWidth: constraints.maxWidth,
-              totalDays: data.totalDays,
-              columns: _yearColumns,
-              dotSpacing: _yearDotSpacing,
-            ),
-          };
+    return ClipRect(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(horizontalInset, topInset, horizontalInset, bottomInset),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final painter = switch (data.gridType) {
+              WallpaperGridType.life => _lifePainter(constraints.maxWidth),
+              WallpaperGridType.year => _yearPainter(constraints.maxWidth),
+            };
+            final exactHeight = switch (data.gridType) {
+              WallpaperGridType.life => WeekGridPainter.computeHeight(
+                availableWidth: constraints.maxWidth,
+                totalWeeks: data.totalWeeks,
+                columns: _lifeColumns,
+                dotSpacing: _lifeDotSpacing,
+              ),
+              WallpaperGridType.year => YearGridPainter.computeHeight(
+                availableWidth: constraints.maxWidth,
+                totalDays: data.totalDays,
+                columns: _yearColumns,
+                dotSpacing: _yearDotSpacing,
+              ),
+            };
 
-          return Align(
-            alignment: Alignment.center,
-            child: SizedBox(
+            final gridScale = config.gridScale.clamp(WallpaperConfig.gridScaleMin, WallpaperConfig.gridScaleMax);
+            final verticalOffset = config.gridVerticalOffset.clamp(
+              WallpaperConfig.gridVerticalOffsetMin,
+              WallpaperConfig.gridVerticalOffsetMax,
+            );
+
+            final gridContent = SizedBox(
               width: constraints.maxWidth,
               height: constraints.maxHeight,
               child: FittedBox(
@@ -241,22 +246,32 @@ class WallpaperView extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+
+            return Align(
+              alignment: Alignment.center,
+              child: Transform.translate(
+                offset: Offset(0, verticalOffset * size.height),
+                child: Transform.scale(
+                  scale: gridScale,
+                  alignment: Alignment.center,
+                  child: gridContent,
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
 
   Widget _buildGridCaption(double width) {
-    final (leftText, typeLabel, value) = switch (data.gridType) {
+    final (typeLabel, value) = switch (data.gridType) {
       WallpaperGridType.life => (
-        Strings.homePageTitle(data.userName),
         Strings.progressLabel,
         _lifeProgressValue(),
       ),
       WallpaperGridType.year => (
-        data.year.toString(),
         Strings.dayLabel,
         '${data.livedDays} / ${data.totalDays}',
       ),
@@ -264,19 +279,11 @@ class WallpaperView extends StatelessWidget {
 
     return SizedBox(
       width: width,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            leftText,
-            style: TextStyles.primaryXsRegular.copyWith(color: _gridTokens.contentSoft),
-          ),
-          Text(
-            '$typeLabel $value',
-            style: TextStyles.primaryXsRegular.copyWith(color: _gridTokens.contentSoft),
-          ),
-        ],
+      child: Center(
+        child: Text(
+          '$typeLabel $value',
+          style: TextStyles.primaryXsRegular.copyWith(color: _gridTokens.content),
+        ),
       ),
     );
   }

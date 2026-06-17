@@ -26,6 +26,8 @@ void main() {
       backgroundMode: WallpaperBackgroundMode.image,
       gridColorArgb: 0xFF112233,
       backgroundImagePath: 'wallpaper_bg_1749200000000.jpeg',
+      gridScale: 1.2,
+      gridVerticalOffset: -0.05,
       dark: true,
       installedAtIso: '2026-06-15T08:00:00.000',
     );
@@ -38,6 +40,8 @@ void main() {
     expect(loaded.backgroundMode, WallpaperBackgroundMode.image);
     expect(loaded.gridColorArgb, 0xFF112233);
     expect(loaded.backgroundImagePath, 'wallpaper_bg_1749200000000.jpeg');
+    expect(loaded.gridScale, 1.2);
+    expect(loaded.gridVerticalOffset, -0.05);
     expect(loaded.dark, true);
     expect(loaded.installedAtIso, '2026-06-15T08:00:00.000');
   });

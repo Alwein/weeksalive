@@ -193,6 +193,15 @@ class _WallpaperEditorPageState extends State<WallpaperEditorPage> {
                       ),
                       const _SectionDivider(),
                       _WallpaperSection(
+                        title: Strings.wallpaperGridLayoutSectionTitle,
+                        child: _GridLayoutSection(
+                          config: config,
+                          onScaleChanged: _controller.setGridScale,
+                          onVerticalOffsetChanged: _controller.setGridVerticalOffset,
+                        ),
+                      ),
+                      const _SectionDivider(),
+                      _WallpaperSection(
                         title: Strings.wallpaperThemeSectionTitle,
                         child: WallpaperThemePicker(
                           selectedThemeId: _controller.effectiveGridThemeId,
@@ -270,6 +279,111 @@ int _nearestPresetIndex(List<double> values, double current) {
     }
   }
   return best;
+}
+
+class _GridLayoutSection extends StatelessWidget {
+  const _GridLayoutSection({
+    required this.config,
+    required this.onScaleChanged,
+    required this.onVerticalOffsetChanged,
+  });
+
+  final WallpaperConfig config;
+  final ValueChanged<double> onScaleChanged;
+  final ValueChanged<double> onVerticalOffsetChanged;
+
+  static const _scaleDivisions = 20;
+  static const _offsetDivisions = 30;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _WallpaperSlider(
+          label: Strings.wallpaperGridScale,
+          valueLabel: Strings.wallpaperGridScaleValue(config.gridScale),
+          value: config.gridScale,
+          min: WallpaperConfig.gridScaleMin,
+          max: WallpaperConfig.gridScaleMax,
+          divisions: _scaleDivisions,
+          onChanged: onScaleChanged,
+        ),
+        const SizedBox(height: Margins.spacingM),
+        _WallpaperSlider(
+          label: Strings.wallpaperGridVerticalOffset,
+          valueLabel: Strings.wallpaperGridVerticalOffsetValue(config.gridVerticalOffset),
+          value: config.gridVerticalOffset,
+          min: WallpaperConfig.gridVerticalOffsetMin,
+          max: WallpaperConfig.gridVerticalOffsetMax,
+          divisions: _offsetDivisions,
+          onChanged: onVerticalOffsetChanged,
+        ),
+      ],
+    );
+  }
+}
+
+class _WallpaperSlider extends StatefulWidget {
+  const _WallpaperSlider({
+    required this.label,
+    required this.valueLabel,
+    required this.value,
+    required this.min,
+    required this.max,
+    required this.divisions,
+    required this.onChanged,
+  });
+
+  final String label;
+  final String valueLabel;
+  final double value;
+  final double min;
+  final double max;
+  final int divisions;
+  final ValueChanged<double> onChanged;
+
+  @override
+  State<_WallpaperSlider> createState() => _WallpaperSliderState();
+}
+
+class _WallpaperSliderState extends State<_WallpaperSlider> {
+  double? _lastSoundValue;
+
+  void _handleChanged(double value) {
+    if (_lastSoundValue == null || (value - _lastSoundValue!).abs() >= 0.001) {
+      _lastSoundValue = value;
+      SensorialFeedback.sliderChanged();
+    }
+    widget.onChanged(value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            Expanded(child: Texts.primaryMedium(widget.label)),
+            Texts.primaryMedium(widget.valueLabel),
+          ],
+        ),
+        const SizedBox(height: Margins.spacingBase),
+        Slider(
+          padding: EdgeInsets.zero,
+          min: widget.min,
+          max: widget.max,
+          divisions: widget.divisions,
+          value: widget.value.clamp(widget.min, widget.max),
+          onChanged: _handleChanged,
+          thumbColor: AppColors.content(context),
+          activeColor: AppColors.content(context),
+          inactiveColor: AppColors.bgSoft(context),
+        ),
+      ],
+    );
+  }
 }
 
 class _BackgroundImageSection extends StatelessWidget {

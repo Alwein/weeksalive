@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart' show Size;
@@ -31,6 +32,11 @@ class WallpaperMiddleware extends MiddlewareClass<AppState> {
   final WallpaperRenderer renderer;
   final WallpaperInstaller installer;
 
+  static const _backgroundRenderDebounce = Duration(milliseconds: 300);
+
+  int _renderGeneration = 0;
+  Future<void>? _renderChain;
+
   @override
   void call(Store<AppState> store, action, NextDispatcher next) {
     next(action);
@@ -43,13 +49,13 @@ class WallpaperMiddleware extends MiddlewareClass<AppState> {
     if (action is SaveWallpaperConfigAction) {
       repository.setConfig(action.config);
       if (action.reRender) {
-        _renderAndApply(store, install: false);
+        _enqueueRender(store, install: false);
       }
       return;
     }
 
     if (action is InstallWallpaperAction) {
-      _renderAndApply(store, install: true);
+      _enqueueRender(store, install: true);
       return;
     }
 
@@ -60,11 +66,27 @@ class WallpaperMiddleware extends MiddlewareClass<AppState> {
     final themeChanged = action is AppThemeLoadedAction;
     if ((action is RefreshWallpaperAction || dataChanged || themeChanged) &&
         store.state.wallpaperState.config.enabled) {
-      _renderAndApply(store, install: false);
+      _enqueueRender(store, install: false);
     }
   }
 
-  Future<void> _renderAndApply(Store<AppState> store, {required bool install}) async {
+  void _enqueueRender(Store<AppState> store, {required bool install}) {
+    final generation = ++_renderGeneration;
+    _renderChain = (_renderChain ?? Future<void>.value()).then(
+      (_) => _renderAndApply(store, install: install, generation: generation),
+    );
+  }
+
+  Future<void> _renderAndApply(
+    Store<AppState> store, {
+    required bool install,
+    required int generation,
+  }) async {
+    if (!install) {
+      await Future<void>.delayed(_backgroundRenderDebounce);
+      if (generation != _renderGeneration) return;
+    }
+
     final config = store.state.wallpaperState.config;
     var installSuccess = false;
     try {
@@ -87,6 +109,8 @@ class WallpaperMiddleware extends MiddlewareClass<AppState> {
         logicalSize: size,
         pixelRatio: pixelRatio,
       );
+
+      if (!install && generation != _renderGeneration) return;
 
       if (install) {
         final status = await installer.install(

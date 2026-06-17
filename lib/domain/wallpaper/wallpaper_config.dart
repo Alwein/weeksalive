@@ -24,6 +24,8 @@ class WallpaperConfig {
     this.backgroundImageOpacity = 1.0,
     this.backgroundBlur = 0.0,
     this.gridOpacity = 1.0,
+    this.gridScale = 1.0,
+    this.gridVerticalOffset = 0.0,
     this.dark = true,
     this.installedAtIso,
   });
@@ -62,12 +64,23 @@ class WallpaperConfig {
   /// Opacity of the grid layer, in [0, 1].
   final double gridOpacity;
 
+  /// Multiplier applied on top of the auto-fit scale. [gridScaleMin]–[gridScaleMax].
+  final double gridScale;
+
+  /// Vertical shift as a fraction of the canvas height. Negative moves the grid up.
+  final double gridVerticalOffset;
+
   /// Whether the wallpaper should render with the dark palette of the theme.
   /// (Wallpapers are static images, so a single brightness must be committed.)
   final bool dark;
 
   /// ISO-8601 timestamp of the last successful install, for display.
   final String? installedAtIso;
+
+  static const gridScaleMin = 0.5;
+  static const gridScaleMax = 1.5;
+  static const gridVerticalOffsetMin = -0.15;
+  static const gridVerticalOffsetMax = 0.15;
 
   Color? get gridColor => gridColorArgb != null ? Color(gridColorArgb!) : null;
 
@@ -88,6 +101,8 @@ class WallpaperConfig {
     double? backgroundImageOpacity,
     double? backgroundBlur,
     double? gridOpacity,
+    double? gridScale,
+    double? gridVerticalOffset,
     bool? dark,
     String? Function()? installedAtIso,
   }) {
@@ -105,6 +120,8 @@ class WallpaperConfig {
       backgroundImageOpacity: backgroundImageOpacity ?? this.backgroundImageOpacity,
       backgroundBlur: backgroundBlur ?? this.backgroundBlur,
       gridOpacity: gridOpacity ?? this.gridOpacity,
+      gridScale: gridScale ?? this.gridScale,
+      gridVerticalOffset: gridVerticalOffset ?? this.gridVerticalOffset,
       dark: dark ?? this.dark,
       installedAtIso: installedAtIso != null ? installedAtIso() : this.installedAtIso,
     );
@@ -122,6 +139,8 @@ class WallpaperConfig {
     'backgroundImageOpacity': backgroundImageOpacity,
     'backgroundBlur': backgroundBlur,
     'gridOpacity': gridOpacity,
+    'gridScale': gridScale,
+    'gridVerticalOffset': gridVerticalOffset,
     'dark': dark,
     'installedAtIso': installedAtIso,
   };
@@ -147,6 +166,8 @@ class WallpaperConfig {
       backgroundImageOpacity: (json['backgroundImageOpacity'] as num?)?.toDouble() ?? 1.0,
       backgroundBlur: (json['backgroundBlur'] as num?)?.toDouble() ?? 0.0,
       gridOpacity: (json['gridOpacity'] as num?)?.toDouble() ?? 1.0,
+      gridScale: (json['gridScale'] as num?)?.toDouble() ?? 1.0,
+      gridVerticalOffset: (json['gridVerticalOffset'] as num?)?.toDouble() ?? 0.0,
       dark: json['dark'] as bool? ?? false,
       installedAtIso: json['installedAtIso'] as String?,
     );

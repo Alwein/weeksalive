@@ -475,6 +475,15 @@ class Strings {
   static String get wallpaperImageDim => "Luminosity";
   static String get wallpaperImageBlur => "Blur";
   static String get wallpaperGridOpacity => "Grid opacity";
+  static String get wallpaperGridLayoutSectionTitle => "Layout";
+  static String get wallpaperGridScale => "Size";
+  static String get wallpaperGridVerticalOffset => "Vertical position";
+  static String wallpaperGridScaleValue(double scale) => '${(scale * 100).round()}%';
+  static String wallpaperGridVerticalOffsetValue(double offset) {
+    final percent = (offset * 100).round();
+    if (percent == 0) return 'Center';
+    return percent > 0 ? '↓ $percent%' : '↑ ${percent.abs()}%';
+  }
   static String get wallpaperThemeSectionTitle => "Theme";
   static String get wallpaperBackgroundImageSectionTitle => "Background image";
   static String get wallpaperAddImage => "Add image";
