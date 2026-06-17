@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -18,10 +20,10 @@ import 'package:weeksalive/presentation/profile/pages/notifications_settings/not
 import 'package:weeksalive/presentation/profile/pages/theme_picker/theme_picker_page.dart';
 import 'package:weeksalive/presentation/profile/pages/week_begin/week_begin_page.dart';
 import 'package:weeksalive/presentation/profile/profile_page_view_model.dart';
-import 'package:weeksalive/presentation/wallpaper/wallpaper_editor_page.dart';
-import 'package:weeksalive/presentation/wallpaper/wallpaper_setup_page.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/weekly_intent/widgets/edit_weekly_intent_bottom_sheet.dart';
+import 'package:weeksalive/presentation/wallpaper/wallpaper_editor_page.dart';
+import 'package:weeksalive/presentation/wallpaper/wallpaper_setup_page.dart';
 import 'package:weeksalive/presentation/widgets/primary_appbar.dart';
 import 'package:weeksalive/presentation/widgets/secondary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
@@ -294,11 +296,12 @@ class _PreferencesCard extends StatelessWidget {
             icon: MingCuteIcons.mgc_right_line,
           ),
           const SmallDivider(width: double.infinity),
-          _PreferencesButton(
-            title: Strings.profilePageWallpaperSetupGuide,
-            onTap: () => WallpaperSetupPage.show(context),
-            icon: MingCuteIcons.mgc_right_line,
-          ),
+          if (Platform.isIOS)
+            _PreferencesButton(
+              title: Strings.profilePageWallpaperSetupGuide,
+              onTap: () => WallpaperSetupPage.show(context),
+              icon: MingCuteIcons.mgc_right_line,
+            ),
         ],
       ),
     );

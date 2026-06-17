@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:weeksalive/core/styles/app_color_tokens.dart';
@@ -75,19 +77,20 @@ class WallpaperPreview extends StatelessWidget {
                     documentsDirectoryPath: documentsDirectoryPath,
                   ),
                 ),
-                Positioned(
-                  left: overlayLeft,
-                  top: overlayTop,
-                  width: overlayWidth,
-                  height: overlayHeight,
-                  child: IgnorePointer(
-                    child: SvgPicture.asset(
-                      _dateOverlayAsset,
-                      fit: BoxFit.fill,
-                      colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+                if (Platform.isIOS)
+                  Positioned(
+                    left: overlayLeft,
+                    top: overlayTop,
+                    width: overlayWidth,
+                    height: overlayHeight,
+                    child: IgnorePointer(
+                      child: SvgPicture.asset(
+                        _dateOverlayAsset,
+                        fit: BoxFit.fill,
+                        colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           ),
