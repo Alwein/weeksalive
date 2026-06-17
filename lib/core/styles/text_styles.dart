@@ -126,6 +126,13 @@ class TextStyles {
     fontSize: FontSizes.small,
     fontWeight: FontWeight.normal,
   );
+
+  static TextStyle primaryXsRegular = const TextStyle(
+    fontFamily: "SpaceGrotesk",
+    fontSize: FontSizes.extraSmall,
+    fontWeight: FontWeight.normal,
+  );
+
   static TextStyle primarySmallMedium = const TextStyle(
     fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.small,

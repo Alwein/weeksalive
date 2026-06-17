@@ -28,6 +28,7 @@ void main() {
       expect(data.totalWeeks, grid.totalWeeks);
       expect(data.livedWeeks, grid.livedWeeks);
       expect(data.gridType, WallpaperGridType.life);
+      expect(data.userName, user.name);
     });
 
     test('year grid uses same fillSizes encoding as HomeWidgetGridData', () {
@@ -58,6 +59,7 @@ void main() {
 
       expect(data.totalWeeks, greaterThan(0));
       expect(data.livedWeeks, 0);
+      expect(data.userName, '');
     });
   });
 }

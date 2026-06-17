@@ -10,6 +10,7 @@ import 'package:weeksalive/domain/wallpaper/wallpaper_grid_type.dart';
 class WallpaperGridData {
   const WallpaperGridData({
     required this.gridType,
+    required this.userName,
     required this.totalWeeks,
     required this.livedWeeks,
     required this.year,
@@ -19,6 +20,7 @@ class WallpaperGridData {
   });
 
   final WallpaperGridType gridType;
+  final String userName;
 
   // Life grid.
   final int totalWeeks;
@@ -52,6 +54,7 @@ class WallpaperGridData {
 
     return WallpaperGridData(
       gridType: gridType,
+      userName: user?.name ?? '',
       totalWeeks: grid.totalWeeks,
       livedWeeks: grid.livedWeeks,
       year: at.year,

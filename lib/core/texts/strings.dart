@@ -393,6 +393,7 @@ class Strings {
   static String get profilePageWallpaper => "Wallpaper";
   static String get profilePageWallpaperConfigured => "ON";
   static String get profilePageWallpaperNotConfigured => "OFF";
+  static String get profilePageWallpaperSetupGuide => "Wallpaper setup guide";
   static String get profilePageWeekBegin => "Week begin";
   static String get profilePageRateTheApp => "Rate the app";
   static String get profilePageSuggestAFeature => "Suggest a feature";
@@ -481,29 +482,34 @@ class Strings {
   static String get wallpaperUpdate => "Update wallpaper";
   static String get wallpaperInstallAction => "Activate";
   static String get wallpaperUpdateAction => "Update";
-  static String get wallpaperSetupTitle => "Automatic updates";
-  static String get wallpaperSetupSubtitle => "Set up once (~2 min), then your lock screen updates automatically.";
-  static String get wallpaperSetupShortcutTitle => "1. Create the shortcut";
-  static String get wallpaperSetupShortcutBody =>
-      "In Shortcuts, add Get Wallpaper (WeeksAlive), then Set Wallpaper Photo (lock screen only). Disable Show Preview and Crop to Subject.";
-  static String get wallpaperSetupAutomationTitle => "2. Create a daily automation";
-  static String get wallpaperSetupAutomationBodyLife =>
-      "In Shortcuts → Automations: Time of Day, weekly (e.g. Monday 6 AM), Run Immediately, then select the WeeksAlive shortcut.";
-  static String get wallpaperSetupAutomationBodyYear =>
-      "In Shortcuts → Automations: Time of Day, daily (e.g. 6 AM), Run Immediately, then select the WeeksAlive shortcut.";
-  static String get wallpaperSetupTestTitle => "3. Test it";
-  static String get wallpaperSetupTestButton => "Run shortcut now";
+
+  static String get wallpaperSetupTitle => "Set up in ~2 min";
+  static String get wallpaperSetupSubtitle =>
+      "Follow this guide to make your lock screen wallpaper update automatically every day.";
+  static String get wallpaperSetupShortcutTitle => "Open Shortcuts app";
   static String get wallpaperOpenShortcuts => "Open Shortcuts";
-  static String get wallpaperIosHelpTitle => "Almost done";
-  static String get wallpaperIosHelpBody =>
-      "Your wallpaper image is ready. Follow these steps to update your lock screen automatically.";
-  static String get wallpaperIosHelpStep1 => "Open the Shortcuts app.";
-  static String get wallpaperIosHelpStep2 =>
-      "Create a shortcut with Get Wallpaper, then Set Wallpaper Photo (lock screen only).";
-  static String get wallpaperIosHelpStep3 => "Create an Automation → Time of Day → Run Immediately.";
-  static String get wallpaperIosHelpStep4 => "Select the WeeksAlive shortcut as the action.";
-  static String get wallpaperIosHelpStep5 => "In Set Wallpaper: disable Show Preview and Crop to Subject.";
-  static String get wallpaperIosHelpNote =>
-      "The app keeps your wallpaper image up to date. The automation only needs to run the shortcut.";
-  static String get wallpaperViewSetupGuide => "Setup guide";
+  static String get wallpaperSetupShowPreview => "Show me how";
+  static String get wallpaperSetupExpandAll => "Expand all";
+  static String get wallpaperSetupCollapseAll => "Collapse all";
+  static String get wallpaperSetupGoToShortcutsPage => "Go to the Automation tab";
+  static String get wallpaperSetupCreateAutomation => "Create a new automation";
+  static String get wallpaperSetupSelectTimeOfDay => "Select Time of Day";
+  static String get wallpaperSetupSelect => "Select → Time of Day → Daily → Run Immediately";
+  static String wallpaperSetupSelectDescription(String time) =>
+      "$time is the recommended time based on your notification settings. So your wallpaper will update after you check in.";
+  static String get wallpaperSetupCreateNewShortcut => "Create new shortcut";
+  static String get wallpaperSetupSearchAndAddGetWallpaper =>
+      "Search and add \"Get Wallpaper\""; // note "Get Wallpaper" is not translated
+  static String get wallpaperSetupSearchAndAddSetWallpaperPhoto => "Search and add \"Set Wallpaper Photo\"";
+  static String get wallpaperSetupClickOnLockScreenAndHomeScreen => "Tap \"Lock Screen and Home Screen\"";
+  static String get wallpaperSetupUnselectHomeScreen => "Keep only \"Lock Screen\"";
+  static String get wallpaperSetupUnselectHomeScreenDescription =>
+      "You can select \"Home Screen\" if you want your life grid to be visible on your home screen.";
+  static String get wallpaperSetupClickOnExpandArrow => "Tap the arrow on Set Wallpaper Photo to show more options";
+  static String get wallpaperSetupUnselectShowPreviewAndCropToSubject =>
+      "Unselect \"Show Preview\" and \"Crop to Subject\"";
+  static String get wallpaperSetupUnselectShowPreviewAndCropToSubjectDescription =>
+      "So the automation runs without asking every day.";
+  static String get wallpaperSetupPressRunButton => "Tap Run to activate the automation";
+  static String get wallpaperSetupYouAreAllSet => "Tap Done to save. You’re all set!";
 }

@@ -27,6 +27,7 @@ class WallpaperPreview extends StatelessWidget {
   final String? documentsDirectoryPath;
 
   static const _mockupReference = Size(402, 874);
+  static const _phoneReferenceHeight = 844.0;
   static const _dateOverlayReference = Size(215, 116);
   static const _dateOverlayTop = 80.0;
   static const _dateOverlayAsset = 'assets/images/date_wallpaper.svg';
@@ -36,6 +37,10 @@ class WallpaperPreview extends StatelessWidget {
     const phoneAspect = 390.0 / 844.0;
     final width = maxHeight * phoneAspect;
     final height = maxHeight;
+    final scale = height / _phoneReferenceHeight;
+    final outerRadius = 60 * scale;
+    final strokeWidth = Dimens.strokeWidthBase * scale;
+    final innerRadius = outerRadius - strokeWidth;
     final overlayWidth = width * (_dateOverlayReference.width / _mockupReference.width);
     final overlayHeight = height * (_dateOverlayReference.height / _mockupReference.height);
     final overlayLeft = (width - overlayWidth) / 2;
@@ -43,16 +48,16 @@ class WallpaperPreview extends StatelessWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(Dimens.radiusL),
+        borderRadius: BorderRadius.circular(outerRadius),
         border: Border.all(
           color: AppColors.strokeColor(context),
-          width: Dimens.strokeWidthBase,
+          width: strokeWidth,
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(Dimens.strokeWidthBase),
+        padding: EdgeInsets.all(strokeWidth),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(Dimens.radiusL - Dimens.strokeWidthBase),
+          borderRadius: BorderRadius.circular(innerRadius),
           child: SizedBox(
             width: width,
             height: height,

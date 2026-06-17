@@ -3,6 +3,9 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:weeksalive/core/styles/app_color_tokens.dart';
+import 'package:weeksalive/core/styles/margins.dart';
+import 'package:weeksalive/core/styles/text_styles.dart';
+import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/data/wallpaper/wallpaper_background_image_storage.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_background_mode.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_config.dart';
@@ -218,13 +221,70 @@ class WallpaperView extends StatelessWidget {
             alignment: Alignment.center,
             child: SizedBox(
               width: constraints.maxWidth,
-              height: exactHeight.clamp(0, constraints.maxHeight),
-              child: CustomPaint(painter: painter),
+              height: constraints.maxHeight,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.center,
+                child: SizedBox(
+                  width: constraints.maxWidth,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: constraints.maxWidth,
+                        height: exactHeight,
+                        child: CustomPaint(painter: painter),
+                      ),
+                      const SizedBox(height: Margins.spacingBase),
+                      _buildGridCaption(constraints.maxWidth),
+                    ],
+                  ),
+                ),
+              ),
             ),
           );
         },
       ),
     );
+  }
+
+  Widget _buildGridCaption(double width) {
+    final (leftText, typeLabel, value) = switch (data.gridType) {
+      WallpaperGridType.life => (
+        Strings.homePageTitle(data.userName),
+        Strings.progressLabel,
+        _lifeProgressValue(),
+      ),
+      WallpaperGridType.year => (
+        data.year.toString(),
+        Strings.dayLabel,
+        '${data.livedDays} / ${data.totalDays}',
+      ),
+    };
+
+    return SizedBox(
+      width: width,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            leftText,
+            style: TextStyles.primaryXsRegular.copyWith(color: _gridTokens.contentSoft),
+          ),
+          Text(
+            '$typeLabel $value',
+            style: TextStyles.primaryXsRegular.copyWith(color: _gridTokens.contentSoft),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _lifeProgressValue() {
+    if (data.totalWeeks <= 0) return '0.0%';
+    final fraction = data.livedWeeks / data.totalWeeks;
+    return '${(fraction * 100).toStringAsFixed(1)}%';
   }
 
   WeekGridPainter _lifePainter(double width) {

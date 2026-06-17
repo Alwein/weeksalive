@@ -142,7 +142,7 @@ class _YearGridTitle extends StatelessWidget {
         const SizedBox(height: Margins.spacingXs),
         Texts.primaryXsCounter(
           context,
-          Strings.progressLabel,
+          Strings.dayLabel,
           _getYearProgress(),
         ),
       ],
@@ -153,8 +153,8 @@ class _YearGridTitle extends StatelessWidget {
     final now = DateTime.now();
     final year = now.year;
     final totalDays = daysInGregorianYear(year);
-    final livedDays = dayOfYearIndex(now);
-    return '${(livedDays / totalDays * 100).toStringAsFixed(1)}%';
+    final livedDays = dayOfYearIndex(now) + 1;
+    return '$livedDays / $totalDays';
   }
 }
 

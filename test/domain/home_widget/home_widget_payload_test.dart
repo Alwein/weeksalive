@@ -37,7 +37,7 @@ void main() {
       final palette = HomeWidgetPalette.fromTokens(_tokens());
 
       expect(palette.content, '#FF112233');
-      expect(palette.contentMuted, '#FF445566');
+      expect(palette.contentSoft, '#FF445566');
       expect(palette.bg, '#FFFFFFFF');
       expect(palette.bgSoft, '#FFEEEEEE');
       expect(palette.strokeColor, '#80123456', reason: 'preserves alpha');
@@ -111,10 +111,7 @@ void main() {
         dark: palette,
       );
       final decoded = jsonDecode(raw) as Map<String, dynamic>;
-      final parsed = (decoded['fillSizes'] as String)
-          .split(',')
-          .map(int.parse)
-          .toList();
+      final parsed = (decoded['fillSizes'] as String).split(',').map(int.parse).toList();
 
       expect(parsed, sizes);
     });
