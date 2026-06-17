@@ -3,32 +3,29 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:weeksalive/core/styles/app_color_tokens.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
-import 'package:weeksalive/core/styles/app_theme_id.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
-import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
-import 'package:weeksalive/domain/wallpaper/wallpaper_background_mode.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_config.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_grid_data.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_grid_tokens.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_grid_type.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/custom_tab_bar.dart';
+import 'package:weeksalive/data/wallpaper/wallpaper_background_image_storage.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
 import 'package:weeksalive/presentation/redux/wallpaper/wallpaper_actions.dart';
+import 'package:weeksalive/presentation/wallpaper/wallpaper_editor_controller.dart';
 import 'package:weeksalive/presentation/wallpaper/wallpaper_setup_page.dart';
-import 'package:weeksalive/presentation/wallpaper/widgets/wallpaper_ios_help_sheet.dart';
 import 'package:weeksalive/presentation/wallpaper/widgets/wallpaper_preview.dart';
 import 'package:weeksalive/presentation/wallpaper/widgets/wallpaper_theme_picker.dart';
 import 'package:weeksalive/presentation/widgets/primary_appbar.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
+import 'package:weeksalive/presentation/widgets/secondary_button.dart';
 import 'package:weeksalive/presentation/widgets/segmented_chip_picker.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
@@ -47,120 +44,87 @@ class WallpaperEditorPage extends StatefulWidget {
   State<WallpaperEditorPage> createState() => _WallpaperEditorPageState();
 }
 
-class _WallpaperEditorPageState extends State<WallpaperEditorPage> with TickerProviderStateMixin {
-  static const double _tabHeight = 48.0;
-
+class _WallpaperEditorPageState extends State<WallpaperEditorPage> {
   final _picker = ImagePicker();
-  late WallpaperConfig _config;
-  late TabController _gridTabController;
-  bool _pendingIosHelpSheet = false;
+  late final WallpaperEditorController _controller;
+  String? _documentsDirectoryPath;
+  bool _pendingIosSetupPage = false;
 
   @override
   void initState() {
     super.initState();
-    _config = StoreProvider.of<AppState>(context, listen: false).state.wallpaperState.config;
-    _gridTabController = CustomTabController(
-      length: 2,
-      vsync: this,
-      initialIndex: _config.gridType == WallpaperGridType.life ? 0 : 1,
-    );
+    final store = StoreProvider.of<AppState>(context, listen: false);
+    _controller = WallpaperEditorController(
+      initialConfig: store.state.wallpaperState.config,
+      onPersist: (config, {reRender = false}) {
+        store.dispatch(SaveWallpaperConfigAction(config, reRender: reRender));
+      },
+    )..addListener(_onControllerChanged);
+    _loadDocumentsDirectory();
   }
 
   @override
   void dispose() {
-    _gridTabController.dispose();
+    _controller
+      ..removeListener(_onControllerChanged)
+      ..dispose();
     super.dispose();
   }
 
-  AppThemeId _effectiveGridThemeId() => resolveWallpaperThemeId(_config);
+  void _onControllerChanged() => setState(() {});
 
-  void _syncTabControllers() {
-    final gridIndex = _config.gridType == WallpaperGridType.life ? 0 : 1;
-    if (_gridTabController.index != gridIndex) _gridTabController.index = gridIndex;
-  }
-
-  void _update(WallpaperConfig next, {bool persist = true, bool reRender = false}) {
-    setState(() {
-      _config = next;
-      _syncTabControllers();
-    });
-    if (persist) {
-      StoreProvider.of<AppState>(context, listen: false).dispatch(
-        SaveWallpaperConfigAction(next, reRender: reRender),
-      );
-    }
+  Future<void> _loadDocumentsDirectory() async {
+    final dir = await getApplicationDocumentsDirectory();
+    if (!mounted) return;
+    setState(() => _documentsDirectoryPath = dir.path);
   }
 
   Future<void> _pickImage() async {
     final picked = await _picker.pickImage(source: ImageSource.gallery);
     if (picked == null) return;
-    final dir = await getApplicationDocumentsDirectory();
-    final dest = p.join(
-      dir.path,
-      'wallpaper_bg_${DateTime.now().millisecondsSinceEpoch}${p.extension(picked.path)}',
-    );
-    await File(picked.path).copy(dest);
-    _update(
-      _config.copyWith(
-        backgroundMode: WallpaperBackgroundMode.image,
-        backgroundImagePath: () => dest,
-      ),
-      reRender: _config.enabled,
-    );
+    final fileName = await WallpaperBackgroundImageStorage.saveFromPicker(picked.path);
+    _controller.setBackgroundImage(fileName);
   }
 
   void _install() {
-    if (Platform.isIOS) _pendingIosHelpSheet = true;
-    StoreProvider.of<AppState>(context, listen: false).dispatch(const InstallWallpaperAction());
+    final store = StoreProvider.of<AppState>(context, listen: false);
+    store.dispatch(SaveWallpaperConfigAction(_controller.config));
+    if (Platform.isIOS) _pendingIosSetupPage = true;
+    store.dispatch(const InstallWallpaperAction());
   }
 
   void _onInstallStateChanged(_InstallViewModel? previous, _InstallViewModel current) {
-    if (!_pendingIosHelpSheet || previous == null) return;
+    if (!_pendingIosSetupPage || previous == null) return;
     if (previous.installing && !current.installing && current.installSucceeded == true) {
-      _pendingIosHelpSheet = false;
-      WallpaperIosHelpSheet.show(context);
+      _pendingIosSetupPage = false;
+      _controller.markSaved();
+      if (Platform.isIOS) WallpaperSetupPage.show(context);
     } else if (!current.installing && current.installSucceeded != null) {
-      _pendingIosHelpSheet = false;
+      _pendingIosSetupPage = false;
     }
   }
 
-  void _onGridTabTapped(int index) {
-    SensorialFeedback.navigationChanged();
-    _update(
-      _config.copyWith(
-        gridType: index == 0 ? WallpaperGridType.life : WallpaperGridType.year,
-      ),
-      reRender: _config.enabled,
-    );
-  }
+  Future<void> _onAttemptDismiss() async {
+    if (!_controller.hasUnsavedChanges) {
+      Navigator.of(context).pop();
+      return;
+    }
 
-  void _removeImage() {
-    _update(
-      _config.copyWith(
-        backgroundMode: WallpaperBackgroundMode.solid,
-        backgroundImagePath: () => null,
-      ),
-      reRender: _config.enabled,
+    final discard = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => _CloseConfirmationDialog(dialogContext: dialogContext),
     );
-  }
 
-  void _onGridThemeSelected(AppThemeId themeId) {
-    _update(
-      _config.copyWith(
-        gridThemeId: () => themeId,
-        gridColorArgb: () => null,
-        dark: switch (themeId) {
-          AppThemeId.dark => true,
-          AppThemeId.light => false,
-          _ => _config.dark,
-        },
-      ),
-      reRender: _config.enabled,
-    );
+    if (!mounted || discard != true) return;
+
+    _controller.discardChanges();
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
+    final config = _controller.config;
+
     return StoreConnector<AppState, _InstallViewModel>(
       converter: (store) => _InstallViewModel(
         installing: store.state.wallpaperState.installing,
@@ -171,94 +135,87 @@ class _WallpaperEditorPageState extends State<WallpaperEditorPage> with TickerPr
       builder: (context, vm) {
         final installing = vm.installing;
         final store = StoreProvider.of<AppState>(context, listen: false);
-        final wallpaperTokens = resolveWallpaperGridTokens(_config);
+        final wallpaperTokens = resolveWallpaperGridTokens(config);
         final data = WallpaperGridData.build(
-          gridType: _config.gridType,
+          gridType: config.gridType,
           user: store.state.userState.userOrNull,
           entries: store.state.dayState.entries.values,
           at: DateTime.now(),
         );
 
-        return Scaffold(
-          backgroundColor: AppColors.bg(context),
-          appBar: PrimaryAppBar(
-            title: Strings.wallpaperPageTitle,
-            actions: [
-              _WallpaperAppBarAction(
-                onPressed: installing ? null : _install,
-                isLoading: installing,
-              ),
-            ],
-          ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _PinnedPreviewPanel(
-                config: _config,
-                data: data,
-                tokens: wallpaperTokens,
-                gridTokens: wallpaperTokens,
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                  padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const SizedBox(height: Margins.spacingM),
-                      _WallpaperSection(
-                        title: Strings.wallpaperGridSectionTitle,
-                        child: CustomTabBar(
-                          controller: _gridTabController,
-                          onTap: _onGridTabTapped,
-                          tabHeight: _tabHeight,
-                          tabs: [
-                            Tab(child: Text(Strings.wallpaperGridLife, style: TextStyles.primaryRegularBold)),
-                            Tab(child: Text(Strings.wallpaperGridYear, style: TextStyles.primaryRegularBold)),
-                          ],
-                        ),
-                      ),
-                      const _SectionDivider(),
-                      _WallpaperSection(
-                        title: Strings.wallpaperThemeSectionTitle,
-                        child: WallpaperThemePicker(
-                          selectedThemeId: _effectiveGridThemeId(),
-                          onSelected: _onGridThemeSelected,
-                        ),
-                      ),
-                      const _SectionDivider(),
-                      _WallpaperSection(
-                        title: Strings.wallpaperBackgroundImageSectionTitle,
-                        child: _BackgroundImageSection(
-                          config: _config,
-                          onPickImage: _pickImage,
-                          onRemoveImage: _removeImage,
-                          onOpacitySelected: (v) => _update(
-                            _config.copyWith(backgroundImageOpacity: v),
-                            reRender: _config.enabled,
-                          ),
-                          onBlurSelected: (v) => _update(
-                            _config.copyWith(backgroundBlur: v),
-                            reRender: _config.enabled,
+        return PopScope(
+          canPop: !_controller.hasUnsavedChanges,
+          onPopInvokedWithResult: (didPop, _) {
+            if (!didPop) _onAttemptDismiss();
+          },
+          child: Scaffold(
+            backgroundColor: AppColors.bg(context),
+            appBar: PrimaryAppBar(
+              title: Strings.wallpaperPageTitle,
+              onLeadingPressed: _onAttemptDismiss,
+              actions: [
+                _WallpaperAppBarAction(
+                  onPressed: installing ? null : _install,
+                  isLoading: installing,
+                ),
+              ],
+            ),
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _PinnedPreviewPanel(
+                  config: config,
+                  data: data,
+                  tokens: wallpaperTokens,
+                  gridTokens: wallpaperTokens,
+                  documentsDirectoryPath: _documentsDirectoryPath,
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                    padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(height: Margins.spacingM),
+                        _WallpaperSection(
+                          title: Strings.wallpaperGridSectionTitle,
+                          child: SegmentedChipPicker(
+                            labels: [Strings.wallpaperGridLife, Strings.wallpaperGridYear],
+                            selectedIndex: config.gridType == WallpaperGridType.life ? 0 : 1,
+                            onSelected: (index) => _controller.setGridType(
+                              index == 0 ? WallpaperGridType.life : WallpaperGridType.year,
+                            ),
                           ),
                         ),
-                      ),
-                      if (Platform.isIOS) ...[
                         const _SectionDivider(),
-                        PrimaryButton(
-                          text: Strings.wallpaperViewSetupGuide,
-                          onPressed: () => WallpaperSetupPage.show(context),
-                          backgroundColor: AppColors.bgSoft(context),
-                          textColor: AppColors.content(context),
+                        _WallpaperSection(
+                          title: Strings.wallpaperThemeSectionTitle,
+                          child: WallpaperThemePicker(
+                            selectedThemeId: _controller.effectiveGridThemeId,
+                            onSelected: _controller.setGridTheme,
+                          ),
                         ),
+                        const _SectionDivider(),
+                        _WallpaperSection(
+                          title: Strings.wallpaperBackgroundImageSectionTitle,
+                          child: _BackgroundImageSection(
+                            config: config,
+                            documentsDirectoryPath: _documentsDirectoryPath,
+                            onPickImage: _pickImage,
+                            onRemoveImage: _controller.removeBackgroundImage,
+                            onOpacitySelected: _controller.setBackgroundImageOpacity,
+                            onBlurSelected: _controller.setBackgroundBlur,
+                            onGridOpacitySelected: _controller.setGridOpacity,
+                          ),
+                        ),
+                        SizedBox(height: Margins.spacingM + MediaQuery.paddingOf(context).bottom),
                       ],
-                      SizedBox(height: Margins.spacingM + MediaQuery.paddingOf(context).bottom),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
@@ -266,30 +223,94 @@ class _WallpaperEditorPageState extends State<WallpaperEditorPage> with TickerPr
   }
 }
 
+class _CloseConfirmationDialog extends StatelessWidget {
+  const _CloseConfirmationDialog({required this.dialogContext});
+
+  final BuildContext dialogContext;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(Dimens.radiusBase),
+        side: BorderSide(color: AppColors.strokeColor(context)),
+      ),
+      backgroundColor: AppColors.bg(context),
+      title: Texts.primaryMediumBold(Strings.dayFormDiscardTitle),
+      actions: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            PrimaryButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              text: Strings.dayFormDiscardCancel,
+            ),
+            const SizedBox(height: Margins.spacingS),
+            SecondaryButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              text: Strings.dayFormDiscardConfirm,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+int _nearestPresetIndex(List<double> values, double current) {
+  var best = 0;
+  var bestDelta = double.infinity;
+  for (var i = 0; i < values.length; i++) {
+    final delta = (values[i] - current).abs();
+    if (delta < bestDelta) {
+      bestDelta = delta;
+      best = i;
+    }
+  }
+  return best;
+}
+
 class _BackgroundImageSection extends StatelessWidget {
   const _BackgroundImageSection({
     required this.config,
+    required this.documentsDirectoryPath,
     required this.onPickImage,
     required this.onRemoveImage,
     required this.onOpacitySelected,
     required this.onBlurSelected,
+    required this.onGridOpacitySelected,
   });
 
   final WallpaperConfig config;
+  final String? documentsDirectoryPath;
   final VoidCallback onPickImage;
   final VoidCallback onRemoveImage;
   final ValueChanged<double> onOpacitySelected;
   final ValueChanged<double> onBlurSelected;
+  final ValueChanged<double> onGridOpacitySelected;
 
-  static const _previewSize = 88.0;
-  static const _opacityValues = [1.0, 0.75, 0.5];
-  static const _opacityLabels = ['100%', '75%', '50%'];
+  static const _dimValues = [1.0, 0.75, 0.5];
+  static const _dimLabels = ['100%', '75%', '50%'];
+  static const _gridOpacityValues = [1.0, 0.75, 0.5];
+  static const _gridOpacityLabels = ['100%', '75%', '50%'];
   static const _blurValues = [0.0, 10.0, 20.0];
   static const _blurLabels = ['0', '10', '20'];
 
   bool get _hasImage {
-    final path = config.backgroundImagePath;
-    return path != null && File(path).existsSync();
+    if (documentsDirectoryPath == null) return false;
+    return WallpaperBackgroundImageStorage.resolveSync(
+          config.backgroundImagePath,
+          documentsDirectoryPath!,
+        ) !=
+        null;
+  }
+
+  String? get _resolvedImagePath {
+    if (documentsDirectoryPath == null) return null;
+    return WallpaperBackgroundImageStorage.resolveSync(
+      config.backgroundImagePath,
+      documentsDirectoryPath!,
+    );
   }
 
   @override
@@ -302,7 +323,7 @@ class _BackgroundImageSection extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _BackgroundImagePreview(
-                imagePath: config.backgroundImagePath!,
+                imagePath: _resolvedImagePath!,
                 onRemove: onRemoveImage,
                 onTap: onPickImage,
               ),
@@ -321,12 +342,12 @@ class _BackgroundImageSection extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Texts.primaryMedium(Strings.wallpaperImageOpacity),
+              Texts.primaryMedium(Strings.wallpaperImageDim),
               const SizedBox(height: Margins.spacingBase),
               SegmentedChipPicker(
-                labels: _opacityLabels,
-                selectedIndex: _nearestIndex(_opacityValues, config.backgroundImageOpacity),
-                onSelected: (index) => onOpacitySelected(_opacityValues[index]),
+                labels: _dimLabels,
+                selectedIndex: _nearestPresetIndex(_dimValues, config.backgroundImageOpacity),
+                onSelected: (index) => onOpacitySelected(_dimValues[index]),
               ),
             ],
           ),
@@ -338,8 +359,21 @@ class _BackgroundImageSection extends StatelessWidget {
               const SizedBox(height: Margins.spacingBase),
               SegmentedChipPicker(
                 labels: _blurLabels,
-                selectedIndex: _nearestIndex(_blurValues, config.backgroundBlur),
+                selectedIndex: _nearestPresetIndex(_blurValues, config.backgroundBlur),
                 onSelected: (index) => onBlurSelected(_blurValues[index]),
+              ),
+            ],
+          ),
+          const SizedBox(height: Margins.spacingM),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Texts.primaryMedium(Strings.wallpaperGridOpacity),
+              const SizedBox(height: Margins.spacingBase),
+              SegmentedChipPicker(
+                labels: _gridOpacityLabels,
+                selectedIndex: _nearestPresetIndex(_gridOpacityValues, config.gridOpacity),
+                onSelected: (index) => onGridOpacitySelected(_gridOpacityValues[index]),
               ),
             ],
           ),
@@ -351,35 +385,25 @@ class _BackgroundImageSection extends StatelessWidget {
       ],
     );
   }
-
-  static int _nearestIndex(List<double> values, double current) {
-    var best = 0;
-    var bestDelta = double.infinity;
-    for (var i = 0; i < values.length; i++) {
-      final delta = (values[i] - current).abs();
-      if (delta < bestDelta) {
-        bestDelta = delta;
-        best = i;
-      }
-    }
-    return best;
-  }
 }
 
 class _EmptyImagePlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: _BackgroundImageSection._previewSize,
+      padding: const EdgeInsets.all(Margins.spacingBase),
       decoration: BoxDecoration(
         color: AppColors.bgSoft(context),
         borderRadius: BorderRadius.circular(Dimens.radiusBase),
-        border: Border.all(color: AppColors.strokeColor(context), width: Dimens.strokeWidthS),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.add_photo_alternate_outlined, size: Dimens.iconSizeM, color: AppColors.contentSoft(context)),
+          Icon(
+            Icons.add_photo_alternate_outlined,
+            size: Dimens.iconSizeM,
+            color: AppColors.contentSoft(context),
+          ),
           const SizedBox(height: Margins.spacingS),
           Texts.primaryMedium(Strings.wallpaperAddImage, color: AppColors.contentSoft(context)),
         ],
@@ -421,8 +445,8 @@ class _BackgroundImagePreview extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: -6,
-              right: -6,
+              top: -Margins.spacingS,
+              right: -Margins.spacingS,
               child: GestureDetector(
                 onTap: () {
                   SensorialFeedback.selectionChanged();
@@ -435,8 +459,8 @@ class _BackgroundImagePreview extends StatelessWidget {
                     border: Border.all(color: AppColors.bg(context), width: Dimens.strokeWidthBase),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Icon(Icons.close, size: Dimens.iconSizeXs, color: AppColors.bg(context)),
+                    padding: const EdgeInsets.all(Margins.spacingXs),
+                    child: Icon(Icons.close, size: Dimens.iconSizeS, color: AppColors.bg(context)),
                   ),
                 ),
               ),
@@ -469,12 +493,14 @@ class _PinnedPreviewPanel extends StatelessWidget {
     required this.data,
     required this.tokens,
     required this.gridTokens,
+    required this.documentsDirectoryPath,
   });
 
   final WallpaperConfig config;
   final WallpaperGridData data;
   final AppColorTokens tokens;
   final AppColorTokens gridTokens;
+  final String? documentsDirectoryPath;
 
   static double _previewHeight(BuildContext context) {
     final screenHeight = MediaQuery.sizeOf(context).height;
@@ -504,6 +530,7 @@ class _PinnedPreviewPanel extends StatelessWidget {
             tokens: tokens,
             gridTokens: gridTokens,
             maxHeight: previewHeight,
+            documentsDirectoryPath: documentsDirectoryPath,
           ),
         ),
       ),

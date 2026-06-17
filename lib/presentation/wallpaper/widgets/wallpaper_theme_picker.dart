@@ -25,10 +25,7 @@ class WallpaperThemePicker extends StatelessWidget {
     return StoreConnector<AppState, Set<AppThemeId>>(
       converter: (store) => store.state.themeState.unlockedThemes,
       builder: (context, unlockedThemes) {
-        final themes = AppThemeId.all
-            .where((id) => id != AppThemeId.system)
-            .where(unlockedThemes.contains)
-            .toList();
+        final themes = AppThemeId.all.where((id) => id != AppThemeId.system).where(unlockedThemes.contains).toList();
         return Wrap(
           spacing: Margins.spacingBase,
           runSpacing: Margins.spacingBase,
@@ -60,38 +57,32 @@ class _WallpaperThemeSwatch extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
-  static const _swatchSize = 44.0;
+  static const _swatchSize = 32.0;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        width: 72,
+      child: Container(
+        padding: const EdgeInsets.all(Margins.spacingBase),
+        decoration: BoxDecoration(
+          color: selected ? AppColors.content(context) : AppColors.bgSoft(context),
+          borderRadius: BorderRadius.circular(Dimens.radiusBase),
+        ),
         child: Column(
           children: [
-            Container(
+            SizedBox(
               width: _swatchSize,
               height: _swatchSize,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: selected ? AppColors.accentOrange(context) : Colors.transparent,
-                  width: Dimens.strokeWidthBase,
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(Dimens.strokeWidthS),
-                child: ClipOval(child: _ThemeSwatchFill(themeId: themeId)),
-              ),
+              child: ClipOval(child: _ThemeSwatchFill(themeId: themeId)),
             ),
-            const SizedBox(height: Margins.spacingXs),
+            const SizedBox(height: Margins.spacingS),
             Texts.primaryXsMedium(
               themeId.label,
               textAlign: TextAlign.center,
-              maxLines: 2,
               overflow: TextOverflow.ellipsis,
+              color: selected ? AppColors.contentMuted(context) : AppColors.content(context),
             ),
           ],
         ),

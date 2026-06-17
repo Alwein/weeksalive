@@ -23,8 +23,9 @@ void main() {
     const config = WallpaperConfig(
       enabled: true,
       gridType: WallpaperGridType.year,
-      backgroundMode: WallpaperBackgroundMode.gradient,
+      backgroundMode: WallpaperBackgroundMode.image,
       gridColorArgb: 0xFF112233,
+      backgroundImagePath: 'wallpaper_bg_1749200000000.jpeg',
       dark: true,
       installedAtIso: '2026-06-15T08:00:00.000',
     );
@@ -34,9 +35,23 @@ void main() {
 
     expect(loaded.enabled, true);
     expect(loaded.gridType, WallpaperGridType.year);
-    expect(loaded.backgroundMode, WallpaperBackgroundMode.gradient);
+    expect(loaded.backgroundMode, WallpaperBackgroundMode.image);
     expect(loaded.gridColorArgb, 0xFF112233);
+    expect(loaded.backgroundImagePath, 'wallpaper_bg_1749200000000.jpeg');
     expect(loaded.dark, true);
     expect(loaded.installedAtIso, '2026-06-15T08:00:00.000');
+  });
+
+  test('normalizes legacy absolute image paths to file names on load', () async {
+    const config = WallpaperConfig(
+      enabled: true,
+      backgroundMode: WallpaperBackgroundMode.image,
+      backgroundImagePath: '/var/mobile/Documents/wallpaper_bg_123.jpeg',
+    );
+
+    await repository.setConfig(config);
+    final loaded = repository.getConfig();
+
+    expect(loaded.backgroundImagePath, 'wallpaper_bg_123.jpeg');
   });
 }

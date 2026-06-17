@@ -23,6 +23,7 @@ class WallpaperConfig {
     this.backgroundImagePath,
     this.backgroundImageOpacity = 1.0,
     this.backgroundBlur = 0.0,
+    this.gridOpacity = 1.0,
     this.dark = true,
     this.installedAtIso,
   });
@@ -46,15 +47,20 @@ class WallpaperConfig {
   /// Null = active theme `bgSoft`.
   final int? backgroundColorSecondaryArgb;
 
-  /// Absolute path to a user-picked background image (when
-  /// [backgroundMode] is [WallpaperBackgroundMode.image]).
+  /// File name of a user-picked background image in the app documents directory
+  /// (when [backgroundMode] is [WallpaperBackgroundMode.image]). Legacy configs
+  /// may still store an absolute path; resolve via [WallpaperBackgroundImageStorage].
   final String? backgroundImagePath;
 
-  /// Opacity applied to [backgroundImagePath], in [0, 1].
+  /// Dimming applied to [backgroundImagePath] over the black backdrop, in [0, 1].
+  /// Lower values darken the image to improve grid legibility.
   final double backgroundImageOpacity;
 
   /// Gaussian blur sigma applied to the background image, in pixels.
   final double backgroundBlur;
+
+  /// Opacity of the grid layer, in [0, 1].
+  final double gridOpacity;
 
   /// Whether the wallpaper should render with the dark palette of the theme.
   /// (Wallpapers are static images, so a single brightness must be committed.)
@@ -81,6 +87,7 @@ class WallpaperConfig {
     String? Function()? backgroundImagePath,
     double? backgroundImageOpacity,
     double? backgroundBlur,
+    double? gridOpacity,
     bool? dark,
     String? Function()? installedAtIso,
   }) {
@@ -97,6 +104,7 @@ class WallpaperConfig {
       backgroundImagePath: backgroundImagePath != null ? backgroundImagePath() : this.backgroundImagePath,
       backgroundImageOpacity: backgroundImageOpacity ?? this.backgroundImageOpacity,
       backgroundBlur: backgroundBlur ?? this.backgroundBlur,
+      gridOpacity: gridOpacity ?? this.gridOpacity,
       dark: dark ?? this.dark,
       installedAtIso: installedAtIso != null ? installedAtIso() : this.installedAtIso,
     );
@@ -113,6 +121,7 @@ class WallpaperConfig {
     'backgroundImagePath': backgroundImagePath,
     'backgroundImageOpacity': backgroundImageOpacity,
     'backgroundBlur': backgroundBlur,
+    'gridOpacity': gridOpacity,
     'dark': dark,
     'installedAtIso': installedAtIso,
   };
@@ -137,6 +146,7 @@ class WallpaperConfig {
       backgroundImagePath: json['backgroundImagePath'] as String?,
       backgroundImageOpacity: (json['backgroundImageOpacity'] as num?)?.toDouble() ?? 1.0,
       backgroundBlur: (json['backgroundBlur'] as num?)?.toDouble() ?? 0.0,
+      gridOpacity: (json['gridOpacity'] as num?)?.toDouble() ?? 1.0,
       dark: json['dark'] as bool? ?? false,
       installedAtIso: json['installedAtIso'] as String?,
     );

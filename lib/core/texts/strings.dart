@@ -471,8 +471,9 @@ class Strings {
   static String get wallpaperBackgroundImage => "Image";
   static String get wallpaperPickImage => "Pick image";
   static String get wallpaperChangeImage => "Change image";
-  static String get wallpaperImageOpacity => "Opacity";
+  static String get wallpaperImageDim => "Luminosity";
   static String get wallpaperImageBlur => "Blur";
+  static String get wallpaperGridOpacity => "Grid opacity";
   static String get wallpaperThemeSectionTitle => "Theme";
   static String get wallpaperBackgroundImageSectionTitle => "Background image";
   static String get wallpaperAddImage => "Add image";

@@ -47,6 +47,7 @@ class WallpaperRenderer {
     required Size logicalSize,
     required double pixelRatio,
   }) async {
+    final documentsDir = await getApplicationDocumentsDirectory();
     final bytes = await _capture(
       config: config,
       data: data,
@@ -54,6 +55,7 @@ class WallpaperRenderer {
       gridTokens: gridTokens,
       logicalSize: logicalSize,
       pixelRatio: pixelRatio,
+      documentsDirectoryPath: documentsDir.path,
     );
     final filePath = await _writeToDisk(bytes);
     return RenderedWallpaper(bytes: bytes, filePath: filePath);
@@ -66,6 +68,7 @@ class WallpaperRenderer {
     AppColorTokens? gridTokens,
     required Size logicalSize,
     required double pixelRatio,
+    required String documentsDirectoryPath,
   }) async {
     final repaintBoundary = RenderRepaintBoundary();
     final view = ui.PlatformDispatcher.instance.implicitView ??
@@ -96,6 +99,7 @@ class WallpaperRenderer {
           tokens: tokens,
           gridTokens: gridTokens,
           size: logicalSize,
+          documentsDirectoryPath: documentsDirectoryPath,
         ),
       ),
     ).attachToRenderTree(buildOwner);

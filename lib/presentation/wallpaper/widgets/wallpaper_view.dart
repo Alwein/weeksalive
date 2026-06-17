@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:weeksalive/core/styles/app_color_tokens.dart';
+import 'package:weeksalive/data/wallpaper/wallpaper_background_image_storage.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_background_mode.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_config.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_grid_data.dart';
@@ -23,6 +24,7 @@ class WallpaperView extends StatelessWidget {
     required this.tokens,
     this.gridTokens,
     required this.size,
+    this.documentsDirectoryPath,
   });
 
   final WallpaperConfig config;
@@ -38,6 +40,9 @@ class WallpaperView extends StatelessWidget {
   /// insets so it stays clear of the clock / home indicator.
   final Size size;
 
+  /// App documents directory used to resolve [WallpaperConfig.backgroundImagePath].
+  final String? documentsDirectoryPath;
+
   static const _lifeColumns = 52;
   static const _lifeDotSpacing = 2.0;
   static const _yearColumns = 15;
@@ -52,6 +57,15 @@ class WallpaperView extends StatelessWidget {
 
   AppColorTokens get _gridTokens => gridTokens ?? tokens;
 
+  String? get _resolvedBackgroundImagePath {
+    final stored = config.backgroundImagePath;
+    if (stored == null) return null;
+    if (documentsDirectoryPath != null) {
+      return WallpaperBackgroundImageStorage.resolveSync(stored, documentsDirectoryPath!);
+    }
+    return File(stored).existsSync() ? stored : null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -61,7 +75,7 @@ class WallpaperView extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           _buildBackground(),
-          _buildGrid(),
+          _buildGridLayer(),
         ],
       ),
     );
@@ -82,8 +96,8 @@ class WallpaperView extends StatelessWidget {
           ),
         );
       case WallpaperBackgroundMode.image:
-        final path = config.backgroundImagePath;
-        if (path == null || !File(path).existsSync()) {
+        final path = _resolvedBackgroundImagePath;
+        if (path == null) {
           return ColoredBox(color: _solidBgColor);
         }
         return _buildImageBackground(path);
@@ -154,6 +168,21 @@ class WallpaperView extends StatelessWidget {
   static const _gridTopInsetFraction = 0.24;
   static const _gridBottomInsetFraction = 0.12;
   static const _gridHorizontalInsetFraction = 0.12;
+
+  Widget _buildGridLayer() {
+    final grid = _buildGrid();
+    if (!_hasBackgroundImage) return grid;
+
+    return Opacity(
+      opacity: config.gridOpacity.clamp(0.0, 1.0),
+      child: grid,
+    );
+  }
+
+  bool get _hasBackgroundImage {
+    if (config.backgroundMode != WallpaperBackgroundMode.image) return false;
+    return _resolvedBackgroundImagePath != null;
+  }
 
   Widget _buildGrid() {
     // Reserve generous top/bottom margins so the grid avoids the lock-screen

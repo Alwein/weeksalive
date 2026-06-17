@@ -16,6 +16,7 @@ class WallpaperPreview extends StatelessWidget {
     required this.tokens,
     this.gridTokens,
     this.maxHeight = 420,
+    this.documentsDirectoryPath,
   });
 
   final WallpaperConfig config;
@@ -23,6 +24,7 @@ class WallpaperPreview extends StatelessWidget {
   final AppColorTokens tokens;
   final AppColorTokens? gridTokens;
   final double maxHeight;
+  final String? documentsDirectoryPath;
 
   static const _mockupReference = Size(402, 874);
   static const _dateOverlayReference = Size(215, 116);
@@ -65,6 +67,7 @@ class WallpaperPreview extends StatelessWidget {
                     tokens: tokens,
                     gridTokens: gridTokens,
                     size: const Size(390, 844),
+                    documentsDirectoryPath: documentsDirectoryPath,
                   ),
                 ),
                 Positioned(
