@@ -20,16 +20,18 @@ class DayFormConfirmationPage extends StatelessWidget {
   const DayFormConfirmationPage({
     super.key,
     required this.entry,
-    required this.isFirstEntry,
+    required this.streakIncreased,
+    required this.showsJournalOnlyHint,
     required this.onClose,
   });
 
   final DayEntry entry;
-  final bool isFirstEntry;
+  final bool streakIncreased;
+  final bool showsJournalOnlyHint;
   final VoidCallback onClose;
 
   void _finish(BuildContext context) {
-    if (isFirstEntry) {
+    if (streakIncreased) {
       SensorialFeedback.navigationChanged();
       Navigator.of(context).push(
         PagedSheetRoute<void>(
@@ -83,6 +85,16 @@ class DayFormConfirmationPage extends StatelessWidget {
                 ),
               ],
             ),
+            if (showsJournalOnlyHint) ...[
+              const SizedBox(height: Margins.spacingS),
+              Text(
+                Strings.dayFormConfirmationJournalOnlyHint,
+                style: TextStyles.primaryMediumMedium.copyWith(
+                  color: AppColors.contentSoft(context),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
             const SizedBox(height: Margins.spacingM),
             _IllustrationBuilder(sizeLevel: entry.sizeLevel),
             const _PositiveAffirmation(),

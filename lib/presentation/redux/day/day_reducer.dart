@@ -11,8 +11,11 @@ DayState dayReducer(DayState state, dynamic action) {
 
   if (action is SaveDayAction) {
     final entry = action.entry;
+    final normalized = normalizeDay(entry.date);
+    final existing = state.entries[normalized];
+    final merged = existing != null ? entry.copyWith(savedAt: existing.savedAt) : entry;
     return state.copyWith(
-      entries: {...state.entries, normalizeDay(entry.date): entry},
+      entries: {...state.entries, normalized: merged},
     );
   }
 

@@ -1,9 +1,9 @@
-class SetStreakCountAction {
+class StreakRecalculatedAction {
   final int count;
-  const SetStreakCountAction(this.count);
-}
+  final int bestEver;
 
-class StreakCountLoadedAction {
-  final int count;
-  const StreakCountLoadedAction(this.count);
+  const StreakRecalculatedAction({
+    required this.count,
+    required this.bestEver,
+  });
 }

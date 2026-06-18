@@ -12,6 +12,8 @@ import 'package:weeksalive/presentation/home/view_model/home_page_view_model.dar
 import 'package:weeksalive/presentation/home/widgets/day_resume_bottom_sheet/day_resume_bottom_sheet.dart';
 import 'package:weeksalive/presentation/home/widgets/home_appbar.dart';
 import 'package:weeksalive/presentation/home/widgets/home_week_calendar.dart';
+import 'package:weeksalive/presentation/home/widgets/rewards_celebration_listener.dart';
+import 'package:weeksalive/presentation/home/widgets/streak_grace_reminder_listener.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/custom_tab_bar.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/navigation/navigation_actions.dart';
@@ -30,9 +32,13 @@ class HomePage extends StatelessWidget {
         final store = StoreProvider.of<AppState>(context);
         return Scaffold(
           backgroundColor: AppColors.bg(context),
-          body: _Body(
-            vm: vm,
-            initialTabIndex: store.state.navigationState.homeTabIndex,
+          body: RewardsCelebrationListener(
+            child: StreakGraceReminderListener(
+              child: _Body(
+                vm: vm,
+                initialTabIndex: store.state.navigationState.homeTabIndex,
+              ),
+            ),
           ),
         );
       },
@@ -128,12 +134,6 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
     await _zoomableGridKey.currentState?.animateToYearView();
     if (!mounted) return;
     await _zoomableGridKey.currentState?.animateDayAppear(result.date, result.sizeLevel);
-
-    if (!mounted) return;
-
-    if (result.streakIncreased) {
-      await _appBarKey.currentState?.playStreakReveal();
-    }
   }
 
   @override

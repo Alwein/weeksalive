@@ -5,13 +5,13 @@ import 'package:weeksalive/data/navigation/navigation_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
-import 'package:weeksalive/data/streak/streak_repository.dart';
+import 'package:weeksalive/data/rewards/rewards_repository.dart';
 import 'package:weeksalive/data/theme/theme_repository.dart';
 import 'package:weeksalive/data/user/user_repository.dart';
 import 'package:weeksalive/data/wallpaper/wallpaper_config_repository.dart';
 import 'package:weeksalive/data/weekly_intent/weekly_intent_repository.dart';
 import 'package:weeksalive/data/weekly_summary/weekly_summary_repository.dart';
-import 'package:weeksalive/domain/theme/theme_unlock_service.dart';
+import 'package:weeksalive/domain/rewards/reward_unlock_service.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/store_factory.dart';
 
@@ -23,7 +23,7 @@ class TestStoreFactory {
   PushNotificationRepository pushNotificationRepository = MockPushNotificationRepository();
   PurchaseRepository purchaseRepository = MockPurchaseRepository();
   ThemeRepository themeRepository = MockThemeRepository();
-  StreakRepository streakRepository = MockStreakRepository();
+  RewardsRepository rewardsRepository = MockRewardsRepository();
   NavigationRepository navigationRepository = MockNavigationRepository();
 
   /// Not wired into the test store by default to prevent async dispatch
@@ -42,12 +42,12 @@ class TestStoreFactory {
       pushNotificationRepository: pushNotificationRepository,
       purchaseRepository: purchaseRepository,
       themeRepository: themeRepository,
-      streakRepository: streakRepository,
+      rewardsRepository: rewardsRepository,
       weeklyIntentRepository: weeklyIntentRepository,
       weeklySummaryRepository: weeklySummaryRepository,
       dayRepository: dayRepository,
       navigationRepository: navigationRepository,
-      themeUnlockService: const ThemeUnlockService(),
+      rewardUnlockService: const RewardUnlockService(),
       homeWidgetService: homeWidgetService,
       wallpaperConfigRepository: wallpaperConfigRepository,
     ).createStore(initialState: initialState);

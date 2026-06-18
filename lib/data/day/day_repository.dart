@@ -27,8 +27,10 @@ class DayRepository {
   }
 
   Future<void> upsert(DayEntry entry) async {
+    final existing = await getByDate(entry.date);
     final savedFileNames = await _saveNewImages(entry.leaveATrace.imagePaths);
     final updatedEntry = entry.copyWith(
+      savedAt: existing?.savedAt ?? entry.savedAt,
       leaveATrace: entry.leaveATrace.copyWith(imagePaths: savedFileNames),
     );
     await _db.into(_db.days).insertOnConflictUpdate(_toCompanion(updatedEntry));
@@ -66,6 +68,7 @@ class DayRepository {
 
     return DayEntry(
       date: row.date,
+      savedAt: row.savedAt,
       averageFeeling: _enumByName(AverageFeeling.values, row.averageFeeling),
       meaningScore: _enumByName(MeaningScore.values, row.meaningScore),
       hasNewExperience: row.hasNewExperience,
@@ -89,6 +92,7 @@ class DayRepository {
       leaveATraceText: Value(entry.leaveATrace.text),
       leaveATraceImagePaths: Value(jsonEncode(entry.leaveATrace.imagePaths)),
       sizeLevel: Value(entry.sizeLevel),
+      savedAt: Value(entry.savedAt),
     );
   }
 }

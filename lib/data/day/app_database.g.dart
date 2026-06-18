@@ -101,6 +101,17 @@ class $DaysTable extends Days with TableInfo<$DaysTable, Day> {
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _savedAtMeta = const VerificationMeta(
+    'savedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> savedAt = GeneratedColumn<DateTime>(
+    'saved_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     date,
@@ -111,6 +122,7 @@ class $DaysTable extends Days with TableInfo<$DaysTable, Day> {
     leaveATraceText,
     leaveATraceImagePaths,
     sizeLevel,
+    savedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -192,6 +204,14 @@ class $DaysTable extends Days with TableInfo<$DaysTable, Day> {
         sizeLevel.isAcceptableOrUnknown(data['size_level']!, _sizeLevelMeta),
       );
     }
+    if (data.containsKey('saved_at')) {
+      context.handle(
+        _savedAtMeta,
+        savedAt.isAcceptableOrUnknown(data['saved_at']!, _savedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_savedAtMeta);
+    }
     return context;
   }
 
@@ -233,6 +253,10 @@ class $DaysTable extends Days with TableInfo<$DaysTable, Day> {
         DriftSqlType.int,
         data['${effectivePrefix}size_level'],
       )!,
+      savedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}saved_at'],
+      )!,
     );
   }
 
@@ -251,6 +275,7 @@ class Day extends DataClass implements Insertable<Day> {
   final String leaveATraceText;
   final String leaveATraceImagePaths;
   final int sizeLevel;
+  final DateTime savedAt;
   const Day({
     required this.date,
     this.averageFeeling,
@@ -260,6 +285,7 @@ class Day extends DataClass implements Insertable<Day> {
     required this.leaveATraceText,
     required this.leaveATraceImagePaths,
     required this.sizeLevel,
+    required this.savedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -278,6 +304,7 @@ class Day extends DataClass implements Insertable<Day> {
     map['leave_a_trace_text'] = Variable<String>(leaveATraceText);
     map['leave_a_trace_image_paths'] = Variable<String>(leaveATraceImagePaths);
     map['size_level'] = Variable<int>(sizeLevel);
+    map['saved_at'] = Variable<DateTime>(savedAt);
     return map;
   }
 
@@ -297,6 +324,7 @@ class Day extends DataClass implements Insertable<Day> {
       leaveATraceText: Value(leaveATraceText),
       leaveATraceImagePaths: Value(leaveATraceImagePaths),
       sizeLevel: Value(sizeLevel),
+      savedAt: Value(savedAt),
     );
   }
 
@@ -318,6 +346,7 @@ class Day extends DataClass implements Insertable<Day> {
         json['leaveATraceImagePaths'],
       ),
       sizeLevel: serializer.fromJson<int>(json['sizeLevel']),
+      savedAt: serializer.fromJson<DateTime>(json['savedAt']),
     );
   }
   @override
@@ -332,6 +361,7 @@ class Day extends DataClass implements Insertable<Day> {
       'leaveATraceText': serializer.toJson<String>(leaveATraceText),
       'leaveATraceImagePaths': serializer.toJson<String>(leaveATraceImagePaths),
       'sizeLevel': serializer.toJson<int>(sizeLevel),
+      'savedAt': serializer.toJson<DateTime>(savedAt),
     };
   }
 
@@ -344,6 +374,7 @@ class Day extends DataClass implements Insertable<Day> {
     String? leaveATraceText,
     String? leaveATraceImagePaths,
     int? sizeLevel,
+    DateTime? savedAt,
   }) => Day(
     date: date ?? this.date,
     averageFeeling: averageFeeling.present
@@ -357,6 +388,7 @@ class Day extends DataClass implements Insertable<Day> {
     leaveATraceText: leaveATraceText ?? this.leaveATraceText,
     leaveATraceImagePaths: leaveATraceImagePaths ?? this.leaveATraceImagePaths,
     sizeLevel: sizeLevel ?? this.sizeLevel,
+    savedAt: savedAt ?? this.savedAt,
   );
   Day copyWithCompanion(DaysCompanion data) {
     return Day(
@@ -380,6 +412,7 @@ class Day extends DataClass implements Insertable<Day> {
           ? data.leaveATraceImagePaths.value
           : this.leaveATraceImagePaths,
       sizeLevel: data.sizeLevel.present ? data.sizeLevel.value : this.sizeLevel,
+      savedAt: data.savedAt.present ? data.savedAt.value : this.savedAt,
     );
   }
 
@@ -393,7 +426,8 @@ class Day extends DataClass implements Insertable<Day> {
           ..write('livingIntentionIds: $livingIntentionIds, ')
           ..write('leaveATraceText: $leaveATraceText, ')
           ..write('leaveATraceImagePaths: $leaveATraceImagePaths, ')
-          ..write('sizeLevel: $sizeLevel')
+          ..write('sizeLevel: $sizeLevel, ')
+          ..write('savedAt: $savedAt')
           ..write(')'))
         .toString();
   }
@@ -408,6 +442,7 @@ class Day extends DataClass implements Insertable<Day> {
     leaveATraceText,
     leaveATraceImagePaths,
     sizeLevel,
+    savedAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -420,7 +455,8 @@ class Day extends DataClass implements Insertable<Day> {
           other.livingIntentionIds == this.livingIntentionIds &&
           other.leaveATraceText == this.leaveATraceText &&
           other.leaveATraceImagePaths == this.leaveATraceImagePaths &&
-          other.sizeLevel == this.sizeLevel);
+          other.sizeLevel == this.sizeLevel &&
+          other.savedAt == this.savedAt);
 }
 
 class DaysCompanion extends UpdateCompanion<Day> {
@@ -432,6 +468,7 @@ class DaysCompanion extends UpdateCompanion<Day> {
   final Value<String> leaveATraceText;
   final Value<String> leaveATraceImagePaths;
   final Value<int> sizeLevel;
+  final Value<DateTime> savedAt;
   final Value<int> rowid;
   const DaysCompanion({
     this.date = const Value.absent(),
@@ -442,6 +479,7 @@ class DaysCompanion extends UpdateCompanion<Day> {
     this.leaveATraceText = const Value.absent(),
     this.leaveATraceImagePaths = const Value.absent(),
     this.sizeLevel = const Value.absent(),
+    this.savedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   DaysCompanion.insert({
@@ -453,8 +491,10 @@ class DaysCompanion extends UpdateCompanion<Day> {
     this.leaveATraceText = const Value.absent(),
     this.leaveATraceImagePaths = const Value.absent(),
     this.sizeLevel = const Value.absent(),
+    required DateTime savedAt,
     this.rowid = const Value.absent(),
-  }) : date = Value(date);
+  }) : date = Value(date),
+       savedAt = Value(savedAt);
   static Insertable<Day> custom({
     Expression<DateTime>? date,
     Expression<String>? averageFeeling,
@@ -464,6 +504,7 @@ class DaysCompanion extends UpdateCompanion<Day> {
     Expression<String>? leaveATraceText,
     Expression<String>? leaveATraceImagePaths,
     Expression<int>? sizeLevel,
+    Expression<DateTime>? savedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -477,6 +518,7 @@ class DaysCompanion extends UpdateCompanion<Day> {
       if (leaveATraceImagePaths != null)
         'leave_a_trace_image_paths': leaveATraceImagePaths,
       if (sizeLevel != null) 'size_level': sizeLevel,
+      if (savedAt != null) 'saved_at': savedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -490,6 +532,7 @@ class DaysCompanion extends UpdateCompanion<Day> {
     Value<String>? leaveATraceText,
     Value<String>? leaveATraceImagePaths,
     Value<int>? sizeLevel,
+    Value<DateTime>? savedAt,
     Value<int>? rowid,
   }) {
     return DaysCompanion(
@@ -502,6 +545,7 @@ class DaysCompanion extends UpdateCompanion<Day> {
       leaveATraceImagePaths:
           leaveATraceImagePaths ?? this.leaveATraceImagePaths,
       sizeLevel: sizeLevel ?? this.sizeLevel,
+      savedAt: savedAt ?? this.savedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -535,6 +579,9 @@ class DaysCompanion extends UpdateCompanion<Day> {
     if (sizeLevel.present) {
       map['size_level'] = Variable<int>(sizeLevel.value);
     }
+    if (savedAt.present) {
+      map['saved_at'] = Variable<DateTime>(savedAt.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -552,6 +599,7 @@ class DaysCompanion extends UpdateCompanion<Day> {
           ..write('leaveATraceText: $leaveATraceText, ')
           ..write('leaveATraceImagePaths: $leaveATraceImagePaths, ')
           ..write('sizeLevel: $sizeLevel, ')
+          ..write('savedAt: $savedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -579,6 +627,7 @@ typedef $$DaysTableCreateCompanionBuilder =
       Value<String> leaveATraceText,
       Value<String> leaveATraceImagePaths,
       Value<int> sizeLevel,
+      required DateTime savedAt,
       Value<int> rowid,
     });
 typedef $$DaysTableUpdateCompanionBuilder =
@@ -591,6 +640,7 @@ typedef $$DaysTableUpdateCompanionBuilder =
       Value<String> leaveATraceText,
       Value<String> leaveATraceImagePaths,
       Value<int> sizeLevel,
+      Value<DateTime> savedAt,
       Value<int> rowid,
     });
 
@@ -639,6 +689,11 @@ class $$DaysTableFilterComposer extends Composer<_$AppDatabase, $DaysTable> {
 
   ColumnFilters<int> get sizeLevel => $composableBuilder(
     column: $table.sizeLevel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get savedAt => $composableBuilder(
+    column: $table.savedAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -690,6 +745,11 @@ class $$DaysTableOrderingComposer extends Composer<_$AppDatabase, $DaysTable> {
     column: $table.sizeLevel,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<DateTime> get savedAt => $composableBuilder(
+    column: $table.savedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$DaysTableAnnotationComposer
@@ -736,6 +796,9 @@ class $$DaysTableAnnotationComposer
 
   GeneratedColumn<int> get sizeLevel =>
       $composableBuilder(column: $table.sizeLevel, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get savedAt =>
+      $composableBuilder(column: $table.savedAt, builder: (column) => column);
 }
 
 class $$DaysTableTableManager
@@ -774,6 +837,7 @@ class $$DaysTableTableManager
                 Value<String> leaveATraceText = const Value.absent(),
                 Value<String> leaveATraceImagePaths = const Value.absent(),
                 Value<int> sizeLevel = const Value.absent(),
+                Value<DateTime> savedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => DaysCompanion(
                 date: date,
@@ -784,6 +848,7 @@ class $$DaysTableTableManager
                 leaveATraceText: leaveATraceText,
                 leaveATraceImagePaths: leaveATraceImagePaths,
                 sizeLevel: sizeLevel,
+                savedAt: savedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -796,6 +861,7 @@ class $$DaysTableTableManager
                 Value<String> leaveATraceText = const Value.absent(),
                 Value<String> leaveATraceImagePaths = const Value.absent(),
                 Value<int> sizeLevel = const Value.absent(),
+                required DateTime savedAt,
                 Value<int> rowid = const Value.absent(),
               }) => DaysCompanion.insert(
                 date: date,
@@ -806,6 +872,7 @@ class $$DaysTableTableManager
                 leaveATraceText: leaveATraceText,
                 leaveATraceImagePaths: leaveATraceImagePaths,
                 sizeLevel: sizeLevel,
+                savedAt: savedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

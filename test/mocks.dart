@@ -8,7 +8,7 @@ import 'package:weeksalive/data/navigation/navigation_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
-import 'package:weeksalive/data/streak/streak_repository.dart';
+import 'package:weeksalive/data/rewards/rewards_repository.dart';
 import 'package:weeksalive/data/theme/theme_repository.dart';
 import 'package:weeksalive/data/user/user_repository.dart';
 import 'package:weeksalive/data/wallpaper/wallpaper_config_repository.dart';
@@ -16,6 +16,7 @@ import 'package:weeksalive/data/weekly_intent/weekly_intent_repository.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_config.dart';
 import 'package:weeksalive/data/weekly_summary/weekly_summary_repository.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
+import 'package:weeksalive/domain/rewards/reward_id.dart';
 import 'package:weeksalive/domain/notifications/notification_slots.dart';
 import 'package:weeksalive/domain/user/user.dart';
 import 'package:weeksalive/domain/weekly_intent/weekly_intent.dart';
@@ -71,18 +72,16 @@ class MockPurchaseRepository extends Mock implements PurchaseRepository {
 class MockThemeRepository extends Mock implements ThemeRepository {
   MockThemeRepository() {
     registerFallbackValue(AppThemeId.system);
-    registerFallbackValue(<AppThemeId>{AppThemeId.system});
     when(() => getSelectedTheme()).thenAnswer((_) async => AppThemeId.system);
-    when(() => getUnlockedThemes()).thenAnswer((_) async => AppThemeId.alwaysUnlocked.toSet());
     when(() => setSelectedTheme(any())).thenAnswer((_) async {});
-    when(() => setUnlockedThemes(any())).thenAnswer((_) async {});
   }
 }
 
-class MockStreakRepository extends Mock implements StreakRepository {
-  MockStreakRepository() {
-    when(() => getStreakCount()).thenAnswer((_) async => 0);
-    when(() => setStreakCount(any())).thenAnswer((_) async {});
+class MockRewardsRepository extends Mock implements RewardsRepository {
+  MockRewardsRepository() {
+    registerFallbackValue(<RewardId>{});
+    when(() => getUnlocked()).thenAnswer((_) async => {});
+    when(() => unlock(any())).thenAnswer((_) async {});
   }
 }
 

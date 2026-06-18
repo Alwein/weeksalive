@@ -85,11 +85,13 @@ class HomeAppBarState extends State<HomeAppBar> with SingleTickerProviderStateMi
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              _StreaksButton(
-                streaks: widget.vm.streakCount,
-                showFire: _showFire,
-                fireAnimation: _fireController,
-              ),
+              if (widget.vm.streakCount > 0)
+                _StreaksButton(
+                  streaks: widget.vm.streakCount,
+                  showFire: _showFire,
+                  fireAnimation: _fireController,
+                  isYesterdayGracePeriod: widget.vm.isYesterdayGracePeriod,
+                ),
               const SizedBox(width: Margins.spacingS),
               const _ProfileButton(),
             ],
@@ -163,13 +165,17 @@ class _StreaksButton extends StatelessWidget {
     required this.streaks,
     required this.showFire,
     required this.fireAnimation,
+    required this.isYesterdayGracePeriod,
   });
   final int streaks;
   final bool showFire;
   final Animation<double> fireAnimation;
+  final bool isYesterdayGracePeriod;
 
   @override
   Widget build(BuildContext context) {
+    final streakIcon = isYesterdayGracePeriod ? MingCuteIcons.mgc_hours_line : MingCuteIcons.mgc_fire_fill;
+
     return TextButton(
       style: TextButton.styleFrom(
         padding: const EdgeInsets.symmetric(
@@ -195,11 +201,11 @@ class _StreaksButton extends StatelessWidget {
               children: [
                 Center(
                   child: Icon(
-                    MingCuteIcons.mgc_fire_fill,
+                    streakIcon,
                     color: AppColors.content(context),
                   ),
                 ),
-                if (showFire)
+                if (showFire && !isYesterdayGracePeriod)
                   OverflowBox(
                     maxWidth: 70,
                     maxHeight: 70,

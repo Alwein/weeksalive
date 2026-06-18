@@ -14,18 +14,20 @@ class DayMiddleware extends MiddlewareClass<AppState> {
   @override
   void call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
-
     if (action is BootstrapAction) {
       final entries = await dayRepository.getAll();
       try {
         store.dispatch(DaysLoadedAction(entries));
+        _refreshStreak(store);
       } catch (_) {
         // Store torn down (e.g. in tests) during the async gap.
       }
     }
 
     if (action is SaveDayAction) {
-      await dayRepository.upsert(action.entry);
+      final normalized = normalizeDay(action.entry.date);
+      final entry = store.state.dayState.entries[normalized] ?? action.entry;
+      await dayRepository.upsert(entry);
       _refreshStreak(store);
     }
 
@@ -36,10 +38,15 @@ class DayMiddleware extends MiddlewareClass<AppState> {
   }
 
   void _refreshStreak(Store<AppState> store) {
-    final dates = store.state.dayState.entries.keys.toSet();
-    final count = computeStreak(dates, DateTime.now());
+    final entries = store.state.dayState.entries.values;
+    final now = DateTime.now();
     try {
-      store.dispatch(SetStreakCountAction(count));
+      store.dispatch(
+        StreakRecalculatedAction(
+          count: computeStreak(entries, now),
+          bestEver: computeBestStreak(entries),
+        ),
+      );
     } catch (_) {
       // The store may have been torn down (e.g. in tests) between the async
       // gap and this dispatch; ignore the resulting "stream closed" error.

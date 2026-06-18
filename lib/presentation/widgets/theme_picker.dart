@@ -9,8 +9,8 @@ import 'package:weeksalive/core/styles/themes/app_theme.dart';
 import 'package:weeksalive/core/styles/themes/default_theme_tokens.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
-import 'package:weeksalive/domain/theme/theme_unlock_condition.dart';
-import 'package:weeksalive/domain/theme/theme_unlock_rules.dart';
+import 'package:weeksalive/domain/rewards/reward_condition.dart';
+import 'package:weeksalive/domain/rewards/reward_rules.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/theme/theme_actions.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
@@ -407,10 +407,10 @@ class _LockedBarrier extends StatelessWidget {
   final AppThemeId themeId;
 
   String? get _unlockHint {
-    final rule = ThemeUnlockRules.all.where((r) => r.themeId == themeId).firstOrNull;
+    final rule = RewardRules.ruleForTheme(themeId);
     if (rule == null) return null;
     return switch (rule.condition) {
-      StreakUnlockCondition(:final minStreak) => Strings.themeLockedStreakHint(minStreak),
+      StreakMilestoneCondition(:final minDays) => Strings.themeLockedStreakHint(minDays),
       TotalDaysLoggedCondition(:final minDays) => Strings.themeLockedStreakHint(minDays),
     };
   }

@@ -20,12 +20,10 @@ void main() {
       expect(preferences.getString('app_theme'), 'dark');
     });
 
-    test('persists selected and unlocked themes', () async {
+    test('persists selected theme', () async {
       await repository.setSelectedTheme(AppThemeId.petale);
-      await repository.setUnlockedThemes({AppThemeId.system, AppThemeId.petale});
 
       expect(await repository.getSelectedTheme(), AppThemeId.petale);
-      expect(await repository.getUnlockedThemes(), containsAll([AppThemeId.system, AppThemeId.petale]));
     });
   });
 }

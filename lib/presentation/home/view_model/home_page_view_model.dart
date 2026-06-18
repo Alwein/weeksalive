@@ -20,17 +20,20 @@ abstract class HomePageViewModel with _$HomePageViewModel {
     /// Set of dates (normalized to midnight) that have been recorded.
     @Default({}) Set<DateTime> recordedDays,
     @Default(false) bool isTodayDone,
+    @Default(false) bool isYesterdayGracePeriod,
   }) = _HomePageViewModel;
 
   factory HomePageViewModel.create(Store<AppState> store) {
     final recordedDays = store.state.dayState.entries.keys.toSet();
+    final now = DateTime.now();
     return HomePageViewModel(
       userName: _userName(store),
       streakCount: store.state.streakState.count,
       lifeWeekGrid: _lifeWeekGrid(store),
       weekStartDay: _weekStartDay(store),
       recordedDays: recordedDays,
-      isTodayDone: recordedDays.contains(normalizeDay(DateTime.now())),
+      isTodayDone: recordedDays.contains(normalizeDay(now)),
+      isYesterdayGracePeriod: isYesterdayGracePeriod(recordedDays: recordedDays, now: now),
     );
   }
 }

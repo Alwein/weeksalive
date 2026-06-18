@@ -3,6 +3,7 @@ import 'package:weeksalive/presentation/redux/day/day_state.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_state.dart';
 import 'package:weeksalive/presentation/redux/remote_config/remote_config_state.dart';
+import 'package:weeksalive/presentation/redux/rewards/rewards_state.dart';
 import 'package:weeksalive/presentation/redux/streak/streak_state.dart';
 import 'package:weeksalive/presentation/redux/theme/theme_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
@@ -20,6 +21,7 @@ abstract class AppState with _$AppState {
     required UserState userState,
     required PurchaseState purchaseState,
     required ThemeState themeState,
+    required RewardsState rewardsState,
     required StreakState streakState,
     required WeeklyIntentState weeklyIntentState,
     required DayState dayState,
@@ -35,6 +37,7 @@ abstract class AppState with _$AppState {
       userState: const UserState.loading(),
       purchaseState: const PurchaseState.initial(),
       themeState: const ThemeState(),
+      rewardsState: const RewardsState(),
       streakState: const StreakState(),
       weeklyIntentState: WeeklyIntentState.initial(),
       dayState: DayState.initial(),

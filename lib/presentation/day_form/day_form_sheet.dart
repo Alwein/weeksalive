@@ -279,32 +279,35 @@ class _DayFormPageContentState extends State<_DayFormPageContent> {
     final entry = _controller.buildEntry(widget.date);
     final store = StoreProvider.of<AppState>(context);
     final previousStreak = store.state.streakState.count;
+    final isNewEntry = widget.viewModel.existingEntry == null;
     store.dispatch(SaveDayAction(entry));
     // The streak is refreshed asynchronously by the middleware, so compute it
     // synchronously from the (already updated) day state to know the new value.
     final newStreak = computeStreak(
-      store.state.dayState.entries.keys.toSet(),
+      store.state.dayState.entries.values,
       DateTime.now(),
     );
+    final savedEntry = store.state.dayState.entryFor(widget.date)!;
+    final showsJournalOnlyHint =
+        isNewEntry && !isStreakEligible(entryDate: savedEntry.date, savedAt: savedEntry.savedAt);
     _saved = true;
     widget.canSave.value = false;
 
     widget.onSaved(
       DayFormResult(
-        date: entry.date,
-        sizeLevel: entry.sizeLevel,
+        date: savedEntry.date,
+        sizeLevel: savedEntry.sizeLevel,
         previousStreak: previousStreak,
         newStreak: newStreak,
       ),
     );
 
-    final isFirstEntry = widget.viewModel.existingEntry == null;
-
     Navigator.of(context).push(
       PagedSheetRoute<void>(
         builder: (_) => DayFormConfirmationPage(
-          entry: entry,
-          isFirstEntry: isFirstEntry,
+          entry: savedEntry,
+          streakIncreased: newStreak > previousStreak,
+          showsJournalOnlyHint: showsJournalOnlyHint,
           onClose: widget.onClose,
         ),
       ),

@@ -9,7 +9,7 @@ import 'package:weeksalive/data/navigation/navigation_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
-import 'package:weeksalive/data/streak/streak_repository.dart';
+import 'package:weeksalive/data/rewards/rewards_repository.dart';
 import 'package:weeksalive/data/theme/theme_repository.dart';
 import 'package:weeksalive/data/user/user_repository.dart';
 import 'package:weeksalive/data/wallpaper/wallpaper_config_repository.dart';
@@ -33,7 +33,7 @@ Future<Store<AppState>> initializeReduxStore(
     navigationRepository: NavigationRepository(preferences: sharedPreferences),
     pushNotificationRepository: pushNotificationRepository ?? PushNotificationRepository(preferences: sharedPreferences),
     purchaseRepository: PurchaseRepository(dotenv: dotenv),
-    streakRepository: StreakRepository(preferences: sharedPreferences),
+    rewardsRepository: RewardsRepository(preferences: sharedPreferences),
     weeklyIntentRepository: WeeklyIntentRepository(preferences: sharedPreferences),
     weeklySummaryRepository: WeeklySummaryRepository(preferences: sharedPreferences),
     dayRepository: DayRepository(database: appDatabase),

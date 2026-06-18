@@ -317,6 +317,11 @@ class Strings {
   static String get consecutiveDay => "Consecutive day";
   static String get consecutiveDays => "Consecutive days";
   static String get congratulations => "Well done!";
+  static String get streakGraceReminderTitle => "No worries";
+  static String get streakGraceReminderBody =>
+      "Missing a day happens. You still have 24 extra hours to log yesterday and keep your streak going.";
+  static String get streakGraceReminderLogYesterday => "Log yesterday";
+  static String get streakGraceReminderDismiss => "Got it";
 
   // weekly intent
   static String get intentBePresent => "Be Present";
@@ -337,6 +342,7 @@ class Strings {
   // day form confirmation page
   static String get dayFormConfirmationTitle => "Daily awareness";
   static String get dayFormConfirmationSubtitle => "Check-in complete.";
+  static String get dayFormConfirmationJournalOnlyHint => "Added to your journal — does not count toward your streak.";
   static String get dayFormConfirmationSave => "Save and finish";
   static List<String> get dayFormConfirmationPositiveAffirmations => [
     "You're becoming more mindful of your time.",

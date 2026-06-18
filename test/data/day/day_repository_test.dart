@@ -46,13 +46,15 @@ void main() {
       expect(stored.sizeLevel, entry.sizeLevel);
     });
 
-    test('upsert overwrites an existing day', () async {
-      await repository.upsert(DayEntry(date: DateTime(2026, 6, 1), hasNewExperience: false));
+    test('upsert overwrites an existing day but keeps the original savedAt', () async {
+      final firstSavedAt = DateTime(2026, 6, 1, 9);
+      await repository.upsert(DayEntry(date: DateTime(2026, 6, 1), hasNewExperience: false, savedAt: firstSavedAt));
       await repository.upsert(DayEntry(date: DateTime(2026, 6, 1), hasNewExperience: true));
 
       final all = await repository.getAll();
       expect(all, hasLength(1));
       expect(all.single.hasNewExperience, isTrue);
+      expect(all.single.savedAt, firstSavedAt);
     });
 
     test('matches a day regardless of time-of-day on the query', () async {

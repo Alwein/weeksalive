@@ -8,7 +8,6 @@ class ThemeRepository {
 
   static const String _appThemeKey = 'app_theme';
   static const String _themeModeKey = 'theme_mode';
-  static const String _unlockedThemesKey = 'unlocked_themes';
 
   Future<AppThemeId> getSelectedTheme() async {
     final value = _preferences.getString(_appThemeKey);
@@ -19,19 +18,8 @@ class ThemeRepository {
     return _migrateLegacyThemeMode();
   }
 
-  Future<Set<AppThemeId>> getUnlockedThemes() async {
-    final stored = _preferences.getStringList(_unlockedThemesKey);
-    if (stored == null) return AppThemeId.alwaysUnlocked.toSet();
-    return stored.map(_parseThemeId).whereType<AppThemeId>().toSet()..addAll(AppThemeId.alwaysUnlocked);
-  }
-
   Future<void> setSelectedTheme(AppThemeId themeId) async {
     await _preferences.setString(_appThemeKey, themeId.storageKey);
-  }
-
-  Future<void> setUnlockedThemes(Set<AppThemeId> themeIds) async {
-    final values = themeIds.map((id) => id.storageKey).toList()..sort();
-    await _preferences.setStringList(_unlockedThemesKey, values);
   }
 
   Future<AppThemeId> _migrateLegacyThemeMode() async {

@@ -19,6 +19,7 @@ class Days extends Table {
 
   TextColumn get leaveATraceImagePaths => text().withDefault(const Constant('[]'))();
   IntColumn get sizeLevel => integer().withDefault(const Constant(0))();
+  DateTimeColumn get savedAt => dateTime()();
 
   @override
   Set<Column> get primaryKey => {date};
