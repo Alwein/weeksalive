@@ -47,6 +47,19 @@ void main() {
       expect(persisted.every((entry) => entry.reRender == false), isTrue);
     });
 
+    test('syncFromStore replaces config and clears dirty state', () {
+      const initial = WallpaperConfig(enabled: true, gridType: WallpaperGridType.year);
+      final controller = createController(initialConfig: initial);
+      controller.setGridScale(1.2);
+
+      controller.syncFromStore(const WallpaperConfig(enabled: false, gridType: WallpaperGridType.life));
+
+      expect(controller.config.enabled, isFalse);
+      expect(controller.config.gridType, WallpaperGridType.life);
+      expect(controller.config.gridScale, 1.0);
+      expect(controller.hasUnsavedChanges, isFalse);
+    });
+
     test('markSaved clears dirty state', () {
       final controller = createController();
       controller.setGridType(WallpaperGridType.year);

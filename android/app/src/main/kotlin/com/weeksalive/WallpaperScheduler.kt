@@ -12,10 +12,15 @@ object WallpaperScheduler {
     private const val WORK_NAME_YEAR = "weeksalive_wallpaper_year"
     private const val WORK_NAME_LIFE = "weeksalive_wallpaper_life"
 
-    fun schedule(context: Context, gridType: String) {
+    fun cancel(context: Context) {
         val workManager = WorkManager.getInstance(context)
         workManager.cancelUniqueWork(WORK_NAME_YEAR)
         workManager.cancelUniqueWork(WORK_NAME_LIFE)
+    }
+
+    fun schedule(context: Context, gridType: String) {
+        val workManager = WorkManager.getInstance(context)
+        cancel(context)
 
         val (name, intervalDays) = when (gridType) {
             "year" -> WORK_NAME_YEAR to 1L

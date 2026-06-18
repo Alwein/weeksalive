@@ -11,8 +11,18 @@ class WallpaperPlugin : MethodChannel.MethodCallHandler {
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "setWallpaper" -> setWallpaper(call, result)
+            "cancelWallpaperSchedule" -> cancelWallpaperSchedule(result)
             "openShortcuts" -> result.success(false)
             else -> result.notImplemented()
+        }
+    }
+
+    private fun cancelWallpaperSchedule(result: MethodChannel.Result) {
+        try {
+            WallpaperScheduler.cancel(MainActivityHolder.activity)
+            result.success(true)
+        } catch (_: Exception) {
+            result.success(false)
         }
     }
 

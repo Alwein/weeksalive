@@ -59,6 +59,12 @@ class WallpaperMiddleware extends MiddlewareClass<AppState> {
       return;
     }
 
+    if (action is DisableWallpaperAction) {
+      _renderGeneration++;
+      _disableWallpaper(store);
+      return;
+    }
+
     final dataChanged = action is SaveDayAction ||
         action is DeleteDayAction ||
         action is DaysLoadedAction ||
@@ -75,6 +81,17 @@ class WallpaperMiddleware extends MiddlewareClass<AppState> {
     _renderChain = (_renderChain ?? Future<void>.value()).then(
       (_) => _renderAndApply(store, install: install, generation: generation),
     );
+  }
+
+  Future<void> _disableWallpaper(Store<AppState> store) async {
+    try {
+      await installer.cancelSchedule();
+      final config = store.state.wallpaperState.config.copyWith(enabled: false);
+      await repository.setConfig(config);
+      _dispatchSafe(store, SaveWallpaperConfigAction(config));
+    } catch (_) {
+      // Best-effort; never break the app.
+    }
   }
 
   Future<void> _renderAndApply(
@@ -126,7 +143,7 @@ class WallpaperMiddleware extends MiddlewareClass<AppState> {
           await repository.setConfig(updated);
           _dispatchSafe(store, SaveWallpaperConfigAction(updated));
         }
-      } else {
+      } else if (config.enabled) {
         await installer.install(filePath: rendered.filePath, gridType: config.gridType);
       }
     } catch (_) {

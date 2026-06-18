@@ -19,6 +19,10 @@ class InstallWallpaperAction {
   const InstallWallpaperAction();
 }
 
+class DisableWallpaperAction {
+  const DisableWallpaperAction();
+}
+
 class RefreshWallpaperAction {
   const RefreshWallpaperAction();
 }

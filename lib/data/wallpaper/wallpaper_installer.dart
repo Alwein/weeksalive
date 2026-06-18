@@ -74,6 +74,18 @@ class WallpaperInstaller {
     }
   }
 
+  /// Cancels the periodic WorkManager job that re-applies the wallpaper (Android
+  /// only). No-op on other platforms.
+  Future<bool> cancelSchedule() async {
+    if (!Platform.isAndroid) return true;
+    try {
+      final ok = await _channel.invokeMethod<bool>('cancelWallpaperSchedule');
+      return ok == true;
+    } on PlatformException {
+      return false;
+    }
+  }
+
   /// Platform-aware install: applies directly on Android, publishes on iOS.
   Future<WallpaperInstallStatus> install({
     required String filePath,

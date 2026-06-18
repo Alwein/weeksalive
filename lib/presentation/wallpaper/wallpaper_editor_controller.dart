@@ -103,6 +103,13 @@ class WallpaperEditorController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void syncFromStore(WallpaperConfig config) {
+    _config = config;
+    _savedConfig = config;
+    _isDirty = false;
+    notifyListeners();
+  }
+
   void discardChanges() {
     _config = _savedConfig;
     _isDirty = false;

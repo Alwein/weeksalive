@@ -491,6 +491,17 @@ class Strings {
   static String get wallpaperUpdate => "Update wallpaper";
   static String get wallpaperInstallAction => "Activate";
   static String get wallpaperUpdateAction => "Update";
+  static String get wallpaperAutomaticTitle => "Automatic wallpaper";
+  static String get wallpaperAutomaticUpdatesDaily => "Updates daily";
+  static String get wallpaperAutomaticUpdatesWeekly => "Updates weekly";
+  static String get wallpaperAutomaticUpdatesOff => "Automatic updates are off";
+  static String get wallpaperDisableTitle => "Stop automatic updates?";
+  static String get wallpaperDisableMessage =>
+      "WeeksAlive will stop updating your wallpaper. Your current wallpaper will stay until you change it in your phone settings.";
+  static String get wallpaperDisableConfirm => "Stop updates";
+  static String get wallpaperDisableCancel => "Keep active";
+  static String get wallpaperDisabledShortcutsMessage =>
+      "To fully stop wallpaper updates, delete the automation in the Shortcuts app.";
 
   static String get wallpaperSetupTitle => "Set up in ~2 min";
   static String get wallpaperSetupSubtitle =>

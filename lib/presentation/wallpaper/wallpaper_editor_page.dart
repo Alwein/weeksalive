@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:image_picker/image_picker.dart';
@@ -93,7 +94,35 @@ class _WallpaperEditorPageState extends State<WallpaperEditorPage> {
     store.dispatch(const InstallWallpaperAction());
   }
 
-  void _onInstallStateChanged(_InstallViewModel? previous, _InstallViewModel current) {
+  Future<void> _onAutomaticToggle(bool enabled) async {
+    if (enabled) {
+      _install();
+      return;
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => _DisableConfirmationDialog(dialogContext: dialogContext),
+    );
+    if (!mounted || confirmed != true) return;
+
+    StoreProvider.of<AppState>(context, listen: false).dispatch(const DisableWallpaperAction());
+  }
+
+  void _onEditorStateChanged(_EditorViewModel? previous, _EditorViewModel current) {
+    if (previous?.enabled != current.enabled) {
+      final store = StoreProvider.of<AppState>(context, listen: false);
+      _controller.syncFromStore(store.state.wallpaperState.config);
+    }
+
+    if (previous?.installing == true && !current.installing && current.installSucceeded == true) {
+      _controller.markSaved();
+    }
+
+    _onInstallStateChanged(previous, current);
+  }
+
+  void _onInstallStateChanged(_EditorViewModel? previous, _EditorViewModel current) {
     if (!_pendingIosSetupPage || previous == null) return;
     if (previous.installing && !current.installing && current.installSucceeded == true) {
       _pendingIosSetupPage = false;
@@ -126,15 +155,18 @@ class _WallpaperEditorPageState extends State<WallpaperEditorPage> {
   Widget build(BuildContext context) {
     final config = _controller.config;
 
-    return StoreConnector<AppState, _InstallViewModel>(
-      converter: (store) => _InstallViewModel(
+    return StoreConnector<AppState, _EditorViewModel>(
+      converter: (store) => _EditorViewModel(
         installing: store.state.wallpaperState.installing,
         installSucceeded: store.state.wallpaperState.installSucceeded,
+        enabled: store.state.wallpaperState.config.enabled,
       ),
       onWillChange: (previous, current) => previous != current,
-      onDidChange: _onInstallStateChanged,
+      onDidChange: _onEditorStateChanged,
       builder: (context, vm) {
         final installing = vm.installing;
+        final enabled = vm.enabled;
+        final canSave = !installing && (!enabled || _controller.hasUnsavedChanges);
         final store = StoreProvider.of<AppState>(context, listen: false);
         final wallpaperTokens = resolveWallpaperGridTokens(config);
         final data = WallpaperGridData.build(
@@ -155,10 +187,12 @@ class _WallpaperEditorPageState extends State<WallpaperEditorPage> {
               title: Strings.wallpaperPageTitle,
               onLeadingPressed: _onAttemptDismiss,
               actions: [
-                _WallpaperAppBarAction(
-                  onPressed: installing ? null : _install,
-                  isLoading: installing,
-                ),
+                if (canSave)
+                  _WallpaperAppBarAction(
+                    onPressed: _install,
+                    isLoading: installing,
+                    label: enabled ? Strings.save : Strings.wallpaperInstallAction,
+                  ),
               ],
             ),
             body: CustomScrollView(
@@ -181,6 +215,15 @@ class _WallpaperEditorPageState extends State<WallpaperEditorPage> {
                   sliver: SliverList(
                     delegate: SliverChildListDelegate([
                       const SizedBox(height: Margins.spacingM),
+                      if (!Platform.isIOS) ...[
+                        _WallpaperAutomaticToggle(
+                          enabled: enabled,
+                          gridType: config.gridType,
+                          installing: installing,
+                          onChanged: _onAutomaticToggle,
+                        ),
+                        const _SectionDivider(),
+                      ],
                       _WallpaperSection(
                         title: Strings.wallpaperGridSectionTitle,
                         child: SegmentedChipPicker(
@@ -230,6 +273,101 @@ class _WallpaperEditorPageState extends State<WallpaperEditorPage> {
           ),
         );
       },
+    );
+  }
+}
+
+class _DisableConfirmationDialog extends StatelessWidget {
+  const _DisableConfirmationDialog({required this.dialogContext});
+
+  final BuildContext dialogContext;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(Dimens.radiusBase),
+        side: BorderSide(color: AppColors.strokeColor(context)),
+      ),
+      backgroundColor: AppColors.bg(context),
+      title: Texts.primaryMediumBold(Strings.wallpaperDisableTitle),
+      content: Texts.primaryRegularMedium(
+        Strings.wallpaperDisableMessage,
+        color: AppColors.contentSoft(context),
+      ),
+      actions: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            PrimaryButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              text: Strings.wallpaperDisableCancel,
+            ),
+            const SizedBox(height: Margins.spacingS),
+            SecondaryButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              text: Strings.wallpaperDisableConfirm,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _WallpaperAutomaticToggle extends StatelessWidget {
+  const _WallpaperAutomaticToggle({
+    required this.enabled,
+    required this.gridType,
+    required this.installing,
+    required this.onChanged,
+  });
+
+  final bool enabled;
+  final WallpaperGridType gridType;
+  final bool installing;
+  final ValueChanged<bool> onChanged;
+
+  String _subtitle() {
+    if (!enabled) return Strings.wallpaperAutomaticUpdatesOff;
+    return gridType == WallpaperGridType.year
+        ? Strings.wallpaperAutomaticUpdatesDaily
+        : Strings.wallpaperAutomaticUpdatesWeekly;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: Margins.spacingBase,
+        vertical: Margins.spacingBase,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.bgSoft(context),
+        borderRadius: BorderRadius.circular(Dimens.radiusBase),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Texts.primaryMediumBold(Strings.wallpaperAutomaticTitle),
+                const SizedBox(height: Margins.spacingXs),
+                Texts.primaryXsMedium(
+                  _subtitle(),
+                  color: AppColors.contentSoft(context),
+                ),
+              ],
+            ),
+          ),
+          CupertinoSwitch(
+            value: enabled,
+            onChanged: installing ? null : onChanged,
+            activeTrackColor: AppColors.greenSuccess(context),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -588,19 +726,27 @@ class _BackgroundImagePreview extends StatelessWidget {
   }
 }
 
-class _InstallViewModel {
-  const _InstallViewModel({required this.installing, required this.installSucceeded});
+class _EditorViewModel {
+  const _EditorViewModel({
+    required this.installing,
+    required this.installSucceeded,
+    required this.enabled,
+  });
 
   final bool installing;
   final bool? installSucceeded;
+  final bool enabled;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is _InstallViewModel && installing == other.installing && installSucceeded == other.installSucceeded;
+      other is _EditorViewModel &&
+          installing == other.installing &&
+          installSucceeded == other.installSucceeded &&
+          enabled == other.enabled;
 
   @override
-  int get hashCode => Object.hash(installing, installSucceeded);
+  int get hashCode => Object.hash(installing, installSucceeded, enabled);
 }
 
 class _PreviewSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
@@ -681,10 +827,12 @@ class _WallpaperAppBarAction extends StatelessWidget {
   const _WallpaperAppBarAction({
     required this.onPressed,
     required this.isLoading,
+    required this.label,
   });
 
   final VoidCallback? onPressed;
   final bool isLoading;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
@@ -692,7 +840,7 @@ class _WallpaperAppBarAction extends StatelessWidget {
       padding: const EdgeInsets.only(right: Margins.spacingS),
       child: PrimaryButton(
         onPressed: isLoading ? null : onPressed,
-        text: Strings.save,
+        text: label,
       ),
     );
   }
