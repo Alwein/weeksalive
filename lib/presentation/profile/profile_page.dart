@@ -19,6 +19,7 @@ import 'package:weeksalive/presentation/profile/pages/edit_profile/edit_profile_
 import 'package:weeksalive/presentation/profile/pages/notifications_settings/notifications_settings_page.dart';
 import 'package:weeksalive/presentation/profile/pages/theme_picker/theme_picker_page.dart';
 import 'package:weeksalive/presentation/profile/pages/week_begin/week_begin_page.dart';
+import 'package:weeksalive/presentation/profile/pages/widgets_page/widgets_page.dart';
 import 'package:weeksalive/presentation/profile/profile_page_view_model.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/weekly_intent/widgets/edit_weekly_intent_bottom_sheet.dart';
@@ -56,6 +57,13 @@ class ProfilePage extends StatelessWidget {
                     children: [
                       const SizedBox(height: Margins.spacingBase),
                       _ProfileCard(viewModel: viewModel),
+                      const SizedBox(height: Margins.spacingM),
+                      Texts.primaryRegularMedium(
+                        Strings.profilePageWidgetsWallpaper,
+                        color: AppColors.contentSoft(context),
+                      ),
+                      const SizedBox(height: Margins.spacingBase),
+                      _WidgetsWallpaperCard(viewModel: viewModel),
                       const SizedBox(height: Margins.spacingM),
                       Texts.primaryRegularMedium(Strings.profilePagePreferences, color: AppColors.contentSoft(context)),
                       const SizedBox(height: Margins.spacingBase),
@@ -288,6 +296,21 @@ class _PreferencesCard extends StatelessWidget {
             onTap: () => ThemePickerPage.show(context),
             icon: MingCuteIcons.mgc_right_line,
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WidgetsWallpaperCard extends StatelessWidget {
+  const _WidgetsWallpaperCard({required this.viewModel});
+  final ProfilePageViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return _ProfileCardContainer(
+      child: Column(
+        children: [
           const SmallDivider(width: double.infinity),
           _PreferencesButton(
             title: Strings.profilePageWallpaper,
@@ -295,13 +318,20 @@ class _PreferencesCard extends StatelessWidget {
             onTap: () => WallpaperEditorPage.show(context),
             icon: MingCuteIcons.mgc_right_line,
           ),
-          const SmallDivider(width: double.infinity),
-          if (Platform.isIOS)
+          if (Platform.isIOS) ...[
+            const SmallDivider(width: double.infinity),
             _PreferencesButton(
               title: Strings.profilePageWallpaperSetupGuide,
               onTap: () => WallpaperSetupPage.show(context),
               icon: MingCuteIcons.mgc_right_line,
             ),
+            const SmallDivider(width: double.infinity),
+            _PreferencesButton(
+              title: Strings.profilePageWidgets,
+              onTap: () => Navigator.push(context, WidgetsPage.route()),
+              icon: MingCuteIcons.mgc_right_line,
+            ),
+          ],
         ],
       ),
     );

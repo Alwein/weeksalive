@@ -386,11 +386,13 @@ class Strings {
   static String get profilePageYearsAhead => "YEARS AHEAD";
   static String get profilePagePreferences => "PREFERENCES";
   static String get profilePageGetInTouch => "GET IN TOUCH";
+  static String get profilePageWidgetsWallpaper => "FEATURES";
   static String get profilePageApplication => "APPLICATION";
   static String get profilePageNotifications => "Notifications";
   static String get profilePageWeeklyIntentions => "Weekly intentions";
   static String get profilePageTheme => "Theme";
   static String get profilePageWallpaper => "Wallpaper";
+  static String get profilePageWidgets => "Widgets";
   static String get profilePageWallpaperConfigured => "ON";
   static String get profilePageWallpaperNotConfigured => "OFF";
   static String get profilePageWallpaperSetupGuide => "Wallpaper setup guide";
@@ -484,6 +486,7 @@ class Strings {
     if (percent == 0) return 'Center';
     return percent > 0 ? '↓ $percent%' : '↑ ${percent.abs()}%';
   }
+
   static String get wallpaperThemeSectionTitle => "Theme";
   static String get wallpaperBackgroundImageSectionTitle => "Background image";
   static String get wallpaperAddImage => "Add image";
@@ -532,4 +535,8 @@ class Strings {
       "So the automation runs without asking every day.";
   static String get wallpaperSetupPressRunButton => "Tap Run to activate the automation";
   static String get wallpaperSetupYouAreAllSet => "Tap Done to save. You’re all set!";
+
+  // widgets page
+  static String get profilePageWidgetsLifeGrid => "LIFE GRID";
+  static String get profilePageWidgetsYearGrid => "YEAR GRID";
 }
