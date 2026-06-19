@@ -9,6 +9,6 @@ class AppLinks {
   static const String privacy = 'https://TODO:/privacy';
   static const String leaveAReviewUrl = 'https://play.google.com/store/apps/details?id=TODO:';
 
-  static const String featureRequestEmail = "contact@weeksalive.com"; // TODO: verifier sur zoho
-  static const String supportEmail = "support@weeksalive.com"; // TODO: verifier sur zoho
+  static const String featureRequestEmail = "contact@weeksalive.com";
+  static const String supportEmail = "support@weeksalive.com";
 }

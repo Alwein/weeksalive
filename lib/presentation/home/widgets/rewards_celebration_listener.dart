@@ -1,9 +1,11 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:weeksalive/domain/rewards/reward_id.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/rewards/rewards_actions.dart';
+import 'package:weeksalive/presentation/widgets/confetti_wrapper.dart';
 
 /// Listens for newly unlocked rewards and clears the pending celebration flag.
 ///
@@ -20,22 +22,25 @@ class RewardsCelebrationListener extends StatefulWidget {
 class _RewardsCelebrationListenerState extends State<RewardsCelebrationListener> {
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, _RewardsCelebrationGate>(
-      converter: _RewardsCelebrationGate.fromStore,
-      onInitialBuild: _onPendingRewards,
-      onWillChange: (previous, next) {
-        if (next.pendingCelebration.isNotEmpty &&
-            previous?.pendingCelebration != next.pendingCelebration) {
-          _onPendingRewards(next);
-        }
+    return ConfettiWrapper(
+      builder: (context, confettiController) {
+        return StoreConnector<AppState, _RewardsCelebrationGate>(
+          converter: _RewardsCelebrationGate.fromStore,
+          onInitialBuild: (gate) => _onPendingRewards(gate, confettiController),
+          onWillChange: (previous, next) {
+            if (next.pendingCelebration.isNotEmpty && previous?.pendingCelebration != next.pendingCelebration) {
+              _onPendingRewards(next, confettiController);
+            }
+          },
+          builder: (context, _) => widget.child,
+        );
       },
-      builder: (context, _) => widget.child,
     );
   }
 
-  void _onPendingRewards(_RewardsCelebrationGate gate) {
+  void _onPendingRewards(_RewardsCelebrationGate gate, ConfettiController confettiController) {
     if (gate.pendingCelebration.isEmpty) return;
-    // TODO: show milestone celebration sheet when UI is ready.
+    confettiController.play();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       StoreProvider.of<AppState>(context, listen: false).dispatch(
