@@ -1,3 +1,4 @@
+import 'package:weeksalive/core/app_icon/app_icon_id.dart';
 import 'package:weeksalive/core/styles/app_theme_id.dart';
 import 'package:weeksalive/domain/rewards/reward_condition.dart';
 import 'package:weeksalive/domain/rewards/reward_id.dart';
@@ -9,6 +10,10 @@ abstract final class RewardRules {
     RewardRule(id: RewardId.themePivoine, condition: StreakMilestoneCondition(120)),
     RewardRule(id: RewardId.themeTerracotta, condition: StreakMilestoneCondition(210)),
     RewardRule(id: RewardId.themeArdoise, condition: StreakMilestoneCondition(300)),
+    RewardRule(id: RewardId.appIconDraw, condition: StreakMilestoneCondition(14)),
+    RewardRule(id: RewardId.appIconOutline, condition: StreakMilestoneCondition(90)),
+    RewardRule(id: RewardId.appIconSisyphus, condition: StreakMilestoneCondition(180)),
+    RewardRule(id: RewardId.appIconGold, condition: StreakMilestoneCondition(270)),
   ];
 
   static RewardRule? ruleFor(RewardId id) {
@@ -20,6 +25,12 @@ abstract final class RewardRules {
 
   static RewardRule? ruleForTheme(AppThemeId themeId) {
     final rewardId = RewardIdThemeMapping.fromThemeId(themeId);
+    if (rewardId == null) return null;
+    return ruleFor(rewardId);
+  }
+
+  static RewardRule? ruleForAppIcon(AppIconId iconId) {
+    final rewardId = RewardIdAppIconMapping.fromAppIconId(iconId);
     if (rewardId == null) return null;
     return ruleFor(rewardId);
   }

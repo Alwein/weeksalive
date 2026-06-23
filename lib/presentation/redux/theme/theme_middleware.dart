@@ -22,7 +22,7 @@ class ThemeMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(
           AppThemeLoadedAction(
             selectedTheme: selectedTheme,
-            unlockedThemes: AppThemeId.alwaysUnlocked.toSet(),
+            unlockedThemes: store.state.themeState.unlockedThemes,
           ),
         );
       } catch (_) {

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:purchases_flutter/models/customer_info_wrapper.dart';
+import 'package:weeksalive/core/app_icon/app_icon_id.dart';
 import 'package:weeksalive/core/styles/app_theme_id.dart';
+import 'package:weeksalive/data/app_icon/app_icon_repository.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
 import 'package:weeksalive/data/home_widget/home_widget_service.dart';
 import 'package:weeksalive/data/navigation/navigation_repository.dart';
@@ -74,6 +76,14 @@ class MockThemeRepository extends Mock implements ThemeRepository {
     registerFallbackValue(AppThemeId.system);
     when(() => getSelectedTheme()).thenAnswer((_) async => AppThemeId.system);
     when(() => setSelectedTheme(any())).thenAnswer((_) async {});
+  }
+}
+
+class MockAppIconRepository extends Mock implements AppIconRepository {
+  MockAppIconRepository() {
+    registerFallbackValue(AppIconId.composer);
+    when(() => getSelectedIcon()).thenAnswer((_) async => AppIconId.composer);
+    when(() => setSelectedIcon(any())).thenAnswer((_) async {});
   }
 }
 

@@ -26,6 +26,68 @@
 		<string>$(FLUTTER_BUILD_NUMBER)</string>
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
+		<key>CFBundleIcons</key>
+		<dict>
+			<key>CFBundleAlternateIcons</key>
+			<dict>
+				<key>weeksalive_dark</key>
+				<dict>
+					<key>CFBundleIconName</key>
+					<string>weeksalive_dark</string>
+				</dict>
+				<key>weeksalive_draw</key>
+				<dict>
+					<key>CFBundleIconName</key>
+					<string>weeksalive_draw</string>
+				</dict>
+				<key>weeksalive_gold</key>
+				<dict>
+					<key>CFBundleIconName</key>
+					<string>weeksalive_gold</string>
+				</dict>
+				<key>weeksalive_outline</key>
+				<dict>
+					<key>CFBundleIconName</key>
+					<string>weeksalive_outline</string>
+				</dict>
+				<key>weeksalive_sisyphus</key>
+				<dict>
+					<key>CFBundleIconName</key>
+					<string>weeksalive_sisyphus</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>CFBundleIcons~ipad</key>
+		<dict>
+			<key>CFBundleAlternateIcons</key>
+			<dict>
+				<key>weeksalive_dark</key>
+				<dict>
+					<key>CFBundleIconName</key>
+					<string>weeksalive_dark</string>
+				</dict>
+				<key>weeksalive_draw</key>
+				<dict>
+					<key>CFBundleIconName</key>
+					<string>weeksalive_draw</string>
+				</dict>
+				<key>weeksalive_gold</key>
+				<dict>
+					<key>CFBundleIconName</key>
+					<string>weeksalive_gold</string>
+				</dict>
+				<key>weeksalive_outline</key>
+				<dict>
+					<key>CFBundleIconName</key>
+					<string>weeksalive_outline</string>
+				</dict>
+				<key>weeksalive_sisyphus</key>
+				<dict>
+					<key>CFBundleIconName</key>
+					<string>weeksalive_sisyphus</string>
+				</dict>
+			</dict>
+		</dict>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
 		<key>UILaunchStoryboardName</key>

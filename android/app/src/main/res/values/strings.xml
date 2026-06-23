@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">WeeksAlive</string>
     <string name="life_grid_widget_label">Grille de vie</string>
     <string name="life_grid_widget_description">Votre vie en un coup d\'oeil.</string>
     <string name="year_grid_widget_label">Grille année</string>

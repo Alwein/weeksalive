@@ -23,6 +23,17 @@ void main() {
       expect(eligible, isNot(contains(RewardId.themeArdoise)));
     });
 
+    test('unlocks app icon rewards when best streak milestones are met', () {
+      final eligible = service.evaluateEligible(bestStreak: 180, totalDaysLogged: 5);
+
+      expect(eligible, containsAll([
+        RewardId.appIconDraw,
+        RewardId.appIconOutline,
+        RewardId.appIconSisyphus,
+      ]));
+      expect(eligible, isNot(contains(RewardId.appIconGold)));
+    });
+
     test('mergeUnlocked keeps previously stored rewards', () {
       final merged = service.mergeUnlocked(
         {RewardId.themeMatcha},

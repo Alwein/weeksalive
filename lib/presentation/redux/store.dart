@@ -2,6 +2,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:redux/redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weeksalive/data/app_icon/app_icon_repository.dart';
 import 'package:weeksalive/data/crashlytics/crashlytics_repository.dart';
 import 'package:weeksalive/data/day/app_database.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
@@ -30,6 +31,7 @@ Future<Store<AppState>> initializeReduxStore(
     remoteConfigRepository: RemoteConfigRepository(crashlyticsRepository: crashlyticsRepository),
     userRepository: UserRepository(preferences: sharedPreferences),
     themeRepository: ThemeRepository(preferences: sharedPreferences),
+    appIconRepository: AppIconRepository(preferences: sharedPreferences),
     navigationRepository: NavigationRepository(preferences: sharedPreferences),
     pushNotificationRepository: pushNotificationRepository ?? PushNotificationRepository(preferences: sharedPreferences),
     purchaseRepository: PurchaseRepository(dotenv: dotenv),

@@ -1,4 +1,5 @@
 import 'package:redux/redux.dart';
+import 'package:weeksalive/data/app_icon/app_icon_repository.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
 import 'package:weeksalive/data/home_widget/home_widget_service.dart';
 import 'package:weeksalive/data/navigation/navigation_repository.dart';
@@ -14,6 +15,7 @@ import 'package:weeksalive/data/weekly_summary/weekly_summary_repository.dart';
 import 'package:weeksalive/domain/rewards/reward_unlock_service.dart';
 import 'package:weeksalive/presentation/redux/app_reducer.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/app_icon/app_icon_middleware.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_middleware.dart';
 import 'package:weeksalive/presentation/redux/day/day_middleware.dart';
 import 'package:weeksalive/presentation/redux/home_widget/home_widget_middleware.dart';
@@ -31,6 +33,7 @@ class StoreFactory {
   final RemoteConfigRepository remoteConfigRepository;
   final UserRepository userRepository;
   final ThemeRepository themeRepository;
+  final AppIconRepository appIconRepository;
   final NavigationRepository navigationRepository;
   final PushNotificationRepository pushNotificationRepository;
   final PurchaseRepository purchaseRepository;
@@ -46,6 +49,7 @@ class StoreFactory {
     required this.remoteConfigRepository,
     required this.userRepository,
     required this.themeRepository,
+    required this.appIconRepository,
     required this.navigationRepository,
     required this.pushNotificationRepository,
     required this.purchaseRepository,
@@ -78,6 +82,7 @@ class StoreFactory {
           rewardsRepository: rewardsRepository,
           rewardUnlockService: rewardUnlockService,
         ).call,
+        AppIconMiddleware(appIconRepository: appIconRepository).call,
         ThemeMiddleware(themeRepository: themeRepository).call,
       ],
     );

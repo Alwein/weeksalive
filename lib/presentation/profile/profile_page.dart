@@ -15,6 +15,7 @@ import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/mail_handler.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_page.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
+import 'package:weeksalive/presentation/profile/pages/app_icon_picker/app_icon_picker_page.dart';
 import 'package:weeksalive/presentation/profile/pages/edit_profile/edit_profile_form.dart';
 import 'package:weeksalive/presentation/profile/pages/notifications_settings/notifications_settings_page.dart';
 import 'package:weeksalive/presentation/profile/pages/theme_picker/theme_picker_page.dart';
@@ -322,13 +323,24 @@ class _WidgetsWallpaperCard extends StatelessWidget {
             const SmallDivider(width: double.infinity),
             _PreferencesButton(
               title: Strings.profilePageWallpaperSetupGuide,
+              value: Strings.profilePageWallpaperSetupGuideDescription,
               onTap: () => WallpaperSetupPage.show(context),
               icon: MingCuteIcons.mgc_right_line,
             ),
             const SmallDivider(width: double.infinity),
             _PreferencesButton(
               title: Strings.profilePageWidgets,
+              value: Strings.profilePageWidgetsDescription,
               onTap: () => Navigator.push(context, WidgetsPage.route()),
+              icon: MingCuteIcons.mgc_right_line,
+            ),
+          ],
+          if (Platform.isIOS || Platform.isAndroid) ...[
+            const SmallDivider(width: double.infinity),
+            _PreferencesButton(
+              title: Strings.profilePageAppIcon,
+              value: viewModel.appIcon,
+              onTap: () => AppIconPickerPage.show(context),
               icon: MingCuteIcons.mgc_right_line,
             ),
           ],

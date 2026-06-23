@@ -12,6 +12,18 @@ subprojects {
 subprojects {
     project.evaluationDependsOn(":app")
 }
+subprojects { subproject ->
+    subproject.plugins.withId("com.android.library") {
+        subproject.android {
+            if (namespace == null) {
+                def manifestFile = subproject.file("src/main/AndroidManifest.xml")
+                if (manifestFile.exists()) {
+                    namespace = new groovy.xml.XmlParser().parse(manifestFile).attribute("package")
+                }
+            }
+        }
+    }
+}
 
 tasks.register("clean", Delete) {
     delete rootProject.buildDir

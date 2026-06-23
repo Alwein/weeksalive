@@ -8,5 +8,6 @@ class MainActivity : FlutterActivity() {
         super.configureFlutterEngine(flutterEngine)
         MainActivityHolder.init(this)
         WallpaperPlugin.register(flutterEngine)
+        AppIconPlugin.register(flutterEngine)
     }
 }
