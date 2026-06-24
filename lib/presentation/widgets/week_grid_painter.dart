@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:weeksalive/core/grid_motif/grid_cell_variant.dart';
+import 'package:weeksalive/core/grid_motif/grid_motif_id.dart';
+import 'package:weeksalive/core/grid_motif/grid_motif_renderer.dart';
 
 class WeekGridPainter extends CustomPainter {
   const WeekGridPainter({
@@ -9,6 +12,7 @@ class WeekGridPainter extends CustomPainter {
     required this.activeColor,
     required this.inactiveColor,
     required this.padding,
+    this.motif = GridMotifId.dots,
     this.revealProgress = 1.0,
     this.highlightedDots = const [],
     this.highlightColor,
@@ -22,16 +26,10 @@ class WeekGridPainter extends CustomPainter {
   final Color activeColor;
   final Color inactiveColor;
   final EdgeInsets padding;
+  final GridMotifId motif;
   final double revealProgress;
-
-  /// Indices (within the full grid) of dots to highlight.
   final List<int> highlightedDots;
-
-  /// Color used for highlighted dots.
   final Color? highlightColor;
-
-  /// Progress from 0.0 to 1.0 controlling how many highlighted dots are visible.
-  /// At 0.0 none are shown; at 1.0 all are shown, appearing one by one.
   final double highlightRevealProgress;
 
   static double computeHeight({
@@ -50,37 +48,28 @@ class WeekGridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final dotSize = (size.width - padding.left - padding.right - dotSpacing * (columns - 1)) / columns;
-    final maxRadius = dotSize / 2;
 
-    // revealProgress goes from 0 to 1 over totalWeeks dots.
-    // revealed is the continuous count of dots that should be visible.
     final revealed = revealProgress * totalWeeks;
     final fullyRevealedCount = revealed.floor();
-    // fractional part drives the scale of the currently-appearing dot
     final currentDotScale = revealed - fullyRevealedCount;
-
-    final activePaint = Paint()..color = activeColor;
-    final inactivePaint = Paint()..color = inactiveColor;
 
     for (var i = 0; i < totalWeeks; i++) {
       if (i > fullyRevealedCount) break;
 
-      final col = i % columns;
-      final row = i ~/ columns;
-      final x = padding.left + col * (dotSize + dotSpacing) + maxRadius;
-      final y = padding.top + row * (dotSize + dotSpacing) + maxRadius;
-      final paint = i < livedWeeks ? activePaint : inactivePaint;
+      final isLived = i < livedWeeks;
+      final color = isLived ? activeColor : inactiveColor;
+      final scale = i < fullyRevealedCount ? 1.0 : currentDotScale;
 
-      if (i < fullyRevealedCount) {
-        canvas.drawCircle(Offset(x, y), maxRadius, paint);
-      } else {
-        // This is the dot currently appearing — scale its radius from 0 to full
-        final radius = maxRadius * currentDotScale;
-        if (radius > 0) canvas.drawCircle(Offset(x, y), radius, paint);
-      }
+      _drawCell(
+        canvas: canvas,
+        index: i,
+        dotSize: dotSize,
+        color: color,
+        scale: scale,
+        isLived: isLived,
+      );
     }
 
-    // Draw highlighted dots on top, appearing one by one.
     if (highlightedDots.isNotEmpty && highlightColor != null) {
       final totalHighlighted = highlightedDots.length;
       final continuousVisible = highlightRevealProgress * totalHighlighted;
@@ -90,32 +79,51 @@ class WeekGridPainter extends CustomPainter {
       for (var hi = 0; hi < totalHighlighted; hi++) {
         if (hi >= fullyVisible + 1) break;
         final dotIndex = highlightedDots[hi];
-        if (dotIndex >= totalWeeks) continue;
+        if (dotIndex >= totalWeeks || dotIndex >= fullyRevealedCount) continue;
 
-        // Skip dots that haven't been revealed by revealProgress yet.
-        if (dotIndex >= fullyRevealedCount) continue;
+        final scale = hi < fullyVisible ? 1.0 : partialScale;
+        if (scale <= 0) continue;
 
-        final col = dotIndex % columns;
-        final row = dotIndex ~/ columns;
-        final x = padding.left + col * (dotSize + dotSpacing) + maxRadius;
-        final y = padding.top + row * (dotSize + dotSpacing) + maxRadius;
-
-        final double radius;
-        if (hi < fullyVisible) {
-          radius = maxRadius;
-        } else {
-          radius = maxRadius * partialScale;
-        }
-
-        if (radius > 0) {
-          canvas.drawCircle(
-            Offset(x, y),
-            radius,
-            Paint()..color = highlightColor!,
-          );
-        }
+        _drawCell(
+          canvas: canvas,
+          index: dotIndex,
+          dotSize: dotSize,
+          color: highlightColor!,
+          scale: scale,
+          isLived: dotIndex < livedWeeks,
+        );
       }
     }
+  }
+
+  void _drawCell({
+    required Canvas canvas,
+    required int index,
+    required double dotSize,
+    required Color color,
+    required double scale,
+    required bool isLived,
+  }) {
+    if (scale <= 0) return;
+
+    final rect = GridMotifRenderer.cellRect(
+      padding: padding,
+      columns: columns,
+      dotSpacing: dotSpacing,
+      dotSize: dotSize,
+      index: index,
+    );
+
+    GridMotifRenderer.draw(
+      canvas: canvas,
+      motifId: motif,
+      variant: gridCellVariantForLifeWeek(isLived: isLived),
+      cellIndex: index,
+      rect: rect,
+      color: color,
+      scale: scale,
+      isStroke: false,
+    );
   }
 
   @override
@@ -126,5 +134,6 @@ class WeekGridPainter extends CustomPainter {
       old.activeColor != activeColor ||
       old.inactiveColor != inactiveColor ||
       old.highlightColor != highlightColor ||
-      old.highlightedDots != highlightedDots;
+      old.highlightedDots != highlightedDots ||
+      old.motif != motif;
 }

@@ -1,6 +1,7 @@
 import 'package:redux/redux.dart';
 import 'package:weeksalive/data/app_icon/app_icon_repository.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
+import 'package:weeksalive/data/grid_motif/grid_motif_repository.dart';
 import 'package:weeksalive/data/home_widget/home_widget_service.dart';
 import 'package:weeksalive/data/navigation/navigation_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
@@ -25,6 +26,7 @@ class TestStoreFactory {
   PurchaseRepository purchaseRepository = MockPurchaseRepository();
   ThemeRepository themeRepository = MockThemeRepository();
   AppIconRepository appIconRepository = MockAppIconRepository();
+  GridMotifRepository gridMotifRepository = MockGridMotifRepository();
   RewardsRepository rewardsRepository = MockRewardsRepository();
   NavigationRepository navigationRepository = MockNavigationRepository();
 
@@ -45,6 +47,7 @@ class TestStoreFactory {
       purchaseRepository: purchaseRepository,
       themeRepository: themeRepository,
       appIconRepository: appIconRepository,
+      gridMotifRepository: gridMotifRepository,
       rewardsRepository: rewardsRepository,
       weeklyIntentRepository: weeklyIntentRepository,
       weeklySummaryRepository: weeklySummaryRepository,

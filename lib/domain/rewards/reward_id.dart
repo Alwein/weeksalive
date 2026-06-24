@@ -1,5 +1,7 @@
 import 'package:weeksalive/core/app_icon/app_icon_id.dart';
+import 'package:weeksalive/core/grid_motif/grid_motif_id.dart';
 import 'package:weeksalive/core/styles/app_theme_id.dart';
+import 'package:weeksalive/domain/rewards/reward_id.dart';
 
 enum RewardId {
   themeMatcha,
@@ -10,7 +12,10 @@ enum RewardId {
   appIconOutline,
   appIconSisyphus,
   appIconGold,
-  gridPatternDots;
+  gridMotifFlowers,
+  gridMotifDraw,
+  gridMotifTreeSprout,
+  gridMotifMoons;
 
   String get storageKey => name;
 
@@ -58,6 +63,24 @@ extension RewardIdAppIconMapping on RewardId {
   };
 }
 
+extension RewardIdGridMotifMapping on RewardId {
+  GridMotifId? get asGridMotifId => switch (this) {
+    RewardId.gridMotifFlowers => GridMotifId.flowers,
+    RewardId.gridMotifDraw => GridMotifId.draw,
+    RewardId.gridMotifTreeSprout => GridMotifId.treeSprout,
+    RewardId.gridMotifMoons => GridMotifId.moons,
+    _ => null,
+  };
+
+  static RewardId? fromGridMotifId(GridMotifId motifId) => switch (motifId) {
+    GridMotifId.flowers => RewardId.gridMotifFlowers,
+    GridMotifId.draw => RewardId.gridMotifDraw,
+    GridMotifId.treeSprout => RewardId.gridMotifTreeSprout,
+    GridMotifId.moons => RewardId.gridMotifMoons,
+    _ => null,
+  };
+}
+
 Set<AppThemeId> rewardIdsToThemeIds(Set<RewardId> rewards) {
   return rewards.map((id) => id.asThemeId).whereType<AppThemeId>().toSet();
 }
@@ -72,4 +95,12 @@ Set<AppIconId> rewardIdsToAppIconIds(Set<RewardId> rewards) {
 
 Set<RewardId> appIconIdsToRewardIds(Set<AppIconId> icons) {
   return icons.map(RewardIdAppIconMapping.fromAppIconId).whereType<RewardId>().toSet();
+}
+
+Set<GridMotifId> rewardIdsToGridMotifIds(Set<RewardId> rewards) {
+  return rewards.map((id) => id.asGridMotifId).whereType<GridMotifId>().toSet();
+}
+
+Set<RewardId> gridMotifIdsToRewardIds(Set<GridMotifId> motifs) {
+  return motifs.map(RewardIdGridMotifMapping.fromGridMotifId).whereType<RewardId>().toSet();
 }

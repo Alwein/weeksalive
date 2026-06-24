@@ -6,6 +6,7 @@ import 'package:weeksalive/data/app_icon/app_icon_repository.dart';
 import 'package:weeksalive/data/crashlytics/crashlytics_repository.dart';
 import 'package:weeksalive/data/day/app_database.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
+import 'package:weeksalive/data/grid_motif/grid_motif_repository.dart';
 import 'package:weeksalive/data/navigation/navigation_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
@@ -32,6 +33,7 @@ Future<Store<AppState>> initializeReduxStore(
     userRepository: UserRepository(preferences: sharedPreferences),
     themeRepository: ThemeRepository(preferences: sharedPreferences),
     appIconRepository: AppIconRepository(preferences: sharedPreferences),
+    gridMotifRepository: GridMotifRepository(preferences: sharedPreferences),
     navigationRepository: NavigationRepository(preferences: sharedPreferences),
     pushNotificationRepository: pushNotificationRepository ?? PushNotificationRepository(preferences: sharedPreferences),
     purchaseRepository: PurchaseRepository(dotenv: dotenv),

@@ -34,6 +34,17 @@ void main() {
       expect(eligible, isNot(contains(RewardId.appIconGold)));
     });
 
+    test('unlocks grid motif rewards when best streak milestones are met', () {
+      final eligible = service.evaluateEligible(bestStreak: 240, totalDaysLogged: 5);
+
+      expect(eligible, containsAll([
+        RewardId.gridMotifFlowers,
+        RewardId.gridMotifDraw,
+        RewardId.gridMotifTreeSprout,
+        RewardId.gridMotifMoons,
+      ]));
+    });
+
     test('mergeUnlocked keeps previously stored rewards', () {
       final merged = service.mergeUnlocked(
         {RewardId.themeMatcha},

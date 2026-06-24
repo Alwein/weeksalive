@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:weeksalive/core/grid_motif/grid_cell_variant.dart';
+import 'package:weeksalive/core/grid_motif/grid_motif_id.dart';
+import 'package:weeksalive/core/grid_motif/grid_motif_renderer.dart';
 
-/// Grid of circular dots for a Gregorian year (journal / illustration).
+/// Grid of cells for a Gregorian year (journal / illustration).
 class YearGridPainter extends CustomPainter {
   const YearGridPainter({
     required this.columns,
     required this.totalDays,
     required this.dotSpacing,
     required this.emptyStrokeColor,
+    this.motif = GridMotifId.dots,
     this.fillColor = Colors.black,
     this.pastEmptyColor,
     this.todayEmptyColor,
@@ -20,41 +24,23 @@ class YearGridPainter extends CustomPainter {
     this.appearProgress = 1.0,
   });
 
-  static const _emptyStrokeWidth = 1.0;
-
-  /// Minimum dot diameter (pixels) for size level 0.
   static const _minDotDiameter = 4.0;
 
   final int columns;
   final int totalDays;
   final double dotSpacing;
   final Color emptyStrokeColor;
-
-  /// Uniform color used for all filled dots.
+  final GridMotifId motif;
   final Color fillColor;
-
-  /// Color used to fill past days that have no journal entry.
-  /// When null, those dots are drawn as empty circles.
   final Color? pastEmptyColor;
-
-  /// Color used to fill today's dot when there is no journal entry yet.
-  /// When null, today without entry is drawn as an empty circle.
   final Color? todayEmptyColor;
   final EdgeInsets padding;
-
-  /// When > 0, draws filled circles with optional [revealProgress] animation (onboarding).
   final int filledCount;
   final int highlightGridIndex;
-
-  /// Per-dot size level in [0, 4]. 0 → 2 px diameter, 4 → full cell diameter.
   final List<int> fillSizes;
   final Color? highlightColor;
   final double revealProgress;
-
-  /// Index of a single dot that should scale in (from 0) on save. -1 disables.
   final int appearIndex;
-
-  /// Scale-in progress in [0, 1] applied to the [appearIndex] dot.
   final double appearProgress;
 
   static double computeHeight({
@@ -70,8 +56,6 @@ class YearGridPainter extends CustomPainter {
     return padding.top + padding.bottom + rows * dotSize + (rows - 1) * dotSpacing;
   }
 
-  /// Returns the day index ([0, totalDays - 1]) whose cell contains [localPosition]
-  /// for a grid painted at [size], or -1 when the position is outside any cell.
   static int dayIndexAtPosition({
     required Offset localPosition,
     required Size size,
@@ -98,7 +82,6 @@ class YearGridPainter extends CustomPainter {
     return index;
   }
 
-  /// Maps a size level [0, 4] to a radius given the maximum cell radius.
   double _sizeRadius(int level, double maxRadius) {
     const minRadius = _minDotDiameter / 2;
     if (level <= 0) return minRadius;
@@ -106,84 +89,163 @@ class YearGridPainter extends CustomPainter {
     return minRadius + (maxRadius - minRadius) * (level / 4);
   }
 
+  ({double scale, Color color, bool isStroke}) _appearanceForFillSize({
+    required int fillSize,
+    required Color fillOrHighlightColor,
+    required double maxRadius,
+  }) {
+    return switch (fillSize) {
+      -1 => (scale: 1.0, color: emptyStrokeColor, isStroke: true),
+      -2 => (
+        scale: 1.0,
+        color: pastEmptyColor ?? emptyStrokeColor,
+        isStroke: pastEmptyColor == null,
+      ),
+      -3 => (
+        scale: 1.0,
+        color: todayEmptyColor ?? emptyStrokeColor,
+        isStroke: todayEmptyColor == null,
+      ),
+      _ => (
+        scale: _sizeRadius(fillSize.clamp(0, 4), maxRadius) / maxRadius,
+        color: fillOrHighlightColor,
+        isStroke: false,
+      ),
+    };
+  }
+
   @override
   void paint(Canvas canvas, Size size) {
     final paintWidth = size.width - padding.left - padding.right;
     final dotSize = (paintWidth - dotSpacing * (columns - 1)) / columns;
     final maxRadius = dotSize / 2;
-    final emptyStroke = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = _emptyStrokeWidth
-      ..color = emptyStrokeColor;
-
-    final emptyStrokeRadius = maxRadius - _emptyStrokeWidth / 2;
 
     final continuousRevealed = revealProgress * filledCount;
     final animationComplete = revealProgress >= 1.0;
 
     for (var i = 0; i < totalDays; i++) {
-      final col = i % columns;
-      final row = i ~/ columns;
-      final cx = padding.left + col * (dotSize + dotSpacing) + maxRadius;
-      final cy = padding.top + row * (dotSize + dotSpacing) + maxRadius;
-      final center = Offset(cx, cy);
+      final rect = GridMotifRenderer.cellRect(
+        padding: padding,
+        columns: columns,
+        dotSpacing: dotSpacing,
+        dotSize: dotSize,
+        index: i,
+      );
 
       if (i >= filledCount) {
-        canvas.drawCircle(center, emptyStrokeRadius, emptyStroke);
+        _drawCell(
+          canvas: canvas,
+          index: i,
+          rect: rect,
+          fillSize: -1,
+          color: emptyStrokeColor,
+          scale: 1.0,
+          isStroke: true,
+        );
         continue;
       }
 
       final rawLevel = (i < fillSizes.length) ? fillSizes[i] : 4;
-      if (rawLevel == -1) {
-        canvas.drawCircle(center, emptyStrokeRadius, emptyStroke);
-        continue;
-      }
-      if (rawLevel == -2) {
-        if (pastEmptyColor != null) {
-          canvas.drawCircle(center, maxRadius, Paint()..color = pastEmptyColor!);
-        } else {
-          canvas.drawCircle(center, emptyStrokeRadius, emptyStroke);
-        }
-        continue;
-      }
-      if (rawLevel == -3) {
-        if (todayEmptyColor != null) {
-          canvas.drawCircle(center, maxRadius, Paint()..color = todayEmptyColor!);
-        } else {
-          canvas.drawCircle(center, emptyStrokeRadius, emptyStroke);
-        }
-        continue;
-      }
-
-      final isHighlight = animationComplete && i == highlightGridIndex && highlightColor != null;
-      final color = isHighlight ? highlightColor! : fillColor;
-      final level = rawLevel.clamp(0, 4);
-      var targetRadius = _sizeRadius(level, maxRadius);
 
       if (i == appearIndex) {
-        // Scale this single dot in on save: empty circle at 0, full size at 1.
         if (appearProgress <= 0.0) {
-          canvas.drawCircle(center, emptyStrokeRadius, emptyStroke);
+          _drawCell(
+            canvas: canvas,
+            index: i,
+            rect: rect,
+            fillSize: -1,
+            color: emptyStrokeColor,
+            scale: 1.0,
+            isStroke: true,
+          );
           continue;
         }
-        targetRadius *= appearProgress.clamp(0.0, 1.0);
-        canvas.drawCircle(center, targetRadius, Paint()..color = color);
+        final isHighlight = animationComplete && i == highlightGridIndex && highlightColor != null;
+        final appearance = _appearanceForFillSize(
+          fillSize: rawLevel,
+          fillOrHighlightColor: isHighlight ? highlightColor! : fillColor,
+          maxRadius: maxRadius,
+        );
+        _drawCell(
+          canvas: canvas,
+          index: i,
+          rect: rect,
+          fillSize: rawLevel,
+          color: appearance.color,
+          scale: appearance.scale * appearProgress.clamp(0.0, 1.0),
+          isStroke: appearance.isStroke,
+        );
         continue;
       }
 
       final revealThreshold = i + 1;
       if (continuousRevealed >= revealThreshold) {
-        canvas.drawCircle(center, targetRadius, Paint()..color = color);
+        final isHighlight = animationComplete && i == highlightGridIndex && highlightColor != null;
+        final appearance = _appearanceForFillSize(
+          fillSize: rawLevel,
+          fillOrHighlightColor: isHighlight ? highlightColor! : fillColor,
+          maxRadius: maxRadius,
+        );
+        _drawCell(
+          canvas: canvas,
+          index: i,
+          rect: rect,
+          fillSize: rawLevel,
+          color: appearance.color,
+          scale: appearance.scale,
+          isStroke: appearance.isStroke,
+        );
       } else if (continuousRevealed > i) {
-        final scale = continuousRevealed - i;
-        final radius = targetRadius * scale.clamp(0.0, 1.0);
-        if (radius > 0) {
-          canvas.drawCircle(center, radius, Paint()..color = color);
-        }
+        final revealScale = (continuousRevealed - i).clamp(0.0, 1.0);
+        final appearance = _appearanceForFillSize(
+          fillSize: rawLevel,
+          fillOrHighlightColor: fillColor,
+          maxRadius: maxRadius,
+        );
+        _drawCell(
+          canvas: canvas,
+          index: i,
+          rect: rect,
+          fillSize: rawLevel,
+          color: appearance.color,
+          scale: appearance.scale * revealScale,
+          isStroke: appearance.isStroke,
+        );
       } else {
-        canvas.drawCircle(center, emptyStrokeRadius, emptyStroke);
+        _drawCell(
+          canvas: canvas,
+          index: i,
+          rect: rect,
+          fillSize: -1,
+          color: emptyStrokeColor,
+          scale: 1.0,
+          isStroke: true,
+        );
       }
     }
+  }
+
+  void _drawCell({
+    required Canvas canvas,
+    required int index,
+    required Rect rect,
+    required int fillSize,
+    required Color color,
+    required double scale,
+    required bool isStroke,
+  }) {
+    if (scale <= 0) return;
+
+    GridMotifRenderer.draw(
+      canvas: canvas,
+      motifId: motif,
+      variant: gridCellVariantForYearFillSize(fillSize),
+      cellIndex: index,
+      rect: rect,
+      color: color,
+      scale: scale,
+      isStroke: isStroke,
+    );
   }
 
   @override
@@ -192,6 +254,7 @@ class YearGridPainter extends CustomPainter {
       old.totalDays != totalDays ||
       old.dotSpacing != dotSpacing ||
       old.emptyStrokeColor != emptyStrokeColor ||
+      old.motif != motif ||
       old.fillColor != fillColor ||
       old.pastEmptyColor != pastEmptyColor ||
       old.todayEmptyColor != todayEmptyColor ||

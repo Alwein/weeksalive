@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_foundation/path_provider_foundation.dart';
+import 'package:weeksalive/core/grid_motif/grid_motif_id.dart';
 import 'package:weeksalive/core/styles/app_color_tokens.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_config.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_grid_data.dart';
@@ -44,6 +45,7 @@ class WallpaperRenderer {
     required WallpaperGridData data,
     required AppColorTokens tokens,
     AppColorTokens? gridTokens,
+    GridMotifId gridMotif = GridMotifId.dots,
     required Size logicalSize,
     required double pixelRatio,
   }) async {
@@ -53,6 +55,7 @@ class WallpaperRenderer {
       data: data,
       tokens: tokens,
       gridTokens: gridTokens,
+      gridMotif: gridMotif,
       logicalSize: logicalSize,
       pixelRatio: pixelRatio,
       documentsDirectoryPath: documentsDir.path,
@@ -66,6 +69,7 @@ class WallpaperRenderer {
     required WallpaperGridData data,
     required AppColorTokens tokens,
     AppColorTokens? gridTokens,
+    required GridMotifId gridMotif,
     required Size logicalSize,
     required double pixelRatio,
     required String documentsDirectoryPath,
@@ -98,6 +102,7 @@ class WallpaperRenderer {
           data: data,
           tokens: tokens,
           gridTokens: gridTokens,
+          gridMotif: gridMotif,
           size: logicalSize,
           documentsDirectoryPath: documentsDirectoryPath,
         ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:weeksalive/core/grid_motif/grid_motif_id.dart';
 import 'package:weeksalive/core/styles/app_color_tokens.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
@@ -160,6 +161,7 @@ class _WallpaperEditorPageState extends State<WallpaperEditorPage> {
         installing: store.state.wallpaperState.installing,
         installSucceeded: store.state.wallpaperState.installSucceeded,
         enabled: store.state.wallpaperState.config.enabled,
+        gridMotif: store.state.gridMotifState.selectedMotif,
       ),
       onWillChange: (previous, current) => previous != current,
       onDidChange: _onEditorStateChanged,
@@ -207,6 +209,7 @@ class _WallpaperEditorPageState extends State<WallpaperEditorPage> {
                     data: data,
                     tokens: wallpaperTokens,
                     gridTokens: wallpaperTokens,
+                    gridMotif: vm.gridMotif,
                     documentsDirectoryPath: _documentsDirectoryPath,
                   ),
                 ),
@@ -731,11 +734,13 @@ class _EditorViewModel {
     required this.installing,
     required this.installSucceeded,
     required this.enabled,
+    required this.gridMotif,
   });
 
   final bool installing;
   final bool? installSucceeded;
   final bool enabled;
+  final GridMotifId gridMotif;
 
   @override
   bool operator ==(Object other) =>
@@ -743,10 +748,11 @@ class _EditorViewModel {
       other is _EditorViewModel &&
           installing == other.installing &&
           installSucceeded == other.installSucceeded &&
-          enabled == other.enabled;
+          enabled == other.enabled &&
+          gridMotif == other.gridMotif;
 
   @override
-  int get hashCode => Object.hash(installing, installSucceeded, enabled);
+  int get hashCode => Object.hash(installing, installSucceeded, enabled, gridMotif);
 }
 
 class _PreviewSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
@@ -757,6 +763,7 @@ class _PreviewSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
     required this.data,
     required this.tokens,
     required this.gridTokens,
+    required this.gridMotif,
     required this.documentsDirectoryPath,
   });
 
@@ -766,6 +773,7 @@ class _PreviewSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
   final WallpaperGridData data;
   final AppColorTokens tokens;
   final AppColorTokens gridTokens;
+  final GridMotifId gridMotif;
   final String? documentsDirectoryPath;
 
   static const _horizontalPadding = Margins.spacingM;
@@ -802,6 +810,7 @@ class _PreviewSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
               data: data,
               tokens: tokens,
               gridTokens: gridTokens,
+              gridMotif: gridMotif,
               maxHeight: previewHeight,
               documentsDirectoryPath: documentsDirectoryPath,
             ),
@@ -819,6 +828,7 @@ class _PreviewSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
         data != oldDelegate.data ||
         tokens != oldDelegate.tokens ||
         gridTokens != oldDelegate.gridTokens ||
+        gridMotif != oldDelegate.gridMotif ||
         documentsDirectoryPath != oldDelegate.documentsDirectoryPath;
   }
 }

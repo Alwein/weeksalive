@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProfilePageViewModel {
 
- String get userName; String get age; String get yearsAhead; String get dateOfBirth; String get lifespan; String get gender; String get notificationsEnabled; String get weekStartDay; String get weeklyIntents; String get theme; String get appIcon; String get wallpaperStatus;
+ String get userName; String get age; String get yearsAhead; String get dateOfBirth; String get lifespan; String get gender; String get notificationsEnabled; String get weekStartDay; String get weeklyIntents; String get theme; String get gridMotif; String get appIcon; String get wallpaperStatus;
 /// Create a copy of ProfilePageViewModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ProfilePageViewModelCopyWith<ProfilePageViewModel> get copyWith => _$ProfilePag
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfilePageViewModel&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.age, age) || other.age == age)&&(identical(other.yearsAhead, yearsAhead) || other.yearsAhead == yearsAhead)&&(identical(other.dateOfBirth, dateOfBirth) || other.dateOfBirth == dateOfBirth)&&(identical(other.lifespan, lifespan) || other.lifespan == lifespan)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.notificationsEnabled, notificationsEnabled) || other.notificationsEnabled == notificationsEnabled)&&(identical(other.weekStartDay, weekStartDay) || other.weekStartDay == weekStartDay)&&(identical(other.weeklyIntents, weeklyIntents) || other.weeklyIntents == weeklyIntents)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.appIcon, appIcon) || other.appIcon == appIcon)&&(identical(other.wallpaperStatus, wallpaperStatus) || other.wallpaperStatus == wallpaperStatus));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfilePageViewModel&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.age, age) || other.age == age)&&(identical(other.yearsAhead, yearsAhead) || other.yearsAhead == yearsAhead)&&(identical(other.dateOfBirth, dateOfBirth) || other.dateOfBirth == dateOfBirth)&&(identical(other.lifespan, lifespan) || other.lifespan == lifespan)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.notificationsEnabled, notificationsEnabled) || other.notificationsEnabled == notificationsEnabled)&&(identical(other.weekStartDay, weekStartDay) || other.weekStartDay == weekStartDay)&&(identical(other.weeklyIntents, weeklyIntents) || other.weeklyIntents == weeklyIntents)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.gridMotif, gridMotif) || other.gridMotif == gridMotif)&&(identical(other.appIcon, appIcon) || other.appIcon == appIcon)&&(identical(other.wallpaperStatus, wallpaperStatus) || other.wallpaperStatus == wallpaperStatus));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userName,age,yearsAhead,dateOfBirth,lifespan,gender,notificationsEnabled,weekStartDay,weeklyIntents,theme,appIcon,wallpaperStatus);
+int get hashCode => Object.hash(runtimeType,userName,age,yearsAhead,dateOfBirth,lifespan,gender,notificationsEnabled,weekStartDay,weeklyIntents,theme,gridMotif,appIcon,wallpaperStatus);
 
 @override
 String toString() {
-  return 'ProfilePageViewModel(userName: $userName, age: $age, yearsAhead: $yearsAhead, dateOfBirth: $dateOfBirth, lifespan: $lifespan, gender: $gender, notificationsEnabled: $notificationsEnabled, weekStartDay: $weekStartDay, weeklyIntents: $weeklyIntents, theme: $theme, appIcon: $appIcon, wallpaperStatus: $wallpaperStatus)';
+  return 'ProfilePageViewModel(userName: $userName, age: $age, yearsAhead: $yearsAhead, dateOfBirth: $dateOfBirth, lifespan: $lifespan, gender: $gender, notificationsEnabled: $notificationsEnabled, weekStartDay: $weekStartDay, weeklyIntents: $weeklyIntents, theme: $theme, gridMotif: $gridMotif, appIcon: $appIcon, wallpaperStatus: $wallpaperStatus)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ProfilePageViewModelCopyWith<$Res>  {
   factory $ProfilePageViewModelCopyWith(ProfilePageViewModel value, $Res Function(ProfilePageViewModel) _then) = _$ProfilePageViewModelCopyWithImpl;
 @useResult
 $Res call({
- String userName, String age, String yearsAhead, String dateOfBirth, String lifespan, String gender, String notificationsEnabled, String weekStartDay, String weeklyIntents, String theme, String appIcon, String wallpaperStatus
+ String userName, String age, String yearsAhead, String dateOfBirth, String lifespan, String gender, String notificationsEnabled, String weekStartDay, String weeklyIntents, String theme, String gridMotif, String appIcon, String wallpaperStatus
 });
 
 
@@ -62,7 +62,7 @@ class _$ProfilePageViewModelCopyWithImpl<$Res>
 
 /// Create a copy of ProfilePageViewModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? userName = null,Object? age = null,Object? yearsAhead = null,Object? dateOfBirth = null,Object? lifespan = null,Object? gender = null,Object? notificationsEnabled = null,Object? weekStartDay = null,Object? weeklyIntents = null,Object? theme = null,Object? appIcon = null,Object? wallpaperStatus = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? userName = null,Object? age = null,Object? yearsAhead = null,Object? dateOfBirth = null,Object? lifespan = null,Object? gender = null,Object? notificationsEnabled = null,Object? weekStartDay = null,Object? weeklyIntents = null,Object? theme = null,Object? gridMotif = null,Object? appIcon = null,Object? wallpaperStatus = null,}) {
   return _then(_self.copyWith(
 userName: null == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
 as String,age: null == age ? _self.age : age // ignore: cast_nullable_to_non_nullable
@@ -74,6 +74,7 @@ as String,notificationsEnabled: null == notificationsEnabled ? _self.notificatio
 as String,weekStartDay: null == weekStartDay ? _self.weekStartDay : weekStartDay // ignore: cast_nullable_to_non_nullable
 as String,weeklyIntents: null == weeklyIntents ? _self.weeklyIntents : weeklyIntents // ignore: cast_nullable_to_non_nullable
 as String,theme: null == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
+as String,gridMotif: null == gridMotif ? _self.gridMotif : gridMotif // ignore: cast_nullable_to_non_nullable
 as String,appIcon: null == appIcon ? _self.appIcon : appIcon // ignore: cast_nullable_to_non_nullable
 as String,wallpaperStatus: null == wallpaperStatus ? _self.wallpaperStatus : wallpaperStatus // ignore: cast_nullable_to_non_nullable
 as String,
@@ -161,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String userName,  String age,  String yearsAhead,  String dateOfBirth,  String lifespan,  String gender,  String notificationsEnabled,  String weekStartDay,  String weeklyIntents,  String theme,  String appIcon,  String wallpaperStatus)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String userName,  String age,  String yearsAhead,  String dateOfBirth,  String lifespan,  String gender,  String notificationsEnabled,  String weekStartDay,  String weeklyIntents,  String theme,  String gridMotif,  String appIcon,  String wallpaperStatus)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProfilePageViewModel() when $default != null:
-return $default(_that.userName,_that.age,_that.yearsAhead,_that.dateOfBirth,_that.lifespan,_that.gender,_that.notificationsEnabled,_that.weekStartDay,_that.weeklyIntents,_that.theme,_that.appIcon,_that.wallpaperStatus);case _:
+return $default(_that.userName,_that.age,_that.yearsAhead,_that.dateOfBirth,_that.lifespan,_that.gender,_that.notificationsEnabled,_that.weekStartDay,_that.weeklyIntents,_that.theme,_that.gridMotif,_that.appIcon,_that.wallpaperStatus);case _:
   return orElse();
 
 }
@@ -182,10 +183,10 @@ return $default(_that.userName,_that.age,_that.yearsAhead,_that.dateOfBirth,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String userName,  String age,  String yearsAhead,  String dateOfBirth,  String lifespan,  String gender,  String notificationsEnabled,  String weekStartDay,  String weeklyIntents,  String theme,  String appIcon,  String wallpaperStatus)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String userName,  String age,  String yearsAhead,  String dateOfBirth,  String lifespan,  String gender,  String notificationsEnabled,  String weekStartDay,  String weeklyIntents,  String theme,  String gridMotif,  String appIcon,  String wallpaperStatus)  $default,) {final _that = this;
 switch (_that) {
 case _ProfilePageViewModel():
-return $default(_that.userName,_that.age,_that.yearsAhead,_that.dateOfBirth,_that.lifespan,_that.gender,_that.notificationsEnabled,_that.weekStartDay,_that.weeklyIntents,_that.theme,_that.appIcon,_that.wallpaperStatus);case _:
+return $default(_that.userName,_that.age,_that.yearsAhead,_that.dateOfBirth,_that.lifespan,_that.gender,_that.notificationsEnabled,_that.weekStartDay,_that.weeklyIntents,_that.theme,_that.gridMotif,_that.appIcon,_that.wallpaperStatus);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +203,10 @@ return $default(_that.userName,_that.age,_that.yearsAhead,_that.dateOfBirth,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String userName,  String age,  String yearsAhead,  String dateOfBirth,  String lifespan,  String gender,  String notificationsEnabled,  String weekStartDay,  String weeklyIntents,  String theme,  String appIcon,  String wallpaperStatus)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String userName,  String age,  String yearsAhead,  String dateOfBirth,  String lifespan,  String gender,  String notificationsEnabled,  String weekStartDay,  String weeklyIntents,  String theme,  String gridMotif,  String appIcon,  String wallpaperStatus)?  $default,) {final _that = this;
 switch (_that) {
 case _ProfilePageViewModel() when $default != null:
-return $default(_that.userName,_that.age,_that.yearsAhead,_that.dateOfBirth,_that.lifespan,_that.gender,_that.notificationsEnabled,_that.weekStartDay,_that.weeklyIntents,_that.theme,_that.appIcon,_that.wallpaperStatus);case _:
+return $default(_that.userName,_that.age,_that.yearsAhead,_that.dateOfBirth,_that.lifespan,_that.gender,_that.notificationsEnabled,_that.weekStartDay,_that.weeklyIntents,_that.theme,_that.gridMotif,_that.appIcon,_that.wallpaperStatus);case _:
   return null;
 
 }
@@ -217,7 +218,7 @@ return $default(_that.userName,_that.age,_that.yearsAhead,_that.dateOfBirth,_tha
 
 
 class _ProfilePageViewModel implements ProfilePageViewModel {
-  const _ProfilePageViewModel({required this.userName, required this.age, required this.yearsAhead, required this.dateOfBirth, required this.lifespan, required this.gender, required this.notificationsEnabled, required this.weekStartDay, required this.weeklyIntents, required this.theme, required this.appIcon, required this.wallpaperStatus});
+  const _ProfilePageViewModel({required this.userName, required this.age, required this.yearsAhead, required this.dateOfBirth, required this.lifespan, required this.gender, required this.notificationsEnabled, required this.weekStartDay, required this.weeklyIntents, required this.theme, required this.gridMotif, required this.appIcon, required this.wallpaperStatus});
   
 
 @override final  String userName;
@@ -230,6 +231,7 @@ class _ProfilePageViewModel implements ProfilePageViewModel {
 @override final  String weekStartDay;
 @override final  String weeklyIntents;
 @override final  String theme;
+@override final  String gridMotif;
 @override final  String appIcon;
 @override final  String wallpaperStatus;
 
@@ -243,16 +245,16 @@ _$ProfilePageViewModelCopyWith<_ProfilePageViewModel> get copyWith => __$Profile
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProfilePageViewModel&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.age, age) || other.age == age)&&(identical(other.yearsAhead, yearsAhead) || other.yearsAhead == yearsAhead)&&(identical(other.dateOfBirth, dateOfBirth) || other.dateOfBirth == dateOfBirth)&&(identical(other.lifespan, lifespan) || other.lifespan == lifespan)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.notificationsEnabled, notificationsEnabled) || other.notificationsEnabled == notificationsEnabled)&&(identical(other.weekStartDay, weekStartDay) || other.weekStartDay == weekStartDay)&&(identical(other.weeklyIntents, weeklyIntents) || other.weeklyIntents == weeklyIntents)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.appIcon, appIcon) || other.appIcon == appIcon)&&(identical(other.wallpaperStatus, wallpaperStatus) || other.wallpaperStatus == wallpaperStatus));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProfilePageViewModel&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.age, age) || other.age == age)&&(identical(other.yearsAhead, yearsAhead) || other.yearsAhead == yearsAhead)&&(identical(other.dateOfBirth, dateOfBirth) || other.dateOfBirth == dateOfBirth)&&(identical(other.lifespan, lifespan) || other.lifespan == lifespan)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.notificationsEnabled, notificationsEnabled) || other.notificationsEnabled == notificationsEnabled)&&(identical(other.weekStartDay, weekStartDay) || other.weekStartDay == weekStartDay)&&(identical(other.weeklyIntents, weeklyIntents) || other.weeklyIntents == weeklyIntents)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.gridMotif, gridMotif) || other.gridMotif == gridMotif)&&(identical(other.appIcon, appIcon) || other.appIcon == appIcon)&&(identical(other.wallpaperStatus, wallpaperStatus) || other.wallpaperStatus == wallpaperStatus));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userName,age,yearsAhead,dateOfBirth,lifespan,gender,notificationsEnabled,weekStartDay,weeklyIntents,theme,appIcon,wallpaperStatus);
+int get hashCode => Object.hash(runtimeType,userName,age,yearsAhead,dateOfBirth,lifespan,gender,notificationsEnabled,weekStartDay,weeklyIntents,theme,gridMotif,appIcon,wallpaperStatus);
 
 @override
 String toString() {
-  return 'ProfilePageViewModel(userName: $userName, age: $age, yearsAhead: $yearsAhead, dateOfBirth: $dateOfBirth, lifespan: $lifespan, gender: $gender, notificationsEnabled: $notificationsEnabled, weekStartDay: $weekStartDay, weeklyIntents: $weeklyIntents, theme: $theme, appIcon: $appIcon, wallpaperStatus: $wallpaperStatus)';
+  return 'ProfilePageViewModel(userName: $userName, age: $age, yearsAhead: $yearsAhead, dateOfBirth: $dateOfBirth, lifespan: $lifespan, gender: $gender, notificationsEnabled: $notificationsEnabled, weekStartDay: $weekStartDay, weeklyIntents: $weeklyIntents, theme: $theme, gridMotif: $gridMotif, appIcon: $appIcon, wallpaperStatus: $wallpaperStatus)';
 }
 
 
@@ -263,7 +265,7 @@ abstract mixin class _$ProfilePageViewModelCopyWith<$Res> implements $ProfilePag
   factory _$ProfilePageViewModelCopyWith(_ProfilePageViewModel value, $Res Function(_ProfilePageViewModel) _then) = __$ProfilePageViewModelCopyWithImpl;
 @override @useResult
 $Res call({
- String userName, String age, String yearsAhead, String dateOfBirth, String lifespan, String gender, String notificationsEnabled, String weekStartDay, String weeklyIntents, String theme, String appIcon, String wallpaperStatus
+ String userName, String age, String yearsAhead, String dateOfBirth, String lifespan, String gender, String notificationsEnabled, String weekStartDay, String weeklyIntents, String theme, String gridMotif, String appIcon, String wallpaperStatus
 });
 
 
@@ -280,7 +282,7 @@ class __$ProfilePageViewModelCopyWithImpl<$Res>
 
 /// Create a copy of ProfilePageViewModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? userName = null,Object? age = null,Object? yearsAhead = null,Object? dateOfBirth = null,Object? lifespan = null,Object? gender = null,Object? notificationsEnabled = null,Object? weekStartDay = null,Object? weeklyIntents = null,Object? theme = null,Object? appIcon = null,Object? wallpaperStatus = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? userName = null,Object? age = null,Object? yearsAhead = null,Object? dateOfBirth = null,Object? lifespan = null,Object? gender = null,Object? notificationsEnabled = null,Object? weekStartDay = null,Object? weeklyIntents = null,Object? theme = null,Object? gridMotif = null,Object? appIcon = null,Object? wallpaperStatus = null,}) {
   return _then(_ProfilePageViewModel(
 userName: null == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
 as String,age: null == age ? _self.age : age // ignore: cast_nullable_to_non_nullable
@@ -292,6 +294,7 @@ as String,notificationsEnabled: null == notificationsEnabled ? _self.notificatio
 as String,weekStartDay: null == weekStartDay ? _self.weekStartDay : weekStartDay // ignore: cast_nullable_to_non_nullable
 as String,weeklyIntents: null == weeklyIntents ? _self.weeklyIntents : weeklyIntents // ignore: cast_nullable_to_non_nullable
 as String,theme: null == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
+as String,gridMotif: null == gridMotif ? _self.gridMotif : gridMotif // ignore: cast_nullable_to_non_nullable
 as String,appIcon: null == appIcon ? _self.appIcon : appIcon // ignore: cast_nullable_to_non_nullable
 as String,wallpaperStatus: null == wallpaperStatus ? _self.wallpaperStatus : wallpaperStatus // ignore: cast_nullable_to_non_nullable
 as String,

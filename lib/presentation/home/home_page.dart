@@ -71,11 +71,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
       vsync: this,
       initialIndex: widget.initialTabIndex,
     );
-    if (widget.initialTabIndex == 1) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _zoomableGridKey.currentState?.jumpToYearView();
-      });
-    }
+    _gridTabController.addListener(_onGridTabChanged);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       StoreProvider.of<AppState>(context, listen: false).dispatch(const CheckWeeklySummaryAction());
@@ -84,30 +80,26 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
+    _gridTabController.removeListener(_onGridTabChanged);
     _gridTabController.dispose();
     super.dispose();
   }
 
-  void _onGridYearModeCommitted(bool yearMode) {
-    final idx = yearMode ? 1 : 0;
-    if (_gridTabController.index != idx) {
-      _gridTabController.index = idx;
-      SensorialFeedback.navigationChanged();
-      _committedGridTabIndex = idx;
-    }
+  void _commitGridTabIndex(int index) {
+    if (index == _committedGridTabIndex) return;
+    SensorialFeedback.navigationChanged();
+    _committedGridTabIndex = index;
+    StoreProvider.of<AppState>(context).dispatch(SetHomeTabIndexAction(index));
+  }
+
+  void _onGridTabChanged() {
+    if (_gridTabController.indexIsChanging) return;
+    _commitGridTabIndex(_gridTabController.index);
   }
 
   void _onGridTabTapped(int index) {
-    if (index != _committedGridTabIndex) {
-      SensorialFeedback.navigationChanged();
-      _committedGridTabIndex = index;
-      StoreProvider.of<AppState>(context).dispatch(SetHomeTabIndexAction(index));
-    }
-    if (index == 0) {
-      _zoomableGridKey.currentState?.animateToWeekView();
-    } else {
-      _zoomableGridKey.currentState?.animateToYearView();
-    }
+    _commitGridTabIndex(index);
+    _gridTabController.animateTo(index);
   }
 
   void _onPastDayTap(DateTime date) {
@@ -129,8 +121,12 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
     await Future<void>.delayed(const Duration(milliseconds: 400));
     _zoomableGridKey.currentState?.prepareDayAppear(result.date);
 
-    _gridTabController.index = 1;
-    _committedGridTabIndex = 1;
+    if (_committedGridTabIndex != 1) {
+      _committedGridTabIndex = 1;
+      if (mounted) {
+        StoreProvider.of<AppState>(context).dispatch(const SetHomeTabIndexAction(1));
+      }
+    }
     await _zoomableGridKey.currentState?.animateToYearView();
     if (!mounted) return;
     await _zoomableGridKey.currentState?.animateDayAppear(result.date, result.sizeLevel);
@@ -161,8 +157,8 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
               child: ZoomableLifeGridView(
                 key: _zoomableGridKey,
                 grid: widget.vm.lifeWeekGrid,
+                tabController: _gridTabController,
                 padding: const EdgeInsets.only(left: Margins.spacingL, right: Margins.spacingL),
-                onYearModeCommitted: _onGridYearModeCommitted,
                 onPastDayTap: (date, entry) => _onPastDayTap(date),
               ),
             ),

@@ -12,6 +12,7 @@ import 'package:weeksalive/domain/wallpaper/wallpaper_grid_tokens.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/day/day_actions.dart';
+import 'package:weeksalive/presentation/redux/grid_motif/grid_motif_actions.dart';
 import 'package:weeksalive/presentation/redux/theme/theme_actions.dart';
 import 'package:weeksalive/presentation/redux/user/user_actions.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
@@ -70,7 +71,8 @@ class WallpaperMiddleware extends MiddlewareClass<AppState> {
         action is DaysLoadedAction ||
         action is UserLoadedAction;
     final themeChanged = action is AppThemeLoadedAction;
-    if ((action is RefreshWallpaperAction || dataChanged || themeChanged) &&
+    final gridMotifChanged = action is GridMotifLoadedAction || action is SetGridMotifAction;
+    if ((action is RefreshWallpaperAction || dataChanged || themeChanged || gridMotifChanged) &&
         store.state.wallpaperState.config.enabled) {
       _enqueueRender(store, install: false);
     }
@@ -123,6 +125,7 @@ class WallpaperMiddleware extends MiddlewareClass<AppState> {
         data: data,
         tokens: wallpaperTokens,
         gridTokens: wallpaperTokens,
+        gridMotif: store.state.gridMotifState.selectedMotif,
         logicalSize: size,
         pixelRatio: pixelRatio,
       );

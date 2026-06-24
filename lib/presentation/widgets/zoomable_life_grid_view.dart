@@ -1,7 +1,8 @@
-import 'dart:ui' show lerpDouble;
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:weeksalive/core/grid_motif/grid_motif_id.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
@@ -12,38 +13,23 @@ import 'package:weeksalive/presentation/redux/day/day_state.dart';
 import 'package:weeksalive/presentation/widgets/life_grid_view.dart';
 import 'package:weeksalive/presentation/widgets/year_grid_painter.dart';
 
-/// Pinch-driven crossfade between the life-in-weeks grid and the current civil year (days).
+/// Swipeable life-in-weeks grid and current civil year (days), synced with a [TabController].
 class ZoomableLifeGridView extends StatefulWidget {
   const ZoomableLifeGridView({
     super.key,
     required this.grid,
+    required this.tabController,
     this.padding = EdgeInsets.zero,
-    this.onYearModeCommitted,
     this.onPastDayTap,
   });
 
   final LifeWeekGrid grid;
+  final TabController tabController;
   final EdgeInsets padding;
-
-  /// Called when a pinch ends with the resolved mode (after snap target is chosen).
-  /// [true] = year (days) view, [false] = life (weeks) view.
-  final ValueChanged<bool>? onYearModeCommitted;
 
   /// Called when a past day cell is tapped in the year view, with its date and
   /// the recorded entry (null when the day has no record).
   final void Function(DateTime date, DayEntry? entry)? onPastDayTap;
-
-  /// Pinch scale delta multiplier (tuned on device).
-  /// Higher = less finger spread needed to cross the full 0→1 range (~scale 1.4 at 2.5).
-  static const pinchSensitivity = 2.5;
-
-  /// Progress at or above snaps to year view on gesture end.
-  static const snapThreshold = 0.5;
-
-  static const snapDuration = Duration(milliseconds: 220);
-
-  /// Layers ignore pointers when mostly faded to avoid blocking the active view.
-  static const pointerFadeEpsilon = 0.03;
 
   static const yearGridColumns = 15;
   static const yearGridDotSpacing = 4.0;
@@ -56,13 +42,6 @@ class ZoomableLifeGridView extends StatefulWidget {
 }
 
 class ZoomableLifeGridViewState extends State<ZoomableLifeGridView> with TickerProviderStateMixin {
-  double _zoomProgress = 0;
-  double _scaleBaseProgress = 0;
-
-  double _snapStart = 0;
-  double _snapEnd = 0;
-
-  late final AnimationController _snapController;
   late final AnimationController _appearController;
 
   int _appearIndex = -1;
@@ -71,8 +50,6 @@ class ZoomableLifeGridViewState extends State<ZoomableLifeGridView> with TickerP
   @override
   void initState() {
     super.initState();
-    _snapController = AnimationController(vsync: this, duration: ZoomableLifeGridView.snapDuration)
-      ..addListener(_onSnapTick);
     _appearController = AnimationController(vsync: this, duration: ZoomableLifeGridView.appearDuration)
       ..addListener(_onAppearTick);
   }
@@ -83,62 +60,37 @@ class ZoomableLifeGridViewState extends State<ZoomableLifeGridView> with TickerP
     });
   }
 
-  void _onSnapTick() {
-    final t = Curves.easeOutCubic.transform(_snapController.value);
-    setState(() {
-      _zoomProgress = _snapStart + (_snapEnd - _snapStart) * t;
-    });
-  }
+  Future<void> animateToWeekView() => _animateToTab(0);
 
-  void _onScaleStart(ScaleStartDetails details) {
-    _snapController.stop();
-    _scaleBaseProgress = _zoomProgress;
-  }
+  Future<void> animateToYearView() => _animateToTab(1);
 
-  void _onScaleUpdate(ScaleUpdateDetails details) {
-    setState(() {
-      _zoomProgress = (_scaleBaseProgress + (details.scale - 1) * ZoomableLifeGridView.pinchSensitivity).clamp(
-        0.0,
-        1.0,
-      );
-    });
-  }
-
-  void _onScaleEnd(ScaleEndDetails details) {
-    final target = _zoomProgress >= ZoomableLifeGridView.snapThreshold ? 1.0 : 0.0;
-    widget.onYearModeCommitted?.call(target == 1.0);
-    _startSnapTo(target);
-  }
-
-  TickerFuture? _startSnapTo(double target) {
-    _snapEnd = target;
-    _snapStart = _zoomProgress;
-    if ((_snapStart - _snapEnd).abs() < 1e-6) return null;
-    return _snapController.forward(from: 0);
-  }
-
-  Future<void> animateToWeekView() async {
-    _snapController.stop();
-    await _startSnapTo(0.0);
-  }
-
-  Future<void> animateToYearView() async {
-    _snapController.stop();
-    final snap = _startSnapTo(1.0);
-    if (snap != null) {
-      await snap;
+  Future<void> _animateToTab(int index) async {
+    if (widget.tabController.index == index && !widget.tabController.indexIsChanging) {
+      await WidgetsBinding.instance.endOfFrame;
       return;
     }
-    // Already in year view: yield a frame so any pending "hidden" state
-    // (progress 0) is painted before a subsequent scale-in animation starts.
-    await WidgetsBinding.instance.endOfFrame;
+    final animation = widget.tabController.animation;
+    if (animation == null) {
+      widget.tabController.animateTo(index);
+      await WidgetsBinding.instance.endOfFrame;
+      return;
+    }
+
+    final completer = Completer<void>();
+    void onStatus(AnimationStatus status) {
+      if (status == AnimationStatus.completed) {
+        animation.removeStatusListener(onStatus);
+        completer.complete();
+      }
+    }
+
+    animation.addStatusListener(onStatus);
+    widget.tabController.animateTo(index);
+    await completer.future;
   }
 
   void jumpToYearView() {
-    _snapController.stop();
-    setState(() {
-      _zoomProgress = 1.0;
-    });
+    widget.tabController.index = 1;
   }
 
   /// Computes the day-of-year index for [date], or -1 if it is not in the
@@ -189,8 +141,6 @@ class ZoomableLifeGridViewState extends State<ZoomableLifeGridView> with TickerP
 
   @override
   void dispose() {
-    _snapController.removeListener(_onSnapTick);
-    _snapController.dispose();
     _appearController.removeListener(_onAppearTick);
     _appearController.dispose();
     super.dispose();
@@ -198,54 +148,26 @@ class ZoomableLifeGridViewState extends State<ZoomableLifeGridView> with TickerP
 
   @override
   Widget build(BuildContext context) {
-    final p = _zoomProgress.clamp(0.0, 1.0);
-    final weekOpacity = (1.0 - p).clamp(0.0, 1.0);
-    final yearOpacity = p.clamp(0.0, 1.0);
-
-    final weekScale = lerpDouble(1.0, 0.96, p)!;
-    final yearScale = lerpDouble(0.96, 1.0, p)!;
-
-    const eps = ZoomableLifeGridView.pointerFadeEpsilon;
-
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onScaleStart: _onScaleStart,
-      onScaleUpdate: _onScaleUpdate,
-      onScaleEnd: _onScaleEnd,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          IgnorePointer(
-            ignoring: p > 1.0 - eps,
-            child: Opacity(
-              opacity: weekOpacity,
-              child: Transform.scale(
-                scale: weekScale,
-                alignment: Alignment.center,
-                child: LifeGridView(grid: widget.grid, padding: widget.padding),
-              ),
-            ),
-          ),
-          IgnorePointer(
-            ignoring: p < eps,
-            child: Opacity(
-              opacity: yearOpacity,
-              child: Transform.scale(
-                scale: yearScale,
-                alignment: Alignment.center,
-                child: _YearDayGridLayer(
-                  padding: widget.padding,
-                  appearIndex: _appearIndex,
-                  appearProgress: _appearProgress,
-                  onPastDayTap: widget.onPastDayTap,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+    return TabBarView(
+      controller: widget.tabController,
+      children: [
+        LifeGridView(grid: widget.grid, padding: widget.padding),
+        _YearDayGridLayer(
+          padding: widget.padding,
+          appearIndex: _appearIndex,
+          appearProgress: _appearProgress,
+          onPastDayTap: widget.onPastDayTap,
+        ),
+      ],
     );
   }
+}
+
+class _YearGridViewModel {
+  const _YearGridViewModel({required this.dayState, required this.motif});
+
+  final DayState dayState;
+  final GridMotifId motif;
 }
 
 class _YearDayGridLayer extends StatelessWidget {
@@ -270,9 +192,13 @@ class _YearDayGridLayer extends StatelessWidget {
     final now = DateTime.now();
     final totalDays = daysInGregorianYear(now.year);
 
-    return StoreConnector<AppState, DayState>(
-      converter: (store) => store.state.dayState,
-      builder: (context, dayState) {
+    return StoreConnector<AppState, _YearGridViewModel>(
+      converter: (store) => _YearGridViewModel(
+        dayState: store.state.dayState,
+        motif: store.state.gridMotifState.selectedMotif,
+      ),
+      builder: (context, viewModel) {
+        final dayState = viewModel.dayState;
         final fillSizes = _fillSizesForYear(dayState, now, totalDays);
 
         return LayoutBuilder(
@@ -305,6 +231,7 @@ class _YearDayGridLayer extends StatelessWidget {
                       totalDays: totalDays,
                       dotSpacing: ZoomableLifeGridView.yearGridDotSpacing,
                       emptyStrokeColor: strokeColor,
+                      motif: viewModel.motif,
                       fillColor: fillColor,
                       pastEmptyColor: pastEmptyColor,
                       todayEmptyColor: AppColors.accentOrange(context),

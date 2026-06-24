@@ -1,4 +1,5 @@
 import 'package:weeksalive/core/app_icon/app_icon_id.dart';
+import 'package:weeksalive/core/grid_motif/grid_motif_id.dart';
 import 'package:weeksalive/core/styles/app_theme_id.dart';
 import 'package:weeksalive/domain/rewards/reward_condition.dart';
 import 'package:weeksalive/domain/rewards/reward_id.dart';
@@ -14,6 +15,14 @@ abstract final class RewardRules {
     RewardRule(id: RewardId.appIconOutline, condition: StreakMilestoneCondition(90)),
     RewardRule(id: RewardId.appIconSisyphus, condition: StreakMilestoneCondition(180)),
     RewardRule(id: RewardId.appIconGold, condition: StreakMilestoneCondition(270)),
+    RewardRule(id: RewardId.gridMotifFlowers, condition: StreakMilestoneCondition(0)),
+    RewardRule(id: RewardId.gridMotifDraw, condition: StreakMilestoneCondition(0)),
+    RewardRule(id: RewardId.gridMotifTreeSprout, condition: StreakMilestoneCondition(0)),
+    RewardRule(id: RewardId.gridMotifMoons, condition: StreakMilestoneCondition(0)),
+    // RewardRule(id: RewardId.gridMotifFlowers, condition: StreakMilestoneCondition(7)),
+    // RewardRule(id: RewardId.gridMotifDraw, condition: StreakMilestoneCondition(60)),
+    // RewardRule(id: RewardId.gridMotifTreeSprout, condition: StreakMilestoneCondition(150)),
+    // RewardRule(id: RewardId.gridMotifMoons, condition: StreakMilestoneCondition(240)),
   ];
 
   static RewardRule? ruleFor(RewardId id) {
@@ -31,6 +40,12 @@ abstract final class RewardRules {
 
   static RewardRule? ruleForAppIcon(AppIconId iconId) {
     final rewardId = RewardIdAppIconMapping.fromAppIconId(iconId);
+    if (rewardId == null) return null;
+    return ruleFor(rewardId);
+  }
+
+  static RewardRule? ruleForGridMotif(GridMotifId motifId) {
+    final rewardId = RewardIdGridMotifMapping.fromGridMotifId(motifId);
     if (rewardId == null) return null;
     return ruleFor(rewardId);
   }

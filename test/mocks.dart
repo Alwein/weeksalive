@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:purchases_flutter/models/customer_info_wrapper.dart';
 import 'package:weeksalive/core/app_icon/app_icon_id.dart';
+import 'package:weeksalive/core/grid_motif/grid_motif_id.dart';
 import 'package:weeksalive/core/styles/app_theme_id.dart';
 import 'package:weeksalive/data/app_icon/app_icon_repository.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
+import 'package:weeksalive/data/grid_motif/grid_motif_repository.dart';
 import 'package:weeksalive/data/home_widget/home_widget_service.dart';
 import 'package:weeksalive/data/navigation/navigation_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
@@ -84,6 +86,14 @@ class MockAppIconRepository extends Mock implements AppIconRepository {
     registerFallbackValue(AppIconId.composer);
     when(() => getSelectedIcon()).thenAnswer((_) async => AppIconId.composer);
     when(() => setSelectedIcon(any())).thenAnswer((_) async {});
+  }
+}
+
+class MockGridMotifRepository extends Mock implements GridMotifRepository {
+  MockGridMotifRepository() {
+    registerFallbackValue(GridMotifId.dots);
+    when(() => getSelectedMotif()).thenAnswer((_) async => GridMotifId.dots);
+    when(() => setSelectedMotif(any())).thenAnswer((_) async {});
   }
 }
 

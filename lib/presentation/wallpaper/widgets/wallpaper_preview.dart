@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:weeksalive/core/grid_motif/grid_motif_id.dart';
 import 'package:weeksalive/core/styles/app_color_tokens.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
@@ -17,6 +18,7 @@ class WallpaperPreview extends StatelessWidget {
     required this.data,
     required this.tokens,
     this.gridTokens,
+    this.gridMotif = GridMotifId.dots,
     this.maxHeight = 420,
     this.documentsDirectoryPath,
   });
@@ -25,6 +27,7 @@ class WallpaperPreview extends StatelessWidget {
   final WallpaperGridData data;
   final AppColorTokens tokens;
   final AppColorTokens? gridTokens;
+  final GridMotifId gridMotif;
   final double maxHeight;
   final String? documentsDirectoryPath;
 
@@ -73,6 +76,7 @@ class WallpaperPreview extends StatelessWidget {
                     data: data,
                     tokens: tokens,
                     gridTokens: gridTokens,
+                    gridMotif: gridMotif,
                     size: const Size(390, 844),
                     documentsDirectoryPath: documentsDirectoryPath,
                   ),

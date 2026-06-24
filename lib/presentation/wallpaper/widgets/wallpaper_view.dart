@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:weeksalive/core/grid_motif/grid_motif_id.dart';
 import 'package:weeksalive/core/styles/app_color_tokens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
@@ -27,23 +28,16 @@ class WallpaperView extends StatelessWidget {
     required this.tokens,
     this.gridTokens,
     required this.size,
+    this.gridMotif = GridMotifId.dots,
     this.documentsDirectoryPath,
   });
 
   final WallpaperConfig config;
   final WallpaperGridData data;
-
-  /// Color tokens for the background layer.
   final AppColorTokens tokens;
-
-  /// Color tokens for the grid. Falls back to [tokens] when null.
   final AppColorTokens? gridTokens;
-
-  /// Logical size (points) of the canvas. The grid is centered within safe
-  /// insets so it stays clear of the clock / home indicator.
   final Size size;
-
-  /// App documents directory used to resolve [WallpaperConfig.backgroundImagePath].
+  final GridMotifId gridMotif;
   final String? documentsDirectoryPath;
 
   static const _lifeColumns = 52;
@@ -303,6 +297,7 @@ class WallpaperView extends StatelessWidget {
       activeColor: _gridColor,
       inactiveColor: _gridTokens.bgSoft,
       padding: EdgeInsets.zero,
+      motif: gridMotif,
     );
   }
 
@@ -312,6 +307,7 @@ class WallpaperView extends StatelessWidget {
       totalDays: data.totalDays,
       dotSpacing: _yearDotSpacing,
       emptyStrokeColor: _gridTokens.strokeColor,
+      motif: gridMotif,
       fillColor: _gridColor,
       pastEmptyColor: _gridTokens.bgSoft,
       todayEmptyColor: _gridTokens.accentOrange,

@@ -397,6 +397,7 @@ class Strings {
   static String get profilePageNotifications => "Notifications";
   static String get profilePageWeeklyIntentions => "Weekly intentions";
   static String get profilePageTheme => "Theme";
+  static String get profilePageGridMotif => "Grid motif";
   static String get profilePageWallpaper => "Wallpaper";
   static String get profilePageWidgets => "Widgets";
   static String get profilePageWidgetsDescription => "4 available";
@@ -407,6 +408,12 @@ class Strings {
   static String get appIconOutline => "Outline";
   static String get appIconSisyphus => "Sisyphus";
   static String get appIconGold => "Gold";
+  static String get gridMotifDots => "Circles";
+  static String get gridMotifSquares => "Squares";
+  static String get gridMotifFlowers => "Flowers";
+  static String get gridMotifDraw => "Draw";
+  static String get gridMotifTreeSprout => "Tree sprout";
+  static String get gridMotifMoons => "Moons";
   static String get profilePageWallpaperConfigured => "ON";
   static String get profilePageWallpaperNotConfigured => "OFF";
   static String get profilePageWallpaperSetupGuide => "Wallpaper setup guide";
