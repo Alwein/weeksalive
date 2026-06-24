@@ -17,8 +17,8 @@ import 'package:weeksalive/presentation/onboarding/onboarding_page.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/profile/pages/app_icon_picker/app_icon_picker_page.dart';
 import 'package:weeksalive/presentation/profile/pages/edit_profile/edit_profile_form.dart';
-import 'package:weeksalive/presentation/profile/pages/notifications_settings/notifications_settings_page.dart';
 import 'package:weeksalive/presentation/profile/pages/grid_motif_picker/grid_motif_picker_page.dart';
+import 'package:weeksalive/presentation/profile/pages/notifications_settings/notifications_settings_page.dart';
 import 'package:weeksalive/presentation/profile/pages/theme_picker/theme_picker_page.dart';
 import 'package:weeksalive/presentation/profile/pages/week_begin/week_begin_page.dart';
 import 'package:weeksalive/presentation/profile/pages/widgets_page/widgets_page.dart';
@@ -66,6 +66,10 @@ class ProfilePage extends StatelessWidget {
                       ),
                       const SizedBox(height: Margins.spacingBase),
                       _WidgetsWallpaperCard(viewModel: viewModel),
+                      const SizedBox(height: Margins.spacingM),
+                      Texts.primaryRegularMedium(Strings.profilePageAppearance, color: AppColors.contentSoft(context)),
+                      const SizedBox(height: Margins.spacingBase),
+                      _AppearanceCard(viewModel: viewModel),
                       const SizedBox(height: Margins.spacingM),
                       Texts.primaryRegularMedium(Strings.profilePagePreferences, color: AppColors.contentSoft(context)),
                       const SizedBox(height: Margins.spacingBase),
@@ -291,11 +295,32 @@ class _PreferencesCard extends StatelessWidget {
             onTap: () => Navigator.push(context, NotificationsSettingsPage.route()),
             icon: MingCuteIcons.mgc_right_line,
           ),
-          const SmallDivider(width: double.infinity),
+        ],
+      ),
+    );
+  }
+}
+
+class _AppearanceCard extends StatelessWidget {
+  const _AppearanceCard({required this.viewModel});
+  final ProfilePageViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return _ProfileCardContainer(
+      child: Column(
+        children: [
           _PreferencesButton(
             title: Strings.profilePageTheme,
             value: viewModel.theme,
             onTap: () => ThemePickerPage.show(context),
+            icon: MingCuteIcons.mgc_right_line,
+          ),
+          const SmallDivider(width: double.infinity),
+          _PreferencesButton(
+            title: Strings.profilePageAppIcon,
+            value: viewModel.appIcon,
+            onTap: () => AppIconPickerPage.show(context),
             icon: MingCuteIcons.mgc_right_line,
           ),
           const SmallDivider(width: double.infinity),
@@ -340,15 +365,6 @@ class _WidgetsWallpaperCard extends StatelessWidget {
               title: Strings.profilePageWidgets,
               value: Strings.profilePageWidgetsDescription,
               onTap: () => Navigator.push(context, WidgetsPage.route()),
-              icon: MingCuteIcons.mgc_right_line,
-            ),
-          ],
-          if (Platform.isIOS || Platform.isAndroid) ...[
-            const SmallDivider(width: double.infinity),
-            _PreferencesButton(
-              title: Strings.profilePageAppIcon,
-              value: viewModel.appIcon,
-              onTap: () => AppIconPickerPage.show(context),
               icon: MingCuteIcons.mgc_right_line,
             ),
           ],

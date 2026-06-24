@@ -391,6 +391,7 @@ class Strings {
   static String profilePageLifespanValue(int lifespan) => "$lifespan years";
   static String get profilePageYearsAhead => "YEARS AHEAD";
   static String get profilePagePreferences => "PREFERENCES";
+  static String get profilePageAppearance => "APPEARANCE";
   static String get profilePageGetInTouch => "GET IN TOUCH";
   static String get profilePageWidgetsWallpaper => "FEATURES";
   static String get profilePageApplication => "APPLICATION";
