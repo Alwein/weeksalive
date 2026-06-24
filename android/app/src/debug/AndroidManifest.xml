@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <application>
         <activity-alias
-            android:name=".AppIconComposer"
+            android:name=".AppIconComposerOutline"
             android:enabled="false"
             tools:replace="android:enabled" />
     </application>

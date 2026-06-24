@@ -4,9 +4,7 @@ import 'package:weeksalive/presentation/redux/app_icon/app_icon_state.dart';
 
 AppIconState appIconReducer(AppIconState state, dynamic action) {
   if (action is AppIconLoadedAction) {
-    final selected = action.unlockedIcons.contains(action.selectedIcon)
-        ? action.selectedIcon
-        : AppIconId.composer;
+    final selected = action.unlockedIcons.contains(action.selectedIcon) ? action.selectedIcon : AppIconId.defaultIcon;
     return state.copyWith(
       selectedIcon: selected,
       unlockedIcons: action.unlockedIcons,
@@ -20,7 +18,7 @@ AppIconState appIconReducer(AppIconState state, dynamic action) {
 
   if (action is AppIconsUnlockedAction) {
     final unlocked = {...action.unlockedIcons, ...AppIconId.alwaysUnlocked};
-    final selected = unlocked.contains(state.selectedIcon) ? state.selectedIcon : AppIconId.composer;
+    final selected = unlocked.contains(state.selectedIcon) ? state.selectedIcon : AppIconId.defaultIcon;
     return state.copyWith(unlockedIcons: unlocked, selectedIcon: selected);
   }
 

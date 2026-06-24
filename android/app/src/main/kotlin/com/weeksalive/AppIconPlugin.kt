@@ -46,15 +46,16 @@ class AppIconPlugin : MethodChannel.MethodCallHandler {
         packageName: String,
     ): String? {
         return when (iconName) {
-            "dark" -> "$PACKAGE_NAME.AppIconDark"
+            "composer_outline" -> "$PACKAGE_NAME.AppIconComposerOutline"
+            "composer_outline_light" -> "$PACKAGE_NAME.AppIconComposerOutlineLight"
             "draw" -> "$PACKAGE_NAME.AppIconDraw"
-            "outline" -> "$PACKAGE_NAME.AppIconOutline"
+            "composer_outline_silver" -> "$PACKAGE_NAME.AppIconComposerOutlineSilver"
             "sisyphus" -> "$PACKAGE_NAME.AppIconSisyphus"
-            "gold" -> "$PACKAGE_NAME.AppIconGold"
+            "composer_outline_gold" -> "$PACKAGE_NAME.AppIconComposerOutlineGold"
             else -> if (usesMainActivityLauncher(packageManager, packageName)) {
                 null
             } else {
-                "$PACKAGE_NAME.AppIconComposer"
+                "$PACKAGE_NAME.AppIconComposerOutline"
             }
         }
     }
@@ -76,12 +77,12 @@ class AppIconPlugin : MethodChannel.MethodCallHandler {
         const val CHANNEL = "com.weeksalive/app_icon"
 
         private val ALIASES = listOf(
-            "$PACKAGE_NAME.AppIconComposer",
-            "$PACKAGE_NAME.AppIconDark",
+            "$PACKAGE_NAME.AppIconComposerOutline",
+            "$PACKAGE_NAME.AppIconComposerOutlineLight",
             "$PACKAGE_NAME.AppIconDraw",
-            "$PACKAGE_NAME.AppIconOutline",
+            "$PACKAGE_NAME.AppIconComposerOutlineSilver",
             "$PACKAGE_NAME.AppIconSisyphus",
-            "$PACKAGE_NAME.AppIconGold",
+            "$PACKAGE_NAME.AppIconComposerOutlineGold",
         )
 
         fun register(flutterEngine: FlutterEngine) {

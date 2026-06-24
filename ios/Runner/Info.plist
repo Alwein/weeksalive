@@ -30,25 +30,25 @@
 		<dict>
 			<key>CFBundleAlternateIcons</key>
 			<dict>
-				<key>weeksalive_dark</key>
+				<key>weeksalive_composer_outline_gold</key>
 				<dict>
 					<key>CFBundleIconName</key>
-					<string>weeksalive_dark</string>
+					<string>weeksalive_composer_outline_gold</string>
+				</dict>
+				<key>weeksalive_composer_outline_light</key>
+				<dict>
+					<key>CFBundleIconName</key>
+					<string>weeksalive_composer_outline_light</string>
+				</dict>
+				<key>weeksalive_composer_outline_silver</key>
+				<dict>
+					<key>CFBundleIconName</key>
+					<string>weeksalive_composer_outline_silver</string>
 				</dict>
 				<key>weeksalive_draw</key>
 				<dict>
 					<key>CFBundleIconName</key>
 					<string>weeksalive_draw</string>
-				</dict>
-				<key>weeksalive_gold</key>
-				<dict>
-					<key>CFBundleIconName</key>
-					<string>weeksalive_gold</string>
-				</dict>
-				<key>weeksalive_outline</key>
-				<dict>
-					<key>CFBundleIconName</key>
-					<string>weeksalive_outline</string>
 				</dict>
 				<key>weeksalive_sisyphus</key>
 				<dict>
@@ -61,25 +61,25 @@
 		<dict>
 			<key>CFBundleAlternateIcons</key>
 			<dict>
-				<key>weeksalive_dark</key>
+				<key>weeksalive_composer_outline_gold</key>
 				<dict>
 					<key>CFBundleIconName</key>
-					<string>weeksalive_dark</string>
+					<string>weeksalive_composer_outline_gold</string>
+				</dict>
+				<key>weeksalive_composer_outline_light</key>
+				<dict>
+					<key>CFBundleIconName</key>
+					<string>weeksalive_composer_outline_light</string>
+				</dict>
+				<key>weeksalive_composer_outline_silver</key>
+				<dict>
+					<key>CFBundleIconName</key>
+					<string>weeksalive_composer_outline_silver</string>
 				</dict>
 				<key>weeksalive_draw</key>
 				<dict>
 					<key>CFBundleIconName</key>
 					<string>weeksalive_draw</string>
-				</dict>
-				<key>weeksalive_gold</key>
-				<dict>
-					<key>CFBundleIconName</key>
-					<string>weeksalive_gold</string>
-				</dict>
-				<key>weeksalive_outline</key>
-				<dict>
-					<key>CFBundleIconName</key>
-					<string>weeksalive_outline</string>
 				</dict>
 				<key>weeksalive_sisyphus</key>
 				<dict>

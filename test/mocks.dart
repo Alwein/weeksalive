@@ -17,12 +17,12 @@ import 'package:weeksalive/data/theme/theme_repository.dart';
 import 'package:weeksalive/data/user/user_repository.dart';
 import 'package:weeksalive/data/wallpaper/wallpaper_config_repository.dart';
 import 'package:weeksalive/data/weekly_intent/weekly_intent_repository.dart';
-import 'package:weeksalive/domain/wallpaper/wallpaper_config.dart';
 import 'package:weeksalive/data/weekly_summary/weekly_summary_repository.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
-import 'package:weeksalive/domain/rewards/reward_id.dart';
 import 'package:weeksalive/domain/notifications/notification_slots.dart';
+import 'package:weeksalive/domain/rewards/reward_id.dart';
 import 'package:weeksalive/domain/user/user.dart';
+import 'package:weeksalive/domain/wallpaper/wallpaper_config.dart';
 import 'package:weeksalive/domain/weekly_intent/weekly_intent.dart';
 
 import 'fixtures/user_fixtures.dart';
@@ -83,8 +83,8 @@ class MockThemeRepository extends Mock implements ThemeRepository {
 
 class MockAppIconRepository extends Mock implements AppIconRepository {
   MockAppIconRepository() {
-    registerFallbackValue(AppIconId.composer);
-    when(() => getSelectedIcon()).thenAnswer((_) async => AppIconId.composer);
+    registerFallbackValue(AppIconId.defaultIcon);
+    when(() => getSelectedIcon()).thenAnswer((_) async => AppIconId.defaultIcon);
     when(() => setSelectedIcon(any())).thenAnswer((_) async {});
   }
 }

@@ -49,7 +49,7 @@ extension RewardIdThemeMapping on RewardId {
 extension RewardIdAppIconMapping on RewardId {
   AppIconId? get asAppIconId => switch (this) {
     RewardId.appIconDraw => AppIconId.draw,
-    RewardId.appIconOutline => AppIconId.outline,
+    RewardId.appIconOutline => AppIconId.silver,
     RewardId.appIconSisyphus => AppIconId.sisyphus,
     RewardId.appIconGold => AppIconId.gold,
     _ => null,
@@ -57,7 +57,7 @@ extension RewardIdAppIconMapping on RewardId {
 
   static RewardId? fromAppIconId(AppIconId iconId) => switch (iconId) {
     AppIconId.draw => RewardId.appIconDraw,
-    AppIconId.outline => RewardId.appIconOutline,
+    AppIconId.silver => RewardId.appIconOutline,
     AppIconId.sisyphus => RewardId.appIconSisyphus,
     AppIconId.gold => RewardId.appIconGold,
     _ => null,

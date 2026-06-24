@@ -9,7 +9,7 @@ abstract final class LocalNotificationConfig {
   static const dailyNotificationIdStart = 0;
   static const weeklyNotificationId = 10;
 
-  static const androidInitializationSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+  static const androidInitializationSettings = AndroidInitializationSettings('@mipmap/ic_launcher_composer_outline');
 
   static const iosInitializationSettings = DarwinInitializationSettings(
     requestAlertPermission: false,

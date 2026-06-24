@@ -10,8 +10,8 @@ class AppIconRepository {
 
   Future<AppIconId> getSelectedIcon() async {
     final value = _preferences.getString(_appIconKey);
-    if (value == null) return AppIconId.composer;
-    return _parseIconId(value) ?? AppIconId.composer;
+    if (value == null) return AppIconId.defaultIcon;
+    return _parseIconId(value) ?? AppIconId.defaultIcon;
   }
 
   Future<void> setSelectedIcon(AppIconId iconId) async {

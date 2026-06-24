@@ -65,11 +65,11 @@ class AppIconMiddleware extends MiddlewareClass<AppState> {
       try {
         store.dispatch(AppIconsUnlockedAction(unlockedIcons));
         if (!unlockedIcons.contains(selected)) {
-          await appIconRepository.setSelectedIcon(AppIconId.composer);
-          await _appIconService.setIcon(AppIconId.composer);
+          await appIconRepository.setSelectedIcon(AppIconId.defaultIcon);
+          await _appIconService.setIcon(AppIconId.defaultIcon);
           store.dispatch(
             AppIconLoadedAction(
-              selectedIcon: AppIconId.composer,
+              selectedIcon: AppIconId.defaultIcon,
               unlockedIcons: unlockedIcons,
             ),
           );

@@ -5,9 +5,9 @@ class AppIconState {
   final Set<AppIconId> unlockedIcons;
 
   const AppIconState({
-    this.selectedIcon = AppIconId.composer,
+    this.selectedIcon = AppIconId.defaultIcon,
     Set<AppIconId>? unlockedIcons,
-  }) : unlockedIcons = unlockedIcons ?? const {AppIconId.composer, AppIconId.dark};
+  }) : unlockedIcons = unlockedIcons ?? const {AppIconId.defaultIcon, AppIconId.light};
 
   AppIconState copyWith({
     AppIconId? selectedIcon,

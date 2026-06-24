@@ -15,7 +15,7 @@ void main() {
     });
 
     test('returns composer by default', () async {
-      expect(await repository.getSelectedIcon(), AppIconId.composer);
+      expect(await repository.getSelectedIcon(), AppIconId.defaultIcon);
     });
 
     test('persists and reads selected icon', () async {
@@ -25,7 +25,7 @@ void main() {
 
     test('falls back to composer for unknown stored value', () async {
       await preferences.setString('app_icon_v1', 'unknown');
-      expect(await repository.getSelectedIcon(), AppIconId.composer);
+      expect(await repository.getSelectedIcon(), AppIconId.defaultIcon);
     });
   });
 }

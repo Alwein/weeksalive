@@ -404,9 +404,9 @@ class Strings {
   static String get profilePageWidgetsDescription => "4 available";
   static String get profilePageAppIcon => "App icon";
   static String get appIconComposer => "Default";
-  static String get appIconDark => "Dark";
-  static String get appIconDraw => "Draw";
-  static String get appIconOutline => "Outline";
+  static String get appIconLight => "Light";
+  static String get appIconGrid => "Grid";
+  static String get appIconSilver => "Silver";
   static String get appIconSisyphus => "Sisyphus";
   static String get appIconGold => "Gold";
   static String get gridMotifDots => "Circles";

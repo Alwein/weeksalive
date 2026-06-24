@@ -7,17 +7,17 @@ import 'package:weeksalive/presentation/redux/app_icon/app_icon_state.dart';
 void main() {
   group('appIconReducer', () {
     test('rejects selecting a locked icon', () {
-      const state = AppIconState(selectedIcon: AppIconId.composer);
+      const state = AppIconState(selectedIcon: AppIconId.defaultIcon);
 
       final next = appIconReducer(state, const SetAppIconAction(AppIconId.gold));
 
-      expect(next.selectedIcon, AppIconId.composer);
+      expect(next.selectedIcon, AppIconId.defaultIcon);
     });
 
     test('updates selected icon when unlocked', () {
       const state = AppIconState(
-        selectedIcon: AppIconId.composer,
-        unlockedIcons: {AppIconId.composer, AppIconId.dark, AppIconId.gold},
+        selectedIcon: AppIconId.defaultIcon,
+        unlockedIcons: {AppIconId.defaultIcon, AppIconId.light, AppIconId.gold},
       );
 
       final next = appIconReducer(state, const SetAppIconAction(AppIconId.gold));
@@ -28,7 +28,7 @@ void main() {
     test('merges always unlocked icons on unlock action', () {
       const state = AppIconState(
         selectedIcon: AppIconId.draw,
-        unlockedIcons: {AppIconId.composer, AppIconId.dark, AppIconId.draw},
+        unlockedIcons: {AppIconId.defaultIcon, AppIconId.light, AppIconId.draw},
       );
 
       final next = appIconReducer(
@@ -43,15 +43,15 @@ void main() {
     test('resets to composer when selected icon becomes locked', () {
       const state = AppIconState(
         selectedIcon: AppIconId.gold,
-        unlockedIcons: {AppIconId.composer, AppIconId.dark, AppIconId.gold},
+        unlockedIcons: {AppIconId.defaultIcon, AppIconId.light, AppIconId.gold},
       );
 
       final next = appIconReducer(
         state,
-        const AppIconsUnlockedAction({AppIconId.composer, AppIconId.dark}),
+        const AppIconsUnlockedAction({AppIconId.defaultIcon, AppIconId.light}),
       );
 
-      expect(next.selectedIcon, AppIconId.composer);
+      expect(next.selectedIcon, AppIconId.defaultIcon);
     });
   });
 }

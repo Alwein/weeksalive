@@ -10,16 +10,34 @@ from pathlib import Path
 
 from PIL import Image
 
-SRC_BASE = Path('/Users/adrien/Desktop/icons')
+IOS_ICONS = Path(__file__).resolve().parents[2] / 'ios' / 'Runner' / 'icons'
 RES = Path(__file__).resolve().parents[1] / 'app' / 'src' / 'main' / 'res'
 
 VARIANTS = {
-    'ic_launcher': ('weeksalive_icon', (255, 255, 255)),
-    'ic_launcher_dark': ('weeksalive_icon_dark', (9, 9, 9)),
-    'ic_launcher_draw': ('weeksalive_icon_draw', (255, 255, 255)),
-    'ic_launcher_outline': ('weeksalive_icon_outline', (0, 0, 0)),
-    'ic_launcher_sisyphus': ('weeksalive_icon_sisyphus', (255, 255, 255)),
-    'ic_launcher_gold': ('weeksalive_icon_gold', (36, 36, 36)),
+    'ic_launcher_composer_outline': (
+        'weeksalive_composer_outline.icon/Assets/weeksalive_icon_outline 2.png',
+        (0, 0, 0),
+    ),
+    'ic_launcher_composer_outline_light': (
+        'weeksalive_composer_outline_light.icon/Assets/weeksalive_icon_outline_light.png',
+        (255, 255, 255),
+    ),
+    'ic_launcher_draw': (
+        'weeksalive_draw.icon/Assets/weeksalive_icon_draw 2.png',
+        (255, 255, 255),
+    ),
+    'ic_launcher_composer_outline_silver': (
+        'weeksalive_composer_outline_silver.icon/Assets/weeksalive_icon_outline_silver.png',
+        (0, 0, 0),
+    ),
+    'ic_launcher_sisyphus': (
+        'weeksalive_sisyphus.icon/Assets/weeksalive_icon_sisyphus 2.png',
+        (255, 255, 255),
+    ),
+    'ic_launcher_composer_outline_gold': (
+        'weeksalive_composer_outline_gold.icon/Assets/weeksalive_icon_outline_gold.png',
+        (0, 0, 0),
+    ),
 }
 
 DRAWABLE_SIZES = {
@@ -49,8 +67,10 @@ def box_fit_contain(source_path: Path, size: int, bg_color: tuple[int, int, int]
 
 
 def main() -> None:
-    for icon_name, (folder, bg) in VARIANTS.items():
-        source = SRC_BASE / folder / 'Assets.xcassets' / 'AppIcon.appiconset' / '1024.png'
+    for icon_name, (relative_source, bg) in VARIANTS.items():
+        source = IOS_ICONS / relative_source
+        if not source.exists():
+            raise FileNotFoundError(f'Missing icon source: {source}')
         for folder_name, size in DRAWABLE_SIZES.items():
             out = RES / folder_name / f'{icon_name}_foreground_src.png'
             box_fit_contain(source, size, bg).save(out)
