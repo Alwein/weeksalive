@@ -1,7 +1,6 @@
 package com.weeksalive
 
 import android.content.ComponentName
-import android.content.Intent
 import android.content.pm.PackageManager
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
@@ -21,7 +20,7 @@ class AppIconPlugin : MethodChannel.MethodCallHandler {
         val activity = MainActivityHolder.activity
         val packageManager = activity.packageManager
         val packageName = activity.packageName
-        val targetAlias = resolveTargetAlias(iconName, packageManager, packageName)
+        val targetAlias = resolveTargetAlias(iconName)
 
         for (alias in ALIASES) {
             val component = ComponentName(packageName, alias)
@@ -40,11 +39,7 @@ class AppIconPlugin : MethodChannel.MethodCallHandler {
         result.success(null)
     }
 
-    private fun resolveTargetAlias(
-        iconName: String?,
-        packageManager: PackageManager,
-        packageName: String,
-    ): String? {
+    private fun resolveTargetAlias(iconName: String?): String {
         return when (iconName) {
             "composer_outline" -> "$PACKAGE_NAME.AppIconComposerOutline"
             "composer_outline_light" -> "$PACKAGE_NAME.AppIconComposerOutlineLight"
@@ -52,23 +47,7 @@ class AppIconPlugin : MethodChannel.MethodCallHandler {
             "composer_outline_silver" -> "$PACKAGE_NAME.AppIconComposerOutlineSilver"
             "sisyphus" -> "$PACKAGE_NAME.AppIconSisyphus"
             "composer_outline_gold" -> "$PACKAGE_NAME.AppIconComposerOutlineGold"
-            else -> if (usesMainActivityLauncher(packageManager, packageName)) {
-                null
-            } else {
-                "$PACKAGE_NAME.AppIconComposerOutline"
-            }
-        }
-    }
-
-    private fun usesMainActivityLauncher(
-        packageManager: PackageManager,
-        packageName: String,
-    ): Boolean {
-        val intent = Intent(Intent.ACTION_MAIN)
-            .addCategory(Intent.CATEGORY_LAUNCHER)
-            .setPackage(packageName)
-        return packageManager.queryIntentActivities(intent, PackageManager.MATCH_ALL).any { resolveInfo ->
-            resolveInfo.activityInfo.name == "$PACKAGE_NAME.MainActivity"
+            else -> "$PACKAGE_NAME.AppIconComposerOutline"
         }
     }
 

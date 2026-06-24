@@ -345,7 +345,6 @@ class _WidgetsWallpaperCard extends StatelessWidget {
     return _ProfileCardContainer(
       child: Column(
         children: [
-          const SmallDivider(width: double.infinity),
           _PreferencesButton(
             title: Strings.profilePageWallpaper,
             value: viewModel.wallpaperStatus,
