@@ -17,11 +17,11 @@ abstract final class RewardRules {
     RewardRule(id: RewardId.appIconGold, condition: StreakMilestoneCondition(270)),
     RewardRule(id: RewardId.gridMotifFlowers, condition: StreakMilestoneCondition(0)),
     RewardRule(id: RewardId.gridMotifDraw, condition: StreakMilestoneCondition(0)),
-    RewardRule(id: RewardId.gridMotifTreeSprout, condition: StreakMilestoneCondition(0)),
+    RewardRule(id: RewardId.gridMotifEmoji, condition: StreakMilestoneCondition(0)),
     RewardRule(id: RewardId.gridMotifMoons, condition: StreakMilestoneCondition(0)),
     // RewardRule(id: RewardId.gridMotifFlowers, condition: StreakMilestoneCondition(7)),
     // RewardRule(id: RewardId.gridMotifDraw, condition: StreakMilestoneCondition(60)),
-    // RewardRule(id: RewardId.gridMotifTreeSprout, condition: StreakMilestoneCondition(150)),
+    // RewardRule(id: RewardId.gridMotifEmoji, condition: StreakMilestoneCondition(150)),
     // RewardRule(id: RewardId.gridMotifMoons, condition: StreakMilestoneCondition(240)),
   ];
 

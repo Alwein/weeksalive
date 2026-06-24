@@ -50,18 +50,23 @@ class GridMotifMiddleware extends MiddlewareClass<AppState> {
         ...GridMotifId.alwaysUnlocked,
         ...rewardIdsToGridMotifIds(action.unlocked),
       };
-      final selected = store.state.gridMotifState.selectedMotif;
+      final persisted = await gridMotifRepository.getSelectedMotif();
+      final selected = unlockedMotifs.contains(persisted)
+          ? persisted
+          : unlockedMotifs.contains(store.state.gridMotifState.selectedMotif)
+              ? store.state.gridMotifState.selectedMotif
+              : GridMotifId.dots;
       try {
         store.dispatch(GridMotifsUnlockedAction(unlockedMotifs));
-        if (!unlockedMotifs.contains(selected)) {
-          await gridMotifRepository.setSelectedMotif(GridMotifId.dots);
-          store.dispatch(
-            GridMotifLoadedAction(
-              selectedMotif: GridMotifId.dots,
-              unlockedMotifs: unlockedMotifs,
-            ),
-          );
+        if (!unlockedMotifs.contains(persisted)) {
+          await gridMotifRepository.setSelectedMotif(selected);
         }
+        store.dispatch(
+          GridMotifLoadedAction(
+            selectedMotif: selected,
+            unlockedMotifs: unlockedMotifs,
+          ),
+        );
       } catch (_) {
         // Store torn down (e.g. in tests) during the async gap.
       }

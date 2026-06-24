@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weeksalive/core/grid_motif/grid_cell_variant.dart';
+import 'package:weeksalive/core/grid_motif/grid_motif_catalog.dart';
 import 'package:weeksalive/core/grid_motif/grid_motif_id.dart';
 import 'package:weeksalive/core/grid_motif/grid_motif_renderer.dart';
 
@@ -89,6 +90,11 @@ class YearGridPainter extends CustomPainter {
     return minRadius + (maxRadius - minRadius) * (level / 4);
   }
 
+  double _noteScale(int level, double maxRadius) {
+    if (GridMotifCatalog.forId(motif).uniformYearNoteSize) return 1.0;
+    return _sizeRadius(level, maxRadius) / maxRadius;
+  }
+
   ({double scale, Color color, bool isStroke}) _appearanceForFillSize({
     required int fillSize,
     required Color fillOrHighlightColor,
@@ -107,7 +113,7 @@ class YearGridPainter extends CustomPainter {
         isStroke: todayEmptyColor == null,
       ),
       _ => (
-        scale: _sizeRadius(fillSize.clamp(0, 4), maxRadius) / maxRadius,
+        scale: _noteScale(fillSize.clamp(0, 4), maxRadius),
         color: fillOrHighlightColor,
         isStroke: false,
       ),

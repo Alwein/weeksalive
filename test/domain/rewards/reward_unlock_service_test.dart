@@ -40,7 +40,7 @@ void main() {
       expect(eligible, containsAll([
         RewardId.gridMotifFlowers,
         RewardId.gridMotifDraw,
-        RewardId.gridMotifTreeSprout,
+        RewardId.gridMotifEmoji,
         RewardId.gridMotifMoons,
       ]));
     });

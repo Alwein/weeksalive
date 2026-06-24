@@ -3,26 +3,27 @@ import 'package:weeksalive/core/grid_motif/grid_cell_context.dart';
 import 'package:weeksalive/core/grid_motif/grid_cell_variant.dart';
 import 'package:weeksalive/core/grid_motif/grid_motif_definition.dart';
 import 'package:weeksalive/core/grid_motif/grid_motif_id.dart';
-import 'package:weeksalive/core/grid_motif/svg/moons/cell_moons.dart';
+import 'package:weeksalive/core/grid_motif/svg/emoji/cell_emoji.dart';
 import 'package:weeksalive/core/grid_motif/svg/svg_icon_path.dart';
 
-/// Moon phase shapes drawn in a normalized 14×14 design box (center at origin).
+/// Emoji shapes drawn in a normalized 14×14 design box (center at origin).
 ///
-/// Each note level maps to its own moon path ([CellMoonNote1Path] … [CellMoonNote5Path]).
+/// Each note level maps to its own emoji path ([CellEmojiNote1Path] … [CellEmojiNote5Path]).
 /// Size is uniform across note levels — differentiation is visual, not scalar.
 ///
-/// Performance: unit paths are built once per moon phase.
-abstract final class MoonsMotif {
+/// Performance: unit paths are built once per emoji.
+abstract final class EmojiMotif {
   static const _designSpan = SvgIconPath.designSpan;
 
   static const definition = GridMotifDefinition(
-    id: GridMotifId.moons,
+    id: GridMotifId.emoji,
     uniformYearNoteSize: true,
     representations: {
-      GridCellVariant.yearNote1: [moonNote1Draw],
-      GridCellVariant.yearNote2: [moonNote2Draw],
-      GridCellVariant.yearNote3: [moonNote3Draw],
-      GridCellVariant.yearNote4: [moonNote4Draw],
+      GridCellVariant.yearNote1: [emojiNote1Draw],
+      GridCellVariant.yearNote2: [emojiNote2Draw],
+      GridCellVariant.yearNote3: [emojiNote3Draw],
+      GridCellVariant.yearNote4: [emojiNote4Draw],
+      GridCellVariant.yearNote5: [emojiNote5Draw],
     },
   );
 
@@ -41,47 +42,57 @@ abstract final class MoonsMotif {
     );
   }
 
-  static void moonNote1Draw(Canvas canvas, GridCellContext context) {
-    _drawMoon(
+  static void emojiNote1Draw(Canvas canvas, GridCellContext context) {
+    _drawEmoji(
       canvas,
       context,
       noteLevel: 0,
-      pathData: CellMoonNote1Path.pathData,
-      viewBoxSize: CellMoonNote1Path.viewBoxSize,
+      pathData: CellEmojiNote1Path.pathData,
+      viewBoxSize: CellEmojiNote1Path.viewBoxSize,
     );
   }
 
-  static void moonNote2Draw(Canvas canvas, GridCellContext context) {
-    _drawMoon(
+  static void emojiNote2Draw(Canvas canvas, GridCellContext context) {
+    _drawEmoji(
       canvas,
       context,
       noteLevel: 1,
-      pathData: CellMoonNote2Path.pathData,
-      viewBoxSize: CellMoonNote2Path.viewBoxSize,
+      pathData: CellEmojiNote2Path.pathData,
+      viewBoxSize: CellEmojiNote2Path.viewBoxSize,
     );
   }
 
-  static void moonNote3Draw(Canvas canvas, GridCellContext context) {
-    _drawMoon(
+  static void emojiNote3Draw(Canvas canvas, GridCellContext context) {
+    _drawEmoji(
       canvas,
       context,
       noteLevel: 2,
-      pathData: CellMoonNote3Path.pathData,
-      viewBoxSize: CellMoonNote3Path.viewBoxSize,
+      pathData: CellEmojiNote3Path.pathData,
+      viewBoxSize: CellEmojiNote3Path.viewBoxSize,
     );
   }
 
-  static void moonNote4Draw(Canvas canvas, GridCellContext context) {
-    _drawMoon(
+  static void emojiNote4Draw(Canvas canvas, GridCellContext context) {
+    _drawEmoji(
       canvas,
       context,
       noteLevel: 3,
-      pathData: CellMoonNote4Path.pathData,
-      viewBoxSize: CellMoonNote4Path.viewBoxSize,
+      pathData: CellEmojiNote4Path.pathData,
+      viewBoxSize: CellEmojiNote4Path.viewBoxSize,
     );
   }
 
-  static void _drawMoon(
+  static void emojiNote5Draw(Canvas canvas, GridCellContext context) {
+    _drawEmoji(
+      canvas,
+      context,
+      noteLevel: 4,
+      pathData: CellEmojiNote5Path.pathData,
+      viewBoxSize: CellEmojiNote5Path.viewBoxSize,
+    );
+  }
+
+  static void _drawEmoji(
     Canvas canvas,
     GridCellContext context, {
     required int noteLevel,

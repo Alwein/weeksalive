@@ -5,10 +5,10 @@ enum GridMotifId {
   squares,
   flowers,
   draw,
-  treeSprout,
+  emoji,
   moons;
 
-  static const all = [dots, squares, flowers, draw, treeSprout, moons];
+  static const all = [dots, squares, flowers, draw, emoji, moons];
 
   static const alwaysUnlocked = [dots, squares];
 
@@ -21,11 +21,12 @@ enum GridMotifId {
     GridMotifId.squares => Strings.gridMotifSquares,
     GridMotifId.flowers => Strings.gridMotifFlowers,
     GridMotifId.draw => Strings.gridMotifDraw,
-    GridMotifId.treeSprout => Strings.gridMotifTreeSprout,
+    GridMotifId.emoji => Strings.gridMotifEmoji,
     GridMotifId.moons => Strings.gridMotifMoons,
   };
 
   static GridMotifId? fromStorageKey(String value) {
+    if (value == 'treeSprout') return GridMotifId.emoji;
     for (final id in values) {
       if (id.storageKey == value) return id;
     }

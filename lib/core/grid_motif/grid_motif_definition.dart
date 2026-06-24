@@ -7,11 +7,16 @@ class GridMotifDefinition {
     required this.id,
     required this.representations,
     this.fallback,
+    this.uniformYearNoteSize = false,
   });
 
   final GridMotifId id;
   final Map<GridCellVariant, List<GridCellDraw>> representations;
   final GridCellDraw? fallback;
+
+  /// When true, year note cells (levels 1–5) are drawn at full size.
+  /// Differentiation comes from the motif shape, not [GridCellContext.scale].
+  final bool uniformYearNoteSize;
 
   GridCellDraw resolveDraw({
     required GridCellVariant variant,

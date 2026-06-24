@@ -14,12 +14,13 @@ enum RewardId {
   appIconGold,
   gridMotifFlowers,
   gridMotifDraw,
-  gridMotifTreeSprout,
+  gridMotifEmoji,
   gridMotifMoons;
 
   String get storageKey => name;
 
   static RewardId? fromStorageKey(String value) {
+    if (value == 'gridMotifTreeSprout') return RewardId.gridMotifEmoji;
     for (final id in values) {
       if (id.storageKey == value) return id;
     }
@@ -67,7 +68,7 @@ extension RewardIdGridMotifMapping on RewardId {
   GridMotifId? get asGridMotifId => switch (this) {
     RewardId.gridMotifFlowers => GridMotifId.flowers,
     RewardId.gridMotifDraw => GridMotifId.draw,
-    RewardId.gridMotifTreeSprout => GridMotifId.treeSprout,
+    RewardId.gridMotifEmoji => GridMotifId.emoji,
     RewardId.gridMotifMoons => GridMotifId.moons,
     _ => null,
   };
@@ -75,7 +76,7 @@ extension RewardIdGridMotifMapping on RewardId {
   static RewardId? fromGridMotifId(GridMotifId motifId) => switch (motifId) {
     GridMotifId.flowers => RewardId.gridMotifFlowers,
     GridMotifId.draw => RewardId.gridMotifDraw,
-    GridMotifId.treeSprout => RewardId.gridMotifTreeSprout,
+    GridMotifId.emoji => RewardId.gridMotifEmoji,
     GridMotifId.moons => RewardId.gridMotifMoons,
     _ => null,
   };

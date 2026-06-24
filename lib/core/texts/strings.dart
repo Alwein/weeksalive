@@ -412,7 +412,7 @@ class Strings {
   static String get gridMotifSquares => "Squares";
   static String get gridMotifFlowers => "Flowers";
   static String get gridMotifDraw => "Draw";
-  static String get gridMotifTreeSprout => "Tree sprout";
+  static String get gridMotifEmoji => "Emoji";
   static String get gridMotifMoons => "Moons";
   static String get profilePageWallpaperConfigured => "ON";
   static String get profilePageWallpaperNotConfigured => "OFF";

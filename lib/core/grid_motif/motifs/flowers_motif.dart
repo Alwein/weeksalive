@@ -6,21 +6,23 @@ import 'package:weeksalive/core/grid_motif/grid_cell_context.dart';
 import 'package:weeksalive/core/grid_motif/grid_cell_variant.dart';
 import 'package:weeksalive/core/grid_motif/grid_motif_definition.dart';
 import 'package:weeksalive/core/grid_motif/grid_motif_id.dart';
+import 'package:weeksalive/core/grid_motif/svg/flowers/six_petal_solid.dart';
+import 'package:weeksalive/core/grid_motif/svg/svg_icon_path.dart';
 
 /// Four-petal flower drawn in a normalized 14×14 design box (center at 7, 7).
 ///
 /// Filled: union of petal circles with an optional central disc (r=2).
 /// Life grid cells fill the disc and cycle through three solid styles (4, 4×45°, 6 petals).
+/// The six-petal variant uses [FlowerSixPetalSolidPath] (14×14 viewBox).
 /// Year cells use 4 petals with the disc cut out as a hole.
 /// Outlined: 5 stroked circles — center (r=2) + 4 petals (r=3 at ±3, ±3).
 ///
-/// Performance: [_unitFilledPath] is built once (single [Path.combine] cost).
-/// Each cell replays it via [Canvas] translate + scale only.
+/// Performance: unit paths are built once.
+/// Each cell replays them via [Canvas] translate + scale only.
 abstract final class FlowersMotif {
-  static const _designSpan = 14.0;
+  static const _designSpan = SvgIconPath.designSpan;
   static const _petalOffset = 3.0;
   static const _filledPetalRadius = 4.0;
-  static const _filledSixPetalRadius = 4.0;
   static const _filledHoleRadius = 2.0;
   static const _outlinedCenterRadius = 2.0;
   static const _outlinedPetalRadius = 3.0;
@@ -67,10 +69,9 @@ abstract final class FlowersMotif {
   static Path get _unitFilledSolidPathOrBuild =>
       _unitFilledSolidPath ??= _buildFilledPath(petalCenters: _fourPetalCenters(), withCenterHole: false);
 
-  static Path get _unitFilledSixPetalSolidPathOrBuild => _unitFilledSixPetalSolidPath ??= _buildFilledPath(
-    petalCenters: _sixPetalCenters(),
-    petalRadius: _filledSixPetalRadius,
-    withCenterHole: false,
+  static Path get _unitFilledSixPetalSolidPathOrBuild => _unitFilledSixPetalSolidPath ??= SvgIconPath.toDesignPath(
+    pathData: FlowerSixPetalSolidPath.pathData,
+    viewBoxSize: FlowerSixPetalSolidPath.viewBoxSize,
   );
 
   static void filledFlower(Canvas canvas, GridCellContext context) {
@@ -155,13 +156,6 @@ abstract final class FlowersMotif {
 
   static List<Offset> _fourPetalCenters() {
     return _petalSigns.map((sign) => Offset(sign.dx * _petalOffset, sign.dy * _petalOffset)).toList(growable: false);
-  }
-
-  static List<Offset> _sixPetalCenters() {
-    return List.generate(6, (i) {
-      final angle = i * math.pi / 3;
-      return Offset(_petalOffset * math.cos(angle), _petalOffset * math.sin(angle));
-    }, growable: false);
   }
 
   static double _unit(GridCellContext context) {
