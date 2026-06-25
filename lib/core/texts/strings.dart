@@ -469,6 +469,7 @@ class Strings {
 
   static String get weeklySummaryPageTitle => "Week complete";
   static String get weeklySummaryPageSubtitle => "One dot has been added to your life grid.";
+  static String get weeklySummaryDetailsPageTitle => "Your week in review";
   static String get weeklySummaryPageAverageFeeling => "AVERAGE FEELING";
   static String get weeklySummaryPageMeaningScore => "MEANING SCORE";
   static String get weeklySummaryPageNewExperiences => "NEW EXPERIENCES";
