@@ -314,8 +314,8 @@ class Strings {
   static String get livingIntentionsSectionValueNone => "None";
   static String get livingIntentionsSectionEditLabel => "Edit weekly intentions";
   static String get leaveATraceSectionQuestion => "What made today special?";
-  static String get consecutiveDay => "Consecutive day";
-  static String get consecutiveDays => "Consecutive days";
+  static String get consecutiveDay => "consecutive day";
+  static String get consecutiveDays => "consecutive days";
   static String get congratulations => "Well done!";
   static String get streakGraceReminderTitle => "No worries";
   static String get streakGraceReminderBody =>
@@ -327,10 +327,17 @@ class Strings {
   static String get streaksPageTitle => "Streak rewards";
   static String streaksPageSubtitle(int bestStreak) =>
       "Reach streak milestones to unlock themes, app icons, and grid motifs. Your best streak: $bestStreak days.";
-  static String streaksCurrentStreak(int days) => "Current streak: $days days";
+  static String get streaksCurrentStreak => "CURRENT STREAK";
   static String get streaksCategoryTheme => "Theme";
   static String get streaksCategoryAppIcon => "App icon";
   static String get streaksCategoryGridMotif => "Grid motif";
+  static String streaksNextRewardIn(int days) => days == 1 ? "Next reward in 1 day" : "Next reward in $days days";
+  static String streaksRewardUnlockedTitle(int count) =>
+      count == 1 ? "New reward unlocked" : "$count new rewards unlocked";
+  static String get streaksRewardUnlockedBody => "You can customize it right away.";
+  static String get streaksOpenThemePicker => "Browse themes";
+  static String get streaksOpenAppIconPicker => "Choose app icon";
+  static String get streaksOpenGridMotifPicker => "Choose grid motif";
 
   // weekly intent
   static String get intentBePresent => "Be Present";

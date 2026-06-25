@@ -15,7 +15,7 @@ abstract final class RewardRules {
     RewardRule(id: RewardId.appIconOutline, condition: StreakMilestoneCondition(90)),
     RewardRule(id: RewardId.appIconSisyphus, condition: StreakMilestoneCondition(180)),
     RewardRule(id: RewardId.appIconGold, condition: StreakMilestoneCondition(365)),
-    RewardRule(id: RewardId.gridMotifFlowers, condition: StreakMilestoneCondition(7)),
+    RewardRule(id: RewardId.gridMotifFlowers, condition: StreakMilestoneCondition(2)),
     RewardRule(id: RewardId.gridMotifDraw, condition: StreakMilestoneCondition(60)),
     RewardRule(id: RewardId.gridMotifEmoji, condition: StreakMilestoneCondition(150)),
     RewardRule(id: RewardId.gridMotifMoons, condition: StreakMilestoneCondition(240)),
@@ -44,5 +44,43 @@ abstract final class RewardRules {
     final rewardId = RewardIdGridMotifMapping.fromGridMotifId(motifId);
     if (rewardId == null) return null;
     return ruleFor(rewardId);
+  }
+
+  static List<RewardRule> get streakMilestonesSorted {
+    final rules = all.where((rule) => rule.condition is StreakMilestoneCondition).toList()
+      ..sort((a, b) {
+        final aDays = (a.condition as StreakMilestoneCondition).minDays;
+        final bDays = (b.condition as StreakMilestoneCondition).minDays;
+        final cmp = aDays.compareTo(bDays);
+        if (cmp != 0) return cmp;
+        return all.indexOf(a).compareTo(all.indexOf(b));
+      });
+    return rules;
+  }
+
+  static List<RewardId> sortByMilestone(Iterable<RewardId> ids) {
+    final order = streakMilestonesSorted.map((rule) => rule.id).toList();
+    return ids.toList()..sort((a, b) {
+      final aIndex = order.indexOf(a);
+      final bIndex = order.indexOf(b);
+      if (aIndex == -1) return 1;
+      if (bIndex == -1) return -1;
+      return aIndex.compareTo(bIndex);
+    });
+  }
+
+  static ({RewardId rewardId, int daysRemaining})? findNextStreakReward({
+    required int currentStreak,
+    required Set<RewardId> unlocked,
+  }) {
+    for (final rule in streakMilestonesSorted) {
+      if (unlocked.contains(rule.id)) continue;
+      final minDays = (rule.condition as StreakMilestoneCondition).minDays;
+      return (
+        rewardId: rule.id,
+        daysRemaining: (minDays - currentStreak).clamp(0, minDays),
+      );
+    }
+    return null;
   }
 }

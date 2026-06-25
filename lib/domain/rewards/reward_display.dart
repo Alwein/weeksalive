@@ -40,6 +40,24 @@ extension RewardIdDisplay on RewardId {
 
   String get description => '$category - $label';
 
+  String get pickerButtonLabel => switch (this) {
+    RewardId.themeMatcha ||
+    RewardId.themePivoine ||
+    RewardId.themeTerracotta ||
+    RewardId.themeArdoise =>
+      Strings.streaksOpenThemePicker,
+    RewardId.appIconDraw ||
+    RewardId.appIconOutline ||
+    RewardId.appIconSisyphus ||
+    RewardId.appIconGold =>
+      Strings.streaksOpenAppIconPicker,
+    RewardId.gridMotifFlowers ||
+    RewardId.gridMotifDraw ||
+    RewardId.gridMotifEmoji ||
+    RewardId.gridMotifMoons =>
+      Strings.streaksOpenGridMotifPicker,
+  };
+
   AppThemeId? get previewThemeId => asThemeId;
 
   AppIconId? get previewAppIconId => asAppIconId;

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:weeksalive/core/app_icon/app_icon_id.dart';
 import 'package:weeksalive/core/grid_motif/grid_cell_variant.dart';
 import 'package:weeksalive/core/grid_motif/grid_motif_catalog.dart';
@@ -17,6 +16,22 @@ import 'package:weeksalive/presentation/profile/pages/app_icon_picker/app_icon_p
 import 'package:weeksalive/presentation/profile/pages/grid_motif_picker/grid_motif_picker_page.dart';
 import 'package:weeksalive/presentation/profile/pages/theme_picker/theme_picker_page.dart';
 
+void openRewardPicker(BuildContext context, RewardId rewardId) {
+  final navigator = Navigator.of(context, rootNavigator: true);
+  navigator.pop();
+  if (rewardId.previewThemeId != null) {
+    navigator.push(ThemePickerPage.route());
+    return;
+  }
+  if (rewardId.previewAppIconId != null) {
+    navigator.push(AppIconPickerPage.route());
+    return;
+  }
+  if (rewardId.previewGridMotifId != null) {
+    navigator.push(GridMotifPickerPage.route());
+  }
+}
+
 class RewardPreview extends StatelessWidget {
   const RewardPreview({super.key, required this.rewardId});
 
@@ -26,51 +41,35 @@ class RewardPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(Dimens.radiusBase),
-      onTap: () {
-        final themeId = rewardId.previewThemeId;
-        if (themeId != null) {
-          Navigator.push(context, ThemePickerPage.route());
-        }
-
-        final iconId = rewardId.previewAppIconId;
-        if (iconId != null) {
-          Navigator.push(context, AppIconPickerPage.route());
-        }
-
-        final motifId = rewardId.previewGridMotifId;
-        if (motifId != null) {
-          Navigator.push(context, GridMotifPickerPage.route());
-        }
-      },
-      child: Row(
-        children: [
-          Expanded(
-            child: Builder(
-              builder: (context) {
-                final themeId = rewardId.previewThemeId;
-                if (themeId != null) {
-                  return _ThemeRewardPreview(themeId: themeId, label: rewardId.label);
-                }
-
-                final iconId = rewardId.previewAppIconId;
-                if (iconId != null) {
-                  return _AppIconRewardPreview(iconId: iconId);
-                }
-
-                final motifId = rewardId.previewGridMotifId;
-                if (motifId != null) {
-                  return _GridMotifRewardPreview(motifId: motifId);
-                }
-
-                return const SizedBox.shrink();
-              },
-            ),
-          ),
-          const SizedBox(width: Margins.spacingBase),
-          Icon(MingCuteIcons.mgc_right_line, color: AppColors.contentSoft(context), size: Dimens.iconSizeBase),
-        ],
-      ),
+      onTap: () => openRewardPicker(context, rewardId),
+      child: RewardPreviewContent(rewardId: rewardId),
     );
+  }
+}
+
+class RewardPreviewContent extends StatelessWidget {
+  const RewardPreviewContent({super.key, required this.rewardId});
+
+  final RewardId rewardId;
+
+  @override
+  Widget build(BuildContext context) {
+    final themeId = rewardId.previewThemeId;
+    if (themeId != null) {
+      return _ThemeRewardPreview(themeId: themeId, label: rewardId.label);
+    }
+
+    final iconId = rewardId.previewAppIconId;
+    if (iconId != null) {
+      return _AppIconRewardPreview(iconId: iconId);
+    }
+
+    final motifId = rewardId.previewGridMotifId;
+    if (motifId != null) {
+      return _GridMotifRewardPreview(motifId: motifId);
+    }
+
+    return const SizedBox.shrink();
   }
 }
 
@@ -201,6 +200,7 @@ class _AppIconRewardPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
           decoration: BoxDecoration(
@@ -234,7 +234,7 @@ class _GridMotifRewardPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: Alignment.center,
       child: Container(
         padding: const EdgeInsets.all(Margins.spacingBase),
         decoration: BoxDecoration(
@@ -247,15 +247,13 @@ class _GridMotifRewardPreview extends StatelessWidget {
             final width = constraints.maxWidth;
             return SizedBox(
               width: width,
-              height: 18,
-              child: ClipRect(
-                child: CustomPaint(
-                  painter: _GridMotifPreviewPainter(
-                    motifId: motifId,
-                    fillColor: AppColors.content(context),
-                    emptyStrokeColor: AppColors.strokeColor(context),
-                    pastEmptyColor: AppColors.contentSoftOnSoft(context),
-                  ),
+              height: width * 0.075,
+              child: CustomPaint(
+                painter: _GridMotifPreviewPainter(
+                  motifId: motifId,
+                  fillColor: AppColors.content(context),
+                  emptyStrokeColor: AppColors.strokeColor(context),
+                  pastEmptyColor: AppColors.contentSoftOnSoft(context),
                 ),
               ),
             );
@@ -288,11 +286,15 @@ class _GridMotifPreviewPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final dotSize = (size.width - _spacing * (_columns - 1)) / _columns;
     final maxRadius = dotSize / 2;
+    final cellCount = _previewFillSizes.length;
+    final contentWidth = cellCount * dotSize + _spacing * (cellCount - 1);
+    final horizontalOffset = (size.width - contentWidth) / 2;
+    final verticalOffset = (size.height - dotSize) / 2;
 
     for (var i = 0; i < _previewFillSizes.length; i++) {
       final fillSize = _previewFillSizes[i];
       final rect = GridMotifRenderer.cellRect(
-        padding: EdgeInsets.zero,
+        padding: EdgeInsets.only(left: horizontalOffset, top: verticalOffset),
         columns: _columns,
         dotSpacing: _spacing,
         dotSize: dotSize,

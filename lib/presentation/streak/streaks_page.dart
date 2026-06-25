@@ -11,7 +11,6 @@ import 'package:weeksalive/domain/rewards/reward_condition.dart';
 import 'package:weeksalive/domain/rewards/reward_display.dart';
 import 'package:weeksalive/domain/rewards/reward_rule.dart';
 import 'package:weeksalive/domain/rewards/reward_rules.dart';
-import 'package:weeksalive/presentation/home/widgets/fire_rive_player.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/streak/widgets/reward_preview.dart';
@@ -33,14 +32,7 @@ class StreaksPageViewModel {
     final streak = store.state.streakState;
     final unlocked = store.state.rewardsState.unlocked;
 
-    final rules = RewardRules.all.where((rule) => rule.condition is StreakMilestoneCondition).toList()
-      ..sort((a, b) {
-        final aDays = (a.condition as StreakMilestoneCondition).minDays;
-        final bDays = (b.condition as StreakMilestoneCondition).minDays;
-        final cmp = aDays.compareTo(bDays);
-        if (cmp != 0) return cmp;
-        return RewardRules.all.indexOf(a).compareTo(RewardRules.all.indexOf(b));
-      });
+    final rules = RewardRules.streakMilestonesSorted;
 
     final firstLockedIndex = rules.indexWhere((rule) => !unlocked.contains(rule.id));
 
@@ -139,34 +131,21 @@ class _Header extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: Dimens.iconSizeHuge,
-          height: Dimens.iconSizeHuge,
-          decoration: BoxDecoration(
-            color: AppColors.bgSoft(context),
-            shape: BoxShape.circle,
-          ),
-          child: const OverflowBox(
-            maxWidth: 90,
-            maxHeight: 90,
-            alignment: Alignment.bottomCenter,
-            child: Center(child: FireRivePlayer()),
-          ),
-        ),
-        const SizedBox(width: Margins.spacingBase),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Texts.primaryRegularMedium(
                 Strings.streaksPageSubtitle(bestStreak),
-                color: AppColors.content(context),
+                color: AppColors.contentSoft(context),
               ),
               if (currentStreak > 0) ...[
-                const SizedBox(height: Margins.spacingS),
-                Texts.primaryRegular(
-                  Strings.streaksCurrentStreak(currentStreak),
-                  color: AppColors.contentSoft(context),
+                const SizedBox(height: Margins.spacingM),
+                Texts.primaryXsCounter(
+                  context,
+                  Strings.streaksCurrentStreak,
+                  "$currentStreak ${currentStreak == 1 ? Strings.dayLabel : Strings.daysLabel}",
+                  softColor: AppColors.contentSoft(context),
                 ),
               ],
             ],
