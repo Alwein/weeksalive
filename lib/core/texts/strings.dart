@@ -168,8 +168,8 @@ class Strings {
   static String get onboarding17Title2 => "Not to track time\nTo help you feel it.";
   static String get onboarding17Subtitle => "A simple daily ritual to notice your life as it happens.";
 
-  static String get onboarding18Title => "Answer 4 questions every day.";
-  static String get onboarding18Subtitle => "A few quick questions about how today felt.";
+  static String get onboarding18Title => "Every day, reflect on 4 questions.";
+  static String get onboarding18Subtitle => "This will help you notice your life as it happens.";
 
   static String get onboarding19Title => "Day after day.\nWeek after week.";
   static String get onboarding19Subtitle => "Watch both your grids come alive.";
@@ -322,6 +322,15 @@ class Strings {
       "Missing a day happens. You still have 24 extra hours to log yesterday and keep your streak going.";
   static String get streakGraceReminderLogYesterday => "Log yesterday";
   static String get streakGraceReminderDismiss => "Got it";
+
+  // streaks rewards page
+  static String get streaksPageTitle => "Streak rewards";
+  static String streaksPageSubtitle(int bestStreak) =>
+      "Reach streak milestones to unlock themes, app icons, and grid motifs. Your best streak: $bestStreak days.";
+  static String streaksCurrentStreak(int days) => "Current streak: $days days";
+  static String get streaksCategoryTheme => "Theme";
+  static String get streaksCategoryAppIcon => "App icon";
+  static String get streaksCategoryGridMotif => "Grid motif";
 
   // weekly intent
   static String get intentBePresent => "Be Present";

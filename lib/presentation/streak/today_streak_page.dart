@@ -14,16 +14,16 @@ import 'package:weeksalive/presentation/widgets/primary_button.dart';
 
 /// Écran placeholder affiché après la sauvegarde du jour,
 /// montrant le compteur de streak actuel.
-class StreakPage extends StatefulWidget {
-  const StreakPage({super.key, required this.onClose});
+class TodayStreakPage extends StatefulWidget {
+  const TodayStreakPage({super.key, required this.onClose});
 
   final VoidCallback onClose;
 
   @override
-  State<StreakPage> createState() => _StreakPageState();
+  State<TodayStreakPage> createState() => _TodayStreakPageState();
 }
 
-class _StreakPageState extends State<StreakPage> {
+class _TodayStreakPageState extends State<TodayStreakPage> {
   late final FlutterHaptic _haptic;
 
   static const _patterns = [150, 10, 150, 10, 150];

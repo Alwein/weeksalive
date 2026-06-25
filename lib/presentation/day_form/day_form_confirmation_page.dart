@@ -12,7 +12,7 @@ import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
-import 'package:weeksalive/presentation/streak/streak_page.dart';
+import 'package:weeksalive/presentation/streak/today_streak_page.dart';
 import 'package:weeksalive/presentation/widgets/circle.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
 
@@ -35,7 +35,7 @@ class DayFormConfirmationPage extends StatelessWidget {
       SensorialFeedback.navigationChanged();
       Navigator.of(context).push(
         PagedSheetRoute<void>(
-          builder: (_) => StreakPage(onClose: onClose),
+          builder: (_) => TodayStreakPage(onClose: onClose),
         ),
       );
     } else {
