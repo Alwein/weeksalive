@@ -46,7 +46,7 @@ Future<DayFormResult?> showDayFormSheet(
 
   final fullscreenAnimation = SheetOffsetDrivenAnimation(
     controller: controller,
-    initialValue: 0,
+    initialValue: 1,
     startOffset: const SheetOffset(1),
     endOffset: const SheetOffset.proportionalToViewport(1),
   );
@@ -97,7 +97,7 @@ class _DayFormSheetRootState extends State<_DayFormSheetRoot> {
       onGenerateInitialRoutes: (navigator, initialRoute) {
         return [
           PagedSheetRoute<void>(
-            initialOffset: const SheetOffset(1),
+            initialOffset: const SheetOffset.proportionalToViewport(1),
             snapGrid: const MultiSnapGrid(
               snaps: [SheetOffset(1), SheetOffset.proportionalToViewport(1)],
             ),

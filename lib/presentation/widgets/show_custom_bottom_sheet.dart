@@ -19,7 +19,7 @@ Future<T?> showCustomBottomSheet<T>(
   bool dismissible = true,
   WidgetBuilder? previewBuilder,
   bool scaleBackground = true,
-  double backgroundScaleFactor = 0.985,
+  double backgroundScaleFactor = 1,
   bool showhandle = true,
   bool useRootNavigator = false,
 }) {
@@ -209,37 +209,29 @@ class _CustomBottomSheetContentState extends State<_CustomBottomSheetContent> wi
                   child: const SizedBox.expand(),
                 ),
               ),
-            AnimatedPadding(
-              duration: AnimationDurations.veryShort,
-              padding: EdgeInsets.only(
-                left: Margins.spacingS,
-                right: Margins.spacingS,
-                bottom: isKeyboardOpen ? 0 : Margins.spacingM,
-              ),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: (MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top) * 0.95,
-                  ),
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    alignment: Alignment.bottomCenter,
-                    children: [
-                      sheet,
-                      if (preview != null)
-                        Positioned(
-                          top: -((_previewHeight > 0) ? (_previewHeight + previewGap) : previewTopOffsetFallback),
-                          left: 0,
-                          right: 0,
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            heightFactor: 1,
-                            child: preview,
-                          ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: (MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top) * 0.95,
+                ),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    sheet,
+                    if (preview != null)
+                      Positioned(
+                        top: -((_previewHeight > 0) ? (_previewHeight + previewGap) : previewTopOffsetFallback),
+                        left: 0,
+                        right: 0,
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          heightFactor: 1,
+                          child: preview,
                         ),
-                    ],
-                  ),
+                      ),
+                  ],
                 ),
               ),
             ),
