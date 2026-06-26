@@ -15,7 +15,7 @@ abstract final class RewardRules {
     RewardRule(id: RewardId.appIconOutline, condition: StreakMilestoneCondition(90)),
     RewardRule(id: RewardId.appIconSisyphus, condition: StreakMilestoneCondition(180)),
     RewardRule(id: RewardId.appIconGold, condition: StreakMilestoneCondition(365)),
-    RewardRule(id: RewardId.gridMotifFlowers, condition: StreakMilestoneCondition(2)),
+    RewardRule(id: RewardId.gridMotifFlowers, condition: StreakMilestoneCondition(7)),
     RewardRule(id: RewardId.gridMotifDraw, condition: StreakMilestoneCondition(60)),
     RewardRule(id: RewardId.gridMotifEmoji, condition: StreakMilestoneCondition(150)),
     RewardRule(id: RewardId.gridMotifMoons, condition: StreakMilestoneCondition(240)),
