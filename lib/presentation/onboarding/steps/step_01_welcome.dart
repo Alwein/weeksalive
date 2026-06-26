@@ -19,7 +19,7 @@ class Step01Welcome extends OnboardingStep {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              "assets/images/weeksalive_logo.webp",
+              "assets/images/weeksalive_icon_outline.webp",
               width: 96,
               height: 96,
             ),

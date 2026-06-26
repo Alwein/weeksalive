@@ -178,7 +178,7 @@ class OnboardingFakeNotification extends StatelessWidget {
           Hero(
             tag: "onboarding_logo",
             child: Image.asset(
-              "assets/images/weeksalive_logo.webp",
+              "assets/images/weeksalive_icon_outline.webp",
               width: 60,
               height: 60,
             ),
