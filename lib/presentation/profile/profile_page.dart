@@ -354,13 +354,6 @@ class _WidgetsWallpaperCard extends StatelessWidget {
           if (Platform.isIOS) ...[
             const SmallDivider(width: double.infinity),
             _PreferencesButton(
-              title: Strings.profilePageWallpaperSetupGuide,
-              value: Strings.profilePageWallpaperSetupGuideDescription,
-              onTap: () => WallpaperSetupPage.show(context),
-              icon: MingCuteIcons.mgc_right_line,
-            ),
-            const SmallDivider(width: double.infinity),
-            _PreferencesButton(
               title: Strings.profilePageWidgets,
               value: Strings.profilePageWidgetsDescription,
               onTap: () => Navigator.push(context, WidgetsPage.route()),
@@ -478,6 +471,15 @@ class _ApplicationCard extends StatelessWidget {
     return _ProfileCardContainer(
       child: Column(
         children: [
+          if (Platform.isIOS) ...[
+            const SmallDivider(width: double.infinity),
+            _PreferencesButton(
+              title: Strings.profilePageWallpaperSetupGuide,
+              value: Strings.profilePageWallpaperSetupGuideDescription,
+              onTap: () => WallpaperSetupPage.show(context),
+              icon: MingCuteIcons.mgc_right_line,
+            ),
+          ],
           _PreferencesButton(
             title: Strings.profilePageTermsOfService,
             onTap: () => launchUrl(Uri.parse(AppLinks.terms)),

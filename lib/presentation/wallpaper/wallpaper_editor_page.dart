@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:weeksalive/core/grid_motif/grid_motif_id.dart';
 import 'package:weeksalive/core/styles/app_color_tokens.dart';
@@ -804,16 +805,32 @@ class _PreviewSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
             horizontal: _horizontalPadding,
             vertical: _verticalPadding,
           ),
-          child: Center(
-            child: WallpaperPreview(
-              config: config,
-              data: data,
-              tokens: tokens,
-              gridTokens: gridTokens,
-              gridMotif: gridMotif,
-              maxHeight: previewHeight,
-              documentsDirectoryPath: documentsDirectoryPath,
-            ),
+          child: Stack(
+            children: [
+              Center(
+                child: WallpaperPreview(
+                  config: config,
+                  data: data,
+                  tokens: tokens,
+                  gridTokens: gridTokens,
+                  gridMotif: gridMotif,
+                  maxHeight: previewHeight,
+                  documentsDirectoryPath: documentsDirectoryPath,
+                ),
+              ),
+              if (Platform.isIOS) ...[
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: IconButton(
+                    onPressed: () => WallpaperSetupPage.show(context),
+                    icon: Icon(
+                      MingCuteIcons.mgc_question_line,
+                      color: AppColors.contentSoft(context),
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ),
         ),
       ),

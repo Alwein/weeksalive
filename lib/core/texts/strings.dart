@@ -546,7 +546,7 @@ class Strings {
   static String get wallpaperDisabledShortcutsMessage =>
       "To fully stop wallpaper updates, delete the automation in the Shortcuts app.";
 
-  static String get wallpaperSetupTitle => "Set up in ~2 min";
+  static String get wallpaperSetupTitle => "Wallpaper set up ~2 min";
   static String get wallpaperSetupSubtitle =>
       "Follow this guide to make your lock screen wallpaper update automatically every day.";
   static String get wallpaperSetupShortcutTitle => "Open Shortcuts app";

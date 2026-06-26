@@ -94,28 +94,55 @@ class _WallpaperSetupPageState extends State<WallpaperSetupPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              children: [
-                Image.asset('assets/images/shortcuts.webp', width: Dimens.iconSizeHuge, height: Dimens.iconSizeHuge),
-                const SizedBox(width: Margins.spacingBase),
-                Expanded(
-                  child: Texts.primaryRegularMedium(
-                    Strings.wallpaperSetupSubtitle,
-                    color: AppColors.content(context),
+            Container(
+              padding: const EdgeInsets.all(Margins.spacingBase),
+              decoration: BoxDecoration(
+                color: AppColors.blueInfo(context).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(Dimens.radiusBase),
+                border: Border.all(color: AppColors.blueInfo(context)),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    MingCuteIcons.mgc_information_line,
+                    size: Dimens.iconSizeBase,
+                    color: AppColors.blueInfo(context),
                   ),
-                ),
-              ],
+                  const SizedBox(width: Margins.spacingBase),
+                  Expanded(
+                    child: Texts.primaryRegularMedium(
+                      Strings.wallpaperSetupSubtitle,
+                      color: AppColors.blueInfo(context),
+                    ),
+                  ),
+                ],
+              ),
             ),
             const _SectionDivider(),
             _timelineRow(
               _TimelineItem(
                 index: 1,
                 label: Strings.wallpaperSetupShortcutTitle,
-                additionalContent: PrimaryButton(
-                  icon: MingCuteIcons.mgc_external_link_line,
-                  iconRight: true,
-                  text: Strings.wallpaperOpenShortcuts,
-                  onPressed: () => WallpaperInstaller().openShortcutsApp(),
+                additionalContent: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: Margins.spacingS),
+                    Align(
+                      child: Image.asset(
+                        'assets/images/shortcuts.webp',
+                        width: Dimens.iconSizeHuge,
+                        height: Dimens.iconSizeHuge,
+                      ),
+                    ),
+                    const SizedBox(height: Margins.spacingBase),
+                    PrimaryButton(
+                      icon: MingCuteIcons.mgc_external_link_line,
+                      iconRight: true,
+                      text: Strings.wallpaperOpenShortcuts,
+                      onPressed: () => WallpaperInstaller().openShortcutsApp(),
+                    ),
+                  ],
                 ),
               ),
             ),
