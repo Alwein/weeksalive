@@ -1,9 +1,13 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:purchases_flutter/purchases_flutter.dart' hide Store;
+import 'package:redux/redux.dart';
+import 'package:weeksalive/presentation/redux/app_reducer.dart';
+import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_actions.dart';
+import 'package:weeksalive/presentation/redux/purchase/purchase_middleware.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 
 import '../../../fixtures/purchase_fixtures.dart';
@@ -55,95 +59,67 @@ void main() {
   });
 
   group('bootstrap', () {
-    late StoreTester storeTester;
-    final purchaseRepo = MockPurchaseRepository();
+    late MockPurchaseRepository purchaseRepo;
 
-    setUp(() => storeTester = StoreTester());
+    setUp(() => purchaseRepo = MockPurchaseRepository());
 
-    test('transitions initial → idle(isPro:false) when user has no subscription', () {
+    Store<AppState> purchaseBootstrapStore() => Store<AppState>(
+      appReducer,
+      initialState: initialAppState(),
+      middleware: [PurchaseMiddleware(purchaseRepository: purchaseRepo).call],
+    );
+
+    test('transitions initial → idle(isPro:false) when user has no subscription', () async {
       when(() => purchaseRepo.fetchCurrentOffering()).thenAnswer((_) async => null);
       when(() => purchaseRepo.getCustomerInfo()).thenAnswer((_) async => customerInfoFixture());
       when(() => purchaseRepo.isPro(any())).thenReturn(false);
 
-      storeTester.givenStore(
-        initialAppState(),
-        configure: (f) {
-          f.purchaseRepository = purchaseRepo;
-        },
-      );
+      final store = purchaseBootstrapStore();
+      await store.dispatch(BootstrapAction());
+      await pumpEventQueue();
 
-      storeTester.whenDispatching(() => BootstrapAction());
-
-      storeTester.thenExpectStatesInOrder([
-        stateWith(
-          (s) => s.purchaseState,
-          isA<PurchaseStateSuccess>().where((s) => s.isPro, isFalse).where((s) => s.offering, isNull),
-        ),
-      ]);
+      expect(store.state.purchaseState, isA<PurchaseStateSuccess>());
+      expect(store.state.purchaseState.isPro, isFalse);
+      expect(store.state.purchaseState.offering, isNull);
     });
 
-    test('transitions initial → idle(isPro:true) when user is already subscribed', () {
+    test('transitions initial → idle(isPro:true) when user is already subscribed', () async {
       final customerInfo = customerInfoFixture(isPro: true);
       when(() => purchaseRepo.fetchCurrentOffering()).thenAnswer((_) async => null);
       when(() => purchaseRepo.getCustomerInfo()).thenAnswer((_) async => customerInfo);
       when(() => purchaseRepo.isPro(any())).thenReturn(true);
 
-      storeTester.givenStore(
-        initialAppState(),
-        configure: (f) {
-          f.purchaseRepository = purchaseRepo;
-        },
-      );
+      final store = purchaseBootstrapStore();
+      await store.dispatch(BootstrapAction());
+      await pumpEventQueue();
 
-      storeTester.whenDispatching(() => BootstrapAction());
-
-      storeTester.thenExpectStatesInOrder([
-        stateWith((s) => s.purchaseState, isA<PurchaseStateSuccess>().where((s) => s.isPro, isTrue)),
-      ]);
+      expect(store.state.purchaseState, isA<PurchaseStateSuccess>().having((s) => s.isPro, 'isPro', isTrue));
     });
 
-    test('loads the offering and exposes it on idle state', () {
+    test('loads the offering and exposes it on idle state', () async {
       final offering = offeringFixture(id: 'trial_14d', trialDays: 14);
       when(() => purchaseRepo.fetchCurrentOffering()).thenAnswer((_) async => offering);
       when(() => purchaseRepo.getCustomerInfo()).thenAnswer((_) async => customerInfoFixture());
       when(() => purchaseRepo.isPro(any())).thenReturn(false);
 
-      storeTester.givenStore(
-        initialAppState(),
-        configure: (f) {
-          f.purchaseRepository = purchaseRepo;
-        },
-      );
+      final store = purchaseBootstrapStore();
+      await store.dispatch(BootstrapAction());
+      await pumpEventQueue();
 
-      storeTester.whenDispatching(() => BootstrapAction());
-
-      storeTester.thenExpectStatesInOrder([
-        stateWith(
-          (s) => s.purchaseState,
-          isA<PurchaseStateSuccess>()
-              .where((s) => s.offering?.identifier, 'trial_14d')
-              .where((s) => s.offering?.metadata['trial_days'], 14),
-        ),
-      ]);
+      expect(store.state.purchaseState.offering?.identifier, 'trial_14d');
+      expect(store.state.purchaseState.offering?.metadata['trial_days'], 14);
     });
 
-    test('stays idle with null offering when fetchCurrentOffering throws', () {
+    test('stays idle with null offering when fetchCurrentOffering throws', () async {
       when(() => purchaseRepo.fetchCurrentOffering()).thenThrow(Exception('network error'));
       when(() => purchaseRepo.getCustomerInfo()).thenAnswer((_) async => customerInfoFixture());
       when(() => purchaseRepo.isPro(any())).thenReturn(false);
 
-      storeTester.givenStore(
-        initialAppState(),
-        configure: (f) {
-          f.purchaseRepository = purchaseRepo;
-        },
-      );
+      final store = purchaseBootstrapStore();
+      await store.dispatch(BootstrapAction());
+      await pumpEventQueue();
 
-      storeTester.whenDispatching(() => BootstrapAction());
-
-      storeTester.thenExpectStatesInOrder([
-        stateWith((s) => s.purchaseState, isA<PurchaseStateSuccess>().where((s) => s.offering, isNull)),
-      ]);
+      expect(store.state.purchaseState, isA<PurchaseStateSuccess>().having((s) => s.offering, 'offering', isNull));
     });
   });
 

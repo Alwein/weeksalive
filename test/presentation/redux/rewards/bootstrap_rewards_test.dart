@@ -47,6 +47,8 @@ void main() {
     });
 
     test('does not reset reward-unlocked icons when bootstrap finishes late', () async {
+      when(() => rewardsRepository.getUnlocked()).thenAnswer((_) async => {RewardId.appIconDraw});
+
       final store = Store<AppState>(
         appReducer,
         initialState: initialAppState(),

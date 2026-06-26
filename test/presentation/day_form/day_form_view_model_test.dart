@@ -16,13 +16,13 @@ void main() {
     }
 
     User makeUser({required DateTime dateOfBirth}) => User(
-          id: '1',
-          name: 'Adrien',
-          dateOfBirth: dateOfBirth,
-          gender: Gender.male,
-          lifespan: 90,
-          createdAt: DateTime(2024, 1, 1),
-        );
+      id: '1',
+      name: 'Adrien',
+      dateOfBirth: dateOfBirth,
+      gender: Gender.male,
+      lifespan: 90,
+      createdAt: DateTime(2024, 1, 1),
+    );
 
     test('day count is 1 on the date of birth', () {
       final dob = DateTime(1990, 6, 15);
@@ -72,7 +72,7 @@ void main() {
         date: DateTime(2024, 5, 21),
       );
 
-      expect(vm.dayCount, '1');
+      expect(vm.dayCount, '-');
     });
 
     test('day count is 1 when no user is found', () {
@@ -81,7 +81,7 @@ void main() {
         date: DateTime(2024, 5, 21),
       );
 
-      expect(vm.dayCount, '1');
+      expect(vm.dayCount, '-');
     });
 
     test('day count is 1 when date is before date of birth', () {

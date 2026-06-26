@@ -2,8 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:redux/redux.dart';
 import 'package:weeksalive/core/grid_motif/grid_motif_id.dart';
-import 'package:weeksalive/data/day/day_repository.dart';
-import 'package:weeksalive/data/rewards/rewards_repository.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/domain/rewards/reward_id.dart';
 import 'package:weeksalive/presentation/redux/app_reducer.dart';
@@ -42,6 +40,7 @@ void main() {
     });
 
     test('restores persisted reward-unlocked motif when bootstrap loads before rewards', () async {
+      when(() => rewardsRepository.getUnlocked()).thenAnswer((_) async => {RewardId.gridMotifFlowers});
       final store = Store<AppState>(
         appReducer,
         initialState: initialAppState(),

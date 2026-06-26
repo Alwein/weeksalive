@@ -42,36 +42,49 @@ class StoreTester {
   // - Then
 
   Future<void> thenExpectStatesInOrder(List<Matcher> matchers) async {
-    expect(_store.onChange, emitsInOrder(matchers.map((matcher) => emitsThrough(matcher))));
+    final pending = expectLater(
+      _store.onChange,
+      emitsInOrder(matchers.map((matcher) => emitsThrough(matcher))),
+    );
     await _whenFunction();
+    await pending;
+    await pumpEventQueue();
     _store.teardown();
   }
 
   Future<void> thenExpectAtSomePoint(Matcher matcher) async {
-    expect(_store.onChange, emitsAtLeastOnce(matcher));
+    final pending = expectLater(_store.onChange, emitsAtLeastOnce(matcher));
     await _whenFunction();
+    await pending;
+    await pumpEventQueue();
     _store.teardown();
   }
 
   Future<void> thenExpectNever(Matcher matcher) async {
-    expect(_store.onChange, neverEmits(matcher));
+    final pending = expectLater(_store.onChange, neverEmits(matcher));
     await _whenFunction();
+    await pumpEventQueue();
     _store.teardown();
+    await pending;
   }
 
   Future<void> thenExpectNothing() async {
     await _whenFunction();
+    await pumpEventQueue();
     _store.teardown();
   }
 
   Future<void> thenDebugStates(dynamic Function(AppState) info) async {
-    expect(_store.onChange, emitsThrough(DebugMatcher(info)));
+    final pending = expectLater(_store.onChange, emitsThrough(DebugMatcher(info)));
     await _whenFunction();
+    await pending;
+    await pumpEventQueue();
     _store.teardown();
   }
 
   Future<void> then(Function() expect) async {
     await _whenFunction();
+    await pumpEventQueue();
     expect();
     _store.teardown();
   }

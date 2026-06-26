@@ -34,7 +34,7 @@ void main() {
         storeTester.whenDispatching(() => BootstrapAction());
 
         // Then
-        storeTester.thenExpectStatesInOrder([
+        await storeTester.thenExpectStatesInOrder([
           stateWith(
             (s) => s.weeklyIntentState.availableIntents.length,
             kDefaultWeeklyIntents.length,
@@ -60,7 +60,7 @@ void main() {
         storeTester.whenDispatching(() => BootstrapAction());
 
         // Then
-        storeTester.thenExpectStatesInOrder([
+        await storeTester.thenExpectStatesInOrder([
           stateWith(
             (s) => s.weeklyIntentState.availableIntents,
             savedIntents,
@@ -82,7 +82,7 @@ void main() {
         storeTester.whenDispatching(() => BootstrapAction());
 
         // Then
-        storeTester.thenExpectStatesInOrder([
+        await storeTester.thenExpectStatesInOrder([
           stateWith(
             (s) => s.weeklyIntentState.availableIntents.length,
             kDefaultWeeklyIntents.length,
@@ -96,7 +96,7 @@ void main() {
     });
 
     group('when setting the selection', () {
-      test('sets intent selection', () {
+      test('sets intent selection', () async {
         // Given
         storeTester.givenStore(
           initialAppState(),
@@ -109,7 +109,7 @@ void main() {
         storeTester.whenDispatching(() => SetWeeklyIntentSelectionAction([targetId]));
 
         // Then
-        storeTester.thenExpectStatesInOrder([
+        await storeTester.thenExpectStatesInOrder([
           stateWith(
             (s) => s.weeklyIntentState.selectedIds,
             [targetId],
@@ -117,7 +117,7 @@ void main() {
         ]);
       });
 
-      test('clears selection', () {
+      test('clears selection', () async {
         // Given
         final targetId = kDefaultWeeklyIntents.first.id;
         final preloaded = initialAppState().weeklyIntentState.copyWith(
@@ -133,7 +133,7 @@ void main() {
         storeTester.whenDispatching(() => const SetWeeklyIntentSelectionAction([]));
 
         // Then
-        storeTester.thenExpectStatesInOrder([
+        await storeTester.thenExpectStatesInOrder([
           stateWith(
             (s) => s.weeklyIntentState.selectedIds,
             isEmpty,
@@ -165,7 +165,7 @@ void main() {
     });
 
     group('when adding a custom intent', () {
-      test('adds the intent to available list', () {
+      test('adds the intent to available list', () async {
         // Given
         storeTester.givenStore(
           initialAppState(),
@@ -176,7 +176,7 @@ void main() {
         storeTester.whenDispatching(() => const AddWeeklyIntentAction('DREAM'));
 
         // Then
-        storeTester.thenExpectStatesInOrder([
+        await storeTester.thenExpectStatesInOrder([
           stateWith(
             (s) => s.weeklyIntentState.availableIntents.map((i) => i.label),
             contains('DREAM'),
@@ -206,7 +206,7 @@ void main() {
     });
 
     group('when removing an intent', () {
-      test('removes it from available list', () {
+      test('removes it from available list', () async {
         // Given
         final targetId = kDefaultWeeklyIntents.first.id;
         storeTester.givenStore(
@@ -218,7 +218,7 @@ void main() {
         storeTester.whenDispatching(() => RemoveWeeklyIntentAction(targetId));
 
         // Then
-        storeTester.thenExpectStatesInOrder([
+        await storeTester.thenExpectStatesInOrder([
           stateWith(
             (s) => s.weeklyIntentState.availableIntents.map((i) => i.id),
             isNot(contains(targetId)),

@@ -7,6 +7,7 @@ import 'package:weeksalive/domain/home_widget/home_widget_payload.dart';
 
 AppColorTokens _tokens({
   Color content = const Color(0xFF112233),
+  Color contentSoft = const Color(0xFF445566),
   Color contentMuted = const Color(0xFF445566),
   Color bg = const Color(0xFFFFFFFF),
   Color bgSoft = const Color(0xFFEEEEEE),
@@ -16,7 +17,7 @@ AppColorTokens _tokens({
   return AppColorTokens(
     content: content,
     contentMuted: contentMuted,
-    contentSoft: content,
+    contentSoft: contentSoft,
     contentExtraSoft: content,
     contentSoftOnSoft: content,
     bg: bg,
@@ -36,12 +37,12 @@ void main() {
     test('encodes colors as #AARRGGBB hex strings', () {
       final palette = HomeWidgetPalette.fromTokens(_tokens());
 
-      expect(palette.content, '#FF112233');
-      expect(palette.contentSoft, '#FF445566');
-      expect(palette.bg, '#FFFFFFFF');
-      expect(palette.bgSoft, '#FFEEEEEE');
-      expect(palette.strokeColor, '#80123456', reason: 'preserves alpha');
-      expect(palette.accentOrange, '#FFFF8800');
+      expect(palette.content, '#FF112233', reason: "content");
+      expect(palette.contentSoft, '#FF445566', reason: "contentSoft");
+      expect(palette.bg, '#FFFFFFFF', reason: "bg");
+      expect(palette.bgSoft, '#FFEEEEEE', reason: "bgSoft");
+      expect(palette.strokeColor, '#80123456', reason: "strokeColor");
+      expect(palette.accentOrange, '#FFFF8800', reason: "accentOrange");
     });
 
     test('toJson exposes the drawn tokens', () {
@@ -49,7 +50,7 @@ void main() {
 
       expect(
         json.keys,
-        containsAll(['content', 'contentMuted', 'bg', 'bgSoft', 'strokeColor', 'accentOrange']),
+        containsAll(['content', 'contentSoft', 'bg', 'bgSoft', 'strokeColor', 'accentOrange']),
       );
     });
   });

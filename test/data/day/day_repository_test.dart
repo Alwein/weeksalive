@@ -2,17 +2,26 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weeksalive/data/day/app_database.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
+import 'package:weeksalive/data/day/image_storage.dart';
 import 'package:weeksalive/domain/day/day.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
+
+class _FakeImageStorage implements ImageStorage {
+  @override
+  Future<String> save(String absolutePath) async => absolutePath.split('/').last;
+
+  @override
+  Future<String> resolve(String fileName) async => '/tmp/$fileName';
+}
 
 void main() {
   group('DayRepository', () {
     late AppDatabase database;
     late DayRepository repository;
 
-    setUp(() {
+    setUp(() async {
       database = AppDatabase(NativeDatabase.memory());
-      repository = DayRepository(database: database);
+      repository = DayRepository(database: database, imageStorage: _FakeImageStorage());
     });
 
     tearDown(() async {

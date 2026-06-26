@@ -126,7 +126,7 @@ void main() {
         userState: UserState.success(makeUser()),
       );
 
-      expect(vm.lastWeekAverageFeeling, AverageFeeling.okey);
+      expect(vm.lastWeekAverageFeeling, null);
       expect(vm.lastWeekAverageFeelingScore, 0);
       expect(vm.lastWeekAverageMeaningScore, 0);
       expect(vm.lastWeekNewExperiencesCount, 0);

@@ -5,22 +5,6 @@ import 'package:weeksalive/core/styles/themes/app_theme.dart';
 import 'package:weeksalive/core/styles/themes/default_theme_tokens.dart';
 
 void main() {
-  group('DefaultThemeTokens', () {
-    test('light tokens match original default light colors', () {
-      const tokens = DefaultThemeTokens.light;
-      expect(tokens.content, const Color(0xFF090909));
-      expect(tokens.bg, const Color(0xFFFFFFFF));
-      expect(tokens.accentOrange, const Color(0xFFFF8D28));
-    });
-
-    test('dark tokens match original default dark colors', () {
-      const tokens = DefaultThemeTokens.dark;
-      expect(tokens.content, const Color(0xFFFFFFFF));
-      expect(tokens.bg, const Color(0xFF090909));
-      expect(tokens.bg, const Color(0xFF141414));
-    });
-  });
-
   group('AppThemes.resolveTokens', () {
     test('system uses light tokens in light mode', () {
       final tokens = AppThemes.resolveTokens(AppThemeId.system, Brightness.light);

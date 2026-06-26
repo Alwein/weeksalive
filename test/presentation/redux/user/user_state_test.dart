@@ -28,7 +28,7 @@ void main() {
     });
 
     group('when bootstraping the app', () {
-      test('should load then succeed when user is not found', () {
+      test('should load then succeed when user is not found', () async {
         // Given
         when(() => repository.getUser()).thenAnswer((_) async => null);
         storeTester.givenStore(
@@ -42,13 +42,13 @@ void main() {
         storeTester.whenDispatching(() => BootstrapAction());
 
         // Then
-        storeTester.thenExpectStatesInOrder([
+        await storeTester.thenExpectStatesInOrder([
           stateWith((s) => s.userState, isA<UserStateLoading>()),
           stateWith((s) => s.userState, isA<UserStateSuccess>().where((s) => s.user, isNull)),
         ]);
       });
 
-      test('should load then succeed when user is found', () {
+      test('should load then succeed when user is found', () async {
         // Given
         when(() => repository.getUser()).thenAnswer((_) async => userFixture());
         storeTester.givenStore(
@@ -62,7 +62,7 @@ void main() {
         storeTester.whenDispatching(() => BootstrapAction());
 
         // Then
-        storeTester.thenExpectStatesInOrder([
+        await storeTester.thenExpectStatesInOrder([
           stateWith((s) => s.userState, isA<UserStateLoading>()),
           stateWith((s) => s.userState, isA<UserStateSuccess>().where((s) => s.user, userFixture())),
         ]);

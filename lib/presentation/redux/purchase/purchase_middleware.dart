@@ -56,12 +56,6 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
   }
 
   Future<void> _handlePurchase(Store<AppState> store, Package package) async {
-    // TODO: Remove me: only for testing
-    if (1 == 1) {
-      store.dispatch(const PurchaseSucceededAction(isPro: true));
-      return;
-    }
-
     try {
       final customerInfo = await purchaseRepository.purchasePackage(package);
       store.dispatch(PurchaseSucceededAction(isPro: purchaseRepository.isPro(customerInfo)));
