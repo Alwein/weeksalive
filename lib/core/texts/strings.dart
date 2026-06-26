@@ -86,6 +86,12 @@ class Strings {
   static String get onboarding03WeekOfTheYear => "WEEK OF THE YEAR";
   static String get onboarding03Footer => "Every dot is a week you lived, or a week still ahead of you.";
 
+  static String get onboarding03bTitle => "The life of a typical american";
+  static String get onboarding03bChildhood => "YOUTH";
+  static String get onboarding03bEducation => "EDUCATION";
+  static String get onboarding03bCareer => "CAREER";
+  static String get onboarding03bRetirement => "RETIREMENT";
+
   static String get iAmReady => "I\u2019m ready";
 
   static String get onboardingThemePickerTitle => "Choose your theme.";
