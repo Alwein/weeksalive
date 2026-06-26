@@ -135,42 +135,42 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return ApparitionAnimation(
-        child: Column(
-          children: [
-            SizedBox(height: MediaQuery.paddingOf(context).top),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
-              child: HomeAppBar(
-                key: _appBarKey,
-                vm: widget.vm,
-                tabController: _gridTabController,
-              ),
-            ),
-            const SizedBox(height: Margins.spacingBase),
-            HomeWeekCalendar(
+      child: Column(
+        children: [
+          SizedBox(height: MediaQuery.paddingOf(context).top),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
+            child: HomeAppBar(
+              key: _appBarKey,
               vm: widget.vm,
-              onTodayTap: _openTodayForm,
-              onPastDayTap: _onPastDayTap,
-            ),
-            const SizedBox(height: Margins.spacingBase),
-            Expanded(
-              child: ZoomableLifeGridView(
-                key: _zoomableGridKey,
-                grid: widget.vm.lifeWeekGrid,
-                tabController: _gridTabController,
-                padding: const EdgeInsets.only(left: Margins.spacingL, right: Margins.spacingL),
-                onPastDayTap: (date, entry) => _onPastDayTap(date),
-              ),
-            ),
-            _BottomBar(
-              streakCount: widget.vm.streakCount,
-              isTodayDone: widget.vm.isTodayDone,
               tabController: _gridTabController,
-              onTabTap: _onGridTabTapped,
-              onTodayTap: _openTodayForm,
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: Margins.spacingBase),
+          HomeWeekCalendar(
+            vm: widget.vm,
+            onTodayTap: _openTodayForm,
+            onPastDayTap: _onPastDayTap,
+          ),
+          const SizedBox(height: Margins.spacingBase),
+          Expanded(
+            child: ZoomableLifeGridView(
+              key: _zoomableGridKey,
+              grid: widget.vm.lifeWeekGrid,
+              tabController: _gridTabController,
+              padding: const EdgeInsets.only(left: Margins.spacingL, right: Margins.spacingL),
+              onPastDayTap: (date, entry) => _onPastDayTap(date),
+            ),
+          ),
+          _BottomBar(
+            streakCount: widget.vm.streakCount,
+            isTodayDone: widget.vm.isTodayDone,
+            tabController: _gridTabController,
+            onTabTap: _onGridTabTapped,
+            onTodayTap: _openTodayForm,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -262,6 +262,7 @@ class _TodayButton extends StatelessWidget {
                 size: Dimens.iconSizeS,
                 color: fgColor,
               ),
+              const SizedBox(width: Margins.spacingXs),
               Text(
                 Strings.today,
                 style: TextStyles.primaryRegularBold.copyWith(
