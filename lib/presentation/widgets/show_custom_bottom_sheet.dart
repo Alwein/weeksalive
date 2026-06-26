@@ -116,7 +116,6 @@ class _CustomBottomSheetContentState extends State<_CustomBottomSheetContent> wi
 
   @override
   Widget build(BuildContext context) {
-    final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
     final hasPreview = widget.previewBuilder != null;
     final bgController = AppBackgroundScaleScope.maybeOf(context);
 

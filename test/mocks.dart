@@ -56,6 +56,7 @@ class MockPushNotificationRepository extends Mock implements PushNotificationRep
       () => scheduleAllNotifications(
         dailyTimes: any(named: 'dailyTimes'),
         weeklySummary: any(named: 'weeklySummary'),
+        hasTodayEntry: any(named: 'hasTodayEntry'),
       ),
     ).thenAnswer((_) async {});
     when(() => openAppSettings()).thenAnswer((_) async {});

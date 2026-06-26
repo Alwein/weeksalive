@@ -1,10 +1,10 @@
 import 'package:timezone/timezone.dart' as tz;
 
 abstract final class NotificationScheduleCalculator {
-  static tz.TZDateTime nextDailyOccurrence(int hour, int minute) {
-    final now = tz.TZDateTime.now(tz.local);
-    var scheduled = tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
-    if (scheduled.isBefore(now)) {
+  static tz.TZDateTime nextDailyOccurrence(int hour, int minute, {tz.TZDateTime? now}) {
+    final effectiveNow = now ?? tz.TZDateTime.now(tz.local);
+    var scheduled = tz.TZDateTime(tz.local, effectiveNow.year, effectiveNow.month, effectiveNow.day, hour, minute);
+    if (scheduled.isBefore(effectiveNow)) {
       scheduled = scheduled.add(const Duration(days: 1));
     }
     return scheduled;

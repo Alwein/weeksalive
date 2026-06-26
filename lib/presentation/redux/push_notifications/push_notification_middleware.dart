@@ -1,8 +1,10 @@
 import 'package:redux/redux.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
+import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/domain/notifications/notification_slots.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
+import 'package:weeksalive/presentation/redux/day/day_actions.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
 import 'package:weeksalive/presentation/redux/user/user_actions.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
@@ -72,6 +74,22 @@ class PushNotificationMiddleware extends MiddlewareClass<AppState> {
         weeklySummary: null,
       );
     }
+
+    if (action is DaysLoadedAction || action is SaveDayAction || action is DeleteDayAction) {
+      if (_shouldRescheduleForDayChange(store, action)) {
+        await _reschedule(store);
+      }
+    }
+  }
+
+  bool _shouldRescheduleForDayChange(Store<AppState> store, Object action) {
+    final now = DateTime.now();
+    return switch (action) {
+      DaysLoadedAction() => _hasTodayEntry(store),
+      SaveDayAction(:final entry) => normalizeDay(entry.date) == normalizeDay(now),
+      DeleteDayAction(:final date) => normalizeDay(date) == normalizeDay(now),
+      _ => false,
+    };
   }
 
   Future<void> _reschedule(Store<AppState> store, {int? weekStartDay}) async {
@@ -82,6 +100,9 @@ class PushNotificationMiddleware extends MiddlewareClass<AppState> {
     await pushNotificationRepository.scheduleAllNotifications(
       dailyTimes: slots.toNotificationTimes(),
       weeklySummary: slots.weeklySummarySchedule(effectiveWeekStartDay),
+      hasTodayEntry: _hasTodayEntry(store),
     );
   }
+
+  bool _hasTodayEntry(Store<AppState> store) => store.state.dayState.entryFor(DateTime.now()) != null;
 }

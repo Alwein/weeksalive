@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/domain/notifications/notification_payloads.dart';
 import 'package:weeksalive/domain/notifications/notification_slots.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
+import 'package:weeksalive/presentation/redux/day/day_actions.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_actions.dart';
@@ -348,6 +350,86 @@ void main() {
           PendingNotificationTarget.dayForm,
         ),
       ]);
+    });
+  });
+
+  group('DaysLoadedAction', () {
+    late StoreTester storeTester;
+    late MockPushNotificationRepository pushRepo;
+
+    setUp(() {
+      storeTester = StoreTester();
+      pushRepo = MockPushNotificationRepository();
+    });
+
+    test('reschedules with hasTodayEntry when today is logged', () async {
+      final today = normalizeDay(DateTime.now());
+      storeTester.givenStore(
+        initialAppState().copyWith(
+          dayState: initialAppState().dayState.copyWith(
+            entries: {today: DayEntry(date: today)},
+          ),
+        ),
+        configure: (f) => f.pushNotificationRepository = pushRepo,
+      );
+
+      storeTester.whenDispatching(() => DaysLoadedAction([DayEntry(date: today)]));
+
+      await storeTester.thenExpectNothing();
+
+      verify(
+        () => pushRepo.scheduleAllNotifications(
+          dailyTimes: any(named: 'dailyTimes'),
+          weeklySummary: any(named: 'weeklySummary'),
+          hasTodayEntry: true,
+        ),
+      ).called(1);
+    });
+  });
+
+  group('SaveDayAction', () {
+    late MockPushNotificationRepository pushRepo;
+    late TestStoreFactory factory;
+
+    setUp(() {
+      pushRepo = MockPushNotificationRepository();
+      factory = TestStoreFactory()..pushNotificationRepository = pushRepo;
+    });
+
+    test('reschedules with hasTodayEntry after saving today', () async {
+      final today = normalizeDay(DateTime.now());
+      final store = factory.initializeReduxStore(initialAppState());
+
+      await store.dispatch(SaveDayAction(DayEntry(date: today)));
+      await _dispatchBootstrapAndWaitForMiddleware();
+
+      verify(
+        () => pushRepo.scheduleAllNotifications(
+          dailyTimes: any(named: 'dailyTimes'),
+          weeklySummary: any(named: 'weeklySummary'),
+          hasTodayEntry: true,
+        ),
+      ).called(1);
+
+      store.teardown();
+    });
+
+    test('does not reschedule after saving a past day', () async {
+      final yesterday = normalizeDay(DateTime.now()).subtract(const Duration(days: 1));
+      final store = factory.initializeReduxStore(initialAppState());
+
+      await store.dispatch(SaveDayAction(DayEntry(date: yesterday)));
+      await _dispatchBootstrapAndWaitForMiddleware();
+
+      verifyNever(
+        () => pushRepo.scheduleAllNotifications(
+          dailyTimes: any(named: 'dailyTimes'),
+          weeklySummary: any(named: 'weeklySummary'),
+          hasTodayEntry: any(named: 'hasTodayEntry'),
+        ),
+      );
+
+      store.teardown();
     });
   });
 

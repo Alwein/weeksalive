@@ -42,5 +42,11 @@ class PushNotificationRepository {
   Future<void> scheduleAllNotifications({
     required List<TimeOfDay> dailyTimes,
     WeeklySummarySchedule? weeklySummary,
-  }) => _scheduler.reschedule(dailyTimes: dailyTimes, weeklySummary: weeklySummary);
+    bool hasTodayEntry = false,
+  }) =>
+      _scheduler.reschedule(
+        dailyTimes: dailyTimes,
+        weeklySummary: weeklySummary,
+        hasTodayEntry: hasTodayEntry,
+      );
 }
