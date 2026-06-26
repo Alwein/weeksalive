@@ -34,6 +34,9 @@ class OnboardingFormController extends ChangeNotifier {
   bool _gridRevealReady = false;
   bool get gridRevealReady => _gridRevealReady;
 
+  bool _ratingReady = false;
+  bool get ratingReady => _ratingReady;
+
   int get currentAge {
     final dob = _dateOfBirth;
     if (dob == null) return 0;
@@ -113,6 +116,12 @@ class OnboardingFormController extends ChangeNotifier {
   void setGridRevealReady(bool value) {
     if (_gridRevealReady == value) return;
     _gridRevealReady = value;
+    notifyListeners();
+  }
+
+  void setRatingReady(bool value) {
+    if (_ratingReady == value) return;
+    _ratingReady = value;
     notifyListeners();
   }
 
