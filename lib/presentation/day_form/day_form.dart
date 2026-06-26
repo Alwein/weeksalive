@@ -302,7 +302,7 @@ class _DayHeader extends StatelessWidget {
             width: circleSize,
             height: circleSize,
             decoration: BoxDecoration(
-              color: AppColors.content(context),
+              color: AppColors.accentOrange(context),
               shape: BoxShape.circle,
             ),
           ),
