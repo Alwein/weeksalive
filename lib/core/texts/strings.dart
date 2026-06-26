@@ -83,6 +83,7 @@ class Strings {
 
   static String get onboarding03Title => "Your life is made of weeks.";
   static String get onboarding03Subtitle => "Birthdays, heartbreaks, Tuesdays.\nEvery one is here.";
+  static String get onboarding03WeekOfTheYear => "WEEK OF THE YEAR";
   static String get onboarding03Footer => "Every dot is a week you lived, or a week still ahead of you.";
 
   static String get iAmReady => "I\u2019m ready";

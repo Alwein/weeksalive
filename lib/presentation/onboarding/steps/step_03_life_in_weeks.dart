@@ -1,23 +1,33 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
+import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 const _kColumns = 52;
-const _kTotalWeeks = 3000;
-const _kLivedWeeks = 1111;
+const _kTotalWeeks = 4681;
+const _kLivedWeeks = 1560;
 const _kDotSpacing = 2.4;
+const _kAgeLegendWidth = 16.0;
+const _kAgeMarkerWidth = 20.0;
+const _kMarkerGap = 4.0;
+const _kLegendIconSize = 16.0;
+const _kLabelHeight = FontSizes.extraSmall;
+const _kTopLegendHeight = 16.0;
+const _kFirstAgeMarker = 10;
+const _kAgeMarkerStep = 10;
+const _kAnimationTick = Duration(milliseconds: 300);
+const _kAnimatedRows = 30;
 
 // Stagger delays for each content group.
 const _kDelay1 = Duration(milliseconds: 300);
 const _kDelay2 = Duration(milliseconds: 800);
-const _kDelay3 = Duration(milliseconds: 1200);
 
 class Step03LifeInWeeks extends OnboardingStep {
   const Step03LifeInWeeks();
@@ -53,8 +63,6 @@ class Step03LifeInWeeks extends OnboardingStep {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Texts.xlBold(Strings.onboarding03Title),
-                        const SizedBox(height: Margins.spacingBase),
-                        Texts.primaryMediumSoft(context, Strings.onboarding03Subtitle),
                         const SizedBox(height: Margins.spacingM),
                       ],
                     ),
@@ -66,22 +74,6 @@ class Step03LifeInWeeks extends OnboardingStep {
                   const SizedBox(height: Margins.spacingM),
                 ],
               ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
-          child: _FadeSlideIn(
-            delay: _kDelay3,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SmallDivider(),
-                const SizedBox(height: Margins.spacingM),
-                Texts.primaryMediumSoft(context, Strings.onboarding03Footer),
-                const SizedBox(height: Margins.spacingM),
-              ],
             ),
           ),
         ),
@@ -104,9 +96,9 @@ class _GridIllustrationState extends State<_GridIllustration> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+    _timer = Timer.periodic(_kAnimationTick, (_) {
       setState(() {
-        _extra = (_extra + 1) % (_kColumns + 1);
+        _extra = (_extra + 1) % (_kColumns * _kAnimatedRows + 1);
       });
     });
   }
@@ -121,30 +113,168 @@ class _GridIllustrationState extends State<_GridIllustration> {
   Widget build(BuildContext context) {
     final activeColor = AppColors.content(context);
     final inactiveColor = AppColors.bgSoft(context);
+    final accentColor = AppColors.accentOrange(context);
+    final labelColor = AppColors.contentSoft(context);
+    final legendColor = AppColors.content(context);
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final exactHeight = _WeekGridPainter.computeHeight(
-          availableWidth: constraints.maxWidth,
+        final gridWidth = constraints.maxWidth - _kAgeLegendWidth - _kAgeMarkerWidth - _kMarkerGap;
+        final dotSize = (gridWidth - _kDotSpacing * (_kColumns - 1)) / _kColumns;
+        final gridHeight = _WeekGridPainter.computeHeight(
+          availableWidth: gridWidth,
           totalWeeks: _kTotalWeeks,
           columns: _kColumns,
           dotSpacing: _kDotSpacing,
         );
-        return SizedBox(
-          width: double.infinity,
-          height: exactHeight,
-          child: CustomPaint(
-            painter: _WeekGridPainter(
-              columns: _kColumns,
-              totalWeeks: _kTotalWeeks,
-              livedWeeks: _kLivedWeeks + _extra,
-              dotSpacing: _kDotSpacing,
-              activeColor: activeColor,
-              inactiveColor: inactiveColor,
+
+        return Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: _kAgeMarkerWidth + _kMarkerGap),
+                  child: SizedBox(
+                    width: gridWidth,
+                    height: _kTopLegendHeight,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: _AxisLegend(
+                            label: Strings.onboarding03WeekOfTheYear,
+                            trailingIcon: MingCuteIcons.mgc_arrow_right_line,
+                            color: legendColor,
+                          ),
+                        ),
+                        _GridLabel('$_kColumns', color: labelColor),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: Margins.spacingS),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: _kAgeMarkerWidth,
+                      height: gridHeight,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            left: 0,
+                            child: Center(
+                              child: RotatedBox(
+                                quarterTurns: 3,
+                                child: _AxisLegend(
+                                  label: Strings.profilePageAge,
+                                  leadingIcon: MingCuteIcons.mgc_arrow_left_line,
+                                  color: legendColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                          for (var age = _kFirstAgeMarker; age * _kColumns < _kTotalWeeks; age += _kAgeMarkerStep)
+                            Positioned(
+                              top: _rowCenterY(age, dotSize) - _kLabelHeight / 2,
+                              left: 0,
+                              right: 0,
+                              child: _GridLabel(
+                                '$age',
+                                color: labelColor,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: _kMarkerGap),
+                    SizedBox(
+                      width: gridWidth,
+                      height: gridHeight,
+                      child: CustomPaint(
+                        painter: _WeekGridPainter(
+                          columns: _kColumns,
+                          totalWeeks: _kTotalWeeks,
+                          livedWeeks: _kLivedWeeks + _extra,
+                          dotSpacing: _kDotSpacing,
+                          activeColor: activeColor,
+                          inactiveColor: inactiveColor,
+                          accentColor: accentColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ),
+          ],
         );
       },
+    );
+  }
+
+  double _rowCenterY(int age, double dotSize) => age * (dotSize + _kDotSpacing) + dotSize / 2;
+}
+
+class _GridLabel extends StatelessWidget {
+  const _GridLabel(
+    this.text, {
+    required this.color,
+    this.textAlign,
+  });
+
+  final String text;
+  final Color color;
+  final TextAlign? textAlign;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      textAlign: textAlign,
+      style: TextStyles.primaryXsBold.copyWith(color: color, height: 1),
+    );
+  }
+}
+
+class _AxisLegend extends StatelessWidget {
+  const _AxisLegend({
+    required this.label,
+    required this.color,
+    this.leadingIcon,
+    this.trailingIcon,
+  });
+
+  final String label;
+  final Color color;
+  final IconData? leadingIcon;
+  final IconData? trailingIcon;
+
+  @override
+  Widget build(BuildContext context) {
+    final style = TextStyles.primarySmallMedium.copyWith(color: color);
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: Margins.spacingXs,
+      children: [
+        if (leadingIcon != null) Icon(leadingIcon, size: _kLegendIconSize, color: color),
+        Text(label, style: style),
+        if (trailingIcon != null)
+          SizedBox.square(
+            dimension: style.fontSize,
+            child: OverflowBox(
+              alignment: Alignment.center,
+              maxWidth: _kLegendIconSize,
+              maxHeight: _kLegendIconSize,
+              child: Icon(trailingIcon, size: _kLegendIconSize, color: color),
+            ),
+          ),
+      ],
     );
   }
 }
@@ -157,6 +287,7 @@ class _WeekGridPainter extends CustomPainter {
     required this.dotSpacing,
     required this.activeColor,
     required this.inactiveColor,
+    required this.accentColor,
   });
 
   final int columns;
@@ -165,6 +296,7 @@ class _WeekGridPainter extends CustomPainter {
   final double dotSpacing;
   final Color activeColor;
   final Color inactiveColor;
+  final Color accentColor;
 
   static double computeHeight({
     required double availableWidth,
@@ -183,19 +315,24 @@ class _WeekGridPainter extends CustomPainter {
 
     final activePaint = Paint()..color = activeColor;
     final inactivePaint = Paint()..color = inactiveColor;
+    final accentPaint = Paint()..color = accentColor;
 
     for (var i = 0; i < totalWeeks; i++) {
       final col = i % columns;
       final row = i ~/ columns;
       final x = col * (dotSize + dotSpacing) + dotSize / 2;
       final y = row * (dotSize + dotSpacing) + dotSize / 2;
-      canvas.drawCircle(Offset(x, y), dotSize / 2, i < livedWeeks ? activePaint : inactivePaint);
+      final paint = i >= livedWeeks ? inactivePaint : (i == livedWeeks - 1 ? accentPaint : activePaint);
+      canvas.drawCircle(Offset(x, y), dotSize / 2, paint);
     }
   }
 
   @override
   bool shouldRepaint(_WeekGridPainter old) =>
-      old.livedWeeks != livedWeeks || old.activeColor != activeColor || old.inactiveColor != inactiveColor;
+      old.livedWeeks != livedWeeks ||
+      old.activeColor != activeColor ||
+      old.inactiveColor != inactiveColor ||
+      old.accentColor != accentColor;
 }
 
 class _FadeSlideIn extends StatefulWidget {
