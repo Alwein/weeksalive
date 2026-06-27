@@ -8,6 +8,7 @@ import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/presentation/day_form/day_form.dart';
+import 'package:weeksalive/presentation/paywall/in_app_paywall_launcher.dart';
 import 'package:weeksalive/presentation/home/view_model/home_page_view_model.dart';
 import 'package:weeksalive/presentation/home/widgets/day_resume_bottom_sheet/day_resume_bottom_sheet.dart';
 import 'package:weeksalive/presentation/home/widgets/home_appbar.dart';
@@ -15,6 +16,7 @@ import 'package:weeksalive/presentation/home/widgets/home_week_calendar.dart';
 import 'package:weeksalive/presentation/home/widgets/rewards_celebration_listener.dart';
 import 'package:weeksalive/presentation/home/widgets/streak_grace_reminder_listener.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/custom_tab_bar.dart';
+import 'package:weeksalive/presentation/paywall/show_in_app_paywall.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/navigation/navigation_actions.dart';
 import 'package:weeksalive/presentation/redux/weekly_summary/weekly_summary_actions.dart';
@@ -30,13 +32,15 @@ class HomePage extends StatelessWidget {
       converter: HomePageViewModel.create,
       builder: (context, vm) {
         final store = StoreProvider.of<AppState>(context);
-        return Scaffold(
-          backgroundColor: AppColors.bg(context),
-          body: RewardsCelebrationListener(
-            child: StreakGraceReminderListener(
-              child: _Body(
-                vm: vm,
-                initialTabIndex: store.state.navigationState.homeTabIndex,
+        return InAppPaywallLauncher(
+          child: Scaffold(
+            backgroundColor: AppColors.bg(context),
+            body: RewardsCelebrationListener(
+              child: StreakGraceReminderListener(
+                child: _Body(
+                  vm: vm,
+                  initialTabIndex: store.state.navigationState.homeTabIndex,
+                ),
               ),
             ),
           ),
@@ -107,6 +111,11 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
   }
 
   Future<void> _openTodayForm() async {
+    if (!widget.vm.isPro) {
+      await showInAppPaywall(context);
+      return;
+    }
+
     final result = await DayForm.showBottomSheet(
       context,
       DateTime.now(),

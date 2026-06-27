@@ -36,4 +36,10 @@ extension PurchaseStateX on PurchaseState {
   };
 
   bool get isLoading => this is PurchaseStateLoading;
+
+  bool get isResolved => switch (this) {
+    PurchaseStateInitial() => false,
+    PurchaseStateLoading() => false,
+    _ => true,
+  };
 }

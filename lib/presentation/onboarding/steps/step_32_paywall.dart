@@ -3,6 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
+import 'package:weeksalive/presentation/paywall/paywall_presentation.dart';
 import 'package:weeksalive/presentation/paywall/paywall_page.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
@@ -36,7 +37,9 @@ class __PaywallDisplayerState extends State<_PaywallDisplayer> {
   Future<void> _showPaywall() async {
     final isPro = StoreProvider.of<AppState>(context).state.purchaseState.isPro;
     if (!isPro) {
-      await Navigator.of(context).push<bool>(PaywallPage.route());
+      await Navigator.of(context).push<bool>(
+        PaywallPage.route(presentation: PaywallPresentation.onboarding),
+      );
     }
     Future.delayed(const Duration(milliseconds: 300), () => _next());
   }

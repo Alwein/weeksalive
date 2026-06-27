@@ -3,6 +3,7 @@ import 'package:redux/redux.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/domain/life_week_grid.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
 
 part 'home_page_view_model.freezed.dart';
@@ -21,6 +22,7 @@ abstract class HomePageViewModel with _$HomePageViewModel {
     @Default({}) Set<DateTime> recordedDays,
     @Default(false) bool isTodayDone,
     @Default(false) bool isYesterdayGracePeriod,
+    @Default(false) bool isPro,
   }) = _HomePageViewModel;
 
   factory HomePageViewModel.create(Store<AppState> store) {
@@ -34,6 +36,7 @@ abstract class HomePageViewModel with _$HomePageViewModel {
       recordedDays: recordedDays,
       isTodayDone: recordedDays.contains(normalizeDay(now)),
       isYesterdayGracePeriod: isYesterdayGracePeriod(recordedDays: recordedDays, now: now),
+      isPro: store.state.purchaseState.isPro,
     );
   }
 }

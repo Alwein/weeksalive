@@ -49,6 +49,13 @@ void main() {
       expect(const PurchaseState.success(offering: null, isPro: false).isLoading, isFalse);
     });
 
+    test('isResolved extension returns false until success or error', () {
+      expect(const PurchaseState.initial().isResolved, isFalse);
+      expect(const PurchaseState.loading().isResolved, isFalse);
+      expect(const PurchaseState.success(offering: null, isPro: false).isResolved, isTrue);
+      expect(const PurchaseState.error(message: 'e', isPro: false).isResolved, isTrue);
+    });
+
     test('offering extension propagates through all stateful variants', () {
       final offering = offeringFixture();
       expect(const PurchaseState.initial().offering, isNull);

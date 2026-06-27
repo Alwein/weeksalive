@@ -9,6 +9,7 @@ import 'package:weeksalive/core/texts/app_links.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/display_state.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
+import 'package:weeksalive/presentation/paywall/paywall_presentation.dart';
 import 'package:weeksalive/presentation/paywall/paywall_view_model.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_actions.dart';
@@ -16,9 +17,16 @@ import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class PaywallPage extends StatelessWidget {
-  const PaywallPage({super.key});
+  const PaywallPage({super.key, this.presentation = PaywallPresentation.onboarding});
 
-  static Route<bool> route() => MaterialPageRoute<bool>(builder: (_) => const PaywallPage());
+  final PaywallPresentation presentation;
+
+  static Route<bool> route({PaywallPresentation presentation = PaywallPresentation.onboarding}) {
+    return MaterialPageRoute<bool>(
+      builder: (_) => PaywallPage(presentation: presentation),
+      fullscreenDialog: presentation == PaywallPresentation.inApp,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +36,7 @@ class PaywallPage extends StatelessWidget {
       distinct: true,
       builder: (context, vm) {
         return _PaywallView(
+          presentation: presentation,
           trialWeeks: vm.trialWeeks,
           trialEndDate: vm.trialEndDate,
           pricePerYear: vm.pricePerYear,
@@ -46,6 +55,7 @@ class PaywallPage extends StatelessWidget {
 
 class _PaywallView extends StatefulWidget {
   const _PaywallView({
+    required this.presentation,
     required this.trialWeeks,
     required this.trialEndDate,
     required this.pricePerYear,
@@ -58,6 +68,7 @@ class _PaywallView extends StatefulWidget {
     required this.onDismiss,
   });
 
+  final PaywallPresentation presentation;
   final int? trialWeeks;
   final String? trialEndDate;
   final String? pricePerYear;
@@ -106,8 +117,10 @@ class _PaywallViewState extends State<_PaywallView> with SingleTickerProviderSta
 
   @override
   Widget build(BuildContext context) {
+    final canPop = _showSuccess || widget.presentation.isDismissible;
+
     return PopScope(
-      canPop: _showSuccess,
+      canPop: canPop,
       child: Scaffold(
         backgroundColor: AppColors.bg(context),
         body: SafeArea(
@@ -117,29 +130,43 @@ class _PaywallViewState extends State<_PaywallView> with SingleTickerProviderSta
                   fadeAnimation: _fadeAnimation,
                   onGetStarted: () => Navigator.of(context).pop(true),
                 )
-              : Column(
+              : Stack(
                   children: [
-                    Expanded(
-                      child: Center(
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 520),
-                          child: _TimelineOffer(
-                            trialWeeks: widget.trialWeeks,
-                            trialEndDate: widget.trialEndDate,
+                    Column(
+                      children: [
+                        Expanded(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 520),
+                            child: _TimelineOffer(
+                              trialWeeks: widget.trialWeeks,
+                              trialEndDate: widget.trialEndDate,
+                            ),
+                          ),
+                        ),
+                        _FooterSection(
+                          errorMessage: widget.errorMessage,
+                          pricePerYear: widget.pricePerYear,
+                          pricePerWeek: widget.pricePerWeek,
+                          trialWeeks: widget.trialWeeks,
+                          isLoading: widget.isLoading,
+                          onStartTrial: widget.onStartTrial,
+                          onRestore: widget.onRestore,
+                          onDismiss: widget.onDismiss,
+                        ),
+                      ],
+                    ),
+                    if (widget.presentation.isDismissible)
+                      Positioned(
+                        top: Margins.spacingXs,
+                        right: Margins.spacingS,
+                        child: IconButton(
+                          onPressed: widget.onDismiss,
+                          icon: Icon(
+                            MingCuteIcons.mgc_close_line,
+                            color: AppColors.contentSoft(context),
                           ),
                         ),
                       ),
-                    ),
-                    _FooterSection(
-                      errorMessage: widget.errorMessage,
-                      pricePerYear: widget.pricePerYear,
-                      pricePerWeek: widget.pricePerWeek,
-                      trialWeeks: widget.trialWeeks,
-                      isLoading: widget.isLoading,
-                      onStartTrial: widget.onStartTrial,
-                      onRestore: widget.onRestore,
-                      onDismiss: widget.onDismiss,
-                    ),
                   ],
                 ),
         ),
@@ -309,6 +336,10 @@ class _TimelineOffer extends StatelessWidget {
           const SizedBox(height: Margins.spacingL),
           _TrialTimeline(trialWeeks: trialWeeks, trialEndDate: trialEndDate),
           const SizedBox(height: Margins.spacingBase),
+          // TODO: work zone
+          const Placeholder(
+            fallbackHeight: 400,
+          ),
         ],
       ),
     );

@@ -16,7 +16,7 @@ mixin _$HomePageViewModel {
 
  String get userName; int get streakCount; LifeWeekGrid get lifeWeekGrid;/// ISO weekday (1 = Monday … 7 = Sunday) at which the week starts.
  int get weekStartDay;/// Set of dates (normalized to midnight) that have been recorded.
- Set<DateTime> get recordedDays; bool get isTodayDone; bool get isYesterdayGracePeriod;
+ Set<DateTime> get recordedDays; bool get isTodayDone; bool get isYesterdayGracePeriod; bool get isPro;
 /// Create a copy of HomePageViewModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,16 +27,16 @@ $HomePageViewModelCopyWith<HomePageViewModel> get copyWith => _$HomePageViewMode
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomePageViewModel&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.streakCount, streakCount) || other.streakCount == streakCount)&&(identical(other.lifeWeekGrid, lifeWeekGrid) || other.lifeWeekGrid == lifeWeekGrid)&&(identical(other.weekStartDay, weekStartDay) || other.weekStartDay == weekStartDay)&&const DeepCollectionEquality().equals(other.recordedDays, recordedDays)&&(identical(other.isTodayDone, isTodayDone) || other.isTodayDone == isTodayDone)&&(identical(other.isYesterdayGracePeriod, isYesterdayGracePeriod) || other.isYesterdayGracePeriod == isYesterdayGracePeriod));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomePageViewModel&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.streakCount, streakCount) || other.streakCount == streakCount)&&(identical(other.lifeWeekGrid, lifeWeekGrid) || other.lifeWeekGrid == lifeWeekGrid)&&(identical(other.weekStartDay, weekStartDay) || other.weekStartDay == weekStartDay)&&const DeepCollectionEquality().equals(other.recordedDays, recordedDays)&&(identical(other.isTodayDone, isTodayDone) || other.isTodayDone == isTodayDone)&&(identical(other.isYesterdayGracePeriod, isYesterdayGracePeriod) || other.isYesterdayGracePeriod == isYesterdayGracePeriod)&&(identical(other.isPro, isPro) || other.isPro == isPro));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userName,streakCount,lifeWeekGrid,weekStartDay,const DeepCollectionEquality().hash(recordedDays),isTodayDone,isYesterdayGracePeriod);
+int get hashCode => Object.hash(runtimeType,userName,streakCount,lifeWeekGrid,weekStartDay,const DeepCollectionEquality().hash(recordedDays),isTodayDone,isYesterdayGracePeriod,isPro);
 
 @override
 String toString() {
-  return 'HomePageViewModel(userName: $userName, streakCount: $streakCount, lifeWeekGrid: $lifeWeekGrid, weekStartDay: $weekStartDay, recordedDays: $recordedDays, isTodayDone: $isTodayDone, isYesterdayGracePeriod: $isYesterdayGracePeriod)';
+  return 'HomePageViewModel(userName: $userName, streakCount: $streakCount, lifeWeekGrid: $lifeWeekGrid, weekStartDay: $weekStartDay, recordedDays: $recordedDays, isTodayDone: $isTodayDone, isYesterdayGracePeriod: $isYesterdayGracePeriod, isPro: $isPro)';
 }
 
 
@@ -47,7 +47,7 @@ abstract mixin class $HomePageViewModelCopyWith<$Res>  {
   factory $HomePageViewModelCopyWith(HomePageViewModel value, $Res Function(HomePageViewModel) _then) = _$HomePageViewModelCopyWithImpl;
 @useResult
 $Res call({
- String userName, int streakCount, LifeWeekGrid lifeWeekGrid, int weekStartDay, Set<DateTime> recordedDays, bool isTodayDone, bool isYesterdayGracePeriod
+ String userName, int streakCount, LifeWeekGrid lifeWeekGrid, int weekStartDay, Set<DateTime> recordedDays, bool isTodayDone, bool isYesterdayGracePeriod, bool isPro
 });
 
 
@@ -64,7 +64,7 @@ class _$HomePageViewModelCopyWithImpl<$Res>
 
 /// Create a copy of HomePageViewModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? userName = null,Object? streakCount = null,Object? lifeWeekGrid = null,Object? weekStartDay = null,Object? recordedDays = null,Object? isTodayDone = null,Object? isYesterdayGracePeriod = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? userName = null,Object? streakCount = null,Object? lifeWeekGrid = null,Object? weekStartDay = null,Object? recordedDays = null,Object? isTodayDone = null,Object? isYesterdayGracePeriod = null,Object? isPro = null,}) {
   return _then(_self.copyWith(
 userName: null == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
 as String,streakCount: null == streakCount ? _self.streakCount : streakCount // ignore: cast_nullable_to_non_nullable
@@ -73,6 +73,7 @@ as LifeWeekGrid,weekStartDay: null == weekStartDay ? _self.weekStartDay : weekSt
 as int,recordedDays: null == recordedDays ? _self.recordedDays : recordedDays // ignore: cast_nullable_to_non_nullable
 as Set<DateTime>,isTodayDone: null == isTodayDone ? _self.isTodayDone : isTodayDone // ignore: cast_nullable_to_non_nullable
 as bool,isYesterdayGracePeriod: null == isYesterdayGracePeriod ? _self.isYesterdayGracePeriod : isYesterdayGracePeriod // ignore: cast_nullable_to_non_nullable
+as bool,isPro: null == isPro ? _self.isPro : isPro // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -158,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String userName,  int streakCount,  LifeWeekGrid lifeWeekGrid,  int weekStartDay,  Set<DateTime> recordedDays,  bool isTodayDone,  bool isYesterdayGracePeriod)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String userName,  int streakCount,  LifeWeekGrid lifeWeekGrid,  int weekStartDay,  Set<DateTime> recordedDays,  bool isTodayDone,  bool isYesterdayGracePeriod,  bool isPro)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HomePageViewModel() when $default != null:
-return $default(_that.userName,_that.streakCount,_that.lifeWeekGrid,_that.weekStartDay,_that.recordedDays,_that.isTodayDone,_that.isYesterdayGracePeriod);case _:
+return $default(_that.userName,_that.streakCount,_that.lifeWeekGrid,_that.weekStartDay,_that.recordedDays,_that.isTodayDone,_that.isYesterdayGracePeriod,_that.isPro);case _:
   return orElse();
 
 }
@@ -179,10 +180,10 @@ return $default(_that.userName,_that.streakCount,_that.lifeWeekGrid,_that.weekSt
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String userName,  int streakCount,  LifeWeekGrid lifeWeekGrid,  int weekStartDay,  Set<DateTime> recordedDays,  bool isTodayDone,  bool isYesterdayGracePeriod)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String userName,  int streakCount,  LifeWeekGrid lifeWeekGrid,  int weekStartDay,  Set<DateTime> recordedDays,  bool isTodayDone,  bool isYesterdayGracePeriod,  bool isPro)  $default,) {final _that = this;
 switch (_that) {
 case _HomePageViewModel():
-return $default(_that.userName,_that.streakCount,_that.lifeWeekGrid,_that.weekStartDay,_that.recordedDays,_that.isTodayDone,_that.isYesterdayGracePeriod);case _:
+return $default(_that.userName,_that.streakCount,_that.lifeWeekGrid,_that.weekStartDay,_that.recordedDays,_that.isTodayDone,_that.isYesterdayGracePeriod,_that.isPro);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +200,10 @@ return $default(_that.userName,_that.streakCount,_that.lifeWeekGrid,_that.weekSt
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String userName,  int streakCount,  LifeWeekGrid lifeWeekGrid,  int weekStartDay,  Set<DateTime> recordedDays,  bool isTodayDone,  bool isYesterdayGracePeriod)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String userName,  int streakCount,  LifeWeekGrid lifeWeekGrid,  int weekStartDay,  Set<DateTime> recordedDays,  bool isTodayDone,  bool isYesterdayGracePeriod,  bool isPro)?  $default,) {final _that = this;
 switch (_that) {
 case _HomePageViewModel() when $default != null:
-return $default(_that.userName,_that.streakCount,_that.lifeWeekGrid,_that.weekStartDay,_that.recordedDays,_that.isTodayDone,_that.isYesterdayGracePeriod);case _:
+return $default(_that.userName,_that.streakCount,_that.lifeWeekGrid,_that.weekStartDay,_that.recordedDays,_that.isTodayDone,_that.isYesterdayGracePeriod,_that.isPro);case _:
   return null;
 
 }
@@ -214,7 +215,7 @@ return $default(_that.userName,_that.streakCount,_that.lifeWeekGrid,_that.weekSt
 
 
 class _HomePageViewModel implements HomePageViewModel {
-  const _HomePageViewModel({required this.userName, required this.streakCount, required this.lifeWeekGrid, this.weekStartDay = DateTime.monday, final  Set<DateTime> recordedDays = const {}, this.isTodayDone = false, this.isYesterdayGracePeriod = false}): _recordedDays = recordedDays;
+  const _HomePageViewModel({required this.userName, required this.streakCount, required this.lifeWeekGrid, this.weekStartDay = DateTime.monday, final  Set<DateTime> recordedDays = const {}, this.isTodayDone = false, this.isYesterdayGracePeriod = false, this.isPro = false}): _recordedDays = recordedDays;
   
 
 @override final  String userName;
@@ -233,6 +234,7 @@ class _HomePageViewModel implements HomePageViewModel {
 
 @override@JsonKey() final  bool isTodayDone;
 @override@JsonKey() final  bool isYesterdayGracePeriod;
+@override@JsonKey() final  bool isPro;
 
 /// Create a copy of HomePageViewModel
 /// with the given fields replaced by the non-null parameter values.
@@ -244,16 +246,16 @@ _$HomePageViewModelCopyWith<_HomePageViewModel> get copyWith => __$HomePageViewM
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomePageViewModel&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.streakCount, streakCount) || other.streakCount == streakCount)&&(identical(other.lifeWeekGrid, lifeWeekGrid) || other.lifeWeekGrid == lifeWeekGrid)&&(identical(other.weekStartDay, weekStartDay) || other.weekStartDay == weekStartDay)&&const DeepCollectionEquality().equals(other._recordedDays, _recordedDays)&&(identical(other.isTodayDone, isTodayDone) || other.isTodayDone == isTodayDone)&&(identical(other.isYesterdayGracePeriod, isYesterdayGracePeriod) || other.isYesterdayGracePeriod == isYesterdayGracePeriod));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomePageViewModel&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.streakCount, streakCount) || other.streakCount == streakCount)&&(identical(other.lifeWeekGrid, lifeWeekGrid) || other.lifeWeekGrid == lifeWeekGrid)&&(identical(other.weekStartDay, weekStartDay) || other.weekStartDay == weekStartDay)&&const DeepCollectionEquality().equals(other._recordedDays, _recordedDays)&&(identical(other.isTodayDone, isTodayDone) || other.isTodayDone == isTodayDone)&&(identical(other.isYesterdayGracePeriod, isYesterdayGracePeriod) || other.isYesterdayGracePeriod == isYesterdayGracePeriod)&&(identical(other.isPro, isPro) || other.isPro == isPro));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userName,streakCount,lifeWeekGrid,weekStartDay,const DeepCollectionEquality().hash(_recordedDays),isTodayDone,isYesterdayGracePeriod);
+int get hashCode => Object.hash(runtimeType,userName,streakCount,lifeWeekGrid,weekStartDay,const DeepCollectionEquality().hash(_recordedDays),isTodayDone,isYesterdayGracePeriod,isPro);
 
 @override
 String toString() {
-  return 'HomePageViewModel(userName: $userName, streakCount: $streakCount, lifeWeekGrid: $lifeWeekGrid, weekStartDay: $weekStartDay, recordedDays: $recordedDays, isTodayDone: $isTodayDone, isYesterdayGracePeriod: $isYesterdayGracePeriod)';
+  return 'HomePageViewModel(userName: $userName, streakCount: $streakCount, lifeWeekGrid: $lifeWeekGrid, weekStartDay: $weekStartDay, recordedDays: $recordedDays, isTodayDone: $isTodayDone, isYesterdayGracePeriod: $isYesterdayGracePeriod, isPro: $isPro)';
 }
 
 
@@ -264,7 +266,7 @@ abstract mixin class _$HomePageViewModelCopyWith<$Res> implements $HomePageViewM
   factory _$HomePageViewModelCopyWith(_HomePageViewModel value, $Res Function(_HomePageViewModel) _then) = __$HomePageViewModelCopyWithImpl;
 @override @useResult
 $Res call({
- String userName, int streakCount, LifeWeekGrid lifeWeekGrid, int weekStartDay, Set<DateTime> recordedDays, bool isTodayDone, bool isYesterdayGracePeriod
+ String userName, int streakCount, LifeWeekGrid lifeWeekGrid, int weekStartDay, Set<DateTime> recordedDays, bool isTodayDone, bool isYesterdayGracePeriod, bool isPro
 });
 
 
@@ -281,7 +283,7 @@ class __$HomePageViewModelCopyWithImpl<$Res>
 
 /// Create a copy of HomePageViewModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? userName = null,Object? streakCount = null,Object? lifeWeekGrid = null,Object? weekStartDay = null,Object? recordedDays = null,Object? isTodayDone = null,Object? isYesterdayGracePeriod = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? userName = null,Object? streakCount = null,Object? lifeWeekGrid = null,Object? weekStartDay = null,Object? recordedDays = null,Object? isTodayDone = null,Object? isYesterdayGracePeriod = null,Object? isPro = null,}) {
   return _then(_HomePageViewModel(
 userName: null == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
 as String,streakCount: null == streakCount ? _self.streakCount : streakCount // ignore: cast_nullable_to_non_nullable
@@ -290,6 +292,7 @@ as LifeWeekGrid,weekStartDay: null == weekStartDay ? _self.weekStartDay : weekSt
 as int,recordedDays: null == recordedDays ? _self._recordedDays : recordedDays // ignore: cast_nullable_to_non_nullable
 as Set<DateTime>,isTodayDone: null == isTodayDone ? _self.isTodayDone : isTodayDone // ignore: cast_nullable_to_non_nullable
 as bool,isYesterdayGracePeriod: null == isYesterdayGracePeriod ? _self.isYesterdayGracePeriod : isYesterdayGracePeriod // ignore: cast_nullable_to_non_nullable
+as bool,isPro: null == isPro ? _self.isPro : isPro // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

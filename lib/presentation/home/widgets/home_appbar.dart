@@ -9,6 +9,7 @@ import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/domain/life_week_grid.dart';
 import 'package:weeksalive/presentation/home/view_model/home_page_view_model.dart';
 import 'package:weeksalive/presentation/home/widgets/fire_rive_player.dart';
+import 'package:weeksalive/presentation/paywall/show_in_app_paywall.dart';
 import 'package:weeksalive/presentation/profile/profile_page.dart';
 import 'package:weeksalive/presentation/streak/streaks_page.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
@@ -85,6 +86,10 @@ class HomeAppBarState extends State<HomeAppBar> with SingleTickerProviderStateMi
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
+              if (!widget.vm.isPro) ...[
+                const _PremiumButton(),
+                const SizedBox(width: Margins.spacingS),
+              ],
               if (widget.vm.streakCount > 0)
                 _StreaksButton(
                   streaks: widget.vm.streakCount,
@@ -223,6 +228,31 @@ class _StreaksButton extends StatelessWidget {
           const SizedBox(width: Margins.spacingXs),
           Text(streaks.toString(), style: TextStyles.primaryRegularBold),
         ],
+      ),
+    );
+  }
+}
+
+class _PremiumButton extends StatelessWidget {
+  const _PremiumButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      style: IconButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: Margins.spacingS, vertical: Margins.spacingS),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(200))),
+        minimumSize: Size.zero,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        foregroundColor: AppColors.accentOrange(context),
+        backgroundColor: AppColors.bgSoft(context),
+        surfaceTintColor: Colors.transparent,
+      ),
+      onPressed: () => showInAppPaywall(context),
+      child: Icon(
+        MingCuteIcons.mgc_diamond_2_line,
+        color: AppColors.content(context),
+        size: Dimens.iconSizeBase,
       ),
     );
   }
