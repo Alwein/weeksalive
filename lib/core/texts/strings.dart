@@ -264,6 +264,16 @@ class Strings {
   static String paywallTimelineStep4Sublabel(String endDate) =>
       "Watch your grid growing. Cancel anytime before $endDate and you won't be charged.";
 
+  static String get paywallBenefit1 => 'Take back control of your time';
+  static String get paywallBenefit2 => 'Track every day on your unique year grid';
+  static String get paywallBenefit3 => 'Your grid, as your wallpaper & widgets';
+  static String get paywallBenefit4 => 'Unlock rewards by staying consistent';
+
+  static String get paywallReview1 =>
+      "waouw that's a strong motivation app to get our important shit done! thank you!!";
+  static String get paywallReview2 => 'wow..great app..makes me look life in a different perspective..';
+  static String get paywallReview3 => 'This is most concise life lesson ever. Life is important';
+
   static String paywallPriceSubtitle(int trialWeeks, String pricePerYear) =>
       '$trialWeeks weeks free, then $pricePerYear / year';
   static String paywallPricePerWeek(String pricePerWeek) => 'Only $pricePerWeek / week';

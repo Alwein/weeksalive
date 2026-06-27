@@ -11,6 +11,7 @@ import 'package:weeksalive/core/texts/app_links.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/display_state.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/rive_theme_mixin.dart';
 import 'package:weeksalive/presentation/paywall/paywall_presentation.dart';
 import 'package:weeksalive/presentation/paywall/paywall_view_model.dart';
@@ -21,7 +22,11 @@ import 'package:weeksalive/presentation/widgets/texts.dart';
 
 const double _paywallMascotArtboardSize = 120;
 const double _paywallMascotVisibleHeight = 100;
-const double _paywallMascotScrollRoom = 400;
+const double _maxScrollAnimationExtent = 100;
+const Duration _mascotIntroHiddenDelay = Duration(milliseconds: 600);
+const Duration _mascotIntroReverseDuration = Duration(milliseconds: 600);
+
+enum _MascotIntroPhase { hidden, reversing, scroll }
 
 base class _PaywallScrubController extends RiveWidgetController {
   static const String _mainAnimName = 'main';
@@ -30,7 +35,7 @@ base class _PaywallScrubController extends RiveWidgetController {
 
   _PaywallScrubController(super.file) {
     _mainAnim = artboard.animationNamed(_mainAnimName);
-    scrubTo(0);
+    scrubTo(1);
   }
 
   void scrubTo(double progress) {
@@ -117,13 +122,16 @@ class _PaywallView extends StatefulWidget {
   State<_PaywallView> createState() => _PaywallViewState();
 }
 
-class _PaywallViewState extends State<_PaywallView> with SingleTickerProviderStateMixin, RiveThemeMixin<_PaywallView> {
+class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixin, RiveThemeMixin<_PaywallView> {
   bool _showSuccess = false;
   late final AnimationController _successAnimController;
   late final Animation<double> _fadeAnimation;
+  late final AnimationController _mascotIntroController;
+  late final Animation<double> _mascotIntroAnimation;
   late final ScrollController _scrollController;
   late final FileLoader _mascotFileLoader;
   _PaywallScrubController? _scrubController;
+  _MascotIntroPhase _mascotIntroPhase = _MascotIntroPhase.hidden;
 
   @override
   void initState() {
@@ -133,11 +141,38 @@ class _PaywallViewState extends State<_PaywallView> with SingleTickerProviderSta
       duration: AnimationDurations.long,
     );
     _fadeAnimation = CurvedAnimation(parent: _successAnimController, curve: Curves.easeOut);
+    _mascotIntroController = AnimationController(
+      vsync: this,
+      duration: _mascotIntroReverseDuration,
+    );
+    _mascotIntroAnimation = CurvedAnimation(
+      parent: _mascotIntroController,
+      curve: Curves.ease,
+    )..addListener(_onMascotIntroTick);
+    _mascotIntroController.addStatusListener(_onMascotIntroStatus);
     _scrollController = ScrollController()..addListener(_onScroll);
     _mascotFileLoader = FileLoader.fromAsset(
       'assets/animations/outline_paywall.riv',
       riveFactory: Factory.flutter,
     );
+    Future<void>.delayed(_mascotIntroHiddenDelay, _startMascotIntro);
+  }
+
+  void _startMascotIntro() {
+    if (!mounted || _mascotIntroPhase != _MascotIntroPhase.hidden) return;
+    setState(() => _mascotIntroPhase = _MascotIntroPhase.reversing);
+    _mascotIntroController.forward(from: 0);
+  }
+
+  void _onMascotIntroTick() {
+    if (_mascotIntroPhase != _MascotIntroPhase.reversing) return;
+    _scrubController?.scrubTo(1 - _mascotIntroAnimation.value);
+  }
+
+  void _onMascotIntroStatus(AnimationStatus status) {
+    if (status != AnimationStatus.completed || _mascotIntroPhase != _MascotIntroPhase.reversing) return;
+    setState(() => _mascotIntroPhase = _MascotIntroPhase.scroll);
+    _onScroll();
   }
 
   @override
@@ -150,12 +185,14 @@ class _PaywallViewState extends State<_PaywallView> with SingleTickerProviderSta
   void dispose() {
     _scrollController.dispose();
     _mascotFileLoader.dispose();
+    _mascotIntroController.dispose();
     _successAnimController.dispose();
     super.dispose();
   }
 
   void _onScroll() {
-    final max = _scrollController.position.maxScrollExtent;
+    if (_mascotIntroPhase != _MascotIntroPhase.scroll) return;
+    const max = _maxScrollAnimationExtent;
     final progress = max > 0 ? (_scrollController.offset / max).clamp(0.0, 1.0) : 0.0;
     _scrubController?.scrubTo(progress);
   }
@@ -163,7 +200,13 @@ class _PaywallViewState extends State<_PaywallView> with SingleTickerProviderSta
   void _onMascotLoaded(RiveLoaded state) {
     if (state.controller is _PaywallScrubController) {
       _scrubController = state.controller as _PaywallScrubController;
-      _onScroll();
+      if (_mascotIntroPhase == _MascotIntroPhase.scroll) {
+        _onScroll();
+      } else if (_mascotIntroPhase == _MascotIntroPhase.reversing) {
+        _scrubController?.scrubTo(1 - _mascotIntroAnimation.value);
+      } else {
+        _scrubController?.scrubTo(1);
+      }
     }
     onRiveLoaded(state.controller);
     vmi?.color('fill')?.value = AppColors.bg(context);
@@ -230,22 +273,25 @@ class _PaywallViewState extends State<_PaywallView> with SingleTickerProviderSta
                               right: 0,
                               height: _paywallMascotArtboardSize,
                               child: IgnorePointer(
-                                child: Center(
-                                  child: SizedBox(
-                                    width: _paywallMascotArtboardSize,
-                                    height: _paywallMascotArtboardSize,
-                                    child: RiveWidgetBuilder(
-                                      fileLoader: _mascotFileLoader,
-                                      controller: _PaywallScrubController.new,
-                                      onLoaded: _onMascotLoaded,
-                                      builder: (context, state) => switch (state) {
-                                        RiveLoading() => const SizedBox.expand(),
-                                        RiveFailed() => const SizedBox.shrink(),
-                                        RiveLoaded(:final controller) => RiveWidget(
-                                          controller: controller,
-                                          fit: Fit.contain,
-                                        ),
-                                      },
+                                child: Opacity(
+                                  opacity: _mascotIntroPhase == _MascotIntroPhase.hidden ? 0 : 1,
+                                  child: Center(
+                                    child: SizedBox(
+                                      width: _paywallMascotArtboardSize,
+                                      height: _paywallMascotArtboardSize,
+                                      child: RiveWidgetBuilder(
+                                        fileLoader: _mascotFileLoader,
+                                        controller: _PaywallScrubController.new,
+                                        onLoaded: _onMascotLoaded,
+                                        builder: (context, state) => switch (state) {
+                                          RiveLoading() => const SizedBox.expand(),
+                                          RiveFailed() => const SizedBox.shrink(),
+                                          RiveLoaded(:final controller) => RiveWidget(
+                                            controller: controller,
+                                            fit: Fit.contain,
+                                          ),
+                                        },
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -434,14 +480,224 @@ class _TimelineOffer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: Margins.spacingM),
+          const SizedBox(height: Margins.spacingHuge),
           Texts.xlBold(Strings.paywallTitle(trialWeeks?.toString() ?? "-")),
           const SizedBox(height: Margins.spacingL),
           _TrialTimeline(trialWeeks: trialWeeks, trialEndDate: trialEndDate),
-          const SizedBox(height: Margins.spacingBase),
-          const SizedBox(height: _paywallMascotScrollRoom),
+          const SizedBox(height: Margins.spacingXHuge),
+          const _BenefitsSection(),
+          const SizedBox(height: Margins.spacingL),
+          const _SocialProofCarousel(),
+          const SizedBox(height: Margins.spacingL),
+          const SizedBox(
+            height: 160,
+            child: OverflowBox(
+              maxHeight: 220,
+              alignment: Alignment.bottomCenter,
+              child: ParallaxRive(
+                maxOffset: 0,
+                assetPath: "assets/animations/outline_looking_up.riv",
+              ),
+            ),
+          ),
         ],
       ),
+    );
+  }
+}
+
+class _BenefitsSection extends StatelessWidget {
+  const _BenefitsSection();
+
+  static final _benefits = [
+    Strings.paywallBenefit1,
+    Strings.paywallBenefit2,
+    Strings.paywallBenefit3,
+    Strings.paywallBenefit4,
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        for (var i = 0; i < _benefits.length; i++) ...[
+          if (i > 0) const SizedBox(height: Margins.spacingBase),
+          _BenefitRow(label: _benefits[i]),
+        ],
+      ],
+    );
+  }
+}
+
+class _BenefitRow extends StatelessWidget {
+  const _BenefitRow({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          MingCuteIcons.mgc_check_line,
+          size: Dimens.iconSizeXs,
+          color: AppColors.contentSoft(context),
+        ),
+        const SizedBox(width: Margins.spacingS),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 2),
+            child: Text(
+              label,
+              style: TextStyles.primarySmallMedium.copyWith(color: AppColors.contentSoft(context)),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SocialProofCarousel extends StatefulWidget {
+  const _SocialProofCarousel();
+
+  static final _reviews = [
+    Strings.paywallReview1,
+    Strings.paywallReview2,
+    Strings.paywallReview3,
+  ];
+
+  @override
+  State<_SocialProofCarousel> createState() => _SocialProofCarouselState();
+}
+
+class _SocialProofCarouselState extends State<_SocialProofCarousel> {
+  static const _cardHeight = 132.0;
+
+  late final PageController _pageController;
+  int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(viewportFraction: 0.88);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final reviews = _SocialProofCarousel._reviews;
+
+    return Column(
+      children: [
+        SizedBox(
+          height: _cardHeight,
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: reviews.length,
+            onPageChanged: (index) => setState(() => _currentPage = index),
+            itemBuilder: (context, index) {
+              final isLast = index == reviews.length - 1;
+              return Padding(
+                padding: EdgeInsets.only(right: isLast ? 0 : Margins.spacingS),
+                child: _ReviewCard(quote: reviews[index]),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: Margins.spacingS),
+        _CarouselDots(count: reviews.length, currentIndex: _currentPage),
+      ],
+    );
+  }
+}
+
+class _ReviewCard extends StatelessWidget {
+  const _ReviewCard({required this.quote});
+
+  final String quote;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(Margins.spacingBase),
+      decoration: BoxDecoration(
+        color: AppColors.bgSoft(context),
+        borderRadius: BorderRadius.circular(Dimens.radiusBase),
+        border: Border.all(color: AppColors.strokeColor(context), width: Dimens.strokeWidthS),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const _ReviewStars(),
+          const SizedBox(height: Margins.spacingS),
+          Text(
+            '"$quote"',
+            style: TextStyles.primarySmallRegular.copyWith(
+              color: AppColors.content(context),
+              height: 1.45,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ReviewStars extends StatelessWidget {
+  const _ReviewStars();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        for (var i = 0; i < 5; i++) ...[
+          if (i > 0) const SizedBox(width: Margins.spacingXs),
+          const Icon(
+            MingCuteIcons.mgc_star_fill,
+            size: Dimens.iconSizeXs,
+            color: Colors.orangeAccent,
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _CarouselDots extends StatelessWidget {
+  const _CarouselDots({required this.count, required this.currentIndex});
+
+  final int count;
+  final int currentIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        for (var i = 0; i < count; i++) ...[
+          if (i > 0) const SizedBox(width: Margins.spacingXs),
+          AnimatedContainer(
+            duration: AnimationDurations.base,
+            curve: Curves.easeOut,
+            width: i == currentIndex ? 16 : 6,
+            height: 6,
+            decoration: BoxDecoration(
+              color: i == currentIndex ? AppColors.content(context) : AppColors.strokeColor(context),
+              borderRadius: BorderRadius.circular(3),
+            ),
+          ),
+        ],
+      ],
     );
   }
 }
