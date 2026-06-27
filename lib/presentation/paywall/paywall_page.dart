@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
+import 'package:rive/rive.dart' hide Animation;
+import 'package:rive_native/rive_native.dart' as rive_native;
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
@@ -9,12 +11,43 @@ import 'package:weeksalive/core/texts/app_links.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/display_state.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
+import 'package:weeksalive/presentation/onboarding/widgets/rive_theme_mixin.dart';
 import 'package:weeksalive/presentation/paywall/paywall_presentation.dart';
 import 'package:weeksalive/presentation/paywall/paywall_view_model.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_actions.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
+
+const double _paywallMascotArtboardSize = 120;
+const double _paywallMascotVisibleHeight = 100;
+const double _paywallMascotScrollRoom = 400;
+
+base class _PaywallScrubController extends RiveWidgetController {
+  static const String _mainAnimName = 'main';
+
+  late final rive_native.Animation? _mainAnim;
+
+  _PaywallScrubController(super.file) {
+    _mainAnim = artboard.animationNamed(_mainAnimName);
+    scrubTo(0);
+  }
+
+  void scrubTo(double progress) {
+    final anim = _mainAnim;
+    if (anim == null) return;
+    anim.time = progress.clamp(0.0, 1.0) * anim.duration;
+    anim.apply();
+    scheduleRepaint();
+  }
+
+  @override
+  bool advance(double elapsedSeconds) {
+    super.advance(elapsedSeconds);
+    _mainAnim?.apply();
+    return true;
+  }
+}
 
 class PaywallPage extends StatelessWidget {
   const PaywallPage({super.key, this.presentation = PaywallPresentation.onboarding});
@@ -84,10 +117,13 @@ class _PaywallView extends StatefulWidget {
   State<_PaywallView> createState() => _PaywallViewState();
 }
 
-class _PaywallViewState extends State<_PaywallView> with SingleTickerProviderStateMixin {
+class _PaywallViewState extends State<_PaywallView> with SingleTickerProviderStateMixin, RiveThemeMixin<_PaywallView> {
   bool _showSuccess = false;
   late final AnimationController _successAnimController;
   late final Animation<double> _fadeAnimation;
+  late final ScrollController _scrollController;
+  late final FileLoader _mascotFileLoader;
+  _PaywallScrubController? _scrubController;
 
   @override
   void initState() {
@@ -97,12 +133,40 @@ class _PaywallViewState extends State<_PaywallView> with SingleTickerProviderSta
       duration: AnimationDurations.long,
     );
     _fadeAnimation = CurvedAnimation(parent: _successAnimController, curve: Curves.easeOut);
+    _scrollController = ScrollController()..addListener(_onScroll);
+    _mascotFileLoader = FileLoader.fromAsset(
+      'assets/animations/outline_paywall.riv',
+      riveFactory: Factory.flutter,
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    vmi?.color('fill')?.value = AppColors.bg(context);
   }
 
   @override
   void dispose() {
+    _scrollController.dispose();
+    _mascotFileLoader.dispose();
     _successAnimController.dispose();
     super.dispose();
+  }
+
+  void _onScroll() {
+    final max = _scrollController.position.maxScrollExtent;
+    final progress = max > 0 ? (_scrollController.offset / max).clamp(0.0, 1.0) : 0.0;
+    _scrubController?.scrubTo(progress);
+  }
+
+  void _onMascotLoaded(RiveLoaded state) {
+    if (state.controller is _PaywallScrubController) {
+      _scrubController = state.controller as _PaywallScrubController;
+      _onScroll();
+    }
+    onRiveLoaded(state.controller);
+    vmi?.color('fill')?.value = AppColors.bg(context);
   }
 
   @override
@@ -135,23 +199,59 @@ class _PaywallViewState extends State<_PaywallView> with SingleTickerProviderSta
                     Column(
                       children: [
                         Expanded(
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 520),
-                            child: _TimelineOffer(
-                              trialWeeks: widget.trialWeeks,
-                              trialEndDate: widget.trialEndDate,
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 520),
+                              child: _TimelineOffer(
+                                scrollController: _scrollController,
+                                trialWeeks: widget.trialWeeks,
+                                trialEndDate: widget.trialEndDate,
+                              ),
                             ),
                           ),
                         ),
-                        _FooterSection(
-                          errorMessage: widget.errorMessage,
-                          pricePerYear: widget.pricePerYear,
-                          pricePerWeek: widget.pricePerWeek,
-                          trialWeeks: widget.trialWeeks,
-                          isLoading: widget.isLoading,
-                          onStartTrial: widget.onStartTrial,
-                          onRestore: widget.onRestore,
-                          onDismiss: widget.onDismiss,
+                        Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            _FooterSection(
+                              errorMessage: widget.errorMessage,
+                              pricePerYear: widget.pricePerYear,
+                              pricePerWeek: widget.pricePerWeek,
+                              trialWeeks: widget.trialWeeks,
+                              isLoading: widget.isLoading,
+                              onStartTrial: widget.onStartTrial,
+                              onRestore: widget.onRestore,
+                              onDismiss: widget.onDismiss,
+                            ),
+                            Positioned(
+                              top: -_paywallMascotVisibleHeight,
+                              left: 0,
+                              right: 0,
+                              height: _paywallMascotArtboardSize,
+                              child: IgnorePointer(
+                                child: Center(
+                                  child: SizedBox(
+                                    width: _paywallMascotArtboardSize,
+                                    height: _paywallMascotArtboardSize,
+                                    child: RiveWidgetBuilder(
+                                      fileLoader: _mascotFileLoader,
+                                      controller: _PaywallScrubController.new,
+                                      onLoaded: _onMascotLoaded,
+                                      builder: (context, state) => switch (state) {
+                                        RiveLoading() => const SizedBox.expand(),
+                                        RiveFailed() => const SizedBox.shrink(),
+                                        RiveLoaded(:final controller) => RiveWidget(
+                                          controller: controller,
+                                          fit: Fit.contain,
+                                        ),
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -317,16 +417,19 @@ class _FooterSection extends StatelessWidget {
 
 class _TimelineOffer extends StatelessWidget {
   const _TimelineOffer({
+    required this.scrollController,
     required this.trialWeeks,
     required this.trialEndDate,
   });
 
+  final ScrollController scrollController;
   final int? trialWeeks;
   final String? trialEndDate;
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      controller: scrollController,
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -336,10 +439,7 @@ class _TimelineOffer extends StatelessWidget {
           const SizedBox(height: Margins.spacingL),
           _TrialTimeline(trialWeeks: trialWeeks, trialEndDate: trialEndDate),
           const SizedBox(height: Margins.spacingBase),
-          // TODO: work zone
-          const Placeholder(
-            fallbackHeight: 400,
-          ),
+          const SizedBox(height: _paywallMascotScrollRoom),
         ],
       ),
     );
