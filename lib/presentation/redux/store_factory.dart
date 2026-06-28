@@ -5,6 +5,7 @@ import 'package:weeksalive/data/grid_motif/grid_motif_repository.dart';
 import 'package:weeksalive/data/home_widget/home_widget_service.dart';
 import 'package:weeksalive/data/navigation/navigation_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
+import 'package:weeksalive/data/tiktok_events/tiktok_events_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
 import 'package:weeksalive/data/rewards/rewards_repository.dart';
@@ -40,6 +41,7 @@ class StoreFactory {
   final NavigationRepository navigationRepository;
   final PushNotificationRepository pushNotificationRepository;
   final PurchaseRepository purchaseRepository;
+  final TikTokEventsRepository tikTokEventsRepository;
   final RewardsRepository rewardsRepository;
   final WeeklyIntentRepository weeklyIntentRepository;
   final WeeklySummaryRepository weeklySummaryRepository;
@@ -57,6 +59,7 @@ class StoreFactory {
     required this.navigationRepository,
     required this.pushNotificationRepository,
     required this.purchaseRepository,
+    required this.tikTokEventsRepository,
     required this.rewardsRepository,
     required this.weeklyIntentRepository,
     required this.weeklySummaryRepository,
@@ -76,7 +79,10 @@ class StoreFactory {
         UserMiddleware(userRepository: userRepository).call,
         NavigationMiddleware(navigationRepository: navigationRepository).call,
         PushNotificationMiddleware(pushNotificationRepository: pushNotificationRepository).call,
-        PurchaseMiddleware(purchaseRepository: purchaseRepository).call,
+        PurchaseMiddleware(
+          purchaseRepository: purchaseRepository,
+          tikTokEventsRepository: tikTokEventsRepository,
+        ).call,
         WeeklyIntentMiddleware(weeklyIntentRepository: weeklyIntentRepository).call,
         WeeklySummaryMiddleware(weeklySummaryRepository: weeklySummaryRepository).call,
         HomeWidgetMiddleware(homeWidgetService: homeWidgetService).call,

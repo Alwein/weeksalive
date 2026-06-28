@@ -5,6 +5,7 @@ import 'package:weeksalive/data/grid_motif/grid_motif_repository.dart';
 import 'package:weeksalive/data/home_widget/home_widget_service.dart';
 import 'package:weeksalive/data/navigation/navigation_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
+import 'package:weeksalive/data/tiktok_events/tiktok_events_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
 import 'package:weeksalive/data/rewards/rewards_repository.dart';
@@ -24,6 +25,7 @@ class TestStoreFactory {
   UserRepository userRepository = MockUserRepository();
   PushNotificationRepository pushNotificationRepository = MockPushNotificationRepository();
   PurchaseRepository purchaseRepository = MockPurchaseRepository();
+  TikTokEventsRepository tikTokEventsRepository = TikTokEventsRepository();
   ThemeRepository themeRepository = MockThemeRepository();
   AppIconRepository appIconRepository = MockAppIconRepository();
   GridMotifRepository gridMotifRepository = MockGridMotifRepository();
@@ -45,6 +47,7 @@ class TestStoreFactory {
       userRepository: userRepository,
       pushNotificationRepository: pushNotificationRepository,
       purchaseRepository: purchaseRepository,
+      tikTokEventsRepository: tikTokEventsRepository,
       themeRepository: themeRepository,
       appIconRepository: appIconRepository,
       gridMotifRepository: gridMotifRepository,

@@ -4,6 +4,7 @@ import 'package:redux/redux.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/logger.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
+import 'package:weeksalive/data/tiktok_events/tiktok_events_repository.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_actions.dart';
@@ -11,8 +12,12 @@ import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 
 class PurchaseMiddleware extends MiddlewareClass<AppState> {
   final PurchaseRepository purchaseRepository;
+  final TikTokEventsRepository tikTokEventsRepository;
 
-  PurchaseMiddleware({required this.purchaseRepository});
+  PurchaseMiddleware({
+    required this.purchaseRepository,
+    required this.tikTokEventsRepository,
+  });
 
   @override
   void call(Store<AppState> store, action, NextDispatcher next) async {
@@ -58,7 +63,11 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
   Future<void> _handlePurchase(Store<AppState> store, Package package) async {
     try {
       final customerInfo = await purchaseRepository.purchasePackage(package);
-      store.dispatch(PurchaseSucceededAction(isPro: purchaseRepository.isPro(customerInfo)));
+      final isPro = purchaseRepository.isPro(customerInfo);
+      if (isPro) {
+        await _trackPurchaseForTikTok(package);
+      }
+      store.dispatch(PurchaseSucceededAction(isPro: isPro));
     } on PurchasesErrorCode catch (e) {
       if (e == PurchasesErrorCode.purchaseCancelledError) {
         store.dispatch(PurchaseSucceededAction(isPro: store.state.purchaseState.isPro));
@@ -90,6 +99,28 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
     } catch (e, st) {
       log.e('PurchaseMiddleware: restore failed', error: e, stackTrace: st);
       store.dispatch(PurchaseErrorAction(Strings.paywallErrorRestoreGeneric));
+    }
+  }
+
+  Future<void> _trackPurchaseForTikTok(Package package) async {
+    if (!tikTokEventsRepository.isInitialized) return;
+
+    try {
+      final product = package.storeProduct;
+      await tikTokEventsRepository.logPurchase(
+        value: product.price,
+        currency: product.currencyCode,
+        contentId: product.identifier,
+        contentName: package.packageType.name,
+      );
+      await tikTokEventsRepository.logSubscribe(
+        value: product.price,
+        currency: product.currencyCode,
+        contentId: product.identifier,
+        contentName: package.packageType.name,
+      );
+    } catch (e, st) {
+      log.e('PurchaseMiddleware: failed to track TikTok purchase', error: e, stackTrace: st);
     }
   }
 

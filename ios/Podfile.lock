@@ -262,6 +262,10 @@ PODS:
     - sqlite3/perf-threadsafe
     - sqlite3/rtree
     - sqlite3/session
+  - tiktok_events_sdk (0.0.1):
+    - Flutter
+    - TikTokBusinessSDK (~> 1.5.1)
+  - TikTokBusinessSDK (1.5.1)
   - url_launcher_ios (0.0.1):
     - Flutter
 
@@ -291,6 +295,7 @@ DEPENDENCIES:
   - sensors_plus (from `.symlinks/plugins/sensors_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqlite3_flutter_libs (from `.symlinks/plugins/sqlite3_flutter_libs/darwin`)
+  - tiktok_events_sdk (from `.symlinks/plugins/tiktok_events_sdk/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
@@ -328,6 +333,7 @@ SPEC REPOS:
     - SDWebImage
     - SDWebImageWebPCoder
     - sqlite3
+    - TikTokBusinessSDK
 
 EXTERNAL SOURCES:
   app_settings:
@@ -381,6 +387,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   sqlite3_flutter_libs:
     :path: ".symlinks/plugins/sqlite3_flutter_libs/darwin"
+  tiktok_events_sdk:
+    :path: ".symlinks/plugins/tiktok_events_sdk/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
@@ -448,6 +456,8 @@ SPEC CHECKSUMS:
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
   sqlite3: a51c07cf16e023d6c48abd5e5791a61a47354921
   sqlite3_flutter_libs: b3e120efe9a82017e5552a620f696589ed4f62ab
+  tiktok_events_sdk: 861aaded1d7cc4ff4dd1be2e319e68f0598426f5
+  TikTokBusinessSDK: 6b59d8a69ee23fa714831e8c6f47c34831abc60b
   url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
 
 PODFILE CHECKSUM: 36b88bcdcb79291c8489e4de05ca2dc59b264635

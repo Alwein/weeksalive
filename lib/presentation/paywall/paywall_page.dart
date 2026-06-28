@@ -21,7 +21,7 @@ import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 const double _paywallMascotArtboardSize = 120;
-const double _paywallMascotVisibleHeight = 100;
+const double _paywallMascotVisibleHeight = 99.5;
 const double _maxScrollAnimationExtent = 100;
 const Duration _mascotIntroHiddenDelay = Duration(milliseconds: 600);
 const Duration _mascotIntroReverseDuration = Duration(milliseconds: 600);

@@ -9,6 +9,7 @@ import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_actions.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_middleware.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
+import 'package:weeksalive/data/tiktok_events/tiktok_events_repository.dart';
 
 import '../../../fixtures/purchase_fixtures.dart';
 import '../../../helpers/matchers.dart';
@@ -73,7 +74,12 @@ void main() {
     Store<AppState> purchaseBootstrapStore() => Store<AppState>(
       appReducer,
       initialState: initialAppState(),
-      middleware: [PurchaseMiddleware(purchaseRepository: purchaseRepo).call],
+      middleware: [
+        PurchaseMiddleware(
+          purchaseRepository: purchaseRepo,
+          tikTokEventsRepository: TikTokEventsRepository(),
+        ).call,
+      ],
     );
 
     test('transitions initial → idle(isPro:false) when user has no subscription', () async {

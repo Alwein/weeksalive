@@ -9,6 +9,7 @@ import 'package:weeksalive/data/day/day_repository.dart';
 import 'package:weeksalive/data/grid_motif/grid_motif_repository.dart';
 import 'package:weeksalive/data/navigation/navigation_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
+import 'package:weeksalive/data/tiktok_events/tiktok_events_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
 import 'package:weeksalive/data/rewards/rewards_repository.dart';
@@ -23,6 +24,7 @@ import 'package:weeksalive/presentation/redux/store_factory.dart';
 Future<Store<AppState>> initializeReduxStore(
   FirebaseRemoteConfig? firebaseRemoteConfig, {
   PushNotificationRepository? pushNotificationRepository,
+  TikTokEventsRepository? tikTokEventsRepository,
 }) async {
   final crashlyticsRepository = CrashlyticsRepositoryImpl();
   final sharedPreferences = await SharedPreferences.getInstance();
@@ -37,6 +39,7 @@ Future<Store<AppState>> initializeReduxStore(
     navigationRepository: NavigationRepository(preferences: sharedPreferences),
     pushNotificationRepository: pushNotificationRepository ?? PushNotificationRepository(preferences: sharedPreferences),
     purchaseRepository: PurchaseRepository(dotenv: dotenv),
+    tikTokEventsRepository: tikTokEventsRepository ?? TikTokEventsRepository(),
     rewardsRepository: RewardsRepository(preferences: sharedPreferences),
     weeklyIntentRepository: WeeklyIntentRepository(preferences: sharedPreferences),
     weeklySummaryRepository: WeeklySummaryRepository(preferences: sharedPreferences),
