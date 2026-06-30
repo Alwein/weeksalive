@@ -271,8 +271,8 @@ class Strings {
 
   static String get paywallReview1 =>
       "waouw that's a strong motivation app to get our important shit done! thank you!!";
-  static String get paywallReview2 => 'wow..great app..makes me look life in a different perspective..';
-  static String get paywallReview3 => 'This is most concise life lesson ever. Life is important';
+  static String get paywallReview2 => 'wow..great app..makes me look life in a different perspective...';
+  static String get paywallReview3 => 'This is the most concise life lesson ever. Life is important';
 
   static String paywallPriceSubtitle(int trialWeeks, String pricePerYear) =>
       '$trialWeeks weeks free, then $pricePerYear / year';
