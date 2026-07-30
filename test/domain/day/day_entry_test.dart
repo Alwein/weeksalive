@@ -67,10 +67,11 @@ void main() {
   group('isYesterdayGracePeriod', () {
     final today = DateTime(2026, 6, 3, 10);
     final yesterday = DateTime(2026, 6, 2);
+    final dayBeforeYesterday = DateTime(2026, 6, 1);
 
     test('returns true when yesterday is missing and still in grace', () {
       expect(
-        isYesterdayGracePeriod(recordedDays: {DateTime(2026, 6, 1)}, now: today),
+        isYesterdayGracePeriod(recordedDays: {dayBeforeYesterday}, now: today),
         isTrue,
       );
     });
@@ -92,6 +93,16 @@ void main() {
     test('returns false when yesterday is already logged', () {
       expect(
         isYesterdayGracePeriod(recordedDays: {yesterday}, now: today),
+        isFalse,
+      );
+    });
+
+    test('returns false when there is no active streak to protect', () {
+      expect(
+        isYesterdayGracePeriod(
+          recordedDays: {DateTime(2026, 5, 20)},
+          now: today,
+        ),
         isFalse,
       );
     });

@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:purchases_flutter/purchases_flutter.dart' hide Store;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
@@ -13,6 +15,7 @@ import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/app_links.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/mail_handler.dart';
+import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_page.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/profile/pages/app_icon_picker/app_icon_picker_page.dart';
@@ -219,6 +222,16 @@ class _ProfileCardHeader extends StatelessWidget {
   const _ProfileCardHeader({required this.userName});
   final String userName;
 
+  Future<void> _copyRevenueCatId(BuildContext context) async {
+    final appUserId = await Purchases.appUserID;
+    await Clipboard.setData(ClipboardData(text: appUserId));
+    if (!context.mounted) return;
+    SensorialFeedback.selectionChanged();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(Strings.profilePageRevenueCatIdCopied)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -234,7 +247,10 @@ class _ProfileCardHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            child: Texts.primaryLargeBold(userName),
+            child: GestureDetector(
+              onDoubleTap: () => _copyRevenueCatId(context),
+              child: Texts.primaryLargeBold(userName),
+            ),
           ),
           const SizedBox(width: Margins.spacingBase),
           SecondaryButton(

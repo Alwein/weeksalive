@@ -149,8 +149,8 @@ bool isWithinStreakGraceWindow(DateTime day, DateTime now) {
 
 /// Whether [yesterday] was missed but can still be logged for streak purposes.
 ///
-/// Only applies when the user was already tracking before yesterday — not on
-/// first app open or the first day of journaling.
+/// Only applies when there is an active streak at risk — i.e. the day before
+/// yesterday was logged. A distant past entry alone is not enough.
 bool isYesterdayGracePeriod({
   required Set<DateTime> recordedDays,
   required DateTime now,
@@ -162,7 +162,7 @@ bool isYesterdayGracePeriod({
   if (!isWithinStreakGraceWindow(yesterday, now)) return false;
 
   final dayBeforeYesterday = yesterday.subtract(const Duration(days: 1));
-  return recordedDays.any((day) => !day.isAfter(dayBeforeYesterday));
+  return recordedDays.contains(dayBeforeYesterday);
 }
 
 /// Counts consecutive streak-eligible days walking back from [now].

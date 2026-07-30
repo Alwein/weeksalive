@@ -462,6 +462,7 @@ class Strings {
 
   static String get profilePageNotificationsEnabled => "ON";
   static String get profilePageNotificationsDisabled => "OFF";
+  static String get profilePageRevenueCatIdCopied => "Purchase ID copied";
 
   // edit profile page
   static String get editProfilePageTitle => "Edit profile";
