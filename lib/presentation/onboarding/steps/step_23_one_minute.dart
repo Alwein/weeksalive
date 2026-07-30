@@ -848,7 +848,7 @@ class _IntentionSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = values.isEmpty ? "—" : values.map((e) => e.summaryLabel).join(", ");
+    final text = values.isEmpty ? Strings.none : values.map((e) => e.summaryLabel).join(", ");
     return Texts.primaryXsBold(
       text,
       maxLines: 1,
