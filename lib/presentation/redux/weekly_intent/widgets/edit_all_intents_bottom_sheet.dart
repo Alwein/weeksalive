@@ -64,7 +64,7 @@ class _EditAllIntentsSheetState extends State<EditAllIntentsSheet> {
                 children: [
                   for (final intent in intents)
                     _EditableIntentChip(
-                      label: intent.label,
+                      label: intent.localizedLabel,
                       onRemove: () => StoreProvider.of<AppState>(context).dispatch(RemoveWeeklyIntentAction(intent.id)),
                     ),
                 ],

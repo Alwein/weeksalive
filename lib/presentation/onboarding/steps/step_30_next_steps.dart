@@ -211,7 +211,7 @@ List<String> _selectedIntentLabels(OnboardingFormController controller, List<Wee
   for (final id in controller.selectedIntentIds) {
     for (final intent in intents) {
       if (intent.id == id) {
-        labels.add(intent.label);
+        labels.add(intent.localizedLabel);
         break;
       }
     }

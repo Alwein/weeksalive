@@ -51,15 +51,18 @@ class Step21WeeksDisappear extends OnboardingStep {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            YearGridIllustration(
-                              animationDurationMs: 1500,
-                              header: Texts.primaryXsCounter(
-                                context,
-                                Strings.thisYearLabel,
-                                DateTime.now().year.toString(),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),
+                              child: YearGridIllustration(
+                                animationDurationMs: 1500,
+                                header: Texts.primaryXsCounter(
+                                  context,
+                                  Strings.thisYearLabel,
+                                  DateTime.now().year.toString(),
+                                ),
+                                filledCount: daysLived,
+                                wheightDistribution: const [0, 1, 2, 2, 3, 3, 4, 4, 4],
                               ),
-                              filledCount: daysLived,
-                              wheightDistribution: const [0, 1, 2, 2, 3, 3, 4, 4, 4],
                             ),
                           ],
                         ),

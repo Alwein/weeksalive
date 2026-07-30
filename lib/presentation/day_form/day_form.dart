@@ -660,7 +660,7 @@ class _LivingIntentionsSelector extends StatelessWidget {
                         onAllSelected();
                       }
                     },
-                    label: intent.label,
+                    label: intent.localizedLabel,
                   ),
               ],
             ),

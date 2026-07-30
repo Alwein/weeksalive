@@ -116,7 +116,7 @@ int _newExperiencesCount(List<DayEntry> entries) {
 
 List<(int, String)> _livingIntentions(Store<AppState> store, List<DayEntry> entries) {
   final weeklyIntentState = store.state.weeklyIntentState;
-  final labelsById = {for (final intent in weeklyIntentState.availableIntents) intent.id: intent.label};
+  final labelsById = {for (final intent in weeklyIntentState.availableIntents) intent.id: intent.localizedLabel};
   final counts = {for (final id in weeklyIntentState.selectedIds) id: 0};
 
   for (final entry in entries) {

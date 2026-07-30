@@ -64,28 +64,37 @@ class _ThemeGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
-      itemCount: themes.length,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 1.2,
-        mainAxisSpacing: Margins.spacingBase,
-        crossAxisSpacing: Margins.spacingBase,
-      ),
-      itemBuilder: (context, index) => _ThemeCard(
-        themeId: themes[index],
-        selected: themes[index] == viewModel.selectedTheme,
-        locked: !viewModel.unlockedThemes.contains(themes[index]),
-        onTap: () {
-          if (!viewModel.unlockedThemes.contains(themes[index])) {
-            return;
-          }
-          _selectTheme(context, themes[index]);
-        },
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const horizontalPadding = Margins.spacingM * 2;
+        const crossSpacing = Margins.spacingBase;
+        final cellWidth = (constraints.maxWidth - horizontalPadding - crossSpacing) / 2;
+        final cellHeight = (cellWidth * 1.15).clamp(155.0, 190.0);
+
+        return GridView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+          itemCount: themes.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisExtent: cellHeight,
+            mainAxisSpacing: Margins.spacingBase,
+            crossAxisSpacing: Margins.spacingBase,
+          ),
+          itemBuilder: (context, index) => _ThemeCard(
+            themeId: themes[index],
+            selected: themes[index] == viewModel.selectedTheme,
+            locked: !viewModel.unlockedThemes.contains(themes[index]),
+            onTap: () {
+              if (!viewModel.unlockedThemes.contains(themes[index])) {
+                return;
+              }
+              _selectTheme(context, themes[index]);
+            },
+          ),
+        );
+      },
     );
   }
 }
@@ -209,20 +218,38 @@ class _FullCardContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: Margins.spacingXs),
-                  child: Texts.primaryMediumBold(themeId.label, color: tokens.content),
-                ),
-              ),
-              if (selected) _SelectedPill(tokens: tokens),
-            ],
+          if (selected) ...[
+            Align(
+              alignment: Alignment.centerLeft,
+              child: _SelectedPill(tokens: tokens),
+            ),
+            const SizedBox(height: Margins.spacingXs),
+          ],
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: Margins.spacingXs),
+            child: Texts.primaryMediumBold(
+              themeId.label,
+              color: tokens.content,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
-          const SizedBox(height: Margins.spacingBase),
+          const SizedBox(height: Margins.spacingS),
           Expanded(
-            child: locked ? _LockedBarrier(tokens: tokens, themeId: themeId) : _MiniPreview(tokens: tokens),
+            child: locked
+                ? _LockedBarrier(tokens: tokens, themeId: themeId)
+                : LayoutBuilder(
+                    builder: (context, constraints) {
+                      return FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.topLeft,
+                        child: SizedBox(
+                          width: constraints.maxWidth,
+                          child: _MiniPreview(tokens: tokens),
+                        ),
+                      );
+                    },
+                  ),
           ),
         ],
       ),
@@ -244,29 +271,27 @@ class _SystemFullCardContent extends StatelessWidget {
     const light = DefaultThemeTokens.light;
     const dark = DefaultThemeTokens.dark;
 
-    return IntrinsicHeight(
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          _FullCardContent(
-            tokens: light,
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        _FullCardContent(
+          tokens: light,
+          themeId: AppThemeId.system,
+          accentColor: AppThemes.system.previewColor,
+          selected: selected,
+          locked: locked,
+        ),
+        ClipPath(
+          clipper: const _DiagonalRightClipper(),
+          child: _FullCardContent(
+            tokens: dark,
             themeId: AppThemeId.system,
             accentColor: AppThemes.system.previewColor,
             selected: selected,
             locked: locked,
           ),
-          ClipPath(
-            clipper: const _DiagonalRightClipper(),
-            child: _FullCardContent(
-              tokens: dark,
-              themeId: AppThemeId.system,
-              accentColor: AppThemes.system.previewColor,
-              selected: selected,
-              locked: locked,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -425,7 +450,13 @@ class _LockedBarrier extends StatelessWidget {
           Icon(MingCuteIcons.mgc_lock_line, color: tokens.content, size: Dimens.iconSizeM),
           if (hint != null) ...[
             const SizedBox(height: Margins.spacingS),
-            Texts.primaryRegular(hint, color: tokens.content),
+            Texts.primaryRegular(
+              hint,
+              color: tokens.content,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
           ],
         ],
       ),

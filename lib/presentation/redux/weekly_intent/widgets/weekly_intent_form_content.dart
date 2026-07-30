@@ -37,7 +37,7 @@ class WeeklyIntentFormContent extends StatelessWidget {
               children: [
                 for (final intent in intents)
                   _IntentChip(
-                    label: intent.label,
+                    label: intent.localizedLabel,
                     selected: selectedIds.contains(intent.id),
                     onTap: () {
                       SensorialFeedback.selectionChanged();

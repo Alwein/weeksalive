@@ -35,7 +35,7 @@ abstract class ProfilePageViewModel with _$ProfilePageViewModel {
     final weeklyState = store.state.weeklyIntentState;
     final selectedWeeklyIntents = weeklyState.availableIntents
         .where((i) => weeklyState.selectedIds.contains(i.id))
-        .map((e) => e.label)
+        .map((e) => e.localizedLabel)
         .join(', ');
 
     return ProfilePageViewModel(

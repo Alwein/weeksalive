@@ -37,18 +37,20 @@ class _Step25Content extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Texts.onboardingXlBold(Strings.onboardingWeeklyIntentTitle),
-                    const SizedBox(height: Margins.spacingS),
-                    Texts.primaryMediumSoft(context, Strings.onboardingWeeklyIntentSubtitle),
-                    const SizedBox(height: Margins.spacingL),
-                    WeeklyIntentFormContent(
-                      selectedIds: controller.selectedIntentIds,
-                      onIntentToggled: controller.toggleIntent,
-                    ),
-                  ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Texts.onboardingXlBold(Strings.onboardingWeeklyIntentTitle),
+                      const SizedBox(height: Margins.spacingS),
+                      Texts.primaryMediumSoft(context, Strings.onboardingWeeklyIntentSubtitle),
+                      const SizedBox(height: Margins.spacingL),
+                      WeeklyIntentFormContent(
+                        selectedIds: controller.selectedIntentIds,
+                        onIntentToggled: controller.toggleIntent,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Padding(

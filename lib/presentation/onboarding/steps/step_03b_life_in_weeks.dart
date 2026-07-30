@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_haptic/flutter_advanced_haptic.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
@@ -14,6 +16,7 @@ const _kTotalWeeks = 4681;
 const _kDotSpacing = 2.4;
 const _kAgeMarkerWidth = 20.0;
 const _kPhaseLegendWidth = 20.0;
+const _kPhaseSegmentSpacing = 8.0;
 const _kMarkerGap = 4.0;
 const _kLegendIconSize = 16.0;
 const _kLabelHeight = FontSizes.extraSmall;
@@ -149,6 +152,12 @@ class _GridIllustrationState extends State<_GridIllustration> with SingleTickerP
           (start: _kMintWeeksEnd, end: _kPurpleWeeksEnd, label: Strings.onboarding03bCareer, color: purpleColor),
           (start: _kPurpleWeeksEnd, end: _kTotalWeeks, label: Strings.onboarding03bRetirement, color: blueColor),
         ];
+        final labelStyle = TextStyles.primarySmallBold;
+        final phaseLabelLayouts = _computePhaseLabelLayouts(
+          phases: phases,
+          dotSize: dotSize,
+          labelStyle: labelStyle,
+        );
 
         return AnimatedBuilder(
           animation: _controller,
@@ -253,18 +262,18 @@ class _GridIllustrationState extends State<_GridIllustration> with SingleTickerP
                           child: Stack(
                             clipBehavior: Clip.none,
                             children: [
-                              for (final phase in phases)
+                              for (final layout in phaseLabelLayouts)
                                 Positioned(
-                                  top: _segmentTopY(phase.start, dotSize),
-                                  height: _segmentHeight(phase.start, phase.end, dotSize),
+                                  top: layout.top,
+                                  height: layout.height,
                                   left: 0,
                                   right: 0,
                                   child: _RevealLabel(
-                                    reveal: _phaseReveal(revealedWeeks, phase.start, phase.end),
+                                    reveal: _phaseReveal(revealedWeeks, layout.start, layout.end),
                                     child: Center(
                                       child: RotatedBox(
                                         quarterTurns: 1,
-                                        child: _GridLabel(phase.label, color: phase.color),
+                                        child: _GridLabel(layout.label, color: layout.color),
                                       ),
                                     ),
                                   ),
@@ -289,8 +298,70 @@ double _rowCenterY(int age, double dotSize) => age * (dotSize + _kDotSpacing) + 
 
 double _segmentTopY(int startWeek, double dotSize) => (startWeek / _kColumns) * (dotSize + _kDotSpacing);
 
-double _segmentHeight(int startWeek, int endWeek, double dotSize) =>
-    _segmentTopY(endWeek, dotSize) - _segmentTopY(startWeek, dotSize);
+typedef _Phase = ({int start, int end, String label, Color color});
+
+class _PhaseLabelLayout {
+  const _PhaseLabelLayout({
+    required this.start,
+    required this.end,
+    required this.label,
+    required this.color,
+    required this.top,
+    required this.height,
+  });
+
+  final int start;
+  final int end;
+  final String label;
+  final Color color;
+  final double top;
+  final double height;
+}
+
+double _measureLabelWidth(String text, TextStyle style) {
+  final painter = TextPainter(
+    text: TextSpan(text: text, style: style),
+    textDirection: TextDirection.ltr,
+    maxLines: 1,
+  )..layout();
+  return painter.width;
+}
+
+List<_PhaseLabelLayout> _computePhaseLabelLayouts({
+  required List<_Phase> phases,
+  required double dotSize,
+  required TextStyle labelStyle,
+}) {
+  final layouts = <_PhaseLabelLayout>[];
+  var minTopForNext = 0.0;
+
+  for (var i = 0; i < phases.length; i++) {
+    final phase = phases[i];
+    final segmentTop = _segmentTopY(phase.start, dotSize);
+    final segmentBottom = _segmentTopY(phase.end, dotSize);
+    final insetTop = segmentTop + (i > 0 ? _kPhaseSegmentSpacing : 0);
+    final insetBottom = segmentBottom - (i < phases.length - 1 ? _kPhaseSegmentSpacing : 0);
+    final insetHeight = math.max(0, insetBottom - insetTop);
+    final labelHeight = _measureLabelWidth(phase.label, labelStyle);
+    final centeredTop = insetTop + (insetHeight - labelHeight) / 2;
+    final labelTop = math.max(centeredTop, minTopForNext);
+
+    layouts.add(
+      _PhaseLabelLayout(
+        start: phase.start,
+        end: phase.end,
+        label: phase.label,
+        color: phase.color,
+        top: labelTop,
+        height: labelHeight,
+      ),
+    );
+
+    minTopForNext = labelTop + labelHeight + _kPhaseSegmentSpacing;
+  }
+
+  return layouts;
+}
 
 double _markerReveal(double revealedWeeks, int markerWeek) {
   if (revealedWeeks <= markerWeek) return 0;
