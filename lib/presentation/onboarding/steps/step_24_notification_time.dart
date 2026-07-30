@@ -42,7 +42,7 @@ class Step24NotificationTime extends OnboardingStep {
                   ),
                 ),
                 const SizedBox(height: Margins.spacingL),
-                Texts.xlBold(Strings.onboarding20Title),
+                Texts.onboardingXlBold(Strings.onboarding20Title),
                 const SizedBox(height: Margins.spacingM),
                 const _NotificationTimeSelector(),
                 const SizedBox(height: Margins.spacingM),

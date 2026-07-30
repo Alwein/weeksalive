@@ -34,7 +34,7 @@ class Step27Widget extends OnboardingStep {
             ),
           ),
           const SizedBox(height: Margins.spacingM),
-          Texts.xlBold(Strings.onboarding21Title),
+          Texts.onboardingXlBold(Strings.onboarding21Title),
           const SizedBox(height: Margins.spacingM),
           const SmallDivider(),
           const SizedBox(height: Margins.spacingM),

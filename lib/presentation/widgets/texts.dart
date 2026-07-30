@@ -20,6 +20,24 @@ class Texts {
     );
   }
 
+  /// Onboarding titles — Inter.
+  static Widget onboardingXlBold(
+    String text, {
+    TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
+    bool? softWrap,
+  }) {
+    return _StyledText(
+      text: text,
+      style: TextStyles.onboardingXlBold,
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
+      softWrap: softWrap,
+    );
+  }
+
   static Widget hugeBold(
     String text, {
     TextAlign? textAlign,
@@ -30,6 +48,24 @@ class Texts {
     return _StyledText(
       text: text,
       style: TextStyles.hugeBold,
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
+      softWrap: softWrap,
+    );
+  }
+
+  /// Onboarding titles — Inter.
+  static Widget onboardingHugeBold(
+    String text, {
+    TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
+    bool? softWrap,
+  }) {
+    return _StyledText(
+      text: text,
+      style: TextStyles.onboardingHugeBold,
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,
@@ -67,6 +103,26 @@ class Texts {
     return _StyledText(
       text: text,
       style: TextStyles.xlBold,
+      color: AppColors.contentSoft(context),
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
+      softWrap: softWrap,
+    );
+  }
+
+  /// Onboarding titles — Inter.
+  static Widget onboardingXlBoldSoft(
+    BuildContext context,
+    String text, {
+    TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
+    bool? softWrap,
+  }) {
+    return _StyledText(
+      text: text,
+      style: TextStyles.onboardingXlBold,
       color: AppColors.contentSoft(context),
       textAlign: textAlign,
       maxLines: maxLines,

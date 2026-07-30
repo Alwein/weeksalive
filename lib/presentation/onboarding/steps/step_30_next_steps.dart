@@ -32,7 +32,7 @@ class Step30NextSteps extends OnboardingStep {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: Margins.spacingS),
-              Texts.xlBold(Strings.onboarding24Title),
+              Texts.onboardingXlBold(Strings.onboarding24Title),
               const SizedBox(height: Margins.spacingM),
               const _Illustration(),
               const SizedBox(height: Margins.spacingM),

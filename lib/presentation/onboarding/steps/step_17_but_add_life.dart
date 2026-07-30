@@ -30,12 +30,12 @@ class Step17ButAddLife extends OnboardingStep {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Texts.xlBoldSoft(context, Strings.onboardingButAddLifeTitle1),
+                    Texts.onboardingXlBoldSoft(context, Strings.onboardingButAddLifeTitle1),
                     Text(
                       Strings.onboardingButAddLifeBut,
-                      style: TextStyles.primaryXxlBold.copyWith(color: AppColors.content(context)),
+                      style: TextStyles.onboardingXxlBold.copyWith(color: AppColors.content(context)),
                     ),
-                    Texts.xlBold(Strings.onboardingButAddLifeTitle2),
+                    Texts.onboardingXlBold(Strings.onboardingButAddLifeTitle2),
                   ],
                 ),
               ),

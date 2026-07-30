@@ -39,7 +39,7 @@ class Step26GridAlive extends OnboardingStep {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Texts.xlBold(Strings.onboarding19Title),
+                  Texts.onboardingXlBold(Strings.onboarding19Title),
                   const SizedBox(height: Margins.spacingS),
                   Texts.primaryMediumSoft(context, Strings.onboarding19Subtitle),
                   const SizedBox(height: Margins.spacingM),

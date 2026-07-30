@@ -106,7 +106,7 @@ class _Step09GenderContentState extends State<_Step09GenderContent> with RiveThe
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Texts.xlBold(Strings.onboarding07Title),
+                  Texts.onboardingXlBold(Strings.onboarding07Title),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,

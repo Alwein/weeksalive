@@ -29,7 +29,7 @@ class Step20WeeksThatStay extends OnboardingStep {
               spacing: Margins.spacingM,
               children: [
                 const SizedBox(height: Margins.spacingBase),
-                Texts.xlBold(Strings.onboarding15Title),
+                Texts.onboardingXlBold(Strings.onboarding15Title),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: Margins.spacingBase),

@@ -49,7 +49,7 @@ class _Step07DateOfBirthContent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Texts.xlBold(Strings.onboarding06Title),
+                  Texts.onboardingXlBold(Strings.onboarding06Title),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,

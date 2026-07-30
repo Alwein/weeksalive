@@ -40,7 +40,7 @@ class Step16VisitsVisualization extends OnboardingStep {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Texts.xlBold(Strings.onboarding12Title(visits)),
+                  Texts.onboardingXlBold(Strings.onboarding12Title(visits)),
                   const SizedBox(height: Margins.spacingM),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),

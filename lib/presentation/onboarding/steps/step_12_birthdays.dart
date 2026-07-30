@@ -45,7 +45,7 @@ class Step12Birthdays extends OnboardingStep {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Texts.xlBold(Strings.onboarding09BirthdaysTitle(birthdaysAhead)),
+                  Texts.onboardingXlBold(Strings.onboarding09BirthdaysTitle(birthdaysAhead)),
                   const SizedBox(height: Margins.spacingM),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),

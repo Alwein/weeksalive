@@ -62,7 +62,7 @@ class Step03LifeInWeeks extends OnboardingStep {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Texts.xlBold(Strings.onboarding03Title),
+                        Texts.onboardingXlBold(Strings.onboarding03Title),
                         const SizedBox(height: Margins.spacingM),
                       ],
                     ),

@@ -46,7 +46,7 @@ class Step19OneYearBut extends OnboardingStep {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const SizedBox(height: Margins.spacingS),
-                        Texts.xlBold(Strings.onboarding27OneYearButTitle(georgianDays)),
+                        Texts.onboardingXlBold(Strings.onboarding27OneYearButTitle(georgianDays)),
                         const SizedBox(height: Margins.spacingM),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

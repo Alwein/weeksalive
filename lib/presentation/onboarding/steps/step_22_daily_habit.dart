@@ -36,9 +36,9 @@ class Step22DailyHabit extends OnboardingStep {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Texts.xlBold(Strings.onboarding17Title),
+                  Texts.onboardingXlBold(Strings.onboarding17Title),
                   const SizedBox(height: Margins.spacingS),
-                  Texts.xlBoldSoft(context, Strings.onboarding17Title2),
+                  Texts.onboardingXlBoldSoft(context, Strings.onboarding17Title2),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,

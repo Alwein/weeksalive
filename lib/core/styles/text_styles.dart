@@ -31,14 +31,36 @@ class TextStyles {
     fontWeight: FontWeight.bold,
   );
 
+  /// Onboarding display titles (Inter).
+  static TextStyle onboardingXlBold = const TextStyle(
+    fontFamily: "Inter",
+    fontSize: FontSizes.xl,
+    fontWeight: FontWeight.bold,
+  );
+
   static TextStyle hugeBold = const TextStyle(
     fontFamily: "SpaceGrotesk",
     fontSize: FontSizes.huge,
     fontWeight: FontWeight.bold,
   );
 
+  /// Onboarding display titles (Inter).
+  static TextStyle onboardingHugeBold = const TextStyle(
+    fontFamily: "Inter",
+    fontSize: FontSizes.huge,
+    fontWeight: FontWeight.bold,
+  );
+
   static TextStyle primaryXxlBold = const TextStyle(
     fontFamily: "SpaceGrotesk",
+    fontSize: FontSizes.xxxl,
+    fontWeight: FontWeight.bold,
+    height: 0,
+  );
+
+  /// Onboarding display titles (Inter).
+  static TextStyle onboardingXxlBold = const TextStyle(
+    fontFamily: "Inter",
     fontSize: FontSizes.xxxl,
     fontWeight: FontWeight.bold,
     height: 0,

@@ -24,18 +24,18 @@ class Step31Final extends OnboardingStep {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Texts.xlBold(Strings.onboarding25Title1),
-              Texts.xlBold(Strings.onboarding25Title2),
+              Texts.onboardingXlBold(Strings.onboarding25Title1),
+              Texts.onboardingXlBold(Strings.onboarding25Title2),
               Text(
                 Strings.onboarding25Title3,
-                style: TextStyles.xlBold.copyWith(color: AppColors.contentSoftOnSoft(context)),
+                style: TextStyles.onboardingXlBold.copyWith(color: AppColors.contentSoftOnSoft(context)),
               ),
               Text(
                 Strings.onboarding25Title4,
-                style: TextStyles.xlBold.copyWith(color: AppColors.contentSoftOnSoft(context)),
+                style: TextStyles.onboardingXlBold.copyWith(color: AppColors.contentSoftOnSoft(context)),
               ),
-              Texts.xlBoldSoft(context, Strings.onboarding25Title5),
-              Texts.xlBoldSoft(context, Strings.onboarding25Title6),
+              Texts.onboardingXlBoldSoft(context, Strings.onboarding25Title5),
+              Texts.onboardingXlBoldSoft(context, Strings.onboarding25Title6),
               const SizedBox(height: Margins.spacingHuge),
               Row(
                 mainAxisSize: MainAxisSize.min,

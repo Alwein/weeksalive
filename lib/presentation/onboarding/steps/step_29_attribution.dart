@@ -44,7 +44,7 @@ class Step29Attribution extends OnboardingStep {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Texts.xlBold(Strings.onboarding23Title1),
+                  Texts.onboardingXlBold(Strings.onboarding23Title1),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,

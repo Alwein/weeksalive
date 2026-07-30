@@ -63,7 +63,7 @@ class Step03bLifeInWeeks extends OnboardingStep {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Texts.xlBold(Strings.onboarding03bTitle),
+                        Texts.onboardingXlBold(Strings.onboarding03bTitle),
                         const SizedBox(height: Margins.spacingM),
                       ],
                     ),
@@ -340,7 +340,7 @@ class _GridLabel extends StatelessWidget {
     return Text(
       text,
       textAlign: textAlign,
-      style: TextStyles.primaryXsBold.copyWith(color: color, height: 1),
+      style: TextStyles.primarySmallBold.copyWith(color: color, height: 1),
     );
   }
 }

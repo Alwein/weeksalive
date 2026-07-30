@@ -41,7 +41,7 @@ class Step18ThisYear extends OnboardingStep {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Texts.xlBold(Strings.onboarding09dThisYearTitle),
+                  Texts.onboardingXlBold(Strings.onboarding09dThisYearTitle),
                   const SizedBox(height: Margins.spacingM),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),

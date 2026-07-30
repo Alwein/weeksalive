@@ -207,7 +207,7 @@ class _GridContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Texts.xlBold(Strings.onboarding09Title(name)),
+          Texts.onboardingXlBold(Strings.onboarding09Title(name)),
           Expanded(
             child: Center(
               child: _GridIllustration(

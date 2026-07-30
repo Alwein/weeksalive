@@ -73,7 +73,7 @@ class _Step28ContentState extends State<_Step28Content> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Texts.xlBold(Strings.onboarding22Title1),
+                  Texts.onboardingXlBold(Strings.onboarding22Title1),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,

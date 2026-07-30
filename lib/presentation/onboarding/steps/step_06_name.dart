@@ -63,7 +63,7 @@ class _Step06NameContentState extends State<_Step06NameContent> with RiveThemeMi
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Texts.hugeBold(Strings.onboarding05Title),
+          Texts.onboardingHugeBold(Strings.onboarding05Title),
           const SizedBox(height: Margins.spacingS),
           Expanded(
             child: LayoutBuilder(

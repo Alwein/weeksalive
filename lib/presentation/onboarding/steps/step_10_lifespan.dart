@@ -181,7 +181,7 @@ class _Step10LifespanContentState extends State<_Step10LifespanContent> with Riv
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Texts.xlBold(Strings.onboarding08Title),
+                  Texts.onboardingXlBold(Strings.onboarding08Title),
                   const SizedBox(height: Margins.spacingM),
                   LifespanSlider(
                     value: controller.lifespan,

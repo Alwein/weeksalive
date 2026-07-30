@@ -40,7 +40,7 @@ class _Step25Content extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Texts.xlBold(Strings.onboardingWeeklyIntentTitle),
+                    Texts.onboardingXlBold(Strings.onboardingWeeklyIntentTitle),
                     const SizedBox(height: Margins.spacingS),
                     Texts.primaryMediumSoft(context, Strings.onboardingWeeklyIntentSubtitle),
                     const SizedBox(height: Margins.spacingL),

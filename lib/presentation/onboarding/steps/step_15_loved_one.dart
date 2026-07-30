@@ -42,7 +42,7 @@ class Step15LovedOne extends OnboardingStep {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Texts.xlBold(Strings.onboarding11Title1),
+                  Texts.onboardingXlBold(Strings.onboarding11Title1),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,

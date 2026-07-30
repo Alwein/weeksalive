@@ -36,9 +36,9 @@ class Step04MakeItCount extends OnboardingStep {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Texts.xlBold(Strings.onboarding10Title1),
+                  Texts.onboardingXlBold(Strings.onboarding10Title1),
                   const SizedBox(height: Margins.spacingS),
-                  Texts.xlBoldSoft(context, Strings.onboarding10Title2),
+                  Texts.onboardingXlBoldSoft(context, Strings.onboarding10Title2),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,

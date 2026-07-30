@@ -45,7 +45,7 @@ class Step21WeeksDisappear extends OnboardingStep {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const SizedBox(height: Margins.spacingS),
-                        Texts.xlBold(Strings.onboarding13Title),
+                        Texts.onboardingXlBold(Strings.onboarding13Title),
                         const SizedBox(height: Margins.spacingM),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

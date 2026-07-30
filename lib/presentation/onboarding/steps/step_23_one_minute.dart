@@ -34,7 +34,7 @@ class Step23OneMinute extends OnboardingStep {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const SizedBox(height: Margins.spacingS),
-                Texts.xlBold(Strings.onboarding18Title),
+                Texts.onboardingXlBold(Strings.onboarding18Title),
                 const SizedBox(height: Margins.spacingS),
                 Texts.primaryRegularSoft(context, Strings.onboarding18Subtitle),
                 const SizedBox(height: Margins.spacingM),

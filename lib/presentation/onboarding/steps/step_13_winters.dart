@@ -45,7 +45,7 @@ class Step13Winters extends OnboardingStep {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Texts.xlBold(Strings.onboarding09WintersTitle(winterWeeksAhead)),
+                  Texts.onboardingXlBold(Strings.onboarding09WintersTitle(winterWeeksAhead)),
                   const SizedBox(height: Margins.spacingM),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: Margins.spacingL),

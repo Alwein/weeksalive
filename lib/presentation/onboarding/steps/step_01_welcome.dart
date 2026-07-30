@@ -24,7 +24,7 @@ class Step01Welcome extends OnboardingStep {
               height: 96,
             ),
             const SizedBox(height: Margins.spacingXl),
-            Texts.xlBold(Strings.appName),
+            Texts.onboardingXlBold(Strings.appName),
             const SizedBox(height: Margins.spacingM),
             Texts.primaryMediumSoft(
               context,

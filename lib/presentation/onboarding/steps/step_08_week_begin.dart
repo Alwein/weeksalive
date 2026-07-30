@@ -33,7 +33,7 @@ class _Step08Content extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Texts.xlBold(Strings.onboardingWeekBeginTitle),
+                Texts.onboardingXlBold(Strings.onboardingWeekBeginTitle),
                 const SizedBox(height: Margins.spacingS),
                 Texts.primaryMediumSoft(context, Strings.onboardingWeekBeginSubtitle),
                 const SizedBox(height: Margins.spacingL),

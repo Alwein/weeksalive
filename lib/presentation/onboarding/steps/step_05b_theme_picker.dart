@@ -23,7 +23,7 @@ class Step05bThemePicker extends OnboardingStep {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: Margins.spacingM),
-                Texts.xlBold(Strings.onboardingThemePickerTitle),
+                Texts.onboardingXlBold(Strings.onboardingThemePickerTitle),
                 const SizedBox(height: Margins.spacingS),
                 Texts.primaryMediumSoft(
                   context,

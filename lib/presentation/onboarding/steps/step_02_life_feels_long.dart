@@ -38,8 +38,8 @@ class Step02LifeFeelsLong extends OnboardingStep {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Texts.xlBold(Strings.onboarding02Title1),
-                    Texts.xlBoldSoft(context, Strings.onboarding02Title2),
+                    Texts.onboardingXlBold(Strings.onboarding02Title1),
+                    Texts.onboardingXlBoldSoft(context, Strings.onboarding02Title2),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
