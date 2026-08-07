@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weeksalive/core/styles/app_color_tokens.dart';
 import 'package:weeksalive/core/styles/app_colors_extension.dart';
+import 'package:weeksalive/core/styles/app_system_ui_style.dart';
 import 'package:weeksalive/core/styles/app_theme_id.dart';
 import 'package:weeksalive/core/styles/themes/app_theme.dart';
 
@@ -51,9 +52,18 @@ abstract final class AppThemeBuilder {
   }
 
   static ThemeData _themeData(AppColorTokens tokens, Brightness brightness) {
+    final systemOverlayStyle = AppSystemUiStyle.forTokens(tokens);
+
     return ThemeData(
       brightness: brightness,
       useMaterial3: false,
+      scaffoldBackgroundColor: tokens.bg,
+      appBarTheme: AppBarTheme(
+        backgroundColor: tokens.bg,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        systemOverlayStyle: systemOverlayStyle,
+      ),
       extensions: [AppColorsExtension(tokens: tokens)],
     );
   }

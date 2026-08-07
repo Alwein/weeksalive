@@ -321,18 +321,22 @@ class _DemoSectionTile extends StatelessWidget {
                   child: Text(
                     title,
                     style: TextStyles.primaryRegularBold.copyWith(color: titleColor),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 if (!isExpanded && summary != null) ...[
-                  summary!,
                   const SizedBox(width: Margins.spacingS),
+                  Flexible(child: summary!),
                 ],
-                if (isExpanded)
+                if (isExpanded) ...[
+                  const SizedBox(width: Margins.spacingS),
                   Icon(
                     MingCuteIcons.mgc_minimize_line,
                     size: Dimens.iconSizeXs,
                     color: AppColors.contentSoft(context),
                   ),
+                ],
               ],
             ),
           ),
@@ -807,7 +811,14 @@ class _FeelingSummary extends StatelessWidget {
       children: [
         Icon(_feelingIcon(value), size: Dimens.iconSizeXs, color: AppColors.content(context)),
         const SizedBox(width: Margins.spacingS),
-        Texts.primaryXsBold(value.label),
+        Flexible(
+          child: Texts.primaryXsBold(
+            value.label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.end,
+          ),
+        ),
       ],
     );
   }
@@ -824,7 +835,14 @@ class _MeaningSummary extends StatelessWidget {
       children: [
         _MeaningBars(filled: value.filledBars, color: AppColors.content(context), size: Dimens.iconSizeXs),
         const SizedBox(width: Margins.spacingS),
-        Texts.primaryXsBold(value.label),
+        Flexible(
+          child: Texts.primaryXsBold(
+            value.label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.end,
+          ),
+        ),
       ],
     );
   }
@@ -838,6 +856,9 @@ class _NewExperienceSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     return Texts.primaryXsBold(
       value ? Strings.newExperienceSectionValueYes : Strings.newExperienceSectionValueNo,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      textAlign: TextAlign.end,
     );
   }
 }
@@ -853,6 +874,7 @@ class _IntentionSummary extends StatelessWidget {
       text,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
+      textAlign: TextAlign.end,
     );
   }
 }

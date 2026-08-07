@@ -306,10 +306,13 @@ class _DaySection extends StatelessWidget {
                   child: Text(
                     title,
                     style: TextStyles.primaryMediumBold.copyWith(color: titleColor),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 if (summary != null) ...[
-                  summary!,
+                  const SizedBox(width: Margins.spacingS),
+                  Flexible(child: summary!),
                 ],
               ],
             ),

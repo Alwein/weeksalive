@@ -356,30 +356,25 @@ class _DaySection extends StatelessWidget {
                 ),
                 const SizedBox(width: Margins.spacingS),
                 Expanded(
-                  flex: 2,
                   child: Text(
                     title,
                     style: TextStyles.primaryMediumBold.copyWith(color: titleColor),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                Flexible(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      if (!isExpanded && summary != null) ...[
-                        Flexible(child: summary!),
-                        const SizedBox(width: Margins.spacingBase),
-                      ],
-                      isExpanded
-                          ? const SizedBox.shrink()
-                          : Icon(
-                              MingCuteIcons.mgc_down_line,
-                              size: Dimens.iconSizeS,
-                              color: AppColors.contentSoft(context),
-                            ),
-                    ],
+                if (!isExpanded && summary != null) ...[
+                  const SizedBox(width: Margins.spacingS),
+                  Flexible(child: summary!),
+                ],
+                if (!isExpanded) ...[
+                  const SizedBox(width: Margins.spacingBase),
+                  Icon(
+                    MingCuteIcons.mgc_down_line,
+                    size: Dimens.iconSizeS,
+                    color: AppColors.contentSoft(context),
                   ),
-                ),
+                ],
               ],
             ),
           ),
@@ -831,6 +826,7 @@ class _LeaveATraceSummary extends StatelessWidget {
       style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
+      textAlign: TextAlign.end,
     );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:weeksalive/core/styles/app_system_ui_style.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:hidden_logo/hidden_logo.dart';
 import 'package:jiffy/jiffy.dart';
@@ -85,22 +87,25 @@ class _AppState extends State<App> with WidgetsBindingObserver {
               themeMode: config.themeMode,
               builder: (context, child) {
                 Jiffy.setLocale(Localizations.localeOf(context).languageCode);
-                return HiddenLogo(
-                  body: AppBackgroundScaleScope(
-                    notifier: _backgroundScaleController,
-                    child: AnimatedBuilder(
-                      animation: _backgroundScaleController,
-                      child: child!,
-                      builder: (context, child) => AnimatedScale(
-                        scale: _backgroundScaleController.scale,
-                        duration: AnimationDurations.base,
-                        curve: Curves.easeOutSine,
-                        child: child,
+                return AnnotatedRegion<SystemUiOverlayStyle>(
+                  value: AppSystemUiStyle.forContext(context),
+                  child: HiddenLogo(
+                    body: AppBackgroundScaleScope(
+                      notifier: _backgroundScaleController,
+                      child: AnimatedBuilder(
+                        animation: _backgroundScaleController,
+                        child: child!,
+                        builder: (context, child) => AnimatedScale(
+                          scale: _backgroundScaleController.scale,
+                          duration: AnimationDurations.base,
+                          curve: Curves.easeOutSine,
+                          child: child,
+                        ),
                       ),
                     ),
+                    notchBuilder: (context, size) => NotchLogo(size: size),
+                    dynamicIslandBuilder: (context, size) => NotchLogo(size: size),
                   ),
-                  notchBuilder: (context, size) => NotchLogo(size: size),
-                  dynamicIslandBuilder: (context, size) => NotchLogo(size: size),
                 );
               },
               theme: config.theme,

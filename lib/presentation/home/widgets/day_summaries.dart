@@ -25,9 +25,14 @@ class FeelingSummary extends StatelessWidget {
           color: AppColors.content(context),
         ),
         const SizedBox(width: Margins.spacingS),
-        Text(
-          value.label,
-          style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
+        Flexible(
+          child: Text(
+            value.label,
+            style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.end,
+          ),
         ),
       ],
     );
@@ -46,9 +51,14 @@ class MeaningSummary extends StatelessWidget {
       children: [
         MeaningBars(filled: value.filledBars, color: AppColors.content(context), size: Dimens.iconSizeXs),
         const SizedBox(width: Margins.spacingS),
-        Text(
-          value.label,
-          style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
+        Flexible(
+          child: Text(
+            value.label,
+            style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.end,
+          ),
         ),
       ],
     );
@@ -103,6 +113,9 @@ class NewExperienceSummary extends StatelessWidget {
     return Text(
       value ? Strings.newExperienceSectionValueYes : Strings.newExperienceSectionValueNo,
       style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      textAlign: TextAlign.end,
     );
   }
 }
@@ -123,6 +136,7 @@ class LivingIntentionsSummary extends StatelessWidget {
           style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.end,
         );
       },
     );
