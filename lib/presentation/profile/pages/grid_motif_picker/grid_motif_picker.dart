@@ -48,27 +48,36 @@ class _GridMotifGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
-      itemCount: GridMotifId.all.length,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 1,
-        mainAxisSpacing: Margins.spacingBase,
-        crossAxisSpacing: Margins.spacingBase,
-      ),
-      itemBuilder: (context, index) {
-        final motifId = GridMotifId.all[index];
-        return _GridMotifCard(
-          motifId: motifId,
-          selected: motifId == viewModel.selectedMotif,
-          locked: !viewModel.unlockedMotifs.contains(motifId),
-          onTap: () {
-            if (!viewModel.unlockedMotifs.contains(motifId)) return;
-            SensorialFeedback.selectionChanged();
-            StoreProvider.of<AppState>(context).dispatch(SetGridMotifAction(motifId));
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const horizontalPadding = Margins.spacingM * 2;
+        const crossSpacing = Margins.spacingBase;
+        final cellWidth = (constraints.maxWidth - horizontalPadding - crossSpacing) / 2;
+        final cellHeight = cellWidth.clamp(140.0, 180.0);
+
+        return GridView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+          itemCount: GridMotifId.all.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisExtent: cellHeight,
+            mainAxisSpacing: Margins.spacingBase,
+            crossAxisSpacing: Margins.spacingBase,
+          ),
+          itemBuilder: (context, index) {
+            final motifId = GridMotifId.all[index];
+            return _GridMotifCard(
+              motifId: motifId,
+              selected: motifId == viewModel.selectedMotif,
+              locked: !viewModel.unlockedMotifs.contains(motifId),
+              onTap: () {
+                if (!viewModel.unlockedMotifs.contains(motifId)) return;
+                SensorialFeedback.selectionChanged();
+                StoreProvider.of<AppState>(context).dispatch(SetGridMotifAction(motifId));
+              },
+            );
           },
         );
       },
@@ -140,40 +149,47 @@ class _GridMotifCardContent extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(Margins.spacingBase),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Center(
-            child: Container(
-              padding: const EdgeInsets.all(Margins.spacingBase),
-              decoration: BoxDecoration(
-                color: previewBgColor,
-                borderRadius: BorderRadius.circular(Dimens.radiusS),
-              ),
-              child: SizedBox(
-                width: _previewSize,
-                height: _previewSize / 2,
-                child: CustomPaint(
-                  painter: _GridMotifPreviewPainter(
-                    motifId: motifId,
-                    fillColor: fillColor,
-                    emptyStrokeColor: emptyStrokeColor,
-                    pastEmptyColor: pastEmptyColor,
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final previewWidth = _previewSize.clamp(0.0, constraints.maxWidth);
+                return FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Container(
+                    padding: const EdgeInsets.all(Margins.spacingBase),
+                    decoration: BoxDecoration(
+                      color: previewBgColor,
+                      borderRadius: BorderRadius.circular(Dimens.radiusS),
+                    ),
+                    child: SizedBox(
+                      width: previewWidth,
+                      height: previewWidth / 2,
+                      child: CustomPaint(
+                        painter: _GridMotifPreviewPainter(
+                          motifId: motifId,
+                          fillColor: fillColor,
+                          emptyStrokeColor: emptyStrokeColor,
+                          pastEmptyColor: pastEmptyColor,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
           ),
-          const SizedBox(height: Margins.spacingBase),
-          Center(
-            child: locked
-                ? _LockedLabel(motifId: motifId, textColor: textColor, hintColor: hintColor)
-                : Texts.primaryMediumBold(
-                    motifId.label,
-                    color: textColor,
-                    textAlign: TextAlign.center,
-                  ),
-          ),
+          const SizedBox(height: Margins.spacingS),
+          locked
+              ? _LockedLabel(motifId: motifId, textColor: textColor, hintColor: hintColor)
+              : Texts.primaryMediumBold(
+                  motifId.label,
+                  color: textColor,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
         ],
       ),
     );
@@ -205,6 +221,7 @@ class _LockedLabel extends StatelessWidget {
     final hint = _unlockHint;
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -216,13 +233,21 @@ class _LockedLabel extends StatelessWidget {
                 motifId.label,
                 color: textColor,
                 textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
         ),
         if (hint != null) ...[
-          const SizedBox(height: Margins.spacingS),
-          Texts.primaryRegular(hint, color: hintColor, textAlign: TextAlign.center),
+          const SizedBox(height: Margins.spacingXs),
+          Texts.primaryRegular(
+            hint,
+            color: hintColor,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
         ],
       ],
     );

@@ -111,7 +111,8 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
   }
 
   Future<void> _openTodayForm() async {
-    if (!widget.vm.isPro) {
+    if (!widget.vm.isPro && 1 == 2) {
+      // TODO: Remove me after testing
       await showInAppPaywall(context);
       return;
     }

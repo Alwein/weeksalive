@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weeksalive/core/app_icon/app_icon_id.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
@@ -11,7 +14,10 @@ import 'package:weeksalive/domain/rewards/reward_condition.dart';
 import 'package:weeksalive/domain/rewards/reward_rules.dart';
 import 'package:weeksalive/presentation/redux/app_icon/app_icon_actions.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
+
+const _androidIconHintShownKey = 'app_icon_android_hint_shown_v1';
 
 class AppIconPickerViewModel {
   const AppIconPickerViewModel({
@@ -47,30 +53,97 @@ class _AppIconGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
-      itemCount: AppIconId.all.length,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.85,
-        mainAxisSpacing: Margins.spacingBase,
-        crossAxisSpacing: Margins.spacingBase,
-      ),
-      itemBuilder: (context, index) {
-        final iconId = AppIconId.all[index];
-        return _AppIconCard(
-          iconId: iconId,
-          selected: iconId == viewModel.selectedIcon,
-          locked: !viewModel.unlockedIcons.contains(iconId),
-          onTap: () {
-            if (!viewModel.unlockedIcons.contains(iconId)) return;
-            SensorialFeedback.selectionChanged();
-            StoreProvider.of<AppState>(context).dispatch(SetAppIconAction(iconId));
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const horizontalPadding = Margins.spacingM * 2;
+        const crossSpacing = Margins.spacingBase;
+        final cellWidth = (constraints.maxWidth - horizontalPadding - crossSpacing) / 2;
+        final cellHeight = (cellWidth / 0.85).clamp(155.0, 200.0);
+
+        return GridView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+          itemCount: AppIconId.all.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisExtent: cellHeight,
+            mainAxisSpacing: Margins.spacingBase,
+            crossAxisSpacing: Margins.spacingBase,
+          ),
+          itemBuilder: (context, index) {
+            final iconId = AppIconId.all[index];
+            return _AppIconCard(
+              iconId: iconId,
+              selected: iconId == viewModel.selectedIcon,
+              locked: !viewModel.unlockedIcons.contains(iconId),
+              onTap: () => _onIconSelected(context, viewModel, iconId),
+            );
           },
         );
       },
+    );
+  }
+
+  Future<void> _onIconSelected(
+    BuildContext context,
+    AppIconPickerViewModel viewModel,
+    AppIconId iconId,
+  ) async {
+    if (!viewModel.unlockedIcons.contains(iconId)) return;
+    if (iconId == viewModel.selectedIcon) return;
+
+    SensorialFeedback.selectionChanged();
+    StoreProvider.of<AppState>(context).dispatch(SetAppIconAction(iconId));
+
+    if (Platform.isAndroid) {
+      await _maybeShowAndroidIconHint(context);
+    }
+  }
+
+  Future<void> _maybeShowAndroidIconHint(BuildContext context) async {
+    final preferences = await SharedPreferences.getInstance();
+    if (preferences.getBool(_androidIconHintShownKey) ?? false) return;
+    if (!context.mounted) return;
+
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => _AndroidIconHintDialog(dialogContext: dialogContext),
+    );
+
+    await preferences.setBool(_androidIconHintShownKey, true);
+  }
+}
+
+class _AndroidIconHintDialog extends StatelessWidget {
+  const _AndroidIconHintDialog({required this.dialogContext});
+
+  final BuildContext dialogContext;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(Dimens.radiusBase),
+        side: BorderSide(color: AppColors.strokeColor(context)),
+      ),
+      backgroundColor: AppColors.bg(context),
+      title: Texts.primaryMediumBold(Strings.appIconAndroidHintTitle),
+      content: Texts.primaryRegularMedium(
+        Strings.appIconAndroidHintMessage,
+        color: AppColors.contentSoft(context),
+      ),
+      actions: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            PrimaryButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              text: Strings.appIconAndroidHintButton,
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
@@ -135,27 +208,31 @@ class _AppIconCardContent extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(Margins.spacingBase),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Center(
-            child: _AppIconIllustration(
-              iconId: iconId,
-              size: _illustrationSize,
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: _AppIconIllustration(
+                    iconId: iconId,
+                    size: _illustrationSize.clamp(0, constraints.biggest.shortestSide),
+                  ),
+                );
+              },
             ),
           ),
-          const SizedBox(height: Margins.spacingBase),
-          SizedBox(
-            child: Center(
-              child: locked
-                  ? _LockedLabel(iconId: iconId, textColor: textColor, hintColor: hintColor)
-                  : Texts.primaryMediumBold(
-                      iconId.label,
-                      color: textColor,
-                      textAlign: TextAlign.center,
-                    ),
-            ),
-          ),
+          const SizedBox(height: Margins.spacingS),
+          locked
+              ? _LockedLabel(iconId: iconId, textColor: textColor, hintColor: hintColor)
+              : Texts.primaryMediumBold(
+                  iconId.label,
+                  color: textColor,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
         ],
       ),
     );
@@ -187,6 +264,7 @@ class _LockedLabel extends StatelessWidget {
     final hint = _unlockHint;
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -198,13 +276,21 @@ class _LockedLabel extends StatelessWidget {
                 iconId.label,
                 color: textColor,
                 textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
         ),
         if (hint != null) ...[
-          const SizedBox(height: Margins.spacingS),
-          Texts.primaryRegular(hint, color: hintColor, textAlign: TextAlign.center),
+          const SizedBox(height: Margins.spacingXs),
+          Texts.primaryRegular(
+            hint,
+            color: hintColor,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
         ],
       ],
     );

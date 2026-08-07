@@ -439,6 +439,9 @@ class Strings {
   static String get appIconSilver => tr('app_icon_silver');
   static String get appIconSisyphus => tr('app_icon_sisyphus');
   static String get appIconGold => tr('app_icon_gold');
+  static String get appIconAndroidHintTitle => tr('app_icon_android_hint_title');
+  static String get appIconAndroidHintMessage => tr('app_icon_android_hint_message');
+  static String get appIconAndroidHintButton => tr('app_icon_android_hint_button');
   static String get gridMotifDots => tr('grid_motif_dots');
   static String get gridMotifSquares => tr('grid_motif_squares');
   static String get gridMotifFlowers => tr('grid_motif_flowers');
