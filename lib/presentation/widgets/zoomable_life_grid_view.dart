@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -33,6 +34,7 @@ class ZoomableLifeGridView extends StatefulWidget {
 
   static const yearGridColumns = 15;
   static const yearGridDotSpacing = 4.0;
+  static const tabletShortestSide = 600.0;
 
   /// Duration of the single-dot scale-in played when a day is saved.
   static const appearDuration = Duration(milliseconds: 2000);
@@ -203,48 +205,66 @@ class _YearDayGridLayer extends StatelessWidget {
 
         return LayoutBuilder(
           builder: (context, constraints) {
+            final isLargeScreen =
+                MediaQuery.sizeOf(context).shortestSide >= ZoomableLifeGridView.tabletShortestSide;
+            final paintWidth = isLargeScreen
+                ? math.min(
+                    constraints.maxWidth,
+                    YearGridPainter.computeWidthForHeight(
+                      availableHeight: constraints.maxHeight,
+                      totalDays: totalDays,
+                      columns: ZoomableLifeGridView.yearGridColumns,
+                      dotSpacing: ZoomableLifeGridView.yearGridDotSpacing,
+                      padding: padding,
+                    ),
+                  )
+                : constraints.maxWidth;
             final exactHeight = YearGridPainter.computeHeight(
-              availableWidth: constraints.maxWidth,
+              availableWidth: paintWidth,
               totalDays: totalDays,
               columns: ZoomableLifeGridView.yearGridColumns,
               dotSpacing: ZoomableLifeGridView.yearGridDotSpacing,
               padding: padding,
             );
-            final needsScroll = exactHeight > constraints.maxHeight;
 
-            final scrollContent = SingleChildScrollView(
-              child: SizedBox(
-                width: constraints.maxWidth,
-                height: exactHeight,
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTapUp: (details) => _handleTap(
-                    localPosition: details.localPosition,
-                    size: Size(constraints.maxWidth, exactHeight),
+            final gridPaint = SizedBox(
+              width: paintWidth,
+              height: exactHeight,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTapUp: (details) => _handleTap(
+                  localPosition: details.localPosition,
+                  size: Size(paintWidth, exactHeight),
+                  totalDays: totalDays,
+                  now: now,
+                  dayState: dayState,
+                ),
+                child: CustomPaint(
+                  painter: YearGridPainter(
+                    columns: ZoomableLifeGridView.yearGridColumns,
                     totalDays: totalDays,
-                    now: now,
-                    dayState: dayState,
-                  ),
-                  child: CustomPaint(
-                    painter: YearGridPainter(
-                      columns: ZoomableLifeGridView.yearGridColumns,
-                      totalDays: totalDays,
-                      dotSpacing: ZoomableLifeGridView.yearGridDotSpacing,
-                      emptyStrokeColor: strokeColor,
-                      motif: viewModel.motif,
-                      fillColor: fillColor,
-                      pastEmptyColor: pastEmptyColor,
-                      todayEmptyColor: AppColors.accentOrange(context),
-                      filledCount: totalDays,
-                      fillSizes: fillSizes,
-                      padding: padding,
-                      appearIndex: appearIndex,
-                      appearProgress: appearProgress,
-                    ),
+                    dotSpacing: ZoomableLifeGridView.yearGridDotSpacing,
+                    emptyStrokeColor: strokeColor,
+                    motif: viewModel.motif,
+                    fillColor: fillColor,
+                    pastEmptyColor: pastEmptyColor,
+                    todayEmptyColor: AppColors.accentOrange(context),
+                    filledCount: totalDays,
+                    fillSizes: fillSizes,
+                    padding: padding,
+                    appearIndex: appearIndex,
+                    appearProgress: appearProgress,
                   ),
                 ),
               ),
             );
+
+            if (isLargeScreen) {
+              return Align(alignment: Alignment.center, child: gridPaint);
+            }
+
+            final needsScroll = exactHeight > constraints.maxHeight;
+            final scrollContent = SingleChildScrollView(child: gridPaint);
 
             if (!needsScroll) return scrollContent;
 

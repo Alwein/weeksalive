@@ -18,10 +18,12 @@ class Step01Welcome extends OnboardingStep {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              "assets/images/weeksalive_icon_outline.webp",
-              width: 96,
-              height: 96,
+            ExcludeSemantics(
+              child: Image.asset(
+                "assets/images/weeksalive_icon_outline.webp",
+                width: 96,
+                height: 96,
+              ),
             ),
             const SizedBox(height: Margins.spacingXl),
             Texts.onboardingXlBold(Strings.appName),

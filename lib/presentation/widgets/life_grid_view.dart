@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:weeksalive/core/grid_motif/grid_motif_id.dart';
@@ -14,6 +16,7 @@ class LifeGridView extends StatelessWidget {
 
   static const _kColumns = 52;
   static const _kDotSpacing = 2.0;
+  static const _kTabletShortestSide = 600.0;
 
   @override
   Widget build(BuildContext context) {
@@ -26,36 +29,53 @@ class LifeGridView extends StatelessWidget {
 
         return LayoutBuilder(
           builder: (context, constraints) {
+            final isLargeScreen = MediaQuery.sizeOf(context).shortestSide >= _kTabletShortestSide;
+            final paintWidth = isLargeScreen
+                ? math.min(
+                    constraints.maxWidth,
+                    WeekGridPainter.computeWidthForHeight(
+                      availableHeight: constraints.maxHeight,
+                      totalWeeks: grid.totalWeeks,
+                      columns: _kColumns,
+                      dotSpacing: _kDotSpacing,
+                      padding: padding,
+                    ),
+                  )
+                : constraints.maxWidth;
             final exactHeight = WeekGridPainter.computeHeight(
-              availableWidth: constraints.maxWidth,
+              availableWidth: paintWidth,
               totalWeeks: grid.totalWeeks,
               columns: _kColumns,
               dotSpacing: _kDotSpacing,
               padding: padding,
             );
-            final needsScroll = exactHeight > constraints.maxHeight;
 
+            final gridPaint = SizedBox(
+              width: paintWidth,
+              height: exactHeight,
+              child: CustomPaint(
+                painter: WeekGridPainter(
+                  columns: _kColumns,
+                  totalWeeks: grid.totalWeeks,
+                  livedWeeks: grid.livedWeeks,
+                  dotSpacing: _kDotSpacing,
+                  activeColor: activeColor,
+                  inactiveColor: inactiveColor,
+                  padding: padding,
+                  motif: motif,
+                ),
+              ),
+            );
+
+            if (isLargeScreen) {
+              return Align(alignment: Alignment.center, child: gridPaint);
+            }
+
+            final needsScroll = exactHeight > constraints.maxHeight;
             final scrollContent = SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    height: exactHeight,
-                    child: CustomPaint(
-                      painter: WeekGridPainter(
-                        columns: _kColumns,
-                        totalWeeks: grid.totalWeeks,
-                        livedWeeks: grid.livedWeeks,
-                        dotSpacing: _kDotSpacing,
-                        activeColor: activeColor,
-                        inactiveColor: inactiveColor,
-                        padding: padding,
-                        motif: motif,
-                      ),
-                    ),
-                  ),
-                ],
+                children: [gridPaint],
               ),
             );
 

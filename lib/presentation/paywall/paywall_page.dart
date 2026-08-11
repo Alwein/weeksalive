@@ -84,7 +84,7 @@ class PaywallPage extends StatelessWidget {
           onStartTrial: vm.annualPackage != null ? () => vm.onPurchase(context, vm.annualPackage!) : null,
           onRestore: () => vm.onRestore(context),
           onDismiss: () => Navigator.of(context).pop(false),
-          isPro: vm.isPro,
+          isPro: vm.isPro, // TODO:
         );
       },
     );

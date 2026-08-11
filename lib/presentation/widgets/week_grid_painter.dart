@@ -45,6 +45,22 @@ class WeekGridPainter extends CustomPainter {
     return padding.top + padding.bottom + rows * dotSize + (rows - 1) * dotSpacing;
   }
 
+  /// Inverse of [computeHeight]: width needed so the grid fits in [availableHeight].
+  static double computeWidthForHeight({
+    required double availableHeight,
+    required int totalWeeks,
+    required int columns,
+    required double dotSpacing,
+    EdgeInsets padding = EdgeInsets.zero,
+  }) {
+    final rows = (totalWeeks / columns).ceil();
+    if (rows <= 0) return padding.left + padding.right;
+    final paintHeight = availableHeight - padding.top - padding.bottom;
+    final dotSize = (paintHeight - dotSpacing * (rows - 1)) / rows;
+    final paintWidth = columns * dotSize + (columns - 1) * dotSpacing;
+    return paintWidth + padding.left + padding.right;
+  }
+
   @override
   void paint(Canvas canvas, Size size) {
     final dotSize = (size.width - padding.left - padding.right - dotSpacing * (columns - 1)) / columns;
