@@ -10,6 +10,7 @@ import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.da
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_steps.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_progress_bar.dart';
+import 'package:weeksalive/presentation/redux/analytics/analytics_actions.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
 import 'package:weeksalive/presentation/redux/user/user_actions.dart';
@@ -35,6 +36,33 @@ class _OnboardingPageState extends State<OnboardingPage> {
   void initState() {
     super.initState();
     _controller = OnboardingFormController(totalSteps: widget.steps.length);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _dispatch(const OnboardingStartedAction());
+      _trackStepViewed(0);
+    });
+  }
+
+  void _dispatch(Object action) =>
+      StoreProvider.of<AppState>(context, listen: false).dispatch(action);
+
+  void _trackStepViewed(int index) {
+    _dispatch(
+      OnboardingStepViewedAction(stepIndex: index, stepName: widget.steps[index].analyticsName),
+    );
+  }
+
+  void _onPageChanged(int index) {
+    _controller.onPageChanged(index);
+    _trackStepViewed(index);
+  }
+
+  void _goPrevious() {
+    final index = _controller.currentIndex;
+    _dispatch(
+      OnboardingBackPressedAction(stepIndex: index, stepName: widget.steps[index].analyticsName),
+    );
+    _controller.goPrevious();
   }
 
   @override
@@ -47,6 +75,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   Future<void> _handlePrimary(OnboardingStep step) async {
     _dismissKeyboard();
+    _dispatch(
+      OnboardingStepCompletedAction(
+        stepIndex: _controller.currentIndex,
+        stepName: step.analyticsName,
+      ),
+    );
     final override = step.onPrimary;
     if (override != null) {
       await override(context, _controller);
@@ -74,6 +108,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
     store.dispatch(SetUserAction(user));
     store.dispatch(UpdateNotificationSettingsAction(_controller.slots));
     store.dispatch(SetWeeklyIntentSelectionAction(_controller.selectedIntentIds.toList()));
+    store.dispatch(
+      OnboardingProfileSubmittedAction(
+        user: user,
+        slots: _controller.slots,
+        intentsCount: _controller.selectedIntentIds.length,
+      ),
+    );
   }
 
   @override
@@ -91,7 +132,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             onPopInvokedWithResult: (didPop, _) {
               if (!didPop && !_controller.isFirst) {
                 _dismissKeyboard();
-                _controller.goPrevious();
+                _goPrevious();
               }
             },
             child: Scaffold(
@@ -104,6 +145,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     _OnboardingAppBar(
                       controller: _controller,
                       hideBack: _controller.isFirst,
+                      onBack: _goPrevious,
                     ),
                     Expanded(
                       child: ConstrainedBox(
@@ -114,7 +156,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           controller: _controller.pageController,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: widget.steps.length,
-                          onPageChanged: _controller.onPageChanged,
+                          onPageChanged: _onPageChanged,
                           itemBuilder: (context, index) => widget.steps[index].buildContent(context),
                         ),
                       ),
@@ -139,10 +181,15 @@ class _OnboardingPageState extends State<OnboardingPage> {
 }
 
 class _OnboardingAppBar extends StatelessWidget {
-  const _OnboardingAppBar({required this.controller, required this.hideBack});
+  const _OnboardingAppBar({
+    required this.controller,
+    required this.hideBack,
+    required this.onBack,
+  });
 
   final OnboardingFormController controller;
   final bool hideBack;
+  final VoidCallback onBack;
 
   @override
   Widget build(BuildContext context) {
@@ -163,7 +210,7 @@ class _OnboardingAppBar extends StatelessWidget {
               icon: Icon(Icons.arrow_back, color: AppColors.content(context)),
               onPressed: () {
                 FocusScope.of(context).unfocus();
-                controller.goPrevious();
+                onBack();
               },
             ),
             crossFadeState: hideBackButton ? CrossFadeState.showFirst : CrossFadeState.showSecond,

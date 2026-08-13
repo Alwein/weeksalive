@@ -94,7 +94,7 @@ class _EmptyDayContent extends StatelessWidget {
             text: Strings.startTracking,
             onPressed: () {
               Navigator.of(context).pop();
-              DayForm.showBottomSheet(context, date);
+              DayForm.showBottomSheet(context, date, source: 'calendar');
             },
           ),
           const SizedBox(height: Margins.spacingM),
@@ -130,7 +130,7 @@ class _FilledDayContent extends StatelessWidget {
             text: Strings.edit,
             onPressed: () {
               Navigator.of(context).pop();
-              DayForm.showBottomSheet(context, viewModel.entry.date);
+              DayForm.showBottomSheet(context, viewModel.entry.date, source: 'resume');
             },
           ),
           const SizedBox(height: Margins.spacingM),

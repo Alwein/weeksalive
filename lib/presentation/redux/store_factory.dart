@@ -1,5 +1,7 @@
 import 'package:redux/redux.dart';
+import 'package:weeksalive/data/analytics/analytics_repository.dart';
 import 'package:weeksalive/data/app_icon/app_icon_repository.dart';
+import 'package:weeksalive/data/install/install_repository.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
 import 'package:weeksalive/data/grid_motif/grid_motif_repository.dart';
 import 'package:weeksalive/data/home_widget/home_widget_service.dart';
@@ -15,6 +17,7 @@ import 'package:weeksalive/data/wallpaper/wallpaper_config_repository.dart';
 import 'package:weeksalive/data/weekly_intent/weekly_intent_repository.dart';
 import 'package:weeksalive/data/weekly_summary/weekly_summary_repository.dart';
 import 'package:weeksalive/domain/rewards/reward_unlock_service.dart';
+import 'package:weeksalive/presentation/redux/analytics/analytics_middleware.dart';
 import 'package:weeksalive/presentation/redux/app_reducer.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/app_icon/app_icon_middleware.dart';
@@ -49,6 +52,8 @@ class StoreFactory {
   final RewardUnlockService rewardUnlockService;
   final HomeWidgetService homeWidgetService;
   final WallpaperConfigRepository wallpaperConfigRepository;
+  final AnalyticsRepository analyticsRepository;
+  final InstallRepository installRepository;
 
   StoreFactory({
     required this.remoteConfigRepository,
@@ -67,6 +72,8 @@ class StoreFactory {
     RewardUnlockService? rewardUnlockService,
     HomeWidgetService? homeWidgetService,
     required this.wallpaperConfigRepository,
+    required this.analyticsRepository,
+    required this.installRepository,
   })  : rewardUnlockService = rewardUnlockService ?? const RewardUnlockService(),
         homeWidgetService = homeWidgetService ?? HomeWidgetService();
 
@@ -95,6 +102,11 @@ class StoreFactory {
         AppIconMiddleware(appIconRepository: appIconRepository).call,
         GridMotifMiddleware(gridMotifRepository: gridMotifRepository).call,
         ThemeMiddleware(themeRepository: themeRepository).call,
+        // Last, so that every event is derived from a fully reduced state.
+        AnalyticsMiddleware(
+          analyticsRepository: analyticsRepository,
+          installRepository: installRepository,
+        ).call,
       ],
     );
   }

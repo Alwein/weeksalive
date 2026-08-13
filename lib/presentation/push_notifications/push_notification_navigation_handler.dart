@@ -59,7 +59,7 @@ class _PushNotificationNavigationHandlerState extends State<PushNotificationNavi
     store.dispatch(const ClearNotificationTapAction());
     switch (target) {
       case PendingNotificationTarget.dayForm:
-        DayForm.showBottomSheet(navigatorContext, DateTime.now());
+        DayForm.showBottomSheet(navigatorContext, DateTime.now(), source: 'notification');
       case PendingNotificationTarget.weeklySummary:
         _showWeeklySummary(store, navigatorContext);
       case PendingNotificationTarget.none:

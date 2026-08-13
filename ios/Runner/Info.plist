@@ -111,6 +111,8 @@
 		<false/>
 		<key>NSUserTrackingUsageDescription</key>
 		<string>We use your data to show you more relevant ads and improve your experience.</string>
+		<key>com.posthog.posthog.AUTO_INIT</key>
+		<false/>
 		<key>SKAdNetworkItems</key>
 		<array>
 			<dict>

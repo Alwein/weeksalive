@@ -8,6 +8,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:redux/redux.dart';
 import 'package:weeksalive/app_purchase_config.dart';
+import 'package:weeksalive/data/analytics/analytics_initializer.dart';
+import 'package:weeksalive/data/install/install_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/tiktok_events/tiktok_events_repository.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
@@ -26,16 +28,31 @@ Future<AppDependencies> initializeApp() async {
 
   await dotenv.load(fileName: 'env/.env');
 
+  final sharedPreferences = await SharedPreferences.getInstance();
+
+  // The install id has to exist before PostHog and RevenueCat are configured:
+  // it is the single identity both use, and onboarding runs long before a
+  // [User] is persisted.
+  final installRepository = InstallRepository(preferences: sharedPreferences);
+  final isFirstLaunch = installRepository.isFirstLaunch;
+  final installId = await installRepository.getOrCreateInstallId();
+
+  final analyticsRepository = await initializeAnalytics(
+    dotenv: dotenv,
+    installId: installId,
+    isFirstLaunch: isFirstLaunch,
+    isDebugMode: kDebugMode,
+  );
+
   final tikTokEventsRepository = TikTokEventsRepository();
   await tikTokEventsRepository.initializeFromEnv(dotenv, isDebugMode: kDebugMode);
 
-  await AppPurchaseConfig.initializeFromEnv(dotenv);
+  await AppPurchaseConfig.initializeFromEnv(dotenv, appUserId: installId);
 
   await EasyLocalization.ensureInitialized();
 
   await initializeDateFormatting();
 
-  final sharedPreferences = await SharedPreferences.getInstance();
   final pushNotificationRepository = PushNotificationRepository(preferences: sharedPreferences);
   await pushNotificationRepository.setupTimezones();
 
@@ -49,6 +66,8 @@ Future<AppDependencies> initializeApp() async {
     remoteConfig,
     pushNotificationRepository: pushNotificationRepository,
     tikTokEventsRepository: tikTokEventsRepository,
+    analyticsRepository: analyticsRepository,
+    installRepository: installRepository,
   );
 
   await pushNotificationRepository.initialize(

@@ -248,7 +248,7 @@ class _PremiumButton extends StatelessWidget {
         backgroundColor: AppColors.bgSoft(context),
         surfaceTintColor: Colors.transparent,
       ),
-      onPressed: () => showInAppPaywall(context),
+      onPressed: () => showInAppPaywall(context, feature: 'pro_badge'),
       child: Icon(
         MingCuteIcons.mgc_diamond_2_line,
         color: AppColors.content(context),

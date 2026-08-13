@@ -111,15 +111,15 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
   }
 
   Future<void> _openTodayForm() async {
-    if (!widget.vm.isPro && 1 == 2) {
-      // TODO: Remove me after testing
-      await showInAppPaywall(context);
+    if (!widget.vm.isPro) {
+      await showInAppPaywall(context, feature: 'today_check_in');
       return;
     }
 
     final result = await DayForm.showBottomSheet(
       context,
       DateTime.now(),
+      source: 'today_button',
       onDaySaved: (saved) => _zoomableGridKey.currentState?.prepareDayAppear(saved.date),
     );
     if (!mounted || result == null) return;

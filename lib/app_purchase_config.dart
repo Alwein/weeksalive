@@ -7,7 +7,10 @@ class AppPurchaseConfig {
   final String apiKey;
   static AppPurchaseConfig? _instance;
 
-  static Future<void> initializeFromEnv(DotEnv dotenvInstance) async {
+  /// [appUserId] is the persisted install id, also used as the PostHog distinct
+  /// id. Sharing it is what lets RevenueCat's server-side revenue events (trial
+  /// conversion, renewal, churn, refund) attach to the right PostHog person.
+  static Future<void> initializeFromEnv(DotEnv dotenvInstance, {String? appUserId}) async {
     if (kIsWeb) {
       throw UnsupportedError('RevenueCat not configured for web');
     }
@@ -24,8 +27,15 @@ class AppPurchaseConfig {
       _ => throw UnsupportedError('RevenueCat not configured for this platform'),
     };
 
-    final configuration = PurchasesConfiguration(_instance!.apiKey);
+    final configuration = PurchasesConfiguration(_instance!.apiKey)..appUserID = appUserId;
     await Purchases.configure(configuration);
+
+    if (appUserId != null) {
+      // What RevenueCat's PostHog integration reads to pick the person its
+      // revenue events belong to. It falls back to the app user id, which is
+      // the same value, but only while nothing has aliased the user.
+      await Purchases.setAttributes({r'$posthogUserId': appUserId});
+    }
   }
 
   factory AppPurchaseConfig({required Store store, required String apiKey}) {

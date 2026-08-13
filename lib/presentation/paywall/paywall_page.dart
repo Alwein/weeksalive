@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
+import 'package:redux/redux.dart';
 import 'package:rive/rive.dart' hide Animation;
 import 'package:rive_native/rive_native.dart' as rive_native;
 import 'package:weeksalive/core/styles/app_colors.dart';
@@ -15,6 +16,7 @@ import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/rive_theme_mixin.dart';
 import 'package:weeksalive/presentation/paywall/paywall_presentation.dart';
 import 'package:weeksalive/presentation/paywall/paywall_view_model.dart';
+import 'package:weeksalive/presentation/redux/analytics/analytics_actions.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_actions.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
@@ -84,7 +86,7 @@ class PaywallPage extends StatelessWidget {
           onStartTrial: vm.annualPackage != null ? () => vm.onPurchase(context, vm.annualPackage!) : null,
           onRestore: () => vm.onRestore(context),
           onDismiss: () => Navigator.of(context).pop(false),
-          isPro: vm.isPro, // TODO:
+          isPro: vm.isPro, // set this to true for testing
         );
       },
     );
@@ -132,10 +134,15 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
   late final FileLoader _mascotFileLoader;
   _PaywallScrubController? _scrubController;
   _MascotIntroPhase _mascotIntroPhase = _MascotIntroPhase.hidden;
+  Store<AppState>? _store;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _store?.dispatch(PaywallOpenedAction(widget.presentation.name));
+    });
     _successAnimController = AnimationController(
       vsync: this,
       duration: AnimationDurations.long,
@@ -178,11 +185,17 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    // Kept so the paywall can still be closed out in dispose(), where looking
+    // up an inherited widget is no longer allowed.
+    _store = StoreProvider.of<AppState>(context, listen: false);
     vmi?.color('fill')?.value = AppColors.bg(context);
   }
 
   @override
   void dispose() {
+    _store?.dispatch(
+      PaywallClosedAction(presentation: widget.presentation.name, purchased: widget.isPro),
+    );
     _scrollController.dispose();
     _mascotFileLoader.dispose();
     _mascotIntroController.dispose();

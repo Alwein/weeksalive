@@ -25,7 +25,12 @@ class PurchaseSucceededAction {
 
 class PurchaseErrorAction {
   final String message;
-  const PurchaseErrorAction(this.message);
+
+  /// Stable, non-localized cause, for analytics. The message is user-facing and
+  /// translated, so it cannot be grouped on.
+  final String errorCode;
+
+  const PurchaseErrorAction(this.message, {this.errorCode = 'unknown'});
 }
 
 class ClearPurchaseErrorAction {

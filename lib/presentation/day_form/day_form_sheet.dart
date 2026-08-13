@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
+import 'package:redux/redux.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
@@ -11,6 +12,7 @@ import 'package:weeksalive/presentation/day_form/day_form.dart';
 import 'package:weeksalive/presentation/day_form/day_form_confirmation_page.dart';
 import 'package:weeksalive/presentation/day_form/day_form_controller.dart';
 import 'package:weeksalive/presentation/day_form/day_form_view_model.dart';
+import 'package:weeksalive/presentation/redux/analytics/analytics_actions.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/day/day_actions.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
@@ -40,6 +42,7 @@ class DayFormResult {
 Future<DayFormResult?> showDayFormSheet(
   BuildContext context,
   DateTime date, {
+  required String source,
   void Function(DayFormResult result)? onDaySaved,
 }) {
   final controller = SheetController();
@@ -56,6 +59,7 @@ Future<DayFormResult?> showDayFormSheet(
       swipeDismissible: true,
       builder: (context) => _DayFormSheetRoot(
         date: date,
+        source: source,
         controller: controller,
         fullscreenAnimation: fullscreenAnimation,
         onDaySaved: onDaySaved,
@@ -67,12 +71,14 @@ Future<DayFormResult?> showDayFormSheet(
 class _DayFormSheetRoot extends StatefulWidget {
   const _DayFormSheetRoot({
     required this.date,
+    required this.source,
     required this.controller,
     required this.fullscreenAnimation,
     this.onDaySaved,
   });
 
   final DateTime date;
+  final String source;
   final SheetController controller;
   final Animation<double> fullscreenAnimation;
   final void Function(DayFormResult result)? onDaySaved;
@@ -86,12 +92,22 @@ class _DayFormSheetRootState extends State<_DayFormSheetRoot> {
   final _heroController = HeroController();
 
   DayFormResult? _result;
+  Store<AppState>? _store;
 
   late final Navigator _nestedNavigator;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _store?.dispatch(
+        CheckInStartedAction(
+          source: widget.source,
+          dayOffset: normalizeDay(DateTime.now()).difference(normalizeDay(widget.date)).inDays,
+        ),
+      );
+    });
     _nestedNavigator = Navigator(
       observers: [_heroController],
       onGenerateInitialRoutes: (navigator, initialRoute) {
@@ -118,7 +134,16 @@ class _DayFormSheetRootState extends State<_DayFormSheetRoot> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Kept so the abandon can still be reported from dispose(), where looking
+    // up an inherited widget is no longer allowed.
+    _store = StoreProvider.of<AppState>(context, listen: false);
+  }
+
+  @override
   void dispose() {
+    if (_result == null) _store?.dispatch(const CheckInAbandonedAction());
     _canSave.dispose();
     _heroController.dispose();
     super.dispose();

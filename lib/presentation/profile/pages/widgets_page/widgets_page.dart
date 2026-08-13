@@ -1,16 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/data/analytics/analytics_events.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
+import 'package:weeksalive/presentation/redux/analytics/analytics_actions.dart';
+import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/widgets/primary_appbar.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class WidgetsPage extends StatelessWidget {
+class WidgetsPage extends StatefulWidget {
   const WidgetsPage({super.key});
 
   static Route<void> route() {
     return MaterialPageRoute<void>(builder: (context) => const WidgetsPage());
+  }
+
+  @override
+  State<WidgetsPage> createState() => _WidgetsPageState();
+}
+
+class _WidgetsPageState extends State<WidgetsPage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      StoreProvider.of<AppState>(context, listen: false)
+          .dispatch(TrackAnalyticsEventAction(AnalyticsEvent.widgetGuideViewed()));
+    });
   }
 
   @override

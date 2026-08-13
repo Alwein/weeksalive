@@ -1,13 +1,17 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/data/analytics/analytics_events.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
+import 'package:weeksalive/presentation/redux/analytics/analytics_actions.dart';
+import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step28Rating extends OnboardingStep {
@@ -41,6 +45,8 @@ class _Step28ContentState extends State<_Step28Content> {
 
     Future<void>.delayed(_reviewDelay, () async {
       if (!mounted) return;
+      StoreProvider.of<AppState>(context, listen: false)
+          .dispatch(TrackAnalyticsEventAction(AnalyticsEvent.reviewPromptShown()));
       await InAppReview.instance.requestReview();
     });
 

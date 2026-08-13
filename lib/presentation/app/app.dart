@@ -6,6 +6,7 @@ import 'package:weeksalive/core/styles/app_system_ui_style.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:hidden_logo/hidden_logo.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:posthog_flutter/posthog_flutter.dart';
 import 'package:redux/redux.dart';
 import 'package:weeksalive/core/styles/app_theme_builder.dart';
 import 'package:weeksalive/core/styles/app_theme_id.dart';
@@ -65,55 +66,60 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return StoreProvider<AppState>(
-      store: widget.store,
-      child: StoreConnector<AppState, AppThemeId>(
-        converter: (store) => store.state.themeState.selectedTheme,
-        builder: (context, selectedTheme) {
-          final config = AppThemeBuilder.build(selectedTheme);
-          return PushNotificationNavigationHandler(
-            navigatorKey: _navigatorKey,
-            pushNotificationRepository: widget.pushNotificationRepository,
-            child: MaterialApp(
+    // PostHogWidget hosts the session replay capture; it has to sit above the
+    // MaterialApp for the whole tree to be recorded.
+    return PostHogWidget(
+      child: StoreProvider<AppState>(
+        store: widget.store,
+        child: StoreConnector<AppState, AppThemeId>(
+          converter: (store) => store.state.themeState.selectedTheme,
+          builder: (context, selectedTheme) {
+            final config = AppThemeBuilder.build(selectedTheme);
+            return PushNotificationNavigationHandler(
               navigatorKey: _navigatorKey,
-              title: 'WeeksAlive',
-              localizationsDelegates: context.localizationDelegates,
-              supportedLocales: context.supportedLocales,
-              locale: context.locale,
-              navigatorObservers: [
-                FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
-                HapticNavigatorObserver(),
-              ],
-              themeMode: config.themeMode,
-              builder: (context, child) {
-                Jiffy.setLocale(Localizations.localeOf(context).languageCode);
-                return AnnotatedRegion<SystemUiOverlayStyle>(
-                  value: AppSystemUiStyle.forContext(context),
-                  child: HiddenLogo(
-                    body: AppBackgroundScaleScope(
-                      notifier: _backgroundScaleController,
-                      child: AnimatedBuilder(
-                        animation: _backgroundScaleController,
-                        child: child!,
-                        builder: (context, child) => AnimatedScale(
-                          scale: _backgroundScaleController.scale,
-                          duration: AnimationDurations.base,
-                          curve: Curves.easeOutSine,
-                          child: child,
+              pushNotificationRepository: widget.pushNotificationRepository,
+              child: MaterialApp(
+                navigatorKey: _navigatorKey,
+                title: 'WeeksAlive',
+                localizationsDelegates: context.localizationDelegates,
+                supportedLocales: context.supportedLocales,
+                locale: context.locale,
+                navigatorObservers: [
+                  FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+                  PosthogObserver(),
+                  HapticNavigatorObserver(),
+                ],
+                themeMode: config.themeMode,
+                builder: (context, child) {
+                  Jiffy.setLocale(Localizations.localeOf(context).languageCode);
+                  return AnnotatedRegion<SystemUiOverlayStyle>(
+                    value: AppSystemUiStyle.forContext(context),
+                    child: HiddenLogo(
+                      body: AppBackgroundScaleScope(
+                        notifier: _backgroundScaleController,
+                        child: AnimatedBuilder(
+                          animation: _backgroundScaleController,
+                          child: child!,
+                          builder: (context, child) => AnimatedScale(
+                            scale: _backgroundScaleController.scale,
+                            duration: AnimationDurations.base,
+                            curve: Curves.easeOutSine,
+                            child: child,
+                          ),
                         ),
                       ),
+                      notchBuilder: (context, size) => NotchLogo(size: size),
+                      dynamicIslandBuilder: (context, size) => NotchLogo(size: size),
                     ),
-                    notchBuilder: (context, size) => NotchLogo(size: size),
-                    dynamicIslandBuilder: (context, size) => NotchLogo(size: size),
-                  ),
-                );
-              },
-              theme: config.theme,
-              darkTheme: config.darkTheme,
-              home: const BootstrapPage(),
-            ),
-          );
-        },
+                  );
+                },
+                theme: config.theme,
+                darkTheme: config.darkTheme,
+                home: const BootstrapPage(),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

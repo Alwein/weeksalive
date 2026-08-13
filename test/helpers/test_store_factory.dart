@@ -1,5 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:weeksalive/data/app_icon/app_icon_repository.dart';
+import 'package:weeksalive/data/install/install_repository.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
 import 'package:weeksalive/data/grid_motif/grid_motif_repository.dart';
 import 'package:weeksalive/data/home_widget/home_widget_service.dart';
@@ -19,6 +20,7 @@ import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/store_factory.dart';
 
 import '../mocks.dart';
+import 'fake_analytics_repository.dart';
 
 class TestStoreFactory {
   RemoteConfigRepository remoteConfigRepository = MockRemoteConfigRepository();
@@ -40,6 +42,8 @@ class TestStoreFactory {
   DayRepository dayRepository = MockDayRepository();
   HomeWidgetService homeWidgetService = FakeHomeWidgetService();
   WallpaperConfigRepository wallpaperConfigRepository = MockWallpaperConfigRepository();
+  FakeAnalyticsRepository analyticsRepository = FakeAnalyticsRepository();
+  InstallRepository installRepository = FakeInstallRepository();
 
   Store<AppState> initializeReduxStore(AppState initialState) {
     return StoreFactory(
@@ -59,6 +63,8 @@ class TestStoreFactory {
       rewardUnlockService: const RewardUnlockService(),
       homeWidgetService: homeWidgetService,
       wallpaperConfigRepository: wallpaperConfigRepository,
+      analyticsRepository: analyticsRepository,
+      installRepository: installRepository,
     ).createStore(initialState: initialState);
   }
 }

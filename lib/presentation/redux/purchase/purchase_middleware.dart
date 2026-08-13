@@ -73,17 +73,19 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(PurchaseSucceededAction(isPro: store.state.purchaseState.isPro));
         return;
       }
-      store.dispatch(PurchaseErrorAction(_messageForPurchaseError(e)));
+      store.dispatch(PurchaseErrorAction(_messageForPurchaseError(e), errorCode: e.name));
     } on PlatformException catch (e) {
       if (_isCancelledPlatformException(e)) {
         store.dispatch(PurchaseSucceededAction(isPro: store.state.purchaseState.isPro));
         return;
       }
       log.e('PurchaseMiddleware: purchase platform error', error: e);
-      store.dispatch(PurchaseErrorAction(_messageForPlatformException(e)));
+      store.dispatch(
+        PurchaseErrorAction(_messageForPlatformException(e), errorCode: _errorCodeForPlatformException(e)),
+      );
     } catch (e, st) {
       log.e('PurchaseMiddleware: purchase failed', error: e, stackTrace: st);
-      store.dispatch(PurchaseErrorAction(Strings.paywallErrorGeneric));
+      store.dispatch(PurchaseErrorAction(Strings.paywallErrorGeneric, errorCode: 'unknown'));
     }
   }
 
@@ -92,13 +94,15 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
       final customerInfo = await purchaseRepository.restorePurchases();
       store.dispatch(PurchaseSucceededAction(isPro: purchaseRepository.isPro(customerInfo)));
     } on PurchasesErrorCode catch (e) {
-      store.dispatch(PurchaseErrorAction(_messageForRestoreError(e)));
+      store.dispatch(PurchaseErrorAction(_messageForRestoreError(e), errorCode: e.name));
     } on PlatformException catch (e) {
       log.e('PurchaseMiddleware: restore platform error', error: e);
-      store.dispatch(PurchaseErrorAction(_messageForPlatformException(e)));
+      store.dispatch(
+        PurchaseErrorAction(_messageForPlatformException(e), errorCode: _errorCodeForPlatformException(e)),
+      );
     } catch (e, st) {
       log.e('PurchaseMiddleware: restore failed', error: e, stackTrace: st);
-      store.dispatch(PurchaseErrorAction(Strings.paywallErrorRestoreGeneric));
+      store.dispatch(PurchaseErrorAction(Strings.paywallErrorRestoreGeneric, errorCode: 'unknown'));
     }
   }
 
@@ -157,6 +161,15 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
       default:
         return Strings.paywallErrorRestoreGeneric;
     }
+  }
+
+  static String _errorCodeForPlatformException(PlatformException e) {
+    final details = e.details;
+    if (details is Map) {
+      final code = details['readableErrorCode'] ?? details['readable_error_code'];
+      if (code is String) return code;
+    }
+    return e.code;
   }
 
   static String _messageForPlatformException(PlatformException e) {

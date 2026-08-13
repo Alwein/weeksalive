@@ -32,11 +32,14 @@ class DayForm extends StatefulWidget {
   const DayForm({super.key, required this.date});
   final DateTime date;
 
+  /// [source] is where the check-in was started from, for analytics:
+  /// `today_button`, `notification`, `calendar` or `resume`.
   static Future<DayFormResult?> showBottomSheet(
     BuildContext context,
     DateTime date, {
+    required String source,
     void Function(DayFormResult result)? onDaySaved,
-  }) => showDayFormSheet(context, date, onDaySaved: onDaySaved);
+  }) => showDayFormSheet(context, date, source: source, onDaySaved: onDaySaved);
 
   @override
   State<DayForm> createState() => _DayFormState();
