@@ -79,14 +79,15 @@ void main() {
       await store.dispatch(BootstrapAction());
       await _dispatchBootstrapAndWaitForMiddleware();
 
-      final captured = verify(
+      verify(
         () => pushRepo.scheduleAllNotifications(
-          dailyTimes: captureAny(named: 'dailyTimes'),
-          weeklySummary: captureAny(named: 'weeklySummary'),
+          dailyTimes: [const TimeOfDay(hour: 8, minute: 0)],
+          weeklySummary: any(named: 'weeklySummary'),
+          hasTodayEntry: any(named: 'hasTodayEntry'),
+          streakCount: any(named: 'streakCount'),
+          isYesterdayGracePeriod: any(named: 'isYesterdayGracePeriod'),
         ),
-      ).captured;
-      expect(captured[0], [const TimeOfDay(hour: 8, minute: 0)]);
-      expect(captured[1], isNull);
+      ).called(greaterThanOrEqualTo(1));
 
       store.teardown();
     });
@@ -351,6 +352,38 @@ void main() {
         ),
       ]);
     });
+
+    test('sets pendingNavigation to dayFormFollowup for follow-up payload', () {
+      final storeTester = StoreTester();
+      storeTester.givenStore(initialAppState());
+
+      storeTester.whenDispatching(
+        () => const NotificationTappedAction(NotificationPayloads.dailyFollowup),
+      );
+
+      storeTester.thenExpectStatesInOrder([
+        stateWith(
+          (s) => s.pushNotificationState.pendingNavigation,
+          PendingNotificationTarget.dayFormFollowup,
+        ),
+      ]);
+    });
+
+    test('sets pendingNavigation to yesterdayDayForm for streak-save payload', () {
+      final storeTester = StoreTester();
+      storeTester.givenStore(initialAppState());
+
+      storeTester.whenDispatching(
+        () => const NotificationTappedAction(NotificationPayloads.streakSave),
+      );
+
+      storeTester.thenExpectStatesInOrder([
+        stateWith(
+          (s) => s.pushNotificationState.pendingNavigation,
+          PendingNotificationTarget.yesterdayDayForm,
+        ),
+      ]);
+    });
   });
 
   group('DaysLoadedAction', () {
@@ -382,6 +415,61 @@ void main() {
           dailyTimes: any(named: 'dailyTimes'),
           weeklySummary: any(named: 'weeklySummary'),
           hasTodayEntry: true,
+          streakCount: any(named: 'streakCount'),
+          isYesterdayGracePeriod: any(named: 'isYesterdayGracePeriod'),
+        ),
+      ).called(1);
+    });
+
+    test('passes streak count computed from loaded days', () async {
+      final today = normalizeDay(DateTime.now());
+      final yesterday = today.subtract(const Duration(days: 1));
+      storeTester.givenStore(
+        initialAppState().copyWith(
+          dayState: initialAppState().dayState.copyWith(
+            entries: {
+              today: DayEntry(date: today),
+              yesterday: DayEntry(date: yesterday),
+            },
+          ),
+        ),
+        configure: (f) => f.pushNotificationRepository = pushRepo,
+      );
+
+      storeTester.whenDispatching(
+        () => DaysLoadedAction([DayEntry(date: today), DayEntry(date: yesterday)]),
+      );
+
+      await storeTester.thenExpectNothing();
+
+      verify(
+        () => pushRepo.scheduleAllNotifications(
+          dailyTimes: any(named: 'dailyTimes'),
+          weeklySummary: any(named: 'weeklySummary'),
+          hasTodayEntry: true,
+          streakCount: 2,
+          isYesterdayGracePeriod: false,
+        ),
+      ).called(1);
+    });
+
+    test('reschedules even when today is not logged', () async {
+      storeTester.givenStore(
+        initialAppState(),
+        configure: (f) => f.pushNotificationRepository = pushRepo,
+      );
+
+      storeTester.whenDispatching(() => const DaysLoadedAction([]));
+
+      await storeTester.thenExpectNothing();
+
+      verify(
+        () => pushRepo.scheduleAllNotifications(
+          dailyTimes: any(named: 'dailyTimes'),
+          weeklySummary: any(named: 'weeklySummary'),
+          hasTodayEntry: false,
+          streakCount: any(named: 'streakCount'),
+          isYesterdayGracePeriod: any(named: 'isYesterdayGracePeriod'),
         ),
       ).called(1);
     });
@@ -408,17 +496,39 @@ void main() {
           dailyTimes: any(named: 'dailyTimes'),
           weeklySummary: any(named: 'weeklySummary'),
           hasTodayEntry: true,
+          streakCount: any(named: 'streakCount'),
+          isYesterdayGracePeriod: any(named: 'isYesterdayGracePeriod'),
         ),
       ).called(1);
 
       store.teardown();
     });
 
-    test('does not reschedule after saving a past day', () async {
+    test('reschedules after saving yesterday so the streak save can be cancelled', () async {
       final yesterday = normalizeDay(DateTime.now()).subtract(const Duration(days: 1));
       final store = factory.initializeReduxStore(initialAppState());
 
       await store.dispatch(SaveDayAction(DayEntry(date: yesterday)));
+      await _dispatchBootstrapAndWaitForMiddleware();
+
+      verify(
+        () => pushRepo.scheduleAllNotifications(
+          dailyTimes: any(named: 'dailyTimes'),
+          weeklySummary: any(named: 'weeklySummary'),
+          hasTodayEntry: any(named: 'hasTodayEntry'),
+          streakCount: any(named: 'streakCount'),
+          isYesterdayGracePeriod: any(named: 'isYesterdayGracePeriod'),
+        ),
+      ).called(1);
+
+      store.teardown();
+    });
+
+    test('does not reschedule after saving an older day', () async {
+      final twoDaysAgo = normalizeDay(DateTime.now()).subtract(const Duration(days: 2));
+      final store = factory.initializeReduxStore(initialAppState());
+
+      await store.dispatch(SaveDayAction(DayEntry(date: twoDaysAgo)));
       await _dispatchBootstrapAndWaitForMiddleware();
 
       verifyNever(

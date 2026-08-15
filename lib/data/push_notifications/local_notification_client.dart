@@ -62,6 +62,26 @@ class LocalNotificationClient {
 
   Future<void> cancelAll() => _plugin.cancelAll();
 
+  Future<void> cancel(int id) => _plugin.cancel(id: id);
+
+  Future<void> scheduleOnce({
+    required int id,
+    required String title,
+    required String body,
+    required tz.TZDateTime scheduledDate,
+    required String payload,
+  }) {
+    return _plugin.zonedSchedule(
+      id: id,
+      title: title,
+      body: body,
+      payload: payload,
+      scheduledDate: scheduledDate,
+      notificationDetails: LocalNotificationConfig.nudgeNotificationDetails,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+    );
+  }
+
   Future<void> scheduleDaily({
     required int id,
     required String title,

@@ -3,6 +3,8 @@ import 'package:weeksalive/domain/notifications/notification_slots.dart';
 enum PendingNotificationTarget {
   none,
   dayForm,
+  dayFormFollowup,
+  yesterdayDayForm,
   weeklySummary,
 }
 

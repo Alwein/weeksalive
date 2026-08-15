@@ -43,10 +43,14 @@ class PushNotificationRepository {
     required List<TimeOfDay> dailyTimes,
     WeeklySummarySchedule? weeklySummary,
     bool hasTodayEntry = false,
+    int streakCount = 0,
+    bool isYesterdayGracePeriod = false,
   }) =>
       _scheduler.reschedule(
         dailyTimes: dailyTimes,
         weeklySummary: weeklySummary,
         hasTodayEntry: hasTodayEntry,
+        streakCount: streakCount,
+        isYesterdayGracePeriod: isYesterdayGracePeriod,
       );
 }

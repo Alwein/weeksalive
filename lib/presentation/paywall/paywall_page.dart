@@ -4,6 +4,7 @@ import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:redux/redux.dart';
 import 'package:rive/rive.dart' hide Animation;
 import 'package:rive_native/rive_native.dart' as rive_native;
+import 'package:url_launcher/url_launcher.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
@@ -985,7 +986,9 @@ class _Links extends StatelessWidget {
     ),
   );
 
-  void _open(String url) {}
+  void _open(String url) {
+    launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+  }
 }
 
 class _FooterLink extends StatelessWidget {

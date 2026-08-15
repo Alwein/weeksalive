@@ -76,18 +76,21 @@ class PushNotificationMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is DaysLoadedAction || action is SaveDayAction || action is DeleteDayAction) {
-      if (_shouldRescheduleForDayChange(store, action)) {
+      if (_shouldRescheduleForDayChange(action)) {
         await _reschedule(store);
       }
     }
   }
 
-  bool _shouldRescheduleForDayChange(Store<AppState> store, Object action) {
-    final now = DateTime.now();
+  bool _shouldRescheduleForDayChange(Object action) {
+    final today = normalizeDay(DateTime.now());
+    final yesterday = today.subtract(const Duration(days: 1));
     return switch (action) {
-      DaysLoadedAction() => _hasTodayEntry(store),
-      SaveDayAction(:final entry) => normalizeDay(entry.date) == normalizeDay(now),
-      DeleteDayAction(:final date) => normalizeDay(date) == normalizeDay(now),
+      DaysLoadedAction() => true,
+      SaveDayAction(:final entry) =>
+        normalizeDay(entry.date) == today || normalizeDay(entry.date) == yesterday,
+      DeleteDayAction(:final date) =>
+        normalizeDay(date) == today || normalizeDay(date) == yesterday,
       _ => false,
     };
   }
@@ -96,13 +99,18 @@ class PushNotificationMiddleware extends MiddlewareClass<AppState> {
     final slots = store.state.pushNotificationState.slots;
     final effectiveWeekStartDay =
         weekStartDay ?? store.state.userState.userOrNull?.weekStartDay ?? DateTime.monday;
+    final now = DateTime.now();
+    final entries = store.state.dayState.entries;
 
     await pushNotificationRepository.scheduleAllNotifications(
       dailyTimes: slots.toNotificationTimes(),
       weeklySummary: slots.weeklySummarySchedule(effectiveWeekStartDay),
-      hasTodayEntry: _hasTodayEntry(store),
+      hasTodayEntry: entries[normalizeDay(now)] != null,
+      streakCount: computeStreak(entries.values, now),
+      isYesterdayGracePeriod: isYesterdayGracePeriod(
+        recordedDays: entries.keys.toSet(),
+        now: now,
+      ),
     );
   }
-
-  bool _hasTodayEntry(Store<AppState> store) => store.state.dayState.entryFor(DateTime.now()) != null;
 }

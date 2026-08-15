@@ -94,7 +94,11 @@ platform :ios do
       },
       submission_information: {
         export_compliance_platform: "ios",
-        add_id_info_uses_idfa: false,
+        add_id_info_uses_idfa: true,
+        add_id_info_serves_ads: false,
+        add_id_info_tracks_install: true,
+        add_id_info_tracks_action: true,
+        add_id_info_limits_tracking: true,
         content_rights_contains_third_party_content: false,
         content_rights_has_rights: true
       },

@@ -33,7 +33,8 @@ class DayForm extends StatefulWidget {
   final DateTime date;
 
   /// [source] is where the check-in was started from, for analytics:
-  /// `today_button`, `notification`, `calendar` or `resume`.
+  /// `today_button`, `notification`, `notification_followup`,
+  /// `notification_streak_save`, `calendar` or `resume`.
   static Future<DayFormResult?> showBottomSheet(
     BuildContext context,
     DateTime date, {

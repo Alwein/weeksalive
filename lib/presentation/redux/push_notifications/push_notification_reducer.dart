@@ -6,6 +6,8 @@ PushNotificationState pushNotificationReducer(PushNotificationState state, dynam
   if (action is NotificationTappedAction) {
     final target = switch (action.payload) {
       NotificationPayloads.dailyReminder => PendingNotificationTarget.dayForm,
+      NotificationPayloads.dailyFollowup => PendingNotificationTarget.dayFormFollowup,
+      NotificationPayloads.streakSave => PendingNotificationTarget.yesterdayDayForm,
       NotificationPayloads.weeklySummary => PendingNotificationTarget.weeklySummary,
       _ => PendingNotificationTarget.none,
     };

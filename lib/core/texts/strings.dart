@@ -189,6 +189,11 @@ class Strings {
   static String get onboardingNotificationSubtitle => tr('onboarding_notification_subtitle');
   static String get dailyNotificationTitle => tr('daily_notification_title');
   static String get dailyNotificationBody => tr('daily_notification_body');
+  static String get dailyFollowupNotificationTitle => tr('daily_followup_notification_title');
+  static String get dailyFollowupNotificationBody => tr('daily_followup_notification_body');
+  static String get streakSaveNotificationTitle => tr('streak_save_notification_title');
+  static String streakSaveNotificationBody(int count) =>
+      tr('streak_save_notification_body', namedArgs: {'count': '$count'});
   static String get weeklySummaryNotificationTitle => tr('weekly_summary_notification_title');
   static String get weeklySummaryNotificationBody => tr('weekly_summary_notification_body');
 

@@ -10,6 +10,12 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     namespace = "com.weeksalive"
     compileSdk = flutter.compileSdkVersion
@@ -40,11 +46,18 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        release {
+            keyAlias = keystoreProperties["keyAlias"]
+            keyPassword = keystoreProperties["keyPassword"]
+            storeFile = keystoreProperties["storeFile"] ? file(keystoreProperties["storeFile"]) : null
+            storePassword = keystoreProperties["storePassword"]
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
+            signingConfig = signingConfigs.release
         }
     }
 }
@@ -59,6 +72,10 @@ dependencies {
     // Jetpack Glance: native (Compose-style) home-screen widgets.
     implementation 'androidx.glance:glance-appwidget:1.1.1'
     implementation 'androidx.work:work-runtime-ktx:2.9.0'
+
+    // TikTok Events SDK reads Play Install Referrer at runtime; R8 fails the
+    // release build if the library is not on the classpath.
+    implementation 'com.android.installreferrer:installreferrer:2.2'
 }
 
 // home_widget 0.7.x pulls in newer AndroidX artifacts that require a higher

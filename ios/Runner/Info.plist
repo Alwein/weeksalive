@@ -110,7 +110,7 @@
 		<key>UIStatusBarHidden</key>
 		<false/>
 		<key>NSUserTrackingUsageDescription</key>
-		<string>We use your data to show you more relevant ads and improve your experience.</string>
+		<string>This lets us know which ad brought you to WeeksAlive. We don't show ads in the app, and we don't sell your data.</string>
 		<key>com.posthog.posthog.AUTO_INIT</key>
 		<false/>
 		<key>SKAdNetworkItems</key>

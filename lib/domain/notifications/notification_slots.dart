@@ -35,7 +35,7 @@ class WeeklySummarySchedule {
 /// Configurable daily and weekly notification slots.
 class NotificationSlots {
   static const defaultSlot1Time = TimeOfDay(hour: 18, minute: 0);
-  static const defaultSlot2Time = TimeOfDay(hour: 21, minute: 0);
+  static const defaultSlot2Time = TimeOfDay(hour: 20, minute: 0);
   static const defaultWeeklySummaryTime = TimeOfDay(hour: 9, minute: 0);
 
   final NotificationSlotState slot1;
