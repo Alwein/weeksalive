@@ -13,6 +13,12 @@ abstract final class LocalNotificationConfig {
   static const followUpNotificationId = 20;
   static const streakSaveNotificationId = 21;
 
+  static AndroidScheduleMode androidScheduleMode({required bool canScheduleExact}) {
+    return canScheduleExact
+        ? AndroidScheduleMode.exactAllowWhileIdle
+        : AndroidScheduleMode.inexactAllowWhileIdle;
+  }
+
   static const androidInitializationSettings = AndroidInitializationSettings('@mipmap/ic_launcher_composer_outline');
 
   static const iosInitializationSettings = DarwinInitializationSettings(

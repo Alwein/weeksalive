@@ -29,29 +29,40 @@ Future<Store<AppState>> initializeReduxStore(
   TikTokEventsRepository? tikTokEventsRepository,
   AnalyticsRepository? analyticsRepository,
   InstallRepository? installRepository,
+  CrashlyticsRepository? crashlyticsRepository,
 }) async {
-  final crashlyticsRepository = CrashlyticsRepositoryImpl();
+  final crashlytics = crashlyticsRepository ?? CrashlyticsRepositoryImpl();
   final sharedPreferences = await SharedPreferences.getInstance();
   final appDatabase = AppDatabase();
 
   final reduxStore = StoreFactory(
-    remoteConfigRepository: RemoteConfigRepository(crashlyticsRepository: crashlyticsRepository),
+    remoteConfigRepository: RemoteConfigRepository(
+      crashlyticsRepository: crashlytics,
+    ),
     userRepository: UserRepository(preferences: sharedPreferences),
     themeRepository: ThemeRepository(preferences: sharedPreferences),
     appIconRepository: AppIconRepository(preferences: sharedPreferences),
     gridMotifRepository: GridMotifRepository(preferences: sharedPreferences),
     navigationRepository: NavigationRepository(preferences: sharedPreferences),
     pushNotificationRepository:
-        pushNotificationRepository ?? PushNotificationRepository(preferences: sharedPreferences),
+        pushNotificationRepository ??
+        PushNotificationRepository(preferences: sharedPreferences),
     purchaseRepository: PurchaseRepository(dotenv: dotenv),
     tikTokEventsRepository: tikTokEventsRepository ?? TikTokEventsRepository(),
     rewardsRepository: RewardsRepository(preferences: sharedPreferences),
-    weeklyIntentRepository: WeeklyIntentRepository(preferences: sharedPreferences),
-    weeklySummaryRepository: WeeklySummaryRepository(preferences: sharedPreferences),
+    weeklyIntentRepository: WeeklyIntentRepository(
+      preferences: sharedPreferences,
+    ),
+    weeklySummaryRepository: WeeklySummaryRepository(
+      preferences: sharedPreferences,
+    ),
     dayRepository: DayRepository(database: appDatabase),
-    wallpaperConfigRepository: WallpaperConfigRepository(preferences: sharedPreferences),
+    wallpaperConfigRepository: WallpaperConfigRepository(
+      preferences: sharedPreferences,
+    ),
     analyticsRepository: analyticsRepository ?? const NoopAnalyticsRepository(),
-    installRepository: installRepository ?? InstallRepository(preferences: sharedPreferences),
+    installRepository:
+        installRepository ?? InstallRepository(preferences: sharedPreferences),
   ).createStore();
 
   return reduxStore;

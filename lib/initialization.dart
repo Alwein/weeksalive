@@ -9,6 +9,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:redux/redux.dart';
 import 'package:weeksalive/app_purchase_config.dart';
 import 'package:weeksalive/data/analytics/analytics_initializer.dart';
+import 'package:weeksalive/data/crashlytics/crashlytics_repository.dart';
 import 'package:weeksalive/data/install/install_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/tiktok_events/tiktok_events_repository.dart';
@@ -19,23 +20,37 @@ import 'package:weeksalive/presentation/redux/store.dart';
 
 import 'firebase_options.dart';
 
-typedef AppDependencies = ({Store<AppState> store, PushNotificationRepository pushNotificationRepository});
+typedef AppDependencies = ({
+  Store<AppState> store,
+  PushNotificationRepository pushNotificationRepository,
+});
 
 Future<AppDependencies> initializeApp() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
+  final crashlyticsRepository = CrashlyticsRepositoryImpl();
+  // This override persists on the device, so every launch must set it: debug
+  // stays local, release re-enables collection.
+  await crashlyticsRepository.setCollectionEnabled(!kDebugMode);
+  installCrashlyticsErrorHandlers(crashlyticsRepository);
+  await crashlyticsRepository.setCustomKey(
+    'app_environment',
+    kDebugMode ? 'debug' : 'production',
+  );
+
   await dotenv.load(fileName: 'env/.env');
 
   final sharedPreferences = await SharedPreferences.getInstance();
 
-  // The install id has to exist before PostHog and RevenueCat are configured:
-  // it is the single identity both use, and onboarding runs long before a
-  // [User] is persisted.
+  // The install id has to exist before PostHog, RevenueCat and Crashlytics
+  // are identified: it is the single identity they share, and onboarding
+  // runs long before a [User] is persisted.
   final installRepository = InstallRepository(preferences: sharedPreferences);
   final isFirstLaunch = installRepository.isFirstLaunch;
   final installId = await installRepository.getOrCreateInstallId();
+  await crashlyticsRepository.setUserId(installId);
 
   final analyticsRepository = await initializeAnalytics(
     dotenv: dotenv,
@@ -45,7 +60,10 @@ Future<AppDependencies> initializeApp() async {
   );
 
   final tikTokEventsRepository = TikTokEventsRepository();
-  await tikTokEventsRepository.initializeFromEnv(dotenv, isDebugMode: kDebugMode);
+  await tikTokEventsRepository.initializeFromEnv(
+    dotenv,
+    isDebugMode: kDebugMode,
+  );
 
   await AppPurchaseConfig.initializeFromEnv(dotenv, appUserId: installId);
 
@@ -53,7 +71,9 @@ Future<AppDependencies> initializeApp() async {
 
   await initializeDateFormatting();
 
-  final pushNotificationRepository = PushNotificationRepository(preferences: sharedPreferences);
+  final pushNotificationRepository = PushNotificationRepository(
+    preferences: sharedPreferences,
+  );
   await pushNotificationRepository.setupTimezones();
 
   final remoteConfig = await _remoteConfig();
@@ -68,10 +88,12 @@ Future<AppDependencies> initializeApp() async {
     tikTokEventsRepository: tikTokEventsRepository,
     analyticsRepository: analyticsRepository,
     installRepository: installRepository,
+    crashlyticsRepository: crashlyticsRepository,
   );
 
   await pushNotificationRepository.initialize(
-    onNotificationTap: (payload) => store.dispatch(NotificationTappedAction(payload)),
+    onNotificationTap: (payload) =>
+        store.dispatch(NotificationTappedAction(payload)),
   );
 
   return (store: store, pushNotificationRepository: pushNotificationRepository);
@@ -80,7 +102,10 @@ Future<AppDependencies> initializeApp() async {
 Future<FirebaseRemoteConfig?> _remoteConfig() async {
   final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
   await remoteConfig.setConfigSettings(
-    RemoteConfigSettings(fetchTimeout: const Duration(seconds: 5), minimumFetchInterval: const Duration(minutes: 5)),
+    RemoteConfigSettings(
+      fetchTimeout: const Duration(seconds: 5),
+      minimumFetchInterval: const Duration(minutes: 5),
+    ),
   );
   try {
     await remoteConfig.fetchAndActivate();

@@ -57,6 +57,9 @@ class LocalNotificationClient {
           ) ??
           false;
     }
+    if (Platform.isAndroid) {
+      return await _androidPlugin?.requestNotificationsPermission() ?? false;
+    }
     return true;
   }
 
@@ -70,7 +73,7 @@ class LocalNotificationClient {
     required String body,
     required tz.TZDateTime scheduledDate,
     required String payload,
-  }) {
+  }) async {
     return _plugin.zonedSchedule(
       id: id,
       title: title,
@@ -78,7 +81,7 @@ class LocalNotificationClient {
       payload: payload,
       scheduledDate: scheduledDate,
       notificationDetails: LocalNotificationConfig.nudgeNotificationDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      androidScheduleMode: await _androidScheduleMode(),
     );
   }
 
@@ -88,7 +91,7 @@ class LocalNotificationClient {
     required String body,
     required tz.TZDateTime scheduledDate,
     required String payload,
-  }) {
+  }) async {
     return _plugin.zonedSchedule(
       id: id,
       title: title,
@@ -96,7 +99,7 @@ class LocalNotificationClient {
       payload: payload,
       scheduledDate: scheduledDate,
       notificationDetails: LocalNotificationConfig.dailyNotificationDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      androidScheduleMode: await _androidScheduleMode(),
       matchDateTimeComponents: DateTimeComponents.time,
     );
   }
@@ -107,7 +110,7 @@ class LocalNotificationClient {
     required String body,
     required tz.TZDateTime scheduledDate,
     required String payload,
-  }) {
+  }) async {
     return _plugin.zonedSchedule(
       id: id,
       title: title,
@@ -115,9 +118,17 @@ class LocalNotificationClient {
       payload: payload,
       scheduledDate: scheduledDate,
       notificationDetails: LocalNotificationConfig.weeklyNotificationDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      androidScheduleMode: await _androidScheduleMode(),
       matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
     );
+  }
+
+  Future<AndroidScheduleMode> _androidScheduleMode() async {
+    if (!Platform.isAndroid) {
+      return AndroidScheduleMode.exactAllowWhileIdle;
+    }
+    final canScheduleExact = await _androidPlugin?.canScheduleExactNotifications();
+    return LocalNotificationConfig.androidScheduleMode(canScheduleExact: canScheduleExact == true);
   }
 
   IOSFlutterLocalNotificationsPlugin? get _iosPlugin =>
