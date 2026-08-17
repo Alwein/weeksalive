@@ -6,6 +6,36 @@ Upon downloading or utilizing the Application, you are automatically agreeing to
 
 The Service Provider is dedicated to ensuring that the Application is as beneficial and efficient as possible. As such, they reserve the right to modify the Application or charge for their services at any time and for any reason. The Service Provider assures you that any charges for the Application or its services will be clearly communicated to you.
 
+**Subscriptions (WeeksAlive Pro)**
+
+The Application may be downloaded and used without a paid subscription. Optional auto-renewable in-app subscriptions unlock WeeksAlive Pro, which includes full access to premium features such as the life-in-weeks grid experience, the daily ritual, Lock Screen wallpaper, themes, and other Pro features described in the Application at the time of purchase.
+
+*   **Title:** WeeksAlive Pro (also displayed as "WeeksAlive Pro 1 year")
+*   **Length:** 1 year
+*   **Price:** The price charged is the price displayed in the Application and confirmed by Apple or Google before you complete the purchase. Prices vary by storefront, currency, and taxes. For reference, on the Apple App Store the current annual price is USD $44.99 in the United States and EUR €49.99 in eurozone storefronts (including France). On Google Play, prices may differ (for example, USD $19.99 per year in the United States and EUR €20.99 per year in France). The in-app purchase screen always shows the applicable price for your account.
+*   **Free trial:** Eligible users may receive a free trial of 14 days or 30 days, as displayed in the Application at the time of purchase. If you do not cancel before the trial ends, the annual subscription begins and you will be charged. Any unused portion of a free trial is forfeited when you purchase a subscription.
+
+Payment is processed by Apple (App Store) or Google (Google Play), not by the Service Provider. Payment will be charged to your Apple ID or Google Play account at confirmation of purchase.
+
+The subscription automatically renews unless auto-renew is turned off at least 24 hours before the end of the current period. Your account will be charged for renewal within 24 hours prior to the end of the current period, at the cost of the renewal displayed in the store. The subscription continues until you cancel.
+
+You can manage or turn off auto-renewal at any time after purchase:
+
+*   **iOS:** Open Settings → [your name] → Subscriptions, or manage subscriptions at [https://apps.apple.com/account/subscriptions](https://apps.apple.com/account/subscriptions)
+*   **Android:** Open the Google Play Store → Payments & subscriptions → Subscriptions, or manage subscriptions at [https://play.google.com/store/account/subscriptions](https://play.google.com/store/account/subscriptions)
+
+Canceling stops future renewals. You keep access until the end of the current billing period (or free trial). Unless required by law or the store’s refund policy, unused time in a paid period is not refunded.
+
+If the Service Provider increases the price of a subscription, Apple or Google will notify you in accordance with their policies. In regions that require consent, auto-renewal may be disabled if you do not agree to the new price.
+
+Purchases can be restored on another device signed in with the same Apple ID or Google account by using Restore in the Application.
+
+These Terms of Use and the [Privacy Policy](https://weeksalive.web.app/privacy-policy) apply to the Application and to WeeksAlive Pro. For iOS, they are the custom End User License Agreement (EULA) for the Application. Apple’s standard Licensed Application End User License Agreement is available at [https://www.apple.com/legal/internet-services/itunes/dev/stdeula/](https://www.apple.com/legal/internet-services/itunes/dev/stdeula/).
+
+**Apple-specific terms**
+
+If you obtained the Application from the Apple App Store, you acknowledge that these terms are between you and the Service Provider only, not with Apple. Apple has no obligation to provide maintenance or support for the Application. In the event of any failure of the Application to conform to any applicable warranty, you may notify Apple, and Apple will refund the purchase price (if any) for the Application to you; to the maximum extent permitted by law, Apple has no other warranty obligation. Apple is not responsible for addressing any claims relating to the Application or your possession and use of it, including product liability, legal or regulatory failure, or intellectual property claims. Apple and its subsidiaries are third-party beneficiaries of these terms and may enforce them against you.
+
 The Application stores and processes personal data that you provide on your device in order to provide the Service. It is your responsibility to maintain the security of your phone and access to the Application. The Service Provider strongly advises against jailbreaking or rooting your phone, which involves removing software restrictions and limitations imposed by the official operating system of your device. Such actions could expose your phone to malware, viruses, malicious programs, compromise your phone's security features, and may result in the Application not functioning correctly or at all.
 
 Please note that the Application utilizes third-party services that have their own Terms and Conditions. Below are the links to the Terms and Conditions of the third-party service providers used by the Application:
@@ -28,7 +58,7 @@ The Service Provider may wish to update the application at some point. The appli
 
 The Service Provider may periodically update their Terms and Conditions. Therefore, you are advised to review this page regularly for any changes. The Service Provider will notify you of any changes by posting the new Terms and Conditions on this page.
 
-These terms and conditions are effective as of 2026-07-17.
+These terms and conditions are effective as of 2026-08-17.
 
 **Contact Us**
 
