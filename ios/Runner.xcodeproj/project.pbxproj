@@ -15,11 +15,11 @@
 		69FD3C63A3EF5AF0FBB801C2 /* WallpaperPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 479D9F056F34F457AAC6C6B4 /* WallpaperPlugin.swift */; };
 		725751896FD82B9B94B8FE53 /* WeeksAliveShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5C9EAE7A079B3FD00392BA /* WeeksAliveShortcuts.swift */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+		7B578B0F76B5F0FCE73E463C /* WeeksAliveWallpaperIntent.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = AC79654F0C1057D1BFCDCF7A /* WeeksAliveWallpaperIntent.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		A44F04215415556AF1AB4399 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 973A596AA8DC27A0D10EB498 /* Pods_RunnerTests.framework */; };
-		A8B2E22819CF9E69C21AE0D5 /* WeeksAliveWallpaperIntent.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AC79654F0C1057D1BFCDCF7A /* WeeksAliveWallpaperIntent.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A95531DC5E2C1DFFB862F5DC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 863D059FF981C26FCE4C0086 /* Foundation.framework */; };
 		AA7EEA4431B1003315D6ED98 /* GetWallpaperIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367B99939D449E42FA2F5C9A /* GetWallpaperIntent.swift */; };
 		B59DE5C0654368FD9AEEBEB3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 863D059FF981C26FCE4C0086 /* Foundation.framework */; };
@@ -54,6 +54,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		3DC4C99DB541CEFCBFF5C2CE /* Embed ExtensionKit Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(EXTENSIONS_FOLDER_PATH)";
+			dstSubfolderSpec = 16;
+			files = (
+				7B578B0F76B5F0FCE73E463C /* WeeksAliveWallpaperIntent.appex in Embed ExtensionKit Extensions */,
+			);
+			name = "Embed ExtensionKit Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7A4B8134E37154CE7D0B457B /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -61,7 +72,6 @@
 			dstSubfolderSpec = 13;
 			files = (
 				5B567AF732F64E04A43B9090 /* WeeksAliveWidget.appex in Embed Foundation Extensions */,
-				A8B2E22819CF9E69C21AE0D5 /* WeeksAliveWallpaperIntent.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -111,7 +121,7 @@
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AB1D92A87D4239B805DA50BE /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
-		AC79654F0C1057D1BFCDCF7A /* WeeksAliveWallpaperIntent.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WeeksAliveWallpaperIntent.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC79654F0C1057D1BFCDCF7A /* WeeksAliveWallpaperIntent.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = WeeksAliveWallpaperIntent.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC95548DEDD119803DFDC135 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = WeeksAliveWidget/Info.plist; sourceTree = "<group>"; };
 		B5208A55994708B17D276487 /* WeeksAliveWallpaperIntent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WeeksAliveWallpaperIntent.swift; path = WeeksAliveWallpaperIntent/WeeksAliveWallpaperIntent.swift; sourceTree = "<group>"; };
 		C9F5A2B38D4E6F8192B5C3D7 /* AppIconPlugin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppIconPlugin.swift; sourceTree = "<group>"; };
@@ -321,6 +331,7 @@
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				7A4B8134E37154CE7D0B457B /* Embed Foundation Extensions */,
+				3DC4C99DB541CEFCBFF5C2CE /* Embed ExtensionKit Extensions */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				18380912C38C71C0CD566B38 /* [CP] Embed Pods Frameworks */,
 				F5061955FCDA616C5DBAB0B1 /* [CP] Copy Pods Resources */,
@@ -372,7 +383,7 @@
 			name = WeeksAliveWallpaperIntent;
 			productName = WeeksAliveWallpaperIntent;
 			productReference = AC79654F0C1057D1BFCDCF7A /* WeeksAliveWallpaperIntent.appex */;
-			productType = "com.apple.product-type.app-extension";
+			productType = "com.apple.product-type.extensionkit-extension";
 		};
 /* End PBXNativeTarget section */
 
