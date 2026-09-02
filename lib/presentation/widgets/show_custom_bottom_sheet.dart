@@ -193,7 +193,7 @@ class _CustomBottomSheetContentState extends State<_CustomBottomSheetContent> wi
                     if ((_previewHeight - size.height).abs() < 0.5) return;
                     setState(() => _previewHeight = size.height);
                   },
-                  child: AbsorbPointer(child: widget.previewBuilder!(context)),
+                  child: widget.previewBuilder!(context),
                 ),
               )
             : null;

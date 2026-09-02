@@ -18,6 +18,7 @@ import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divi
 import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/widgets/circle.dart';
+import 'package:weeksalive/presentation/widgets/image_carousel_page.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/show_custom_bottom_sheet.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
@@ -369,14 +370,25 @@ class _ImagesPreview extends StatelessWidget {
 
     return SizedBox(
       height: 200,
-      child: _AnimatedImagesStack(imagePaths: imagePaths),
+      child: _AnimatedImagesStack(
+        imagePaths: imagePaths,
+        onImageTap: (index) => ImageCarouselPage.show(
+          context,
+          imagePaths: imagePaths,
+          initialIndex: index,
+        ),
+      ),
     );
   }
 }
 
 class _AnimatedImagesStack extends StatefulWidget {
-  const _AnimatedImagesStack({required this.imagePaths});
+  const _AnimatedImagesStack({
+    required this.imagePaths,
+    required this.onImageTap,
+  });
   final List<String> imagePaths;
+  final ValueChanged<int> onImageTap;
 
   @override
   State<_AnimatedImagesStack> createState() => _AnimatedImagesStackState();
@@ -444,6 +456,7 @@ class _AnimatedImagesStackState extends State<_AnimatedImagesStack> with SingleT
                 rise: rise,
                 photoWidth: photoWidth,
                 dx: dx(i),
+                onTap: () => widget.onImageTap(i),
               ),
           ],
         );
@@ -457,6 +470,7 @@ class _AnimatedImagesStackState extends State<_AnimatedImagesStack> with SingleT
     required double rise,
     required double photoWidth,
     required double dx,
+    required VoidCallback onTap,
   }) {
     final anim = _staggered(index);
     final finalRotation = _rotations[index % _rotations.length];
@@ -474,7 +488,10 @@ class _AnimatedImagesStackState extends State<_AnimatedImagesStack> with SingleT
             angle: rotation.value,
             child: Opacity(
               opacity: opacity.value.clamp(0.0, 1.0),
-              child: _PhotoFrame(path: path, width: photoWidth),
+              child: GestureDetector(
+                onTap: onTap,
+                child: _PhotoFrame(path: path, width: photoWidth),
+              ),
             ),
           ),
         );
