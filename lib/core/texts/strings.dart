@@ -585,8 +585,7 @@ class Strings {
   static String get wallpaperSetupCreateAutomation => tr('wallpaper_setup_create_automation');
   static String get wallpaperSetupSelectTimeOfDay => tr('wallpaper_setup_select_time_of_day');
   static String get wallpaperSetupSelect => tr('wallpaper_setup_select');
-  static String wallpaperSetupSelectDescription(String time) =>
-      tr('wallpaper_setup_select_description', namedArgs: {'time': time});
+  static String get wallpaperSetupSelectDescription => tr('wallpaper_setup_select_description');
   static String get wallpaperSetupCreateNewShortcut => tr('wallpaper_setup_create_new_shortcut');
   // note: "Get Wallpaper" / "Set Wallpaper Photo" are iOS Shortcuts action names
   static String get wallpaperSetupSearchAndAddGetWallpaper =>

@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "Maak een nieuwe automatisering",
   "wallpaper_setup_select_time_of_day": "Selecteer Tijd van de dag",
   "wallpaper_setup_select": "Selecteer → Tijd van de dag → Dagelijks → Direct uitvoeren",
-  "wallpaper_setup_select_description": "{time} is de aanbevolen tijd op basis van je meldingsinstellingen. Zo wordt je achtergrond bijgewerkt nadat je hebt ingecheckt.",
+  "wallpaper_setup_select_description": "00:00 is de aanbevolen tijd. Zo wordt je achtergrond bijgewerkt aan het begin van elke dag.",
   "wallpaper_setup_create_new_shortcut": "Nieuwe opdracht maken",
   "wallpaper_setup_search_and_add_get_wallpaper": "Zoek en voeg \"Haal achtergrond op\" toe",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "Zoek en voeg \"Stel achtergrondfoto in\" toe",

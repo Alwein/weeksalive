@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "Buat otomasi baru",
   "wallpaper_setup_select_time_of_day": "Pilih Time of Day",
   "wallpaper_setup_select": "Pilih → Time of Day → Daily → Run Immediately",
-  "wallpaper_setup_select_description": "{time} adalah waktu yang disarankan berdasarkan pengaturan notifikasimu. Jadi wallpapermu akan diperbarui setelah kamu check-in.",
+  "wallpaper_setup_select_description": "00:00 adalah waktu yang disarankan. Jadi wallpapermu akan diperbarui di awal setiap hari.",
   "wallpaper_setup_create_new_shortcut": "Buat shortcut baru",
   "wallpaper_setup_search_and_add_get_wallpaper": "Cari dan tambahkan \"Get Wallpaper\"",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "Cari dan tambahkan \"Set Wallpaper Photo\"",

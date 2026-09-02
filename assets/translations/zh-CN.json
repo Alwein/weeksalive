@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "创建新的自动化",
   "wallpaper_setup_select_time_of_day": "选择「一天中的某个时间」",
   "wallpaper_setup_select": "选择 → 一天中的某个时间 → 每天 → 立即运行",
-  "wallpaper_setup_select_description": "根据你的通知设置，建议时间为 {time}。这样壁纸会在你打卡后更新。",
+  "wallpaper_setup_select_description": "建议时间为 00:00。这样壁纸会在每天开始时更新。",
   "wallpaper_setup_create_new_shortcut": "创建新快捷指令",
   "wallpaper_setup_search_and_add_get_wallpaper": "搜索并添加「获取壁纸」",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "搜索并添加「设定壁纸照片」",

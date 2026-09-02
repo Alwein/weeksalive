@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "Luo uusi automaatio",
   "wallpaper_setup_select_time_of_day": "Valitse Kellonaika",
   "wallpaper_setup_select": "Valitse → Kellonaika → Päivittäin → Suorita heti",
-  "wallpaper_setup_select_description": "{time} on suositeltu aika ilmoitusasetustesi perusteella. Näin taustakuvasi päivittyy tarkistuksesi jälkeen.",
+  "wallpaper_setup_select_description": "00:00 on suositeltu aika. Näin taustakuvasi päivittyy jokaisen päivän alussa.",
   "wallpaper_setup_create_new_shortcut": "Luo uusi pikakomento",
   "wallpaper_setup_search_and_add_get_wallpaper": "Etsi ja lisää \"Hae taustakuva\"",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "Etsi ja lisää \"Aseta taustakuvan kuva\"",

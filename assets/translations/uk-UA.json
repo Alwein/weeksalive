@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "Створи нову автоматизацію",
   "wallpaper_setup_select_time_of_day": "Обери «Час доби»",
   "wallpaper_setup_select": "Обери → Час доби → Щодня → Виконати одразу",
-  "wallpaper_setup_select_description": "{time} — рекомендований час згідно з налаштуваннями сповіщень. Тоді шпалери оновляться після твого чек-іну.",
+  "wallpaper_setup_select_description": "00:00 — рекомендований час. Тоді шпалери оновляться на початку кожного дня.",
   "wallpaper_setup_create_new_shortcut": "Створити нову команду",
   "wallpaper_setup_search_and_add_get_wallpaper": "Знайди й додай «Отримати шпалери»",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "Знайди й додай «Встановити фото шпалер»",

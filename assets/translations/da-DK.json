@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "Opret en ny automatisering",
   "wallpaper_setup_select_time_of_day": "Vælg Tidspunkt på dagen",
   "wallpaper_setup_select": "Vælg → Tidspunkt på dagen → Dagligt → Kør med det samme",
-  "wallpaper_setup_select_description": "{time} er det anbefalede tidspunkt baseret på dine notifikationsindstillinger. Så opdateres din baggrund efter du har tjekket ind.",
+  "wallpaper_setup_select_description": "00:00 er det anbefalede tidspunkt. Så opdateres din baggrund i begyndelsen af hver dag.",
   "wallpaper_setup_create_new_shortcut": "Opret ny genvej",
   "wallpaper_setup_search_and_add_get_wallpaper": "Søg og tilføj \"Hent baggrund\"",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "Søg og tilføj \"Indstil baggrundsfoto\"",

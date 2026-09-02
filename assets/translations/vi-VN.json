@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "Tạo tự động hóa mới",
   "wallpaper_setup_select_time_of_day": "Chọn Thời gian trong ngày",
   "wallpaper_setup_select": "Chọn → Thời gian trong ngày → Hàng ngày → Chạy ngay",
-  "wallpaper_setup_select_description": "{time} là thời điểm đề xuất dựa trên cài đặt thông báo của bạn. Như vậy hình nền sẽ cập nhật sau khi bạn check-in.",
+  "wallpaper_setup_select_description": "00:00 là thời điểm đề xuất. Như vậy hình nền sẽ cập nhật vào đầu mỗi ngày.",
   "wallpaper_setup_create_new_shortcut": "Tạo phím tắt mới",
   "wallpaper_setup_search_and_add_get_wallpaper": "Tìm và thêm \"Get Wallpaper\"",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "Tìm và thêm \"Set Wallpaper Photo\"",

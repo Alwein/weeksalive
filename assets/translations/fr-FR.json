@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "Crée une nouvelle automatisation",
   "wallpaper_setup_select_time_of_day": "Sélectionne Heure de la journée",
   "wallpaper_setup_select": "Sélectionne → Heure de la journée → Quotidien → Exécuter immédiatement",
-  "wallpaper_setup_select_description": "{time} est l'heure recommandée d'après tes réglages de notification. Ainsi ton fond d'écran se mettra à jour après ton rituel.",
+  "wallpaper_setup_select_description": "00:00 est l'heure recommandée. Ainsi ton fond d'écran se mettra à jour au début de chaque jour.",
   "wallpaper_setup_create_new_shortcut": "Créer un nouveau raccourci",
   "wallpaper_setup_search_and_add_get_wallpaper": "Cherche et ajoute « Obtenir le fond d'écran »",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "Cherche et ajoute « Définir la photo du fond d'écran »",

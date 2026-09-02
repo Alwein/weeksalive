@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "Yeni bir otomasyon oluştur",
   "wallpaper_setup_select_time_of_day": "Günün Saati'ni seç",
   "wallpaper_setup_select": "Seç → Günün Saati → Günlük → Hemen Çalıştır",
-  "wallpaper_setup_select_description": "Bildirim ayarlarına göre önerilen saat {time}. Böylece duvar kağıdı check-in'inden sonra güncellenir.",
+  "wallpaper_setup_select_description": "Önerilen saat 00:00. Böylece duvar kağıdı her günün başında güncellenir.",
   "wallpaper_setup_create_new_shortcut": "Yeni kısayol oluştur",
   "wallpaper_setup_search_and_add_get_wallpaper": "Ara ve \"Duvar Kağıdı Al\" ekle",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "Ara ve \"Duvar Kağıdı Fotoğrafını Ayarla\" ekle",

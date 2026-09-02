@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "Crea una nuova automazione",
   "wallpaper_setup_select_time_of_day": "Seleziona Ora del giorno",
   "wallpaper_setup_select": "Seleziona → Ora del giorno → Quotidiano → Esegui immediatamente",
-  "wallpaper_setup_select_description": "{time} è l'ora consigliata in base alle tue impostazioni di notifica. Così lo sfondo si aggiornerà dopo il check-in.",
+  "wallpaper_setup_select_description": "00:00 è l'ora consigliata. Così lo sfondo si aggiornerà all'inizio di ogni giorno.",
   "wallpaper_setup_create_new_shortcut": "Crea un nuovo comando",
   "wallpaper_setup_search_and_add_get_wallpaper": "Cerca e aggiungi \"Ottieni sfondo\"",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "Cerca e aggiungi \"Imposta foto come sfondo\"",

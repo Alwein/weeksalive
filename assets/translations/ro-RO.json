@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "Creează o automatizare nouă",
   "wallpaper_setup_select_time_of_day": "Selectează Momentul zilei",
   "wallpaper_setup_select": "Selectează → Momentul zilei → Zilnic → Rulează imediat",
-  "wallpaper_setup_select_description": "{time} e ora recomandată pe baza setărilor tale de notificare. Astfel fundalul se actualizează după check-in.",
+  "wallpaper_setup_select_description": "00:00 e ora recomandată. Astfel fundalul se actualizează la începutul fiecărei zile.",
   "wallpaper_setup_create_new_shortcut": "Creează o scurtătură nouă",
   "wallpaper_setup_search_and_add_get_wallpaper": "Caută și adaugă „Obține fundalul”",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "Caută și adaugă „Definește fotografia de fundal”",

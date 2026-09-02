@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "Create a new automation",
   "wallpaper_setup_select_time_of_day": "Select Time of Day",
   "wallpaper_setup_select": "Select → Time of Day → Daily → Run Immediately",
-  "wallpaper_setup_select_description": "{time} is the recommended time based on your notification settings. So your wallpaper will update after you check in.",
+  "wallpaper_setup_select_description": "00:00 is the recommended time. So your wallpaper will update at the start of each day.",
   "wallpaper_setup_create_new_shortcut": "Create new shortcut",
   "wallpaper_setup_search_and_add_get_wallpaper": "Search and add \"Get Wallpaper\"",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "Search and add \"Set Wallpaper Photo\"",

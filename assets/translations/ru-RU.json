@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "Создай новую автоматизацию",
   "wallpaper_setup_select_time_of_day": "Выбери «Время суток»",
   "wallpaper_setup_select": "Выбери → Время суток → Ежедневно → Выполнять сразу",
-  "wallpaper_setup_select_description": "{time} — рекомендуемое время по настройкам уведомлений. Так обои обновятся после твоей проверки.",
+  "wallpaper_setup_select_description": "00:00 — рекомендуемое время. Так обои обновятся в начале каждого дня.",
   "wallpaper_setup_create_new_shortcut": "Создать новую команду",
   "wallpaper_setup_search_and_add_get_wallpaper": "Найди и добавь «Получить обои»",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "Найди и добавь «Установить фото обоев»",

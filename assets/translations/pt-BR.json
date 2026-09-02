@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "Crie uma nova automação",
   "wallpaper_setup_select_time_of_day": "Selecione Hora do Dia",
   "wallpaper_setup_select": "Selecione → Hora do Dia → Diariamente → Executar Imediatamente",
-  "wallpaper_setup_select_description": "{time} é o horário recomendado com base nas suas configurações de notificação. Assim o papel de parede atualiza depois do check-in.",
+  "wallpaper_setup_select_description": "00:00 é o horário recomendado. Assim o papel de parede atualiza no início de cada dia.",
   "wallpaper_setup_create_new_shortcut": "Criar novo atalho",
   "wallpaper_setup_search_and_add_get_wallpaper": "Busque e adicione \"Obter Papel de Parede\"",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "Busque e adicione \"Definir Foto do Papel de Parede\"",

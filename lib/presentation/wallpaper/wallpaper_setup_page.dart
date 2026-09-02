@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
-import 'package:weeksalive/core/l10n/time_utils.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
@@ -11,7 +9,6 @@ import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/data/wallpaper/wallpaper_installer.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
-import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/widgets/primary_appbar.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
@@ -167,20 +164,13 @@ class _WallpaperSetupPageState extends State<WallpaperSetupPage> {
                 assetIllustration: 'assets/images/step03_1x.webp',
               ),
             ),
-            StoreConnector<AppState, TimeOfDay>(
-              converter: (store) => store.state.pushNotificationState.slots.slot2.time,
-              builder: (context, notificationTime) {
-                return _timelineRow(
-                  _TimelineItem(
-                    index: 5,
-                    label: Strings.wallpaperSetupSelect,
-                    description: Strings.wallpaperSetupSelectDescription(
-                      TimeUtils.formatTime(context, notificationTime, minutesOffset: 15),
-                    ),
-                    assetIllustration: 'assets/images/step04_1x.webp',
-                  ),
-                );
-              },
+            _timelineRow(
+              _TimelineItem(
+                index: 5,
+                label: Strings.wallpaperSetupSelect,
+                description: Strings.wallpaperSetupSelectDescription,
+                assetIllustration: 'assets/images/step04_1x.webp',
+              ),
             ),
             _timelineRow(
               _TimelineItem(

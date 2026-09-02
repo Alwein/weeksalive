@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "新しいオートメーションを作成",
   "wallpaper_setup_select_time_of_day": "「時刻」を選択",
   "wallpaper_setup_select": "選択 → 時刻 → 毎日 → すぐに実行",
-  "wallpaper_setup_select_description": "通知設定に基づくおすすめ時刻は{time}です。チェックイン後に壁紙が更新されます。",
+  "wallpaper_setup_select_description": "おすすめ時刻は00:00です。毎日の始まりに壁紙が更新されます。",
   "wallpaper_setup_create_new_shortcut": "新しいショートカットを作成",
   "wallpaper_setup_search_and_add_get_wallpaper": "「壁紙を取得」を検索して追加",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "「壁紙写真を設定」を検索して追加",

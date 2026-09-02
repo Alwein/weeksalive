@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "Opprett en ny automatisering",
   "wallpaper_setup_select_time_of_day": "Velg Tid på dagen",
   "wallpaper_setup_select": "Velg → Tid på dagen → Daglig → Kjør umiddelbart",
-  "wallpaper_setup_select_description": "{time} er anbefalt tid basert på varslingsinnstillingene dine. Da oppdateres bakgrunnen etter at du har sjekket inn.",
+  "wallpaper_setup_select_description": "00:00 er anbefalt tid. Da oppdateres bakgrunnen ved starten av hver dag.",
   "wallpaper_setup_create_new_shortcut": "Opprett ny snarvei",
   "wallpaper_setup_search_and_add_get_wallpaper": "Søk og legg til «Hent bakgrunn»",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "Søk og legg til «Still inn bakgrunnsbilde»",

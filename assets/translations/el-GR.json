@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "Δημιούργησε νέο αυτοματισμό",
   "wallpaper_setup_select_time_of_day": "Επίλεξε Ώρα της ημέρας",
   "wallpaper_setup_select": "Επίλεξε → Ώρα της ημέρας → Καθημερινά → Εκτέλεση αμέσως",
-  "wallpaper_setup_select_description": "Η {time} είναι η προτεινόμενη ώρα βάσει των ρυθμίσεων ειδοποιήσεών σου. Έτσι η ταπετσαρία θα ενημερώνεται αφού ολοκληρώσεις τον έλεγχό σου.",
+  "wallpaper_setup_select_description": "Η 00:00 είναι η προτεινόμενη ώρα. Έτσι η ταπετσαρία θα ενημερώνεται στην αρχή κάθε ημέρας.",
   "wallpaper_setup_create_new_shortcut": "Δημιουργία νέας συντόμευσης",
   "wallpaper_setup_search_and_add_get_wallpaper": "Αναζήτησε και πρόσθεσε «Λήψη ταπετσαρίας»",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "Αναζήτησε και πρόσθεσε «Ορισμός φωτογραφίας ταπετσαρίας»",

@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "Erstell eine neue Automation",
   "wallpaper_setup_select_time_of_day": "Wähl Tageszeit",
   "wallpaper_setup_select": "Wählen → Tageszeit → Täglich → Sofort ausführen",
-  "wallpaper_setup_select_description": "{time} ist die empfohlene Zeit basierend auf deinen Benachrichtigungseinstellungen. So aktualisiert sich dein Hintergrundbild nach dem Check-in.",
+  "wallpaper_setup_select_description": "00:00 ist die empfohlene Zeit. So aktualisiert sich dein Hintergrundbild zu Beginn jedes Tages.",
   "wallpaper_setup_create_new_shortcut": "Neuen Kurzbefehl erstellen",
   "wallpaper_setup_search_and_add_get_wallpaper": "Such und füg „Hintergrundbild abrufen“ hinzu",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "Such und füg „Hintergrundbild-Foto festlegen“ hinzu",

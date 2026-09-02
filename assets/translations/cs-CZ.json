@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "Vytvoř novou automatizaci",
   "wallpaper_setup_select_time_of_day": "Vyber Denní dobu",
   "wallpaper_setup_select": "Vyber → Denní doba → Denně → Spustit ihned",
-  "wallpaper_setup_select_description": "{time} je doporučený čas podle tvých nastavení oznámení. Tapeta se tak aktualizuje po check-inu.",
+  "wallpaper_setup_select_description": "00:00 je doporučený čas. Tapeta se tak aktualizuje na začátku každého dne.",
   "wallpaper_setup_create_new_shortcut": "Vytvořit novou zkratku",
   "wallpaper_setup_search_and_add_get_wallpaper": "Vyhledej a přidej „Získat tapetu“",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "Vyhledej a přidej „Nastavit fotografii tapety“",

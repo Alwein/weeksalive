@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "Utwórz nową automatyzację",
   "wallpaper_setup_select_time_of_day": "Wybierz Pora dnia",
   "wallpaper_setup_select": "Wybierz → Pora dnia → Codziennie → Uruchom natychmiast",
-  "wallpaper_setup_select_description": "{time} to zalecana godzina na podstawie Twoich ustawień powiadomień. Dzięki temu tapeta zaktualizuje się po check-inie.",
+  "wallpaper_setup_select_description": "00:00 to zalecana godzina. Dzięki temu tapeta zaktualizuje się na początku każdego dnia.",
   "wallpaper_setup_create_new_shortcut": "Utwórz nowy skrót",
   "wallpaper_setup_search_and_add_get_wallpaper": "Wyszukaj i dodaj „Pobierz tapetę”",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "Wyszukaj i dodaj „Ustaw zdjęcie tapety”",

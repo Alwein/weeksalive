@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "สร้างระบบอัตโนมัติใหม่",
   "wallpaper_setup_select_time_of_day": "เลือก Time of Day",
   "wallpaper_setup_select": "เลือก → Time of Day → Daily → Run Immediately",
-  "wallpaper_setup_select_description": "{time} คือเวลาที่แนะนำตามการตั้งค่าการแจ้งเตือนของคุณ วอลเปเปอร์จะอัปเดตหลังคุณเช็กอิน",
+  "wallpaper_setup_select_description": "00:00 คือเวลาที่แนะนำ วอลเปเปอร์จะอัปเดตตอนต้นของแต่ละวัน",
   "wallpaper_setup_create_new_shortcut": "สร้างทางลัดใหม่",
   "wallpaper_setup_search_and_add_get_wallpaper": "ค้นหาและเพิ่ม \"Get Wallpaper\"",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "ค้นหาและเพิ่ม \"Set Wallpaper Photo\"",

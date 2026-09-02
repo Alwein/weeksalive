@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "새 자동화 만들기",
   "wallpaper_setup_select_time_of_day": "하루 중 시간 선택",
   "wallpaper_setup_select": "선택 → 하루 중 시간 → 매일 → 즉시 실행",
-  "wallpaper_setup_select_description": "알림 설정 기준으로 권장 시간은 {time}입니다. 체크인 후에 배경화면이 업데이트됩니다.",
+  "wallpaper_setup_select_description": "권장 시간은 00:00입니다. 매일 시작 시 배경화면이 업데이트됩니다.",
   "wallpaper_setup_create_new_shortcut": "새 단축어 만들기",
   "wallpaper_setup_search_and_add_get_wallpaper": "\"배경화면 가져오기\"를 검색해 추가",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "\"배경화면 사진 설정\"을 검색해 추가",

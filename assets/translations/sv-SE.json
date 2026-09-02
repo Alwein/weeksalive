@@ -433,7 +433,7 @@
   "wallpaper_setup_create_automation": "Skapa en ny automation",
   "wallpaper_setup_select_time_of_day": "Välj Tid på dagen",
   "wallpaper_setup_select": "Välj → Tid på dagen → Dagligen → Kör omedelbart",
-  "wallpaper_setup_select_description": "{time} är den rekommenderade tiden utifrån dina notisinställningar. Då uppdateras bakgrundsbilden efter att du checkat in.",
+  "wallpaper_setup_select_description": "00:00 är den rekommenderade tiden. Då uppdateras bakgrundsbilden i början av varje dag.",
   "wallpaper_setup_create_new_shortcut": "Skapa ny genväg",
   "wallpaper_setup_search_and_add_get_wallpaper": "Sök och lägg till \"Hämta bakgrundsbild\"",
   "wallpaper_setup_search_and_add_set_wallpaper_photo": "Sök och lägg till \"Ställ in bakgrundsbild\"",
