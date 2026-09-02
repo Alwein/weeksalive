@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "개인정보",
   "paywall_footer_restore": "복원",
   "paywall_footer_skip": "건너뛰기",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "App Store에 연결할 수 없습니다. 네트워크를 확인한 후 다시 시도해 주세요.",
   "paywall_error_not_allowed": "이 계정에서는 해당 구매가 허용되지 않습니다.",
   "paywall_error_already_owned": "이미 활성 구독이 있습니다. 복원을 눌러 이용하세요.",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "매일 묻지 않고 자동화가 실행되도록 합니다.",
   "wallpaper_setup_press_run_button": "실행을 탭해 자동화를 활성화하세요",
   "wallpaper_setup_you_are_all_set": "완료를 탭해 저장하세요. 설정이 끝났습니다!",
+  "wallpaper_prompt_title": "미니멀한 배경화면",
+  "wallpaper_prompt_body": "주 단위 인생 그리드를 스스로 업데이트되는 배경화면으로 만들어 보세요.",
+  "wallpaper_prompt_cta": "배경화면 설정",
+  "wallpaper_prompt_dismiss": "나중에",
   "profile_page_widgets_life_grid": "인생 그리드",
   "profile_page_widgets_year_grid": "연간 그리드",
   "day_form_confirmation_positive_affirmations": {

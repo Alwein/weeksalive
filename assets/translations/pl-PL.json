@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "Prywatność",
   "paywall_footer_restore": "Przywróć",
   "paywall_footer_skip": "Pomiń",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "Nie udało się połączyć z App Store. Sprawdź połączenie i spróbuj ponownie.",
   "paywall_error_not_allowed": "Ten zakup nie jest dozwolony na Twoim koncie.",
   "paywall_error_already_owned": "Masz już aktywną subskrypcję. Dotknij Przywróć, by uzyskać dostęp.",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "Aby automatyzacja działała bez pytania każdego dnia.",
   "wallpaper_setup_press_run_button": "Dotknij Uruchom, by aktywować automatyzację",
   "wallpaper_setup_you_are_all_set": "Dotknij Gotowe, by zapisać. Gotowe!",
+  "wallpaper_prompt_title": "Minimalistyczne tapety",
+  "wallpaper_prompt_body": "Zamień siatkę życia w tygodniach w tapetę, która sama się aktualizuje.",
+  "wallpaper_prompt_cta": "Skonfiguruj tapetę",
+  "wallpaper_prompt_dismiss": "Może później",
   "profile_page_widgets_life_grid": "SIATKA ŻYCIA",
   "profile_page_widgets_year_grid": "SIATKA ROKU",
   "day_form_confirmation_positive_affirmations": {

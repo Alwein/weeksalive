@@ -15,7 +15,9 @@ class RestorePurchasesAction {
 
 class OfferingLoadedAction {
   final Offering? offering;
-  const OfferingLoadedAction(this.offering);
+  final Offering? alternateOffering;
+
+  const OfferingLoadedAction(this.offering, {this.alternateOffering});
 }
 
 class PurchaseSucceededAction {

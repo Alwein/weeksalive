@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "Privacidad",
   "paywall_footer_restore": "Restaurar",
   "paywall_footer_skip": "Omitir",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "No hemos podido conectar con el App Store. Comprueba tu conexión e inténtalo de nuevo.",
   "paywall_error_not_allowed": "Esta compra no está permitida en tu cuenta.",
   "paywall_error_already_owned": "Ya tienes una suscripción activa. Pulsa Restaurar para acceder.",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "Así la automatización se ejecuta sin preguntarte cada día.",
   "wallpaper_setup_press_run_button": "Pulsa Ejecutar para activar la automatización",
   "wallpaper_setup_you_are_all_set": "Pulsa OK para guardar. ¡Listo!",
+  "wallpaper_prompt_title": "Fondos de pantalla minimalistas",
+  "wallpaper_prompt_body": "Convierte tu cuadrícula de vida en semanas en un fondo de pantalla que se actualiza solo.",
+  "wallpaper_prompt_cta": "Configurar fondo de pantalla",
+  "wallpaper_prompt_dismiss": "Quizás más tarde",
   "profile_page_widgets_life_grid": "CUADRÍCULA DE VIDA",
   "profile_page_widgets_year_grid": "CUADRÍCULA DEL AÑO",
   "day_form_confirmation_positive_affirmations": {

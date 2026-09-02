@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "Privacy",
   "paywall_footer_restore": "Ripristina",
   "paywall_footer_skip": "Salta",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "Non siamo riusciti a raggiungere l'App Store. Controlla la connessione e riprova.",
   "paywall_error_not_allowed": "Questo acquisto non è consentito sul tuo account.",
   "paywall_error_already_owned": "Hai già un abbonamento attivo. Tocca Ripristina per ottenere l'accesso.",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "Così l'automazione viene eseguita senza chiederti conferma ogni giorno.",
   "wallpaper_setup_press_run_button": "Tocca Esegui per attivare l'automazione",
   "wallpaper_setup_you_are_all_set": "Tocca Fine per salvare. Tutto pronto!",
+  "wallpaper_prompt_title": "Sfondi minimalisti",
+  "wallpaper_prompt_body": "Trasforma la tua griglia della vita in settimane in uno sfondo che si aggiorna da solo.",
+  "wallpaper_prompt_cta": "Configura lo sfondo",
+  "wallpaper_prompt_dismiss": "Più tardi",
   "profile_page_widgets_life_grid": "GRIGLIA DI VITA",
   "profile_page_widgets_year_grid": "GRIGLIA DELL'ANNO",
   "day_form_confirmation_positive_affirmations": {

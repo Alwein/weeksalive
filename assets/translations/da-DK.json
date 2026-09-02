@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "Privatliv",
   "paywall_footer_restore": "Gendan",
   "paywall_footer_skip": "Spring over",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "Vi kunne ikke nå App Store. Tjek din forbindelse, og prøv igen.",
   "paywall_error_not_allowed": "Dette køb er ikke tilladt på din konto.",
   "paywall_error_already_owned": "Du har allerede et aktivt abonnement. Tryk på Gendan for at få adgang.",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "Så kører automatiseringen uden at spørge hver dag.",
   "wallpaper_setup_press_run_button": "Tryk på Kør for at aktivere automatiseringen",
   "wallpaper_setup_you_are_all_set": "Tryk på Færdig for at gemme. Du er klar!",
+  "wallpaper_prompt_title": "Minimalistiske baggrunde",
+  "wallpaper_prompt_body": "Gør dit liv-i-uger-gitter til en baggrund, der opdaterer sig selv.",
+  "wallpaper_prompt_cta": "Opsæt baggrund",
+  "wallpaper_prompt_dismiss": "Måske senere",
   "profile_page_widgets_life_grid": "LIVSGITTER",
   "profile_page_widgets_year_grid": "ÅRSGITTER",
   "day_form_confirmation_positive_affirmations": {

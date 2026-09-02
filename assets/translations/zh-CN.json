@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "隐私",
   "paywall_footer_restore": "恢复购买",
   "paywall_footer_skip": "跳过",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "无法连接 App Store。请检查网络后重试。",
   "paywall_error_not_allowed": "你的账户无法完成此购买。",
   "paywall_error_already_owned": "你已有有效订阅。点击「恢复购买」即可获取访问权限。",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "这样自动化每天运行时不会再询问你。",
   "wallpaper_setup_press_run_button": "点按「运行」以启用自动化",
   "wallpaper_setup_you_are_all_set": "点按「完成」保存。一切就绪！",
+  "wallpaper_prompt_title": "极简壁纸",
+  "wallpaper_prompt_body": "把你的「以周为单位的人生」网格设为会自动更新的壁纸。",
+  "wallpaper_prompt_cta": "设置壁纸",
+  "wallpaper_prompt_dismiss": "以后再说",
   "profile_page_widgets_life_grid": "人生网格",
   "profile_page_widgets_year_grid": "年度网格",
   "day_form_confirmation_positive_affirmations": {

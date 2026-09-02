@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "Integritet",
   "paywall_footer_restore": "Återställ",
   "paywall_footer_skip": "Hoppa över",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "Vi kunde inte nå App Store. Kontrollera din anslutning och försök igen.",
   "paywall_error_not_allowed": "Det här köpet är inte tillåtet på ditt konto.",
   "paywall_error_already_owned": "Du har redan en aktiv prenumeration. Tryck på Återställ för att få tillgång.",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "Så att automationen körs utan att fråga varje dag.",
   "wallpaper_setup_press_run_button": "Tryck på Kör för att aktivera automationen",
   "wallpaper_setup_you_are_all_set": "Tryck på Klar för att spara. Du är klar!",
+  "wallpaper_prompt_title": "Minimalistiska bakgrundsbilder",
+  "wallpaper_prompt_body": "Gör ditt liv-i-veckor-rutnät till en bakgrundsbild som uppdaterar sig själv.",
+  "wallpaper_prompt_cta": "Ställ in bakgrundsbild",
+  "wallpaper_prompt_dismiss": "Kanske senare",
   "profile_page_widgets_life_grid": "LIVSRUTNÄT",
   "profile_page_widgets_year_grid": "ÅRSRUTNÄT",
   "day_form_confirmation_positive_affirmations": {

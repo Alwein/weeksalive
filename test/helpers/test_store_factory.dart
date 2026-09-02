@@ -13,6 +13,7 @@ import 'package:weeksalive/data/rewards/rewards_repository.dart';
 import 'package:weeksalive/data/theme/theme_repository.dart';
 import 'package:weeksalive/data/user/user_repository.dart';
 import 'package:weeksalive/data/wallpaper/wallpaper_config_repository.dart';
+import 'package:weeksalive/data/wallpaper_prompt/wallpaper_prompt_store.dart';
 import 'package:weeksalive/data/weekly_intent/weekly_intent_repository.dart';
 import 'package:weeksalive/data/weekly_summary/weekly_summary_repository.dart';
 import 'package:weeksalive/domain/rewards/reward_unlock_service.dart';
@@ -42,6 +43,7 @@ class TestStoreFactory {
   DayRepository dayRepository = MockDayRepository();
   HomeWidgetService homeWidgetService = FakeHomeWidgetService();
   WallpaperConfigRepository wallpaperConfigRepository = MockWallpaperConfigRepository();
+  WallpaperPromptStore wallpaperPromptStore = FakeWallpaperPromptStore();
   FakeAnalyticsRepository analyticsRepository = FakeAnalyticsRepository();
   InstallRepository installRepository = FakeInstallRepository();
   FakeReviewPromptStore reviewPromptStore = FakeReviewPromptStore();
@@ -64,6 +66,7 @@ class TestStoreFactory {
       rewardUnlockService: const RewardUnlockService(),
       homeWidgetService: homeWidgetService,
       wallpaperConfigRepository: wallpaperConfigRepository,
+      wallpaperPromptStore: wallpaperPromptStore,
       analyticsRepository: analyticsRepository,
       installRepository: installRepository,
       reviewPromptStore: reviewPromptStore,

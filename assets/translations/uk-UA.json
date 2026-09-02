@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "Конфіденційність",
   "paywall_footer_restore": "Відновити",
   "paywall_footer_skip": "Пропустити",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "Не вдалося звʼязатися з App Store. Перевір зʼєднання й спробуй ще раз.",
   "paywall_error_not_allowed": "Ця покупка не дозволена для твого облікового запису.",
   "paywall_error_already_owned": "У тебе вже є активна підписка. Натисни «Відновити», щоб отримати доступ.",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "Щоб автоматизація запускалася без запиту щодня.",
   "wallpaper_setup_press_run_button": "Натисни «Виконати», щоб активувати автоматизацію",
   "wallpaper_setup_you_are_all_set": "Натисни «Готово», щоб зберегти. Усе готово!",
+  "wallpaper_prompt_title": "Мінімалістичні шпалери",
+  "wallpaper_prompt_body": "Перетворіть сітку життя в тижнях на шпалери, що оновлюються самі.",
+  "wallpaper_prompt_cta": "Налаштувати шпалери",
+  "wallpaper_prompt_dismiss": "Можливо, пізніше",
   "profile_page_widgets_life_grid": "СІТКА ЖИТТЯ",
   "profile_page_widgets_year_grid": "СІТКА РОКУ",
   "day_form_confirmation_positive_affirmations": {

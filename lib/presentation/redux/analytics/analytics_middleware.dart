@@ -190,6 +190,14 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
       case WallpaperInstallCompletedAction(success: true):
         analyticsRepository.capture(AnalyticsEvent.wallpaperExported());
 
+      case WallpaperPromptRequestedAction():
+        analyticsRepository.capture(AnalyticsEvent.wallpaperPromptShown());
+
+      case WallpaperPromptResolvedAction():
+        analyticsRepository.capture(
+          AnalyticsEvent.wallpaperPromptResolved(accepted: action.accepted),
+        );
+
       case UpdateUserAction():
         _onProfileUpdated(store, action, previousUser: previousUser);
 

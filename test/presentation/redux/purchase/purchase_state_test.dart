@@ -83,7 +83,7 @@ void main() {
     );
 
     test('transitions initial → idle(isPro:false) when user has no subscription', () async {
-      when(() => purchaseRepo.fetchCurrentOffering()).thenAnswer((_) async => null);
+      when(() => purchaseRepo.fetchOfferings()).thenAnswer((_) async => (current: null, alternate: null));
       when(() => purchaseRepo.getCustomerInfo()).thenAnswer((_) async => customerInfoFixture());
       when(() => purchaseRepo.isPro(any())).thenReturn(false);
 
@@ -98,7 +98,7 @@ void main() {
 
     test('transitions initial → idle(isPro:true) when user is already subscribed', () async {
       final customerInfo = customerInfoFixture(isPro: true);
-      when(() => purchaseRepo.fetchCurrentOffering()).thenAnswer((_) async => null);
+      when(() => purchaseRepo.fetchOfferings()).thenAnswer((_) async => (current: null, alternate: null));
       when(() => purchaseRepo.getCustomerInfo()).thenAnswer((_) async => customerInfo);
       when(() => purchaseRepo.isPro(any())).thenReturn(true);
 
@@ -111,7 +111,7 @@ void main() {
 
     test('loads the offering and exposes it on idle state', () async {
       final offering = offeringFixture(id: 'trial_14d', trialDays: 14);
-      when(() => purchaseRepo.fetchCurrentOffering()).thenAnswer((_) async => offering);
+      when(() => purchaseRepo.fetchOfferings()).thenAnswer((_) async => (current: offering, alternate: null));
       when(() => purchaseRepo.getCustomerInfo()).thenAnswer((_) async => customerInfoFixture());
       when(() => purchaseRepo.isPro(any())).thenReturn(false);
 
@@ -123,8 +123,25 @@ void main() {
       expect(store.state.purchaseState.offering?.metadata['trial_days'], 14);
     });
 
-    test('stays idle with null offering when fetchCurrentOffering throws', () async {
-      when(() => purchaseRepo.fetchCurrentOffering()).thenThrow(Exception('network error'));
+    test('loads the alternate offering alongside the current one', () async {
+      final offering = offeringFixture(id: 'trial_30d', trialDays: 30);
+      final alternate = offeringFixture(id: 'trial_14d', trialDays: 14);
+      when(() => purchaseRepo.fetchOfferings()).thenAnswer(
+        (_) async => (current: offering, alternate: alternate),
+      );
+      when(() => purchaseRepo.getCustomerInfo()).thenAnswer((_) async => customerInfoFixture());
+      when(() => purchaseRepo.isPro(any())).thenReturn(false);
+
+      final store = purchaseBootstrapStore();
+      await store.dispatch(BootstrapAction());
+      await pumpEventQueue();
+
+      expect(store.state.purchaseState.offering?.identifier, 'trial_30d');
+      expect(store.state.purchaseState.alternateOffering?.identifier, 'trial_14d');
+    });
+
+    test('stays idle with null offering when fetchOfferings throws', () async {
+      when(() => purchaseRepo.fetchOfferings()).thenThrow(Exception('network error'));
       when(() => purchaseRepo.getCustomerInfo()).thenAnswer((_) async => customerInfoFixture());
       when(() => purchaseRepo.isPro(any())).thenReturn(false);
 
@@ -144,7 +161,7 @@ void main() {
 
     test('refreshes the offering independently of bootstrap', () {
       final offering = offeringFixture(id: 'trial_30d', trialDays: 30);
-      when(() => repository.fetchCurrentOffering()).thenAnswer((_) async => offering);
+      when(() => repository.fetchOfferings()).thenAnswer((_) async => (current: offering, alternate: null));
       when(() => repository.getCustomerInfo()).thenAnswer((_) async => customerInfoFixture());
       when(() => repository.isPro(any())).thenReturn(false);
 

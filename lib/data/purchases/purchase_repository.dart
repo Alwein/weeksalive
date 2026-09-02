@@ -9,8 +9,22 @@ class PurchaseRepository {
   String get _entitlementId => dotenv.env['REVENUE_CAT_ENTITLEMENT_ID'] ?? 'WeeksAlive Pro';
 
   Future<Offering?> fetchCurrentOffering() async {
+    final result = await fetchOfferings();
+    return result.current;
+  }
+
+  Future<({Offering? current, Offering? alternate})> fetchOfferings() async {
     final offerings = await Purchases.getOfferings();
-    return offerings.current;
+    final current = offerings.current;
+    return (current: current, alternate: alternateOffering(offerings, current));
+  }
+
+  Offering? alternateOffering(Offerings offerings, Offering? current) {
+    if (current == null || offerings.all.length < 2) return null;
+    for (final offering in offerings.all.values) {
+      if (offering.identifier != current.identifier) return offering;
+    }
+    return null;
   }
 
   Future<CustomerInfo> purchasePackage(Package package) async {

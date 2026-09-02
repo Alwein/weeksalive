@@ -30,4 +30,15 @@ void main() {
     final next = wallpaperReducer(initial, const WallpaperInstallCompletedAction(success: true));
     expect(next.installSucceeded, true);
   });
+
+  test('WallpaperPromptRequestedAction marks the nudge as pending', () {
+    final next = wallpaperReducer(initial, const WallpaperPromptRequestedAction());
+    expect(next.promptPending, true);
+  });
+
+  test('WallpaperPromptResolvedAction clears the pending nudge', () {
+    final pending = wallpaperReducer(initial, const WallpaperPromptRequestedAction());
+    final next = wallpaperReducer(pending, const WallpaperPromptResolvedAction(accepted: true));
+    expect(next.promptPending, false);
+  });
 }

@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "Datenschutz",
   "paywall_footer_restore": "Wiederherstellen",
   "paywall_footer_skip": "Überspringen",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "Der App Store war nicht erreichbar. Prüf deine Verbindung und versuch es erneut.",
   "paywall_error_not_allowed": "Dieser Kauf ist auf deinem Account nicht erlaubt.",
   "paywall_error_already_owned": "Du hast bereits ein aktives Abo. Tippe auf Wiederherstellen, um Zugang zu bekommen.",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "Damit die Automation ohne tägliche Nachfrage läuft.",
   "wallpaper_setup_press_run_button": "Tipp auf Ausführen, um die Automation zu aktivieren",
   "wallpaper_setup_you_are_all_set": "Tipp auf Fertig zum Speichern. Du bist startklar!",
+  "wallpaper_prompt_title": "Minimalistische Hintergrundbilder",
+  "wallpaper_prompt_body": "Mach dein Leben-in-Wochen-Raster zu einem Hintergrundbild, das sich von selbst aktualisiert.",
+  "wallpaper_prompt_cta": "Hintergrundbild einrichten",
+  "wallpaper_prompt_dismiss": "Später",
   "profile_page_widgets_life_grid": "LEBENSRASTER",
   "profile_page_widgets_year_grid": "JAHRESRASTER",
   "day_form_confirmation_positive_affirmations": {

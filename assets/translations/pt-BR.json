@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "Privacidade",
   "paywall_footer_restore": "Restaurar",
   "paywall_footer_skip": "Pular",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "Não foi possível conectar à App Store. Verifique sua conexão e tente de novo.",
   "paywall_error_not_allowed": "Esta compra não é permitida na sua conta.",
   "paywall_error_already_owned": "Você já tem uma assinatura ativa. Toque em Restaurar para liberar o acesso.",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "Para que a automação rode sem perguntar todos os dias.",
   "wallpaper_setup_press_run_button": "Toque em Executar para ativar a automação",
   "wallpaper_setup_you_are_all_set": "Toque em OK para salvar. Pronto!",
+  "wallpaper_prompt_title": "Papéis de parede minimalistas",
+  "wallpaper_prompt_body": "Transforme sua grade da vida em semanas em um papel de parede que se atualiza sozinho.",
+  "wallpaper_prompt_cta": "Configurar papel de parede",
+  "wallpaper_prompt_dismiss": "Talvez depois",
   "profile_page_widgets_life_grid": "GRADE DE VIDA",
   "profile_page_widgets_year_grid": "GRADE DO ANO",
   "day_form_confirmation_positive_affirmations": {

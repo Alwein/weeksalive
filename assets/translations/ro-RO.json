@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "Confidențialitate",
   "paywall_footer_restore": "Restaurează",
   "paywall_footer_skip": "Sari",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "Nu am putut ajunge la App Store. Verifică conexiunea și încearcă din nou.",
   "paywall_error_not_allowed": "Această achiziție nu e permisă pe contul tău.",
   "paywall_error_already_owned": "Ai deja un abonament activ. Atinge Restaurează ca să ai acces.",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "Ca automatizarea să ruleze fără să te întrebe în fiecare zi.",
   "wallpaper_setup_press_run_button": "Atinge Rulează ca să activezi automatizarea",
   "wallpaper_setup_you_are_all_set": "Atinge OK ca să salvezi. Ești gata!",
+  "wallpaper_prompt_title": "Fundaluri minimaliste",
+  "wallpaper_prompt_body": "Transformă grila vieții tale în săptămâni într-un fundal care se actualizează singur.",
+  "wallpaper_prompt_cta": "Configurează fundalul",
+  "wallpaper_prompt_dismiss": "Poate mai târziu",
   "profile_page_widgets_life_grid": "GRILĂ DE VIAȚĂ",
   "profile_page_widgets_year_grid": "GRILĂ ANUALĂ",
   "day_form_confirmation_positive_affirmations": {

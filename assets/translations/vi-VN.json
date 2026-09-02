@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "Riêng tư",
   "paywall_footer_restore": "Khôi phục",
   "paywall_footer_skip": "Bỏ qua",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "Không thể kết nối App Store. Vui lòng kiểm tra kết nối và thử lại.",
   "paywall_error_not_allowed": "Giao dịch này không được phép trên tài khoản của bạn.",
   "paywall_error_already_owned": "Bạn đã có gói đăng ký đang hoạt động. Nhấn Khôi phục để truy cập.",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "Để tự động hóa chạy mà không hỏi mỗi ngày.",
   "wallpaper_setup_press_run_button": "Nhấn Run để kích hoạt tự động hóa",
   "wallpaper_setup_you_are_all_set": "Nhấn Done để lưu. Xong rồi!",
+  "wallpaper_prompt_title": "Hình nền tối giản",
+  "wallpaper_prompt_body": "Biến lưới cuộc đời theo tuần thành hình nền tự cập nhật.",
+  "wallpaper_prompt_cta": "Thiết lập hình nền",
+  "wallpaper_prompt_dismiss": "Để sau",
   "profile_page_widgets_life_grid": "LƯỚI ĐỜI",
   "profile_page_widgets_year_grid": "LƯỚI NĂM",
   "day_form_confirmation_positive_affirmations": {

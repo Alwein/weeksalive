@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "ความเป็นส่วนตัว",
   "paywall_footer_restore": "กู้คืน",
   "paywall_footer_skip": "ข้าม",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "เชื่อมต่อ App Store ไม่ได้ กรุณาตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง",
   "paywall_error_not_allowed": "บัญชีของคุณไม่อนุญาตให้ซื้อรายการนี้",
   "paywall_error_already_owned": "คุณมีสมาชิกที่ใช้งานอยู่แล้ว กดกู้คืนเพื่อเข้าถึง",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "เพื่อให้ระบบอัตโนมัติทำงานโดยไม่ถามทุกวัน",
   "wallpaper_setup_press_run_button": "แตะ Run เพื่อเปิดใช้งานระบบอัตโนมัติ",
   "wallpaper_setup_you_are_all_set": "แตะ Done เพื่อบันทึก พร้อมแล้ว!",
+  "wallpaper_prompt_title": "วอลเปเปอร์มินิมอล",
+  "wallpaper_prompt_body": "เปลี่ยนตารางชีวิตเป็นสัปดาห์ของคุณให้เป็นวอลเปเปอร์ที่อัปเดตตัวเอง",
+  "wallpaper_prompt_cta": "ตั้งค่าวอลเปเปอร์",
+  "wallpaper_prompt_dismiss": "ไว้ทีหลัง",
   "profile_page_widgets_life_grid": "ตารางชีวิต",
   "profile_page_widgets_year_grid": "ตารางปี",
   "day_form_confirmation_positive_affirmations": {

@@ -266,6 +266,12 @@ class AnalyticsEvent {
 
   factory AnalyticsEvent.wallpaperExported() => const AnalyticsEvent._('wallpaper_exported');
 
+  /// The second-launch nudge inviting the user to set up the wallpaper.
+  factory AnalyticsEvent.wallpaperPromptShown() => const AnalyticsEvent._('wallpaper_prompt_shown');
+
+  factory AnalyticsEvent.wallpaperPromptResolved({required bool accepted}) =>
+      AnalyticsEvent._('wallpaper_prompt_resolved', {'accepted': accepted});
+
   factory AnalyticsEvent.widgetGuideViewed() => const AnalyticsEvent._('widget_guide_viewed');
 
   factory AnalyticsEvent.gridViewChanged({required String tab}) =>

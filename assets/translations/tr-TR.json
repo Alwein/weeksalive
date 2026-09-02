@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "Gizlilik",
   "paywall_footer_restore": "Geri yükle",
   "paywall_footer_skip": "Atla",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "App Store'a ulaşamadık. Bağlantını kontrol edip tekrar dene.",
   "paywall_error_not_allowed": "Bu satın alma hesabında izinli değil.",
   "paywall_error_already_owned": "Zaten aktif bir aboneliğin var. Erişim için Geri yükle'ye dokun.",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "Böylece otomasyon her gün sormadan çalışır.",
   "wallpaper_setup_press_run_button": "Otomasyonu etkinleştirmek için Çalıştır'a dokun",
   "wallpaper_setup_you_are_all_set": "Kaydetmek için Tamam'a dokun. Her şey hazır!",
+  "wallpaper_prompt_title": "Minimalist duvar kâğıtları",
+  "wallpaper_prompt_body": "Hafta hafta yaşam ızgaranı kendini güncelleyen bir duvar kâğıdına dönüştür.",
+  "wallpaper_prompt_cta": "Duvar kâğıdını ayarla",
+  "wallpaper_prompt_dismiss": "Belki sonra",
   "profile_page_widgets_life_grid": "HAYAT IZGARASI",
   "profile_page_widgets_year_grid": "YIL IZGARASI",
   "day_form_confirmation_positive_affirmations": {

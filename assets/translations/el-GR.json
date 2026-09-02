@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "Απόρρητο",
   "paywall_footer_restore": "Επαναφορά",
   "paywall_footer_skip": "Παράλειψη",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "Δεν μπορέσαμε να συνδεθούμε στο App Store. Έλεγξε τη σύνδεσή σου και δοκίμασε ξανά.",
   "paywall_error_not_allowed": "Αυτή η αγορά δεν επιτρέπεται στον λογαριασμό σου.",
   "paywall_error_already_owned": "Έχεις ήδη ενεργή συνδρομή. Πάτα Επαναφορά για πρόσβαση.",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "Για να εκτελείται ο αυτοματισμός χωρίς να σε ρωτάει κάθε μέρα.",
   "wallpaper_setup_press_run_button": "Πάτα Εκτέλεση για να ενεργοποιήσεις τον αυτοματισμό",
   "wallpaper_setup_you_are_all_set": "Πάτα Τέλος για αποθήκευση. Είσαι έτοιμος!",
+  "wallpaper_prompt_title": "Μινιμαλιστικές ταπετσαρίες",
+  "wallpaper_prompt_body": "Κάνε το πλέγμα της ζωής σου σε εβδομάδες ταπετσαρία που ενημερώνεται μόνη της.",
+  "wallpaper_prompt_cta": "Ρύθμιση ταπετσαρίας",
+  "wallpaper_prompt_dismiss": "Ίσως αργότερα",
   "profile_page_widgets_life_grid": "ΠΛΕΓΜΑ ΖΩΗΣ",
   "profile_page_widgets_year_grid": "ΠΛΕΓΜΑ ΕΤΟΥΣ",
   "day_form_confirmation_positive_affirmations": {

@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "Privasi",
   "paywall_footer_restore": "Pulihkan",
   "paywall_footer_skip": "Lewati",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "Kami tidak bisa menghubungi App Store. Periksa koneksimu dan coba lagi.",
   "paywall_error_not_allowed": "Pembelian ini tidak diizinkan di akunmu.",
   "paywall_error_already_owned": "Kamu sudah punya langganan aktif. Ketuk Pulihkan untuk mendapatkan akses.",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "Agar otomasi berjalan tanpa bertanya setiap hari.",
   "wallpaper_setup_press_run_button": "Ketuk Run untuk mengaktifkan otomasi",
   "wallpaper_setup_you_are_all_set": "Ketuk Done untuk menyimpan. Siap!",
+  "wallpaper_prompt_title": "Wallpaper minimalis",
+  "wallpaper_prompt_body": "Ubah kisi hidup dalam mingguan-mu menjadi wallpaper yang memperbarui dirinya sendiri.",
+  "wallpaper_prompt_cta": "Atur wallpaper",
+  "wallpaper_prompt_dismiss": "Mungkin nanti",
   "profile_page_widgets_life_grid": "GRID HIDUP",
   "profile_page_widgets_year_grid": "GRID TAHUN",
   "day_form_confirmation_positive_affirmations": {

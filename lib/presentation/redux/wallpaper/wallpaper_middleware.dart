@@ -7,12 +7,16 @@ import 'package:redux/redux.dart';
 import 'package:weeksalive/data/wallpaper/wallpaper_config_repository.dart';
 import 'package:weeksalive/data/wallpaper/wallpaper_installer.dart';
 import 'package:weeksalive/data/wallpaper/wallpaper_renderer.dart';
+import 'package:weeksalive/data/wallpaper_prompt/wallpaper_prompt_repository.dart';
+import 'package:weeksalive/data/wallpaper_prompt/wallpaper_prompt_store.dart';
+import 'package:weeksalive/domain/day/day_entry.dart' as day_entry;
 import 'package:weeksalive/domain/wallpaper/wallpaper_grid_data.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_grid_tokens.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/day/day_actions.dart';
 import 'package:weeksalive/presentation/redux/grid_motif/grid_motif_actions.dart';
+import 'package:weeksalive/presentation/redux/push_notifications/push_notification_state.dart';
 import 'package:weeksalive/presentation/redux/theme/theme_actions.dart';
 import 'package:weeksalive/presentation/redux/user/user_actions.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
@@ -24,14 +28,18 @@ import 'package:weeksalive/presentation/redux/wallpaper/wallpaper_actions.dart';
 class WallpaperMiddleware extends MiddlewareClass<AppState> {
   WallpaperMiddleware({
     required this.repository,
+    required this.promptStore,
     WallpaperRenderer? renderer,
     WallpaperInstaller? installer,
   }) : renderer = renderer ?? WallpaperRenderer(),
        installer = installer ?? WallpaperInstaller();
 
   final WallpaperConfigRepository repository;
+  final WallpaperPromptStore promptStore;
   final WallpaperRenderer renderer;
   final WallpaperInstaller installer;
+
+  bool _launchCounted = false;
 
   static const _backgroundRenderDebounce = Duration(milliseconds: 300);
 
@@ -44,6 +52,17 @@ class WallpaperMiddleware extends MiddlewareClass<AppState> {
 
     if (action is BootstrapAction) {
       _dispatchSafe(store, WallpaperConfigLoadedAction(repository.getConfig()));
+      _countLaunch();
+      return;
+    }
+
+    if (action is CheckWallpaperPromptAction) {
+      _maybeRequestPrompt(store);
+      return;
+    }
+
+    if (action is WallpaperPromptResolvedAction) {
+      _markPromptShown();
       return;
     }
 
@@ -76,6 +95,42 @@ class WallpaperMiddleware extends MiddlewareClass<AppState> {
         store.state.wallpaperState.config.enabled) {
       _enqueueRender(store, install: false);
     }
+  }
+
+  /// Records the current launch, once per process.
+  Future<void> _countLaunch() async {
+    if (_launchCounted) return;
+    _launchCounted = true;
+    try {
+      await promptStore.incrementLaunchCount();
+    } catch (_) {
+      // Best-effort; the nudge is not worth crashing over.
+    }
+  }
+
+  Future<void> _markPromptShown() async {
+    try {
+      await promptStore.markShown();
+    } catch (_) {
+      // Best-effort.
+    }
+  }
+
+  /// Requests the one-time wallpaper setup nudge when, on the second launch or
+  /// later, the user still has no wallpaper and no other home sheet is queued.
+  void _maybeRequestPrompt(Store<AppState> store) {
+    if (promptStore.hasBeenShown) return;
+    if (promptStore.launchCount < WallpaperPromptRepository.triggerAtLaunch) return;
+    if (store.state.wallpaperState.config.enabled) return;
+    if (store.state.wallpaperState.promptPending) return;
+
+    // Yield to the more time-sensitive home sheets so nothing stacks.
+    if (store.state.weeklySummaryState.pendingShow) return;
+    if (store.state.pushNotificationState.pendingNavigation != PendingNotificationTarget.none) return;
+    final recordedDays = store.state.dayState.entries.keys.toSet();
+    if (day_entry.isYesterdayGracePeriod(recordedDays: recordedDays, now: DateTime.now())) return;
+
+    _dispatchSafe(store, const WallpaperPromptRequestedAction());
   }
 
   void _enqueueRender(Store<AppState> store, {required bool install}) {

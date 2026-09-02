@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "Soukromí",
   "paywall_footer_restore": "Obnovit",
   "paywall_footer_skip": "Přeskočit",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "Nepodařilo se spojit s App Store. Zkontroluj připojení a zkus to znovu.",
   "paywall_error_not_allowed": "Tento nákup není na tvém účtu povolen.",
   "paywall_error_already_owned": "Už máš aktivní předplatné. Klepni na Obnovit pro přístup.",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "Aby automatizace běžela každý den bez ptaní.",
   "wallpaper_setup_press_run_button": "Klepni na Spustit pro aktivaci automatizace",
   "wallpaper_setup_you_are_all_set": "Klepni na Hotovo pro uložení. Hotovo!",
+  "wallpaper_prompt_title": "Minimalistické tapety",
+  "wallpaper_prompt_body": "Proměňte svou mřížku života v týdnech v tapetu, která se sama aktualizuje.",
+  "wallpaper_prompt_cta": "Nastavit tapetu",
+  "wallpaper_prompt_dismiss": "Možná později",
   "profile_page_widgets_life_grid": "ŽIVOTNÍ MŘÍŽKA",
   "profile_page_widgets_year_grid": "ROČNÍ MŘÍŽKA",
   "day_form_confirmation_positive_affirmations": {

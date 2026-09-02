@@ -47,12 +47,17 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
   Future<void> _loadOfferingAndStatus(Store<AppState> store) async {
     try {
       final results = await Future.wait([
-        purchaseRepository.fetchCurrentOffering(),
+        purchaseRepository.fetchOfferings(),
         purchaseRepository.getCustomerInfo(),
       ]);
-      final offering = results[0] as dynamic;
+      final offerings = results[0] as ({Offering? current, Offering? alternate});
       final customerInfo = results[1] as CustomerInfo;
-      store.dispatch(OfferingLoadedAction(offering));
+      store.dispatch(
+        OfferingLoadedAction(
+          offerings.current,
+          alternateOffering: offerings.alternate,
+        ),
+      );
       store.dispatch(PurchaseSucceededAction(isPro: purchaseRepository.isPro(customerInfo)));
     } catch (e, st) {
       log.e('PurchaseMiddleware: failed to load offering/status', error: e, stackTrace: st);

@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "Конфиденциальность",
   "paywall_footer_restore": "Восстановить",
   "paywall_footer_skip": "Пропустить",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "Не удалось связаться с App Store. Проверь соединение и попробуй снова.",
   "paywall_error_not_allowed": "Эта покупка недоступна для твоего аккаунта.",
   "paywall_error_already_owned": "У тебя уже есть активная подписка. Нажми «Восстановить», чтобы получить доступ.",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "Чтобы автоматизация запускалась без запроса каждый день.",
   "wallpaper_setup_press_run_button": "Нажми «Выполнить», чтобы активировать автоматизацию",
   "wallpaper_setup_you_are_all_set": "Нажми «Готово», чтобы сохранить. Всё готово!",
+  "wallpaper_prompt_title": "Минималистичные обои",
+  "wallpaper_prompt_body": "Превратите сетку жизни в неделях в обои, которые обновляются сами.",
+  "wallpaper_prompt_cta": "Настроить обои",
+  "wallpaper_prompt_dismiss": "Может, позже",
   "profile_page_widgets_life_grid": "СЕТКА ЖИЗНИ",
   "profile_page_widgets_year_grid": "СЕТКА ГОДА",
   "day_form_confirmation_positive_affirmations": {

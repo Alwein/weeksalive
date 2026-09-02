@@ -17,5 +17,11 @@ WallpaperState wallpaperReducer(WallpaperState state, dynamic action) {
   if (action is WallpaperInstallCompletedAction) {
     return state.copyWith(installSucceeded: () => action.success);
   }
+  if (action is WallpaperPromptRequestedAction) {
+    return state.copyWith(promptPending: true);
+  }
+  if (action is WallpaperPromptResolvedAction) {
+    return state.copyWith(promptPending: false);
+  }
   return state;
 }

@@ -14,10 +14,12 @@ import 'package:weeksalive/presentation/home/widgets/home_appbar.dart';
 import 'package:weeksalive/presentation/home/widgets/home_week_calendar.dart';
 import 'package:weeksalive/presentation/home/widgets/rewards_celebration_listener.dart';
 import 'package:weeksalive/presentation/home/widgets/streak_grace_reminder_listener.dart';
+import 'package:weeksalive/presentation/home/widgets/wallpaper_prompt_listener.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/custom_tab_bar.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/navigation/navigation_actions.dart';
 import 'package:weeksalive/presentation/redux/review_prompt/review_prompt_actions.dart';
+import 'package:weeksalive/presentation/redux/wallpaper/wallpaper_actions.dart';
 import 'package:weeksalive/presentation/redux/weekly_summary/weekly_summary_actions.dart';
 import 'package:weeksalive/presentation/widgets/apparition_animation.dart';
 import 'package:weeksalive/presentation/widgets/zoomable_life_grid_view.dart';
@@ -35,9 +37,11 @@ class HomePage extends StatelessWidget {
           backgroundColor: AppColors.bg(context),
           body: RewardsCelebrationListener(
             child: StreakGraceReminderListener(
-              child: _Body(
-                vm: vm,
-                initialTabIndex: store.state.navigationState.homeTabIndex,
+              child: WallpaperPromptListener(
+                child: _Body(
+                  vm: vm,
+                  initialTabIndex: store.state.navigationState.homeTabIndex,
+                ),
               ),
             ),
           ),
@@ -75,7 +79,9 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
     _gridTabController.addListener(_onGridTabChanged);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      StoreProvider.of<AppState>(context, listen: false).dispatch(const CheckWeeklySummaryAction());
+      final store = StoreProvider.of<AppState>(context, listen: false);
+      store.dispatch(const CheckWeeklySummaryAction());
+      store.dispatch(const CheckWallpaperPromptAction());
     });
   }
 

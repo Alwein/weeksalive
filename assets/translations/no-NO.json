@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "Personvern",
   "paywall_footer_restore": "Gjenopprett",
   "paywall_footer_skip": "Hopp over",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "Vi fikk ikke kontakt med App Store. Sjekk tilkoblingen din og prøv igjen.",
   "paywall_error_not_allowed": "Dette kjøpet er ikke tillatt på kontoen din.",
   "paywall_error_already_owned": "Du har allerede et aktivt abonnement. Trykk på Gjenopprett for å få tilgang.",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "Slik at automatiseringen kjører uten å spørre hver dag.",
   "wallpaper_setup_press_run_button": "Trykk på Kjør for å aktivere automatiseringen",
   "wallpaper_setup_you_are_all_set": "Trykk på Ferdig for å lagre. Da er du klar!",
+  "wallpaper_prompt_title": "Minimalistiske bakgrunner",
+  "wallpaper_prompt_body": "Gjør livet-i-uker-rutenettet ditt om til en bakgrunn som oppdaterer seg selv.",
+  "wallpaper_prompt_cta": "Sett opp bakgrunn",
+  "wallpaper_prompt_dismiss": "Kanskje senere",
   "profile_page_widgets_life_grid": "LIVSRUTENETT",
   "profile_page_widgets_year_grid": "ÅRSRUTENETT",
   "day_form_confirmation_positive_affirmations": {

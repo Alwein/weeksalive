@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "Privacy",
   "paywall_footer_restore": "Herstellen",
   "paywall_footer_skip": "Overslaan",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "We konden de App Store niet bereiken. Controleer je verbinding en probeer het opnieuw.",
   "paywall_error_not_allowed": "Deze aankoop is niet toegestaan op je account.",
   "paywall_error_already_owned": "Je hebt al een actief abonnement. Tik op Herstellen om toegang te krijgen.",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "Zodat de automatisering elke dag zonder vragen kan draaien.",
   "wallpaper_setup_press_run_button": "Tik op Voer uit om de automatisering te activeren",
   "wallpaper_setup_you_are_all_set": "Tik op Klaar om op te slaan. Je bent helemaal klaar!",
+  "wallpaper_prompt_title": "Minimalistische achtergronden",
+  "wallpaper_prompt_body": "Maak van je leven-in-weken-raster een achtergrond die zichzelf bijwerkt.",
+  "wallpaper_prompt_cta": "Achtergrond instellen",
+  "wallpaper_prompt_dismiss": "Misschien later",
   "profile_page_widgets_life_grid": "LEVENGRID",
   "profile_page_widgets_year_grid": "JAARGRID",
   "day_form_confirmation_positive_affirmations": {

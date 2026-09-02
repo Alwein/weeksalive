@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
+import 'package:purchases_flutter/purchases_flutter.dart' hide Store;
 import 'package:redux/redux.dart';
 import 'package:rive/rive.dart' hide Animation;
 import 'package:rive_native/rive_native.dart' as rive_native;
@@ -78,16 +79,15 @@ class PaywallPage extends StatelessWidget {
       builder: (context, vm) {
         return _PaywallView(
           presentation: presentation,
-          trialWeeks: vm.trialWeeks,
-          trialEndDate: vm.trialEndDate,
-          pricePerYear: vm.pricePerYear,
-          pricePerWeek: vm.pricePerWeek,
+          primaryPlan: vm.primaryPlan,
+          alternatePlan: vm.alternatePlan,
+          hasAlternatePlan: vm.hasAlternatePlan,
           isLoading: vm.isLoading,
           errorMessage: vm.errorMessage,
-          onStartTrial: vm.annualPackage != null ? () => vm.onPurchase(context, vm.annualPackage!) : null,
+          onPurchase: vm.onPurchase,
           onRestore: () => vm.onRestore(context),
           onDismiss: () => Navigator.of(context).pop(false),
-          isPro: vm.isPro, // set this to true for testing
+          isPro: vm.isPro,
         );
       },
     );
@@ -97,27 +97,25 @@ class PaywallPage extends StatelessWidget {
 class _PaywallView extends StatefulWidget {
   const _PaywallView({
     required this.presentation,
-    required this.trialWeeks,
-    required this.trialEndDate,
-    required this.pricePerYear,
-    required this.pricePerWeek,
+    required this.primaryPlan,
+    required this.alternatePlan,
+    required this.hasAlternatePlan,
     required this.isLoading,
     required this.isPro,
     required this.errorMessage,
-    required this.onStartTrial,
+    required this.onPurchase,
     required this.onRestore,
     required this.onDismiss,
   });
 
   final PaywallPresentation presentation;
-  final int? trialWeeks;
-  final String? trialEndDate;
-  final String? pricePerYear;
-  final String? pricePerWeek;
+  final PaywallPlanData? primaryPlan;
+  final PaywallPlanData? alternatePlan;
+  final bool hasAlternatePlan;
   final bool isLoading;
   final bool isPro;
   final String? errorMessage;
-  final VoidCallback? onStartTrial;
+  final void Function(BuildContext, Package) onPurchase;
   final VoidCallback onRestore;
   final VoidCallback onDismiss;
 
@@ -236,9 +234,16 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
     }
   }
 
+  void _startAlternateTrial() {
+    final package = widget.alternatePlan?.annualPackage;
+    if (package == null || widget.isLoading) return;
+    widget.onPurchase(context, package);
+  }
+
   @override
   Widget build(BuildContext context) {
     final canPop = _showSuccess || widget.presentation.isDismissible;
+    final primaryPlan = widget.primaryPlan;
 
     return PopScope(
       canPop: canPop,
@@ -262,8 +267,11 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
                               constraints: const BoxConstraints(maxWidth: 520),
                               child: _TimelineOffer(
                                 scrollController: _scrollController,
-                                trialWeeks: widget.trialWeeks,
-                                trialEndDate: widget.trialEndDate,
+                                trialWeeks: primaryPlan?.trialWeeks,
+                                trialEndDate: primaryPlan?.trialEndDate,
+                                alternateTrialDays: widget.alternatePlan?.trialDays,
+                                onStartAlternateTrial: widget.hasAlternatePlan ? _startAlternateTrial : null,
+                                isLoading: widget.isLoading,
                               ),
                             ),
                           ),
@@ -273,11 +281,13 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
                           children: [
                             _FooterSection(
                               errorMessage: widget.errorMessage,
-                              pricePerYear: widget.pricePerYear,
-                              pricePerWeek: widget.pricePerWeek,
-                              trialWeeks: widget.trialWeeks,
+                              pricePerYear: primaryPlan?.pricePerYear,
+                              pricePerWeek: primaryPlan?.pricePerWeek,
+                              trialWeeks: primaryPlan?.trialWeeks,
                               isLoading: widget.isLoading,
-                              onStartTrial: widget.onStartTrial,
+                              onStartTrial: primaryPlan?.annualPackage != null
+                                  ? () => widget.onPurchase(context, primaryPlan!.annualPackage!)
+                                  : null,
                               onRestore: widget.onRestore,
                               onDismiss: widget.onDismiss,
                             ),
@@ -480,11 +490,17 @@ class _TimelineOffer extends StatelessWidget {
     required this.scrollController,
     required this.trialWeeks,
     required this.trialEndDate,
+    required this.alternateTrialDays,
+    required this.onStartAlternateTrial,
+    required this.isLoading,
   });
 
   final ScrollController scrollController;
   final int? trialWeeks;
   final String? trialEndDate;
+  final int? alternateTrialDays;
+  final VoidCallback? onStartAlternateTrial;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -500,6 +516,14 @@ class _TimelineOffer extends StatelessWidget {
           _TrialTimeline(trialWeeks: trialWeeks, trialEndDate: trialEndDate),
           const SizedBox(height: Margins.spacingXHuge),
           const _BenefitsSection(),
+          if (alternateTrialDays != null && onStartAlternateTrial != null) ...[
+            const SizedBox(height: Margins.spacingL),
+            _AlternateTrialButton(
+              trialDays: alternateTrialDays!,
+              isLoading: isLoading,
+              onTap: onStartAlternateTrial!,
+            ),
+          ],
           // TODO: Social proof hidden during first app store reveiw - set this back when we have more reviews
           // const SizedBox(height: Margins.spacingL),
           // const _SocialProofCarousel(),
@@ -927,6 +951,34 @@ class _CtaButton extends StatelessWidget {
         text: trialWeeks != null ? Strings.paywallCtaWithWeeks(trialWeeks!) : Strings.paywallCtaWithTrial,
         onPressed: enabled ? onTap : null,
         displayState: isLoading ? DisplayState.loading : DisplayState.success,
+      ),
+    );
+  }
+}
+
+class _AlternateTrialButton extends StatelessWidget {
+  const _AlternateTrialButton({
+    required this.trialDays,
+    required this.isLoading,
+    required this.onTap,
+  });
+
+  final int trialDays;
+  final bool isLoading;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: isLoading ? null : onTap,
+      child: Text(
+        Strings.paywallStartAlternateTrial(trialDays),
+        style: TextStyles.primarySmallMedium.copyWith(
+          color: AppColors.contentSoft(context),
+          decoration: TextDecoration.underline,
+          decorationColor: AppColors.contentSoft(context),
+        ),
+        textAlign: TextAlign.center,
       ),
     );
   }

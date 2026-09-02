@@ -17,6 +17,7 @@ import 'package:weeksalive/data/rewards/rewards_repository.dart';
 import 'package:weeksalive/data/theme/theme_repository.dart';
 import 'package:weeksalive/data/user/user_repository.dart';
 import 'package:weeksalive/data/wallpaper/wallpaper_config_repository.dart';
+import 'package:weeksalive/data/wallpaper_prompt/wallpaper_prompt_store.dart';
 import 'package:weeksalive/data/weekly_intent/weekly_intent_repository.dart';
 import 'package:weeksalive/data/weekly_summary/weekly_summary_repository.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
@@ -72,6 +73,7 @@ class MockPurchaseRepository extends Mock implements PurchaseRepository {
   MockPurchaseRepository() {
     registerFallbackValue(FakeCustomerInfo());
     when(() => fetchCurrentOffering()).thenAnswer((_) => Future.sync(() => null));
+    when(() => fetchOfferings()).thenAnswer((_) => Future.sync(() => (current: null, alternate: null)));
     when(() => getCustomerInfo()).thenAnswer((_) => Future.sync(() => FakeCustomerInfo()));
     when(() => isPro(any())).thenReturn(false);
   }
@@ -189,5 +191,31 @@ class MockWallpaperConfigRepository extends Mock implements WallpaperConfigRepos
     registerFallbackValue(const WallpaperConfig());
     when(() => getConfig()).thenReturn(const WallpaperConfig());
     when(() => setConfig(any())).thenAnswer((_) async {});
+  }
+}
+
+class FakeWallpaperPromptStore implements WallpaperPromptStore {
+  FakeWallpaperPromptStore({int launchCount = 0, bool hasBeenShown = false})
+    : _launchCount = launchCount,
+      _hasBeenShown = hasBeenShown;
+
+  int _launchCount;
+  bool _hasBeenShown;
+
+  @override
+  int get launchCount => _launchCount;
+
+  @override
+  bool get hasBeenShown => _hasBeenShown;
+
+  @override
+  Future<int> incrementLaunchCount() async {
+    _launchCount++;
+    return _launchCount;
+  }
+
+  @override
+  Future<void> markShown() async {
+    _hasBeenShown = true;
   }
 }

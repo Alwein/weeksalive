@@ -6,16 +6,45 @@ import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_actions.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 
-class PaywallViewModel {
+class PaywallPlanData {
   final Package? annualPackage;
-
+  final int? trialDays;
   final int? trialWeeks;
-
   final String? pricePerYear;
-
   final String? pricePerWeek;
-
   final String? trialEndDate;
+  final String? offeringId;
+
+  const PaywallPlanData({
+    required this.annualPackage,
+    required this.trialDays,
+    required this.trialWeeks,
+    required this.pricePerYear,
+    required this.pricePerWeek,
+    required this.trialEndDate,
+    required this.offeringId,
+  });
+
+  static PaywallPlanData? fromOffering(Offering? offering) {
+    if (offering == null) return null;
+    final annual = offering.annual;
+    final trialDays = PaywallViewModel.trialDaysFromOffering(offering);
+    final trialWeeks = PaywallViewModel.trialWeeksFromOffering(offering);
+    return PaywallPlanData(
+      annualPackage: annual,
+      trialDays: trialDays,
+      trialWeeks: trialWeeks,
+      pricePerYear: annual?.storeProduct.priceString,
+      pricePerWeek: PaywallViewModel.weeklyPrice(annual),
+      trialEndDate: PaywallViewModel.formatTrialEndDate(trialWeeks),
+      offeringId: offering.identifier,
+    );
+  }
+}
+
+class PaywallViewModel {
+  final PaywallPlanData? primaryPlan;
+  final PaywallPlanData? alternatePlan;
 
   final bool isLoading;
   final bool isPro;
@@ -24,11 +53,8 @@ class PaywallViewModel {
   final void Function(BuildContext) onRestore;
 
   const PaywallViewModel({
-    required this.annualPackage,
-    required this.trialWeeks,
-    required this.pricePerYear,
-    required this.pricePerWeek,
-    required this.trialEndDate,
+    required this.primaryPlan,
+    required this.alternatePlan,
     required this.isLoading,
     required this.isPro,
     required this.errorMessage,
@@ -36,22 +62,14 @@ class PaywallViewModel {
     required this.onRestore,
   });
 
+  bool get hasAlternatePlan => alternatePlan?.annualPackage != null;
+
   static PaywallViewModel create(Store<AppState> store) {
     final ps = store.state.purchaseState;
-    final offering = ps.offering;
-    final annual = offering?.annual;
-
-    final trialWeeks = _trialWeeksFromOffering(offering);
-    final pricePerYear = annual?.storeProduct.priceString;
-    final pricePerWeek = _weeklyPrice(annual);
-    final trialEndDate = _formatTrialEndDate(trialWeeks);
 
     return PaywallViewModel(
-      annualPackage: annual,
-      trialWeeks: trialWeeks,
-      pricePerYear: pricePerYear,
-      pricePerWeek: pricePerWeek,
-      trialEndDate: trialEndDate,
+      primaryPlan: PaywallPlanData.fromOffering(ps.offering),
+      alternatePlan: PaywallPlanData.fromOffering(ps.alternateOffering),
       isLoading: ps.isLoading,
       isPro: ps.isPro,
       errorMessage: switch (ps) {
@@ -63,30 +81,29 @@ class PaywallViewModel {
     );
   }
 
-  static String? _formatTrialEndDate(int? trialWeeks) {
+  static String? formatTrialEndDate(int? trialWeeks) {
     if (trialWeeks == null) return null;
     final endDate = DateTime.now().add(Duration(days: trialWeeks * 7));
     return DateFormat('MMM d').format(endDate);
   }
 
-  static int? _trialWeeksFromOffering(Offering? offering) {
+  static int? trialWeeksFromOffering(Offering? offering) {
     if (offering == null) return null;
-    final raw = offering.metadata['trial_days'];
-    final int? days;
-    if (raw is int) {
-      days = raw;
-    } else if (raw is double) {
-      days = raw.toInt();
-    } else if (raw is String) {
-      days = int.tryParse(raw);
-    } else {
-      days = null;
-    }
+    final days = trialDaysFromOffering(offering);
     if (days == null) return null;
     return (days / 7).round().clamp(1, 99);
   }
 
-  static String? _weeklyPrice(Package? annual) {
+  static int? trialDaysFromOffering(Offering? offering) {
+    if (offering == null) return null;
+    final raw = offering.metadata['trial_days'];
+    if (raw is int) return raw;
+    if (raw is double) return raw.toInt();
+    if (raw is String) return int.tryParse(raw);
+    return null;
+  }
+
+  static String? weeklyPrice(Package? annual) {
     if (annual == null) return null;
     final annualPrice = annual.storeProduct.price;
     final weeklyPrice = annualPrice / 52;

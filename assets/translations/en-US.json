@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "Privacy",
   "paywall_footer_restore": "Restore",
   "paywall_footer_skip": "Skip",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "We couldn't reach the App Store. Please check your connection and try again.",
   "paywall_error_not_allowed": "This purchase isn't allowed on your account.",
   "paywall_error_already_owned": "You already have an active subscription. Tap Restore to get access.",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "So the automation runs without asking every day.",
   "wallpaper_setup_press_run_button": "Tap Run to activate the automation",
   "wallpaper_setup_you_are_all_set": "Tap Done to save. You’re all set!",
+  "wallpaper_prompt_title": "Minimalist wallpapers",
+  "wallpaper_prompt_body": "Turn your life-in-weeks grid into a wallpaper that updates by itself.",
+  "wallpaper_prompt_cta": "Set up wallpaper",
+  "wallpaper_prompt_dismiss": "Maybe later",
   "profile_page_widgets_life_grid": "LIFE GRID",
   "profile_page_widgets_year_grid": "YEAR GRID",
   "day_form_confirmation_positive_affirmations": {

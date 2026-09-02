@@ -311,6 +311,8 @@ class Strings {
   static String get paywallFooterPrivacy => tr('paywall_footer_privacy');
   static String get paywallFooterRestore => tr('paywall_footer_restore');
   static String get paywallFooterSkip => tr('paywall_footer_skip');
+  static String paywallStartAlternateTrial(int trialDays) =>
+      tr('paywall_start_alternate_trial', namedArgs: {'trial_days': '$trialDays'});
 
   // paywall errors
   static String get paywallErrorNetwork => tr('paywall_error_network');
@@ -604,6 +606,12 @@ class Strings {
       tr('wallpaper_setup_unselect_show_preview_and_crop_to_subject_description');
   static String get wallpaperSetupPressRunButton => tr('wallpaper_setup_press_run_button');
   static String get wallpaperSetupYouAreAllSet => tr('wallpaper_setup_you_are_all_set');
+
+  // wallpaper prompt (nudge shown on the second app launch)
+  static String get wallpaperPromptTitle => tr('wallpaper_prompt_title');
+  static String get wallpaperPromptBody => tr('wallpaper_prompt_body');
+  static String get wallpaperPromptCta => tr('wallpaper_prompt_cta');
+  static String get wallpaperPromptDismiss => tr('wallpaper_prompt_dismiss');
 
   // widgets page
   static String get profilePageWidgetsLifeGrid => tr('profile_page_widgets_life_grid');

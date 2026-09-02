@@ -217,6 +217,7 @@
   "paywall_footer_privacy": "プライバシー",
   "paywall_footer_restore": "復元",
   "paywall_footer_skip": "スキップ",
+  "paywall_start_alternate_trial": "Start a {trial_days}-day trial instead",
   "paywall_error_network": "App Storeに接続できませんでした。通信状況を確認して、もう一度お試しください。",
   "paywall_error_not_allowed": "このアカウントでは購入できません。",
   "paywall_error_already_owned": "すでに有効なサブスクリプションがあります。「復元」をタップしてアクセスしてください。",
@@ -445,6 +446,10 @@
   "wallpaper_setup_unselect_show_preview_and_crop_to_subject_description": "毎日確認を求められず、オートメーションが動くようにします。",
   "wallpaper_setup_press_run_button": "「実行」をタップしてオートメーションを有効にする",
   "wallpaper_setup_you_are_all_set": "「完了」をタップして保存。準備完了です！",
+  "wallpaper_prompt_title": "ミニマルな壁紙",
+  "wallpaper_prompt_body": "「週で見る人生」グリッドを、自動で更新される壁紙に。",
+  "wallpaper_prompt_cta": "壁紙を設定",
+  "wallpaper_prompt_dismiss": "あとで",
   "profile_page_widgets_life_grid": "人生グリッド",
   "profile_page_widgets_year_grid": "年間グリッド",
   "day_form_confirmation_positive_affirmations": {
