@@ -19,6 +19,7 @@ import 'package:weeksalive/presentation/paywall/in_app_paywall_launcher.dart';
 import 'package:weeksalive/presentation/paywall/show_in_app_paywall.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/navigation/navigation_actions.dart';
+import 'package:weeksalive/presentation/redux/review_prompt/review_prompt_actions.dart';
 import 'package:weeksalive/presentation/redux/weekly_summary/weekly_summary_actions.dart';
 import 'package:weeksalive/presentation/widgets/apparition_animation.dart';
 import 'package:weeksalive/presentation/widgets/zoomable_life_grid_view.dart';
@@ -124,6 +125,10 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
     );
     if (!mounted || result == null) return;
     await _playSaveAnimations(result);
+    if (!mounted) return;
+    await Future<void>.delayed(const Duration(seconds: 1));
+    if (!mounted) return;
+    StoreProvider.of<AppState>(context, listen: false).dispatch(const TryReviewPromptAction());
   }
 
   Future<void> _playSaveAnimations(DayFormResult result) async {

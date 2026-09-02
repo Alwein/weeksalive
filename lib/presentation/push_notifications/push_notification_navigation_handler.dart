@@ -8,6 +8,7 @@ import 'package:weeksalive/presentation/day_form/day_form.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_state.dart';
+import 'package:weeksalive/presentation/redux/review_prompt/review_prompt_actions.dart';
 import 'package:weeksalive/presentation/redux/weekly_summary/weekly_summary_actions.dart';
 import 'package:weeksalive/presentation/weekly_summary/weekly_summary_page.dart';
 
@@ -53,19 +54,31 @@ class _PushNotificationNavigationHandlerState extends State<PushNotificationNavi
     StoreProvider.of<AppState>(context).dispatch(NotificationTappedAction(launchPayload));
   }
 
-  void _handlePendingNavigation(Store<AppState> store, PendingNotificationTarget target) {
+  Future<void> _handlePendingNavigation(Store<AppState> store, PendingNotificationTarget target) async {
     final navigatorContext = widget.navigatorKey.currentContext;
     if (navigatorContext == null) return;
 
     store.dispatch(const ClearNotificationTapAction());
     switch (target) {
       case PendingNotificationTarget.dayForm:
-        DayForm.showBottomSheet(navigatorContext, DateTime.now(), source: 'notification');
+        final result = await DayForm.showBottomSheet(navigatorContext, DateTime.now(), source: 'notification');
+        if (result != null) {
+          await Future<void>.delayed(const Duration(seconds: 1));
+          store.dispatch(const TryReviewPromptAction(source: 'notification'));
+        }
       case PendingNotificationTarget.dayFormFollowup:
-        DayForm.showBottomSheet(navigatorContext, DateTime.now(), source: 'notification_followup');
+        final followupResult = await DayForm.showBottomSheet(
+          navigatorContext,
+          DateTime.now(),
+          source: 'notification_followup',
+        );
+        if (followupResult != null) {
+          await Future<void>.delayed(const Duration(seconds: 1));
+          store.dispatch(const TryReviewPromptAction(source: 'notification_followup'));
+        }
       case PendingNotificationTarget.yesterdayDayForm:
         final yesterday = normalizeDay(DateTime.now()).subtract(const Duration(days: 1));
-        DayForm.showBottomSheet(navigatorContext, yesterday, source: 'notification_streak_save');
+        await DayForm.showBottomSheet(navigatorContext, yesterday, source: 'notification_streak_save');
       case PendingNotificationTarget.weeklySummary:
         _showWeeklySummary(store, navigatorContext);
       case PendingNotificationTarget.none:

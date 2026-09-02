@@ -12,6 +12,7 @@ import 'package:weeksalive/data/navigation/navigation_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
+import 'package:weeksalive/data/review/review_prompt_store.dart';
 import 'package:weeksalive/data/rewards/rewards_repository.dart';
 import 'package:weeksalive/data/theme/theme_repository.dart';
 import 'package:weeksalive/data/user/user_repository.dart';
@@ -159,6 +160,28 @@ class FakeHomeWidgetService extends Fake implements HomeWidgetService {
     required Iterable<DayEntry> entries,
     required AppThemeId selectedTheme,
   }) async {}
+}
+
+class FakeReviewPromptStore implements ReviewPromptStore {
+  bool _hasRequested = false;
+  int _checkInCount = 0;
+
+  @override
+  bool get hasRequested => _hasRequested;
+
+  @override
+  int get checkInCount => _checkInCount;
+
+  @override
+  Future<int> incrementCheckInCount() async {
+    _checkInCount++;
+    return _checkInCount;
+  }
+
+  @override
+  Future<void> markRequested() async {
+    _hasRequested = true;
+  }
 }
 
 class MockWallpaperConfigRepository extends Mock implements WallpaperConfigRepository {

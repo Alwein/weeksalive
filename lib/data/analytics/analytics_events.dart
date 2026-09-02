@@ -84,7 +84,8 @@ class AnalyticsEvent {
   factory AnalyticsEvent.attPermissionResult({required String status}) =>
       AnalyticsEvent._('att_permission_result', {'status': status});
 
-  factory AnalyticsEvent.reviewPromptShown() => const AnalyticsEvent._('review_prompt_shown');
+  factory AnalyticsEvent.reviewPromptShown({required String source}) =>
+      AnalyticsEvent._('review_prompt_shown', {'source': source});
 
   // --- Paywall and purchase ------------------------------------------------
 

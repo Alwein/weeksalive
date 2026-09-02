@@ -1,17 +1,9 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:in_app_review/in_app_review.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
-import 'package:weeksalive/data/analytics/analytics_events.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
-import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
-import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
-import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_animations.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
-import 'package:weeksalive/presentation/redux/analytics/analytics_actions.dart';
-import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step28Rating extends OnboardingStep {
@@ -21,40 +13,11 @@ class Step28Rating extends OnboardingStep {
   String primaryLabel(BuildContext context) => Strings.continueString;
 
   @override
-  bool canContinue(OnboardingFormController controller) => controller.ratingReady;
-
-  @override
   Widget buildContent(BuildContext context) => const _Step28Content();
 }
 
-class _Step28Content extends StatefulWidget {
+class _Step28Content extends StatelessWidget {
   const _Step28Content();
-
-  @override
-  State<_Step28Content> createState() => _Step28ContentState();
-}
-
-class _Step28ContentState extends State<_Step28Content> {
-  static const _reviewDelay = Duration(milliseconds: 500);
-  static const _continueDelay = Duration(milliseconds: 2000);
-
-  @override
-  void initState() {
-    super.initState();
-    OnboardingScope.read(context).setRatingReady(false);
-
-    Future<void>.delayed(_reviewDelay, () async {
-      if (!mounted) return;
-      StoreProvider.of<AppState>(context, listen: false)
-          .dispatch(TrackAnalyticsEventAction(AnalyticsEvent.reviewPromptShown()));
-      await InAppReview.instance.requestReview();
-    });
-
-    Future<void>.delayed(_continueDelay, () {
-      if (!mounted) return;
-      OnboardingScope.of(context).setRatingReady(true);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,18 +43,7 @@ class _Step28ContentState extends State<_Step28Content> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Texts.onboardingXlBold(Strings.onboarding22Title1),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(height: Margins.spacingM),
-                      const SmallDivider(),
-                      const SizedBox(height: Margins.spacingM),
-                      Texts.primaryMediumSoft(context, Strings.onboarding22Subtitle),
-                      const SizedBox(height: Margins.spacingM),
-                    ],
-                  ),
+                  const SizedBox(height: Margins.spacingBase),
                 ],
               ),
             ),

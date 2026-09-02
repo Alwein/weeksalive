@@ -10,6 +10,7 @@ import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/tiktok_events/tiktok_events_repository.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
+import 'package:weeksalive/data/review/review_prompt_store.dart';
 import 'package:weeksalive/data/rewards/rewards_repository.dart';
 import 'package:weeksalive/data/theme/theme_repository.dart';
 import 'package:weeksalive/data/user/user_repository.dart';
@@ -28,6 +29,7 @@ import 'package:weeksalive/presentation/redux/home_widget/home_widget_middleware
 import 'package:weeksalive/presentation/redux/navigation/navigation_middleware.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_middleware.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_middleware.dart';
+import 'package:weeksalive/presentation/redux/review_prompt/review_prompt_middleware.dart';
 import 'package:weeksalive/presentation/redux/rewards/rewards_middleware.dart';
 import 'package:weeksalive/presentation/redux/theme/theme_middleware.dart';
 import 'package:weeksalive/presentation/redux/user/user_middleware.dart';
@@ -54,6 +56,7 @@ class StoreFactory {
   final WallpaperConfigRepository wallpaperConfigRepository;
   final AnalyticsRepository analyticsRepository;
   final InstallRepository installRepository;
+  final ReviewPromptStore reviewPromptStore;
 
   StoreFactory({
     required this.remoteConfigRepository,
@@ -74,6 +77,7 @@ class StoreFactory {
     required this.wallpaperConfigRepository,
     required this.analyticsRepository,
     required this.installRepository,
+    required this.reviewPromptStore,
   })  : rewardUnlockService = rewardUnlockService ?? const RewardUnlockService(),
         homeWidgetService = homeWidgetService ?? HomeWidgetService();
 
@@ -95,6 +99,9 @@ class StoreFactory {
         HomeWidgetMiddleware(homeWidgetService: homeWidgetService).call,
         WallpaperMiddleware(repository: wallpaperConfigRepository).call,
         DayMiddleware(dayRepository: dayRepository).call,
+        ReviewPromptMiddleware(
+          reviewPromptStore: reviewPromptStore,
+        ).call,
         RewardsMiddleware(
           rewardsRepository: rewardsRepository,
           rewardUnlockService: rewardUnlockService,

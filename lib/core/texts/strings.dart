@@ -234,7 +234,6 @@ class Strings {
   static String get onboarding21Subtitle => tr('onboarding_21_subtitle');
 
   static String get onboarding22Title1 => tr('onboarding_22_title_1');
-  static String get onboarding22Subtitle => tr('onboarding_22_subtitle');
 
   static String get onboarding23Title1 => tr('onboarding_23_title_1');
   static String get onboarding23Subtitle => tr('onboarding_23_subtitle');

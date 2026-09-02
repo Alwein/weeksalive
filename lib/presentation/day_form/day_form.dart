@@ -934,7 +934,7 @@ class _LeaveATraceInputState extends State<_LeaveATraceInput> {
                     readOnly: true,
                     controller: _textController,
                     maxLines: null,
-                    keyboardType: TextInputType.multiline,
+                    keyboardType: TextInputType.text,
                     style: TextStyles.primaryXsBold.copyWith(color: AppColors.content(context)),
                     decoration: InputDecoration(
                       border: InputBorder.none,

@@ -44,6 +44,7 @@ class TestStoreFactory {
   WallpaperConfigRepository wallpaperConfigRepository = MockWallpaperConfigRepository();
   FakeAnalyticsRepository analyticsRepository = FakeAnalyticsRepository();
   InstallRepository installRepository = FakeInstallRepository();
+  FakeReviewPromptStore reviewPromptStore = FakeReviewPromptStore();
 
   Store<AppState> initializeReduxStore(AppState initialState) {
     return StoreFactory(
@@ -65,6 +66,7 @@ class TestStoreFactory {
       wallpaperConfigRepository: wallpaperConfigRepository,
       analyticsRepository: analyticsRepository,
       installRepository: installRepository,
+      reviewPromptStore: reviewPromptStore,
     ).createStore(initialState: initialState);
   }
 }
