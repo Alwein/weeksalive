@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -538,6 +540,52 @@ void main() {
           hasTodayEntry: any(named: 'hasTodayEntry'),
         ),
       );
+
+      store.teardown();
+    });
+
+    test('re-applies reschedule when a stale run finishes after saving today', () async {
+      final today = normalizeDay(DateTime.now());
+      final blockedSchedule = Completer<void>();
+      var scheduleCallCount = 0;
+
+      when(
+        () => pushRepo.scheduleAllNotifications(
+          dailyTimes: any(named: 'dailyTimes'),
+          weeklySummary: any(named: 'weeklySummary'),
+          hasTodayEntry: any(named: 'hasTodayEntry'),
+          streakCount: any(named: 'streakCount'),
+          isYesterdayGracePeriod: any(named: 'isYesterdayGracePeriod'),
+        ),
+      ).thenAnswer((_) async {
+        scheduleCallCount++;
+        if (scheduleCallCount == 1) {
+          await blockedSchedule.future;
+        }
+      });
+
+      final store = factory.initializeReduxStore(initialAppState());
+
+      final bootstrapFuture = store.dispatch(BootstrapAction());
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+
+      await store.dispatch(SaveDayAction(DayEntry(date: today)));
+
+      blockedSchedule.complete();
+      await bootstrapFuture;
+      await _dispatchBootstrapAndWaitForMiddleware();
+
+      final captured = verify(
+        () => pushRepo.scheduleAllNotifications(
+          dailyTimes: any(named: 'dailyTimes'),
+          weeklySummary: any(named: 'weeklySummary'),
+          hasTodayEntry: captureAny(named: 'hasTodayEntry'),
+          streakCount: any(named: 'streakCount'),
+          isYesterdayGracePeriod: any(named: 'isYesterdayGracePeriod'),
+        ),
+      ).captured;
+
+      expect(captured.last, isTrue);
 
       store.teardown();
     });

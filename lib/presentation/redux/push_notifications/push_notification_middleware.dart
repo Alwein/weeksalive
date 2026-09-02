@@ -12,6 +12,10 @@ import 'package:weeksalive/presentation/redux/user/user_state.dart';
 class PushNotificationMiddleware extends MiddlewareClass<AppState> {
   final PushNotificationRepository pushNotificationRepository;
 
+  /// Bumped on every [_reschedule] request so a slower, older run re-schedules
+  /// once more with the latest day state instead of leaving stale notifications.
+  int _rescheduleGeneration = 0;
+
   PushNotificationMiddleware({required this.pushNotificationRepository});
 
   @override
@@ -31,7 +35,6 @@ class PushNotificationMiddleware extends MiddlewareClass<AppState> {
           slots: slots,
         ),
       );
-      await _reschedule(store);
     }
 
     if (action is RequestNotificationPermissionAction) {
@@ -96,6 +99,16 @@ class PushNotificationMiddleware extends MiddlewareClass<AppState> {
   }
 
   Future<void> _reschedule(Store<AppState> store, {int? weekStartDay}) async {
+    final generation = ++_rescheduleGeneration;
+    await _performReschedule(store, weekStartDay: weekStartDay);
+    while (generation != _rescheduleGeneration) {
+      final latestGeneration = _rescheduleGeneration;
+      await _performReschedule(store);
+      if (latestGeneration == _rescheduleGeneration) return;
+    }
+  }
+
+  Future<void> _performReschedule(Store<AppState> store, {int? weekStartDay}) async {
     final slots = store.state.pushNotificationState.slots;
     final effectiveWeekStartDay =
         weekStartDay ?? store.state.userState.userOrNull?.weekStartDay ?? DateTime.monday;
