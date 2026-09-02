@@ -15,8 +15,6 @@ import 'package:weeksalive/presentation/home/widgets/home_week_calendar.dart';
 import 'package:weeksalive/presentation/home/widgets/rewards_celebration_listener.dart';
 import 'package:weeksalive/presentation/home/widgets/streak_grace_reminder_listener.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/custom_tab_bar.dart';
-import 'package:weeksalive/presentation/paywall/in_app_paywall_launcher.dart';
-import 'package:weeksalive/presentation/paywall/show_in_app_paywall.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/navigation/navigation_actions.dart';
 import 'package:weeksalive/presentation/redux/review_prompt/review_prompt_actions.dart';
@@ -33,15 +31,13 @@ class HomePage extends StatelessWidget {
       converter: HomePageViewModel.create,
       builder: (context, vm) {
         final store = StoreProvider.of<AppState>(context);
-        return InAppPaywallLauncher(
-          child: Scaffold(
-            backgroundColor: AppColors.bg(context),
-            body: RewardsCelebrationListener(
-              child: StreakGraceReminderListener(
-                child: _Body(
-                  vm: vm,
-                  initialTabIndex: store.state.navigationState.homeTabIndex,
-                ),
+        return Scaffold(
+          backgroundColor: AppColors.bg(context),
+          body: RewardsCelebrationListener(
+            child: StreakGraceReminderListener(
+              child: _Body(
+                vm: vm,
+                initialTabIndex: store.state.navigationState.homeTabIndex,
               ),
             ),
           ),
@@ -112,11 +108,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
   }
 
   Future<void> _openTodayForm() async {
-    if (!widget.vm.isPro) {
-      await showInAppPaywall(context, feature: 'today_check_in');
-      return;
-    }
-
+    // The premium gate lives in DayForm.showBottomSheet, shared by every entry point.
     final result = await DayForm.showBottomSheet(
       context,
       DateTime.now(),

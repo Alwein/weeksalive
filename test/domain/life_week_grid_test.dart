@@ -139,4 +139,55 @@ void main() {
       expect(total, end.difference(dob).inDays ~/ 7);
     });
   });
+
+  group('LifeWeekGrid.completedRowProgress', () {
+    test('maps a mid-year week to year-of-life over lifespan', () {
+      const grid = LifeWeekGrid(
+        totalWeeks: 90 * 52,
+        livedWeeks: 32 * 52 + 10,
+      );
+      final progress = grid.completedRowProgress(lifespanYears: 90)!;
+      expect(progress.yearInLife, 32);
+      expect(progress.yearsInLife, 90);
+      expect(progress.weekInYear, 10);
+      expect(progress.weeksInYear, 52);
+      expect(progress.completedColumn, 9);
+    });
+
+    test('returns null when no week has been lived', () {
+      const grid = LifeWeekGrid(totalWeeks: 90 * 52, livedWeeks: 0);
+      expect(grid.completedRowProgress(lifespanYears: 90), isNull);
+    });
+
+    test('first completed week is year 0 week 1', () {
+      const grid = LifeWeekGrid(totalWeeks: 90 * 52, livedWeeks: 1);
+      final progress = grid.completedRowProgress(lifespanYears: 90)!;
+      expect(progress.yearInLife, 0);
+      expect(progress.weekInYear, 1);
+      expect(progress.completedColumn, 0);
+    });
+
+    test('last week of a year stays on that year', () {
+      const grid = LifeWeekGrid(
+        totalWeeks: 90 * 52,
+        livedWeeks: 33 * 52,
+      );
+      final progress = grid.completedRowProgress(lifespanYears: 90)!;
+      expect(progress.yearInLife, 32);
+      expect(progress.weekInYear, 52);
+      expect(progress.completedColumn, 51);
+    });
+
+    test('clamps leftover leap-week rows to lifespan', () {
+      const grid = LifeWeekGrid(
+        totalWeeks: 90 * 52 + 20,
+        livedWeeks: 90 * 52 + 5,
+      );
+      final progress = grid.completedRowProgress(lifespanYears: 90)!;
+      expect(progress.yearInLife, 90);
+      expect(progress.yearsInLife, 90);
+      expect(progress.weekInYear, 5);
+      expect(progress.weeksInYear, 20);
+    });
+  });
 }

@@ -9,6 +9,32 @@ class LifeWeekGrid {
     return (livedWeeks / totalWeeks).clamp(0.0, 1.0);
   }
 
+  /// Progress in the year-of-life row that contains the most recently completed week.
+  ///
+  /// [yearInLife] is the 0-based row (the user's age during that year), clamped
+  /// to [lifespanYears] so leftover leap-week rows still read as the last year.
+  LifeYearRowProgress? completedRowProgress({
+    required int lifespanYears,
+    int columns = 52,
+  }) {
+    if (livedWeeks <= 0 || totalWeeks <= 0 || lifespanYears < 0) return null;
+
+    final completedIndex = livedWeeks - 1;
+    final currentRow = completedIndex ~/ columns;
+    final rowStart = currentRow * columns;
+    final weeksInRow = _min(columns, totalWeeks - rowStart);
+    if (weeksInRow <= 0) return null;
+    final livedInRow = _min(weeksInRow, livedWeeks - rowStart);
+
+    return LifeYearRowProgress(
+      yearInLife: _min(currentRow, lifespanYears),
+      yearsInLife: lifespanYears,
+      weekInYear: livedInRow,
+      weeksInYear: weeksInRow,
+      completedColumn: livedInRow - 1,
+    );
+  }
+
   factory LifeWeekGrid.fromProfile({
     required DateTime? dateOfBirth,
     required int projectedLifespanYears,
@@ -75,6 +101,28 @@ DateTime addCalendarYears(DateTime d, int years) {
     d.millisecond,
     d.microsecond,
   );
+}
+
+int _min(int a, int b) => a < b ? a : b;
+
+/// Caption coordinates for one year-of-life row of the life grid.
+class LifeYearRowProgress {
+  const LifeYearRowProgress({
+    required this.yearInLife,
+    required this.yearsInLife,
+    required this.weekInYear,
+    required this.weeksInYear,
+    required this.completedColumn,
+  });
+
+  /// 0-based year of life (age during this row).
+  final int yearInLife;
+  final int yearsInLife;
+  final int weekInYear;
+  final int weeksInYear;
+
+  /// 0-based column of the most recently completed week in this row.
+  final int completedColumn;
 }
 
 /// Result of a "lived vs ahead" partition of grid dot indices.

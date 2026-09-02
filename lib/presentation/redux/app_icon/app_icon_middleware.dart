@@ -61,19 +61,24 @@ class AppIconMiddleware extends MiddlewareClass<AppState> {
         ...AppIconId.alwaysUnlocked,
         ...rewardIdsToAppIconIds(action.unlocked),
       };
-      final selected = store.state.appIconState.selectedIcon;
+      final persisted = await appIconRepository.getSelectedIcon();
+      final selected = unlockedIcons.contains(persisted)
+          ? persisted
+          : unlockedIcons.contains(store.state.appIconState.selectedIcon)
+              ? store.state.appIconState.selectedIcon
+              : AppIconId.defaultIcon;
       try {
         store.dispatch(AppIconsUnlockedAction(unlockedIcons));
-        if (!unlockedIcons.contains(selected)) {
-          await appIconRepository.setSelectedIcon(AppIconId.defaultIcon);
-          await _appIconService.setIcon(AppIconId.defaultIcon);
-          store.dispatch(
-            AppIconLoadedAction(
-              selectedIcon: AppIconId.defaultIcon,
-              unlockedIcons: unlockedIcons,
-            ),
-          );
+        if (!unlockedIcons.contains(persisted)) {
+          await appIconRepository.setSelectedIcon(selected);
+          await _appIconService.setIcon(selected);
         }
+        store.dispatch(
+          AppIconLoadedAction(
+            selectedIcon: selected,
+            unlockedIcons: unlockedIcons,
+          ),
+        );
       } catch (_) {
         // Store torn down (e.g. in tests) during the async gap.
       }

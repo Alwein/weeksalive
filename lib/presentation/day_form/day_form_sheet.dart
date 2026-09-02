@@ -12,9 +12,11 @@ import 'package:weeksalive/presentation/day_form/day_form.dart';
 import 'package:weeksalive/presentation/day_form/day_form_confirmation_page.dart';
 import 'package:weeksalive/presentation/day_form/day_form_controller.dart';
 import 'package:weeksalive/presentation/day_form/day_form_view_model.dart';
+import 'package:weeksalive/presentation/paywall/show_in_app_paywall.dart';
 import 'package:weeksalive/presentation/redux/analytics/analytics_actions.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/day/day_actions.dart';
+import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/secondary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
@@ -44,7 +46,16 @@ Future<DayFormResult?> showDayFormSheet(
   DateTime date, {
   required String source,
   void Function(DayFormResult result)? onDaySaved,
-}) {
+}) async {
+  // Single premium gate for every entry point into the day form. Any caller
+  // (today button, calendar, resume sheet, notifications, …) is routed through
+  // here, so the paywall cannot be bypassed by opening the form another way.
+  final store = StoreProvider.of<AppState>(context, listen: false);
+  if (!store.state.purchaseState.isPro) {
+    final subscribed = await showInAppPaywall(context, feature: source);
+    if (subscribed != true || !context.mounted) return null;
+  }
+
   final controller = SheetController();
 
   final fullscreenAnimation = SheetOffsetDrivenAnimation(

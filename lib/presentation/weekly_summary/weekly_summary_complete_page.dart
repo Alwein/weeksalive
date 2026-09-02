@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
@@ -10,6 +8,7 @@ import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/domain/life_week_grid.dart';
 import 'package:weeksalive/presentation/home/view_model/home_page_view_model.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/user/user_state.dart';
 import 'package:weeksalive/presentation/weekly_summary/weekly_summary_sheet.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
@@ -66,22 +65,17 @@ class _DotsLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, LifeWeekGrid>(
-      converter: (store) => HomePageViewModel.create(store).lifeWeekGrid,
-      builder: (context, grid) {
-        if (grid.livedWeeks <= 0) return const SizedBox.shrink();
-
-        final completedIndex = grid.livedWeeks - 1;
-        final currentRow = completedIndex ~/ _columns;
-        final rowStart = currentRow * _columns;
-        final weeksInRow = math.min(_columns, grid.totalWeeks - rowStart);
-        final livedInRow = math.min(weeksInRow, grid.livedWeeks - rowStart);
-        final completedColumn = livedInRow - 1;
-
-        final String year = DateTime.now().year.toString();
-
-        final weekInYear = livedInRow;
-        final weeksInYear = weeksInRow;
+    return StoreConnector<AppState, _DotsLineViewModel>(
+      converter: (store) => _DotsLineViewModel(
+        grid: HomePageViewModel.create(store).lifeWeekGrid,
+        lifespanYears: store.state.userState.userOrNull?.lifespan ?? 85,
+      ),
+      builder: (context, vm) {
+        final progress = vm.grid.completedRowProgress(
+          lifespanYears: vm.lifespanYears,
+          columns: _columns,
+        );
+        if (progress == null) return const SizedBox.shrink();
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -89,27 +83,36 @@ class _DotsLine extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Texts.primaryXsCounter(context, Strings.yearLabel, year),
-                Texts.primaryXsCounter(context, Strings.weekLabel, '$weekInYear/$weeksInYear'),
+                Texts.primaryXsCounter(
+                  context,
+                  Strings.yearLabel,
+                  '${progress.yearInLife}/${progress.yearsInLife}',
+                ),
+                Texts.primaryXsCounter(
+                  context,
+                  Strings.weekLabel,
+                  '${progress.weekInYear}/${progress.weeksInYear}',
+                ),
               ],
             ),
             const SizedBox(height: Margins.spacingS),
             LayoutBuilder(
               builder: (context, constraints) {
-                final dotSize = (constraints.maxWidth - _dotSpacing * (weeksInRow - 1)) / weeksInRow;
+                final dotSize =
+                    (constraints.maxWidth - _dotSpacing * (progress.weeksInYear - 1)) / progress.weeksInYear;
                 return SizedBox(
                   height: dotSize,
                   width: constraints.maxWidth,
                   child: CustomPaint(
                     painter: WeekGridPainter(
-                      columns: weeksInRow,
-                      totalWeeks: weeksInRow,
-                      livedWeeks: livedInRow,
+                      columns: progress.weeksInYear,
+                      totalWeeks: progress.weeksInYear,
+                      livedWeeks: progress.weekInYear,
                       dotSpacing: _dotSpacing,
                       activeColor: AppColors.content(context),
                       inactiveColor: AppColors.bgSoft(context),
                       padding: EdgeInsets.zero,
-                      highlightedDots: [completedColumn],
+                      highlightedDots: [progress.completedColumn],
                       highlightColor: AppColors.accentOrange(context),
                     ),
                   ),
@@ -121,4 +124,11 @@ class _DotsLine extends StatelessWidget {
       },
     );
   }
+}
+
+class _DotsLineViewModel {
+  const _DotsLineViewModel({required this.grid, required this.lifespanYears});
+
+  final LifeWeekGrid grid;
+  final int lifespanYears;
 }
