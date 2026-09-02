@@ -210,7 +210,7 @@ class _StreakPageContent extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: Margins.spacingBase),
-              RewardPreview(rewardId: nextRewardId),
+              RewardPreview(rewardId: nextRewardId, locked: true),
             ],
             const SizedBox(height: Margins.spacingXl),
             PrimaryButton(

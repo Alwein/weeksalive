@@ -236,7 +236,7 @@ class _RewardTimelineRow extends StatelessWidget {
                     style: TextStyles.primaryRegular.copyWith(color: AppColors.contentSoft(context)),
                   ),
                   const SizedBox(height: Margins.spacingM),
-                  RewardPreview(rewardId: item.rule.id),
+                  RewardPreview(rewardId: item.rule.id, locked: !item.isUnlocked),
                   const SizedBox(height: Margins.spacingM),
                 ],
               ),

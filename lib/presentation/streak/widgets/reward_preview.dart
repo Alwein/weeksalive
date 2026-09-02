@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:weeksalive/core/app_icon/app_icon_id.dart';
 import 'package:weeksalive/core/grid_motif/grid_cell_variant.dart';
 import 'package:weeksalive/core/grid_motif/grid_motif_catalog.dart';
@@ -33,27 +34,48 @@ void openRewardPicker(BuildContext context, RewardId rewardId) {
 }
 
 class RewardPreview extends StatelessWidget {
-  const RewardPreview({super.key, required this.rewardId});
+  const RewardPreview({
+    super.key,
+    required this.rewardId,
+    this.locked = false,
+  });
 
   final RewardId rewardId;
+
+  /// Affiche un cadenas et rend l'aperçu non interactif pour une récompense
+  /// pas encore débloquée.
+  final bool locked;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(Dimens.radiusBase),
-      onTap: () => openRewardPicker(context, rewardId),
-      child: RewardPreviewContent(rewardId: rewardId),
+      onTap: locked ? null : () => openRewardPicker(context, rewardId),
+      child: RewardPreviewContent(rewardId: rewardId, locked: locked),
     );
   }
 }
 
 class RewardPreviewContent extends StatelessWidget {
-  const RewardPreviewContent({super.key, required this.rewardId});
+  const RewardPreviewContent({
+    super.key,
+    required this.rewardId,
+    this.locked = false,
+  });
 
   final RewardId rewardId;
 
+  /// Superpose un cadenas et atténue l'aperçu pour signaler qu'il est verrouillé.
+  final bool locked;
+
   @override
   Widget build(BuildContext context) {
+    if (locked) {
+      return _LockedRewardPreview(
+        child: RewardPreviewContent(rewardId: rewardId),
+      );
+    }
+
     final themeId = rewardId.previewThemeId;
     if (themeId != null) {
       return _ThemeRewardPreview(themeId: themeId, label: rewardId.label);
@@ -70,6 +92,39 @@ class RewardPreviewContent extends StatelessWidget {
     }
 
     return const SizedBox.shrink();
+  }
+}
+
+/// Enveloppe un aperçu de récompense avec un voile et un cadenas centré pour
+/// indiquer clairement qu'elle n'est pas encore débloquée.
+class _LockedRewardPreview extends StatelessWidget {
+  const _LockedRewardPreview({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Opacity(
+          opacity: 0.6,
+          child: IgnorePointer(child: child),
+        ),
+        Container(
+          padding: const EdgeInsets.all(Margins.spacingS),
+          decoration: BoxDecoration(
+            color: AppColors.bg(context).withValues(alpha: 0.4),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            MingCuteIcons.mgc_lock_line,
+            size: Dimens.iconSizeS,
+            color: AppColors.content(context),
+          ),
+        ),
+      ],
+    );
   }
 }
 
