@@ -1119,6 +1119,7 @@ class _TextEditorPageState extends State<_TextEditorPage> {
                   autofocus: true,
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
+                  textCapitalization: TextCapitalization.sentences,
                   style: TextStyles.primaryRegularMedium.copyWith(color: AppColors.content(context)),
                   decoration: InputDecoration(
                     border: InputBorder.none,

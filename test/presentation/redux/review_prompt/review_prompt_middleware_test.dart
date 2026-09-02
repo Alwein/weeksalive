@@ -1,12 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:redux/redux.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
-import 'package:weeksalive/presentation/redux/analytics/analytics_actions.dart';
+import 'package:weeksalive/presentation/redux/analytics/analytics_middleware.dart';
 import 'package:weeksalive/presentation/redux/app_reducer.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/day/day_actions.dart';
 import 'package:weeksalive/presentation/redux/review_prompt/review_prompt_actions.dart';
-import 'package:weeksalive/presentation/redux/analytics/analytics_middleware.dart';
 import 'package:weeksalive/presentation/redux/review_prompt/review_prompt_middleware.dart';
 
 import '../../../helpers/fake_analytics_repository.dart';
