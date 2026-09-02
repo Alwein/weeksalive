@@ -500,8 +500,9 @@ class _TimelineOffer extends StatelessWidget {
           _TrialTimeline(trialWeeks: trialWeeks, trialEndDate: trialEndDate),
           const SizedBox(height: Margins.spacingXHuge),
           const _BenefitsSection(),
-          const SizedBox(height: Margins.spacingL),
-          const _SocialProofCarousel(),
+          // TODO: Social proof hidden during first app store reveiw - set this back when we have more reviews
+          // const SizedBox(height: Margins.spacingL),
+          // const _SocialProofCarousel(),
           const SizedBox(height: Margins.spacingL),
           const SizedBox(
             height: 160,
