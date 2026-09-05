@@ -467,7 +467,7 @@ class _FooterSection extends StatelessWidget {
                   )
                 else if (isLoading)
                   const _PriceBlockSkeleton(),
-                const SizedBox(height: Margins.spacingBase),
+                const SizedBox(height: Margins.spacingS),
                 _CtaButton(
                   trialWeeks: trialWeeks,
                   isLoading: isLoading,
@@ -917,13 +917,13 @@ class _PriceBlock extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          Strings.paywallPriceSubtitle(trialWeeks, pricePerYear),
-          style: TextStyles.primaryRegular.copyWith(color: AppColors.contentSoft(context)),
+          Strings.paywallPricePerWeek(pricePerWeek),
+          style: TextStyles.primarySmallRegular.copyWith(color: AppColors.contentSoft(context)),
           textAlign: TextAlign.center,
         ),
-        const SizedBox(height: Margins.spacingXs),
+        const SizedBox(height: Margins.spacingS),
         Text(
-          Strings.paywallPricePerWeek(pricePerWeek),
+          Strings.paywallPriceSubtitle(trialWeeks, pricePerYear),
           style: TextStyles.primaryMediumBlack.copyWith(color: AppColors.content(context)),
           textAlign: TextAlign.center,
         ),
@@ -995,7 +995,7 @@ class _PriceBlockSkeleton extends StatelessWidget {
       children: [
         Container(
           height: 14,
-          width: 200,
+          width: 220,
           decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
         ),
         const SizedBox(height: Margins.spacingXs),

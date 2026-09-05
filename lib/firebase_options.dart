@@ -64,5 +64,4 @@ class DefaultFirebaseOptions {
     projectId: 'weeksalive',
     storageBucket: 'weeksalive.firebasestorage.app',
   );
-
 }
