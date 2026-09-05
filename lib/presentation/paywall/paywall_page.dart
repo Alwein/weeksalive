@@ -134,6 +134,7 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
   _PaywallScrubController? _scrubController;
   _MascotIntroPhase _mascotIntroPhase = _MascotIntroPhase.hidden;
   Store<AppState>? _store;
+  bool _purchaseAttempted = false;
 
   @override
   void initState() {
@@ -228,16 +229,35 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
   void didUpdateWidget(_PaywallView old) {
     super.didUpdateWidget(old);
 
-    if (widget.isPro && !old.isPro) {
+    if (widget.errorMessage != null && old.errorMessage == null) {
+      _purchaseAttempted = false;
+    }
+
+    // Only treat isPro flipping true as "just purchased" if the user actually
+    // tapped purchase/restore on this screen. Otherwise a background
+    // entitlement refresh resolving while the paywall happens to be open
+    // (e.g. bootstrap racing a push-notification launch) would be misread as
+    // a completed purchase and jump straight to the success screen.
+    if (_purchaseAttempted && widget.isPro && !old.isPro) {
       setState(() => _showSuccess = true);
       _successAnimController.forward();
     }
   }
 
+  void _purchase(Package package) {
+    _purchaseAttempted = true;
+    widget.onPurchase(context, package);
+  }
+
+  void _restore() {
+    _purchaseAttempted = true;
+    widget.onRestore();
+  }
+
   void _startAlternateTrial() {
     final package = widget.alternatePlan?.annualPackage;
     if (package == null || widget.isLoading) return;
-    widget.onPurchase(context, package);
+    _purchase(package);
   }
 
   @override
@@ -286,9 +306,9 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
                               trialWeeks: primaryPlan?.trialWeeks,
                               isLoading: widget.isLoading,
                               onStartTrial: primaryPlan?.annualPackage != null
-                                  ? () => widget.onPurchase(context, primaryPlan!.annualPackage!)
+                                  ? () => _purchase(primaryPlan!.annualPackage!)
                                   : null,
-                              onRestore: widget.onRestore,
+                              onRestore: _restore,
                               onDismiss: widget.onDismiss,
                             ),
                             Positioned(

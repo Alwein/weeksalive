@@ -51,6 +51,16 @@ Future<DayFormResult?> showDayFormSheet(
   // (today button, calendar, resume sheet, notifications, …) is routed through
   // here, so the paywall cannot be bypassed by opening the form another way.
   final store = StoreProvider.of<AppState>(context, listen: false);
+  if (!store.state.purchaseState.isResolved) {
+    // RevenueCat's entitlement fetch may still be in flight (e.g. cold launch
+    // from a push notification racing bootstrap). Wait for it to resolve so we
+    // don't gate on a default "not pro" value that flips true underneath the
+    // paywall a moment later.
+    await store.onChange
+        .firstWhere((state) => state.purchaseState.isResolved)
+        .timeout(const Duration(seconds: 5), onTimeout: () => store.state);
+    if (!context.mounted) return null;
+  }
   if (!store.state.purchaseState.isPro) {
     final subscribed = await showInAppPaywall(context, feature: source);
     if (subscribed != true || !context.mounted) return null;
