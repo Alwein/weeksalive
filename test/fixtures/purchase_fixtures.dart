@@ -39,7 +39,7 @@ CustomerInfo customerInfoFixture({bool isPro = false}) {
   });
 }
 
-Package packageFixture({String offeringId = 'default'}) {
+Package packageFixture({String offeringId = 'default', Map<String, dynamic>? introPrice}) {
   return Package.fromJson({
     'identifier': r'$rc_annual',
     'packageType': 'ANNUAL',
@@ -48,14 +48,14 @@ Package packageFixture({String offeringId = 'default'}) {
       'placementIdentifier': null,
       'targetingContext': null,
     },
-    'product': const {
+    'product': {
       'identifier': 'yearly',
       'description': 'WeeksAlive Pro yearly',
       'title': 'WeeksAlive Pro',
       'price': 49.99,
       'priceString': r'$49.99',
       'currencyCode': 'USD',
-      'introPrice': null,
+      'introPrice': introPrice,
       'discounts': null,
       'productCategory': 'SUBSCRIPTION',
       'defaultOption': null,
@@ -66,13 +66,38 @@ Package packageFixture({String offeringId = 'default'}) {
   });
 }
 
-Offering offeringFixture({String id = 'default', int trialDays = 14}) {
-  final package = packageFixture(offeringId: id);
+Offering offeringFixture({
+  String id = 'default',
+  int trialDays = 14,
+  Map<String, dynamic>? introPrice,
+  bool includeAnnual = true,
+  bool includeTrialMetadata = true,
+}) {
+  final metadata = includeTrialMetadata ? {'trial_days': trialDays} : <String, Object>{};
+  if (!includeAnnual) {
+    return Offering(id, 'Standard offering', metadata, const []);
+  }
+  final package = packageFixture(offeringId: id, introPrice: introPrice);
   return Offering(
     id,
     'Standard offering',
-    {'trial_days': trialDays},
+    metadata,
     [package],
     annual: package,
   );
+}
+
+Map<String, dynamic> introPriceFixture({
+  required String period,
+  required String periodUnit,
+  required int periodNumberOfUnits,
+}) {
+  return {
+    'price': 0.0,
+    'priceString': r'$0.00',
+    'period': period,
+    'cycles': 1,
+    'periodUnit': periodUnit,
+    'periodNumberOfUnits': periodNumberOfUnits,
+  };
 }

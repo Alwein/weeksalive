@@ -20,9 +20,11 @@ class PurchaseRepository {
   }
 
   Offering? alternateOffering(Offerings offerings, Offering? current) {
-    if (current == null || offerings.all.length < 2) return null;
+    if (current == null) return null;
     for (final offering in offerings.all.values) {
-      if (offering.identifier != current.identifier) return offering;
+      if (offering.identifier == current.identifier) continue;
+      if (offering.annual == null) continue;
+      return offering;
     }
     return null;
   }
