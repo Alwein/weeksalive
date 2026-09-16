@@ -64,6 +64,10 @@ Future<AppDependencies> initializeApp() async {
     dotenv,
     isDebugMode: kDebugMode,
   );
+  // Same install id as PostHog, RevenueCat and Crashlytics: it is what will let
+  // server-side Events API calls (trial conversion, churn) be attributed to the
+  // user the SDK already knows.
+  await tikTokEventsRepository.identifyUser(externalId: installId);
 
   await AppPurchaseConfig.initializeFromEnv(dotenv, appUserId: installId);
 

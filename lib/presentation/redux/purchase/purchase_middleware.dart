@@ -70,7 +70,10 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
       final customerInfo = await purchaseRepository.purchasePackage(package);
       final isPro = purchaseRepository.isPro(customerInfo);
       if (isPro) {
-        await _trackPurchaseForTikTok(package);
+        await _trackPurchaseForTikTok(
+          package,
+          isTrial: purchaseRepository.isInTrial(customerInfo),
+        );
       }
       store.dispatch(PurchaseSucceededAction(isPro: isPro));
     } on PurchasesErrorCode catch (e) {
@@ -111,11 +114,29 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
     }
   }
 
-  Future<void> _trackPurchaseForTikTok(Package package) async {
+  /// A trial start and a paid purchase are different signals for TikTok, and
+  /// reporting one as the other is what breaks App Event Optimization: sending
+  /// Purchase the day a free trial opens declares revenue that has not happened
+  /// and leaves the campaign with no StartTrial to bid on. The conversion that
+  /// follows the trial happens outside the app, so only a server-side Events
+  /// API call (RevenueCat webhook) can ever report it.
+  Future<void> _trackPurchaseForTikTok(Package package, {required bool isTrial}) async {
     if (!tikTokEventsRepository.isInitialized) return;
 
     try {
       final product = package.storeProduct;
+
+      if (isTrial) {
+        await tikTokEventsRepository.logStartTrial(
+          value: product.price,
+          currency: product.currencyCode,
+          contentId: product.identifier,
+          contentName: package.packageType.name,
+          trialDays: _trialDays(product),
+        );
+        return;
+      }
+
       await tikTokEventsRepository.logPurchase(
         value: product.price,
         currency: product.currencyCode,
@@ -131,6 +152,19 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
     } catch (e, st) {
       log.e('PurchaseMiddleware: failed to track TikTok purchase', error: e, stackTrace: st);
     }
+  }
+
+  static int? _trialDays(StoreProduct product) {
+    final intro = product.introductoryPrice;
+    if (intro == null) return null;
+    final units = intro.periodNumberOfUnits;
+    return switch (intro.periodUnit) {
+      PeriodUnit.day => units,
+      PeriodUnit.week => units * 7,
+      PeriodUnit.month => units * 30,
+      PeriodUnit.year => units * 365,
+      PeriodUnit.unknown => null,
+    };
   }
 
   static bool _isCancelledPlatformException(PlatformException e) {

@@ -186,6 +186,103 @@ void main() {
     });
   });
 
+  group('TikTok purchase events', () {
+    late MockPurchaseRepository purchaseRepo;
+    late MockTikTokEventsRepository tikTokRepo;
+
+    setUp(() {
+      purchaseRepo = MockPurchaseRepository();
+      tikTokRepo = MockTikTokEventsRepository();
+      when(() => purchaseRepo.isPro(any())).thenReturn(true);
+      when(() => purchaseRepo.purchasePackage(any())).thenAnswer(
+        (_) async => customerInfoFixture(isPro: true),
+      );
+    });
+
+    Store<AppState> purchaseStore() => Store<AppState>(
+      appReducer,
+      initialState: initialAppState(),
+      middleware: [
+        PurchaseMiddleware(
+          purchaseRepository: purchaseRepo,
+          tikTokEventsRepository: tikTokRepo,
+        ).call,
+      ],
+    );
+
+    test('reports a free trial as StartTrial and never as revenue', () async {
+      when(() => purchaseRepo.isInTrial(any())).thenReturn(true);
+      final package = packageFixture(
+        introPrice: introPriceFixture(period: 'P2W', periodUnit: 'WEEK', periodNumberOfUnits: 2),
+      );
+
+      final store = purchaseStore();
+      await store.dispatch(PurchasePackageAction(package));
+      await pumpEventQueue();
+
+      verify(
+        () => tikTokRepo.logStartTrial(
+          value: 49.99,
+          currency: 'USD',
+          contentId: 'yearly',
+          contentName: 'annual',
+          trialDays: 14,
+        ),
+      ).called(1);
+      verifyNever(
+        () => tikTokRepo.logPurchase(
+          value: any(named: 'value'),
+          currency: any(named: 'currency'),
+          contentId: any(named: 'contentId'),
+          contentName: any(named: 'contentName'),
+          quantity: any(named: 'quantity'),
+        ),
+      );
+      verifyNever(
+        () => tikTokRepo.logSubscribe(
+          value: any(named: 'value'),
+          currency: any(named: 'currency'),
+          contentId: any(named: 'contentId'),
+          contentName: any(named: 'contentName'),
+        ),
+      );
+    });
+
+    test('reports a purchase without trial as Purchase and Subscribe', () async {
+      when(() => purchaseRepo.isInTrial(any())).thenReturn(false);
+
+      final store = purchaseStore();
+      await store.dispatch(PurchasePackageAction(packageFixture()));
+      await pumpEventQueue();
+
+      verify(
+        () => tikTokRepo.logPurchase(
+          value: 49.99,
+          currency: 'USD',
+          contentId: 'yearly',
+          contentName: 'annual',
+        ),
+      ).called(1);
+      verify(
+        () => tikTokRepo.logSubscribe(
+          value: 49.99,
+          currency: 'USD',
+          contentId: 'yearly',
+          contentName: 'annual',
+        ),
+      ).called(1);
+      verifyNever(
+        () => tikTokRepo.logStartTrial(
+          value: any(named: 'value'),
+          currency: any(named: 'currency'),
+          contentId: any(named: 'contentId'),
+          contentName: any(named: 'contentName'),
+          trialDays: any(named: 'trialDays'),
+        ),
+      );
+    });
+  });
+
   group('PurchasePackageAction', () {
     late StoreTester storeTester;
     final repository = MockPurchaseRepository();
@@ -197,6 +294,7 @@ void main() {
       final customerInfo = customerInfoFixture(isPro: true);
       when(() => repository.purchasePackage(any())).thenAnswer((_) async => customerInfo);
       when(() => repository.isPro(any())).thenReturn(true);
+      when(() => repository.isInTrial(any())).thenReturn(true);
 
       storeTester.givenStore(
         initialAppState(),

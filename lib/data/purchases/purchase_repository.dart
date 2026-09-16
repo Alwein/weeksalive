@@ -45,4 +45,12 @@ class PurchaseRepository {
   bool isPro(CustomerInfo customerInfo) {
     return customerInfo.entitlements.active.containsKey(_entitlementId);
   }
+
+  /// Whether the entitlement is currently served by a free trial rather than a
+  /// paid period. The store, not the offering metadata, is the authority here:
+  /// a user who already burned the introductory offer is charged immediately
+  /// and must not be reported to TikTok as a trial start.
+  bool isInTrial(CustomerInfo customerInfo) {
+    return customerInfo.entitlements.active[_entitlementId]?.periodType == PeriodType.trial;
+  }
 }

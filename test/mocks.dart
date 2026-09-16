@@ -15,6 +15,7 @@ import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
 import 'package:weeksalive/data/review/review_prompt_store.dart';
 import 'package:weeksalive/data/rewards/rewards_repository.dart';
 import 'package:weeksalive/data/theme/theme_repository.dart';
+import 'package:weeksalive/data/tiktok_events/tiktok_events_repository.dart';
 import 'package:weeksalive/data/user/user_repository.dart';
 import 'package:weeksalive/data/wallpaper/wallpaper_config_repository.dart';
 import 'package:weeksalive/data/wallpaper_prompt/wallpaper_prompt_store.dart';
@@ -30,6 +31,38 @@ import 'package:weeksalive/domain/weekly_intent/weekly_intent.dart';
 import 'fixtures/user_fixtures.dart';
 
 class _FakeUser extends Fake implements User {}
+
+class MockTikTokEventsRepository extends Mock implements TikTokEventsRepository {
+  MockTikTokEventsRepository() {
+    when(() => isInitialized).thenReturn(true);
+    when(
+      () => logStartTrial(
+        value: any(named: 'value'),
+        currency: any(named: 'currency'),
+        contentId: any(named: 'contentId'),
+        contentName: any(named: 'contentName'),
+        trialDays: any(named: 'trialDays'),
+      ),
+    ).thenAnswer((_) async {});
+    when(
+      () => logPurchase(
+        value: any(named: 'value'),
+        currency: any(named: 'currency'),
+        contentId: any(named: 'contentId'),
+        contentName: any(named: 'contentName'),
+        quantity: any(named: 'quantity'),
+      ),
+    ).thenAnswer((_) async {});
+    when(
+      () => logSubscribe(
+        value: any(named: 'value'),
+        currency: any(named: 'currency'),
+        contentId: any(named: 'contentId'),
+        contentName: any(named: 'contentName'),
+      ),
+    ).thenAnswer((_) async {});
+  }
+}
 
 class MockUserRepository extends Mock implements UserRepository {
   MockUserRepository() {
