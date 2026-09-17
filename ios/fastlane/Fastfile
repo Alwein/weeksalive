@@ -65,17 +65,13 @@ platform :ios do
       release_notes: {
         'en-US' => "Bug fixes and improvements.",     # Anglais (États-Unis)
         'de-DE' => "Bug fixes and improvements.",     # Allemand
-        'ar-SA' => "Bug fixes and improvements.",     # Arabe
         'zh-Hans' => "Bug fixes and improvements.",   # Chinois (simplifié)
-        'zh-Hant' => "Bug fixes and improvements.",   # Chinois (traditionnel)
         'ko' => "Bug fixes and improvements.",        # Coréen
         'da' => "Bug fixes and improvements.",        # Danois
         'es-ES' => "Bug fixes and improvements.",     # Espagnol (Espagne)
         'fi' => "Bug fixes and improvements.",        # Finnois
         'fr-FR' => "Bug fixes and improvements.",     # Français
         'el' => "Bug fixes and improvements.",        # Grec
-        'he' => "Bug fixes and improvements.",        # Hébreu
-        'hi' => "Bug fixes and improvements.",        # Hindi
         'id' => "Bug fixes and improvements.",        # Indonésien
         'it' => "Bug fixes and improvements.",        # Italien
         'ja' => "Bug fixes and improvements.",        # Japonais

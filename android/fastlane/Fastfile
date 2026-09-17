@@ -24,6 +24,8 @@ platform :android do
   desc "Upload an AAB to Google Play without modifying the store listing"
   lane :upload_aab do
     upload_to_play_store(
+      package_name: "com.weeksalive",
+      json_key: File.expand_path("../fastlane_service_account.json", __dir__),
       track: "production", # Modifier ici si besoin (internal, alpha, beta, production)
       aab: "../build/app/outputs/bundle/release/app-release.aab",
       skip_upload_metadata: true,   # Ne pas uploader la description, titre, etc.

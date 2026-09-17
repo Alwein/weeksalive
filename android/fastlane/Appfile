@@ -1,0 +1,2 @@
+json_key_file("fastlane_service_account.json") # Path to the json secret file
+package_name("com.weeksalive")
