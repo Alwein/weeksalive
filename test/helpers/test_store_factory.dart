@@ -2,6 +2,7 @@ import 'package:redux/redux.dart';
 import 'package:weeksalive/data/app_icon/app_icon_repository.dart';
 import 'package:weeksalive/data/install/install_repository.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
+import 'package:weeksalive/data/demo_mode/demo_mode_repository.dart';
 import 'package:weeksalive/data/grid_motif/grid_motif_repository.dart';
 import 'package:weeksalive/data/home_widget/home_widget_service.dart';
 import 'package:weeksalive/data/navigation/navigation_repository.dart';
@@ -26,7 +27,8 @@ import 'fake_analytics_repository.dart';
 class TestStoreFactory {
   RemoteConfigRepository remoteConfigRepository = MockRemoteConfigRepository();
   UserRepository userRepository = MockUserRepository();
-  PushNotificationRepository pushNotificationRepository = MockPushNotificationRepository();
+  PushNotificationRepository pushNotificationRepository =
+      MockPushNotificationRepository();
   PurchaseRepository purchaseRepository = MockPurchaseRepository();
   TikTokEventsRepository tikTokEventsRepository = TikTokEventsRepository();
   ThemeRepository themeRepository = MockThemeRepository();
@@ -39,10 +41,13 @@ class TestStoreFactory {
   /// interference with other middleware bootstrap tests. Use the isolated
   /// store helper in weekly_intent_state_test.dart for bootstrap tests.
   WeeklyIntentRepository weeklyIntentRepository = MockWeeklyIntentRepository();
-  WeeklySummaryRepository weeklySummaryRepository = MockWeeklySummaryRepository();
+  WeeklySummaryRepository weeklySummaryRepository =
+      MockWeeklySummaryRepository();
   DayRepository dayRepository = MockDayRepository();
+  DemoModeRepository demoModeRepository = MockDemoModeRepository();
   HomeWidgetService homeWidgetService = FakeHomeWidgetService();
-  WallpaperConfigRepository wallpaperConfigRepository = MockWallpaperConfigRepository();
+  WallpaperConfigRepository wallpaperConfigRepository =
+      MockWallpaperConfigRepository();
   WallpaperPromptStore wallpaperPromptStore = FakeWallpaperPromptStore();
   FakeAnalyticsRepository analyticsRepository = FakeAnalyticsRepository();
   InstallRepository installRepository = FakeInstallRepository();
@@ -62,6 +67,7 @@ class TestStoreFactory {
       weeklyIntentRepository: weeklyIntentRepository,
       weeklySummaryRepository: weeklySummaryRepository,
       dayRepository: dayRepository,
+      demoModeRepository: demoModeRepository,
       navigationRepository: navigationRepository,
       rewardUnlockService: const RewardUnlockService(),
       homeWidgetService: homeWidgetService,

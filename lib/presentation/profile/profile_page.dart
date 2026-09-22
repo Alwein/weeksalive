@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,6 +28,7 @@ import 'package:weeksalive/presentation/profile/pages/week_begin/week_begin_page
 import 'package:weeksalive/presentation/profile/pages/widgets_page/widgets_page.dart';
 import 'package:weeksalive/presentation/profile/profile_page_view_model.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/demo_mode/demo_mode_actions.dart';
 import 'package:weeksalive/presentation/redux/weekly_intent/widgets/edit_weekly_intent_bottom_sheet.dart';
 import 'package:weeksalive/presentation/wallpaper/wallpaper_editor_page.dart';
 import 'package:weeksalive/presentation/wallpaper/wallpaper_setup_page.dart';
@@ -34,7 +36,7 @@ import 'package:weeksalive/presentation/widgets/primary_appbar.dart';
 import 'package:weeksalive/presentation/widgets/secondary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
   static Route<void> route() {
@@ -42,21 +44,46 @@ class ProfilePage extends StatelessWidget {
   }
 
   @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  static const _developerTapCount = 5;
+
+  int _versionTaps = 0;
+  bool _developerOptionsVisible = false;
+  final Future<PackageInfo> _packageInfo = PackageInfo.fromPlatform();
+
+  void _onVersionTap() {
+    if (_developerOptionsVisible) return;
+    SensorialFeedback.selectionChanged();
+    setState(() {
+      _versionTaps++;
+      if (_versionTaps >= _developerTapCount) {
+        _developerOptionsVisible = true;
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final locale = Localizations.localeOf(context).toString();
     return StoreConnector<AppState, ProfilePageViewModel>(
-      converter: (store) => ProfilePageViewModel.create(store, DateTime.now(), locale: locale),
+      converter: (store) =>
+          ProfilePageViewModel.create(store, DateTime.now(), locale: locale),
       builder: (context, viewModel) {
         return Scaffold(
           backgroundColor: AppColors.bg(context),
           appBar: PrimaryAppBar(title: Strings.profilePageTitle),
           body: FutureBuilder<PackageInfo>(
-            future: PackageInfo.fromPlatform(),
+            future: _packageInfo,
             builder: (context, data) {
               final version = data.data?.version ?? 'x.x.x';
               return SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsetsGeometry.symmetric(horizontal: Margins.spacingM),
+                  padding: const EdgeInsetsGeometry.symmetric(
+                    horizontal: Margins.spacingM,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -70,23 +97,46 @@ class ProfilePage extends StatelessWidget {
                       const SizedBox(height: Margins.spacingBase),
                       _WidgetsWallpaperCard(viewModel: viewModel),
                       const SizedBox(height: Margins.spacingM),
-                      Texts.primaryRegularMedium(Strings.profilePageAppearance, color: AppColors.contentSoft(context)),
+                      Texts.primaryRegularMedium(
+                        Strings.profilePageAppearance,
+                        color: AppColors.contentSoft(context),
+                      ),
                       const SizedBox(height: Margins.spacingBase),
                       _AppearanceCard(viewModel: viewModel),
                       const SizedBox(height: Margins.spacingM),
-                      Texts.primaryRegularMedium(Strings.profilePagePreferences, color: AppColors.contentSoft(context)),
+                      Texts.primaryRegularMedium(
+                        Strings.profilePagePreferences,
+                        color: AppColors.contentSoft(context),
+                      ),
                       const SizedBox(height: Margins.spacingBase),
                       _PreferencesCard(viewModel: viewModel),
                       const SizedBox(height: Margins.spacingM),
-                      Texts.primaryRegularMedium(Strings.profilePageGetInTouch, color: AppColors.contentSoft(context)),
+                      Texts.primaryRegularMedium(
+                        Strings.profilePageGetInTouch,
+                        color: AppColors.contentSoft(context),
+                      ),
                       const SizedBox(height: Margins.spacingBase),
                       _GetInTouchCard(viewModel: viewModel, version: version),
                       const SizedBox(height: Margins.spacingM),
-                      Texts.primaryRegularMedium(Strings.profilePageApplication, color: AppColors.contentSoft(context)),
+                      Texts.primaryRegularMedium(
+                        Strings.profilePageApplication,
+                        color: AppColors.contentSoft(context),
+                      ),
                       const SizedBox(height: Margins.spacingBase),
                       _ApplicationCard(viewModel: viewModel),
+                      if (_developerOptionsVisible) ...[
+                        const SizedBox(height: Margins.spacingM),
+                        Texts.primaryRegularMedium(
+                          'Developer',
+                          color: AppColors.contentSoft(context),
+                        ),
+                        const SizedBox(height: Margins.spacingBase),
+                        _DeveloperCard(
+                          demoModeEnabled: viewModel.demoModeEnabled,
+                        ),
+                      ],
                       const SizedBox(height: Margins.spacingL),
-                      _VersionNumber(version: version),
+                      _VersionNumber(version: version, onTap: _onVersionTap),
                       const SizedBox(height: Margins.spacingL),
                     ],
                   ),
@@ -111,7 +161,9 @@ class _ProfileCard extends StatelessWidget {
         children: [
           _ProfileCardHeader(userName: viewModel.userName),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Margins.spacingBase),
+            padding: const EdgeInsets.symmetric(
+              horizontal: Margins.spacingBase,
+            ),
             child: Column(
               children: [
                 const SizedBox(height: Margins.spacingBase),
@@ -187,7 +239,9 @@ class _HorizontalCardSection extends StatelessWidget {
         ),
         Text(
           value,
-          style: TextStyles.primaryRegularBold.copyWith(color: AppColors.content(context)),
+          style: TextStyles.primaryRegularBold.copyWith(
+            color: AppColors.content(context),
+          ),
         ),
       ],
     );
@@ -211,7 +265,9 @@ class _VerticalCardSection extends StatelessWidget {
         const SizedBox(height: Margins.spacingS),
         Text(
           value,
-          style: TextStyles.primaryXlBold.copyWith(color: AppColors.content(context)),
+          style: TextStyles.primaryXlBold.copyWith(
+            color: AppColors.content(context),
+          ),
         ),
       ],
     );
@@ -235,7 +291,10 @@ class _ProfileCardHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingBase, vertical: Margins.spacingS),
+      padding: const EdgeInsets.symmetric(
+        horizontal: Margins.spacingBase,
+        vertical: Margins.spacingS,
+      ),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(Dimens.radiusL - Dimens.strokeWidthS),
@@ -274,7 +333,10 @@ class _ProfileCardContainer extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Dimens.radiusL),
-        border: Border.all(color: AppColors.strokeColor(context), width: Dimens.strokeWidthS),
+        border: Border.all(
+          color: AppColors.strokeColor(context),
+          width: Dimens.strokeWidthS,
+        ),
       ),
       clipBehavior: Clip.hardEdge,
       child: child,
@@ -308,7 +370,8 @@ class _PreferencesCard extends StatelessWidget {
           _PreferencesButton(
             title: Strings.profilePageNotifications,
             value: viewModel.notificationsEnabled,
-            onTap: () => Navigator.push(context, NotificationsSettingsPage.route()),
+            onTap: () =>
+                Navigator.push(context, NotificationsSettingsPage.route()),
             icon: MingCuteIcons.mgc_right_line,
           ),
         ],
@@ -383,7 +446,12 @@ class _WidgetsWallpaperCard extends StatelessWidget {
 }
 
 class _PreferencesButton extends StatelessWidget {
-  const _PreferencesButton({required this.title, this.value, required this.onTap, this.icon});
+  const _PreferencesButton({
+    required this.title,
+    this.value,
+    required this.onTap,
+    this.icon,
+  });
   final String title;
   final String? value;
   final VoidCallback? onTap;
@@ -418,7 +486,12 @@ class _PreferencesButton extends StatelessWidget {
                         ),
                       ),
                     const SizedBox(width: Margins.spacingS),
-                    if (icon != null) Icon(icon, color: AppColors.content(context), size: Dimens.iconSizeS),
+                    if (icon != null)
+                      Icon(
+                        icon,
+                        color: AppColors.content(context),
+                        size: Dimens.iconSizeS,
+                      ),
                   ],
                 ),
               ),
@@ -488,13 +561,13 @@ class _ApplicationCard extends StatelessWidget {
       child: Column(
         children: [
           if (Platform.isIOS) ...[
-            const SmallDivider(width: double.infinity),
             _PreferencesButton(
               title: Strings.profilePageWallpaperSetupGuide,
               value: Strings.profilePageWallpaperSetupGuideDescription,
               onTap: () => WallpaperSetupPage.show(context),
               icon: MingCuteIcons.mgc_right_line,
             ),
+            const SmallDivider(width: double.infinity),
           ],
           _PreferencesButton(
             title: Strings.profilePageTermsOfService,
@@ -507,14 +580,47 @@ class _ApplicationCard extends StatelessWidget {
             onTap: () => launchUrl(Uri.parse(AppLinks.privacy)),
             icon: MingCuteIcons.mgc_external_link_line,
           ),
-          if (kDebugMode) ...[
-            const SmallDivider(width: double.infinity),
-            _PreferencesButton(
-              title: "Show onboarding",
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const OnboardingPage())),
-              icon: MingCuteIcons.mgc_right_line,
+        ],
+      ),
+    );
+  }
+}
+
+class _DeveloperCard extends StatelessWidget {
+  const _DeveloperCard({required this.demoModeEnabled});
+  final bool demoModeEnabled;
+
+  @override
+  Widget build(BuildContext context) {
+    return _ProfileCardContainer(
+      child: Column(
+        children: [
+          _PreferencesButton(
+            title: 'Show onboarding',
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const OnboardingPage()),
             ),
-          ],
+            icon: MingCuteIcons.mgc_right_line,
+          ),
+          const SmallDivider(width: double.infinity),
+          Padding(
+            padding: const EdgeInsets.all(Margins.spacingBase),
+            child: Row(
+              children: [
+                Expanded(child: Texts.primaryBold('Demo mode')),
+                CupertinoSwitch(
+                  value: demoModeEnabled,
+                  onChanged: (enabled) {
+                    StoreProvider.of<AppState>(
+                      context,
+                    ).dispatch(SetDemoModeAction(enabled));
+                  },
+                  activeTrackColor: AppColors.greenSuccess(context),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -522,15 +628,23 @@ class _ApplicationCard extends StatelessWidget {
 }
 
 class _VersionNumber extends StatelessWidget {
-  const _VersionNumber({required this.version});
+  const _VersionNumber({required this.version, required this.onTap});
   final String version;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Texts.primaryRegularMedium(
-      version,
-      color: AppColors.contentSoft(context),
-      textAlign: TextAlign.center,
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: Margins.spacingS),
+        child: Texts.primaryRegularMedium(
+          version,
+          color: AppColors.contentSoft(context),
+          textAlign: TextAlign.center,
+        ),
+      ),
     );
   }
 }

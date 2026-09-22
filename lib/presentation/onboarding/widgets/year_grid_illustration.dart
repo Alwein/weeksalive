@@ -1,10 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_haptic/flutter_advanced_haptic.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/domain/year_grid/year_grid_demo.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 import 'package:weeksalive/presentation/widgets/year_grid_painter.dart';
 
@@ -25,7 +24,8 @@ class YearGridIllustration extends StatefulWidget {
   State<YearGridIllustration> createState() => _YearGridIllustrationState();
 }
 
-class _YearGridIllustrationState extends State<YearGridIllustration> with SingleTickerProviderStateMixin {
+class _YearGridIllustrationState extends State<YearGridIllustration>
+    with SingleTickerProviderStateMixin {
   static const _kColumns = 15;
   static const _kTotalDays = 365;
   static const _kDotSpacing = 4.0;
@@ -42,10 +42,15 @@ class _YearGridIllustrationState extends State<YearGridIllustration> with Single
   void initState() {
     super.initState();
     _kAnimationDuration = Duration(milliseconds: widget.animationDurationMs);
-    final rng = Random(42);
-    _fillSizes = List.generate(widget.filledCount, (_) => _randomSizeLevel(rng));
+    _fillSizes = weightedYearGridFillSizes(
+      count: widget.filledCount,
+      weightDistribution: widget.wheightDistribution,
+    );
     _highlightGridIndex = widget.filledCount - 1;
-    _controller = AnimationController(vsync: this, duration: _kAnimationDuration);
+    _controller = AnimationController(
+      vsync: this,
+      duration: _kAnimationDuration,
+    );
     _haptic = FlutterHaptic.instance;
     Future<void>.delayed(_kDelayBeforeAnimation, () {
       if (!mounted) return;
@@ -55,11 +60,6 @@ class _YearGridIllustrationState extends State<YearGridIllustration> with Single
         duration: widget.animationDurationMs,
       );
     });
-  }
-
-  int _randomSizeLevel(Random rng) {
-    final weightedLevels = widget.wheightDistribution;
-    return weightedLevels[rng.nextInt(weightedLevels.length)];
   }
 
   @override

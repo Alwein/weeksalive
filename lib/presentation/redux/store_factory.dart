@@ -3,6 +3,7 @@ import 'package:weeksalive/data/analytics/analytics_repository.dart';
 import 'package:weeksalive/data/app_icon/app_icon_repository.dart';
 import 'package:weeksalive/data/install/install_repository.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
+import 'package:weeksalive/data/demo_mode/demo_mode_repository.dart';
 import 'package:weeksalive/data/grid_motif/grid_motif_repository.dart';
 import 'package:weeksalive/data/home_widget/home_widget_service.dart';
 import 'package:weeksalive/data/navigation/navigation_repository.dart';
@@ -26,6 +27,7 @@ import 'package:weeksalive/presentation/redux/app_icon/app_icon_middleware.dart'
 import 'package:weeksalive/presentation/redux/grid_motif/grid_motif_middleware.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_middleware.dart';
 import 'package:weeksalive/presentation/redux/day/day_middleware.dart';
+import 'package:weeksalive/presentation/redux/demo_mode/demo_mode_middleware.dart';
 import 'package:weeksalive/presentation/redux/home_widget/home_widget_middleware.dart';
 import 'package:weeksalive/presentation/redux/navigation/navigation_middleware.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_middleware.dart';
@@ -52,6 +54,7 @@ class StoreFactory {
   final WeeklyIntentRepository weeklyIntentRepository;
   final WeeklySummaryRepository weeklySummaryRepository;
   final DayRepository dayRepository;
+  final DemoModeRepository demoModeRepository;
   final RewardUnlockService rewardUnlockService;
   final HomeWidgetService homeWidgetService;
   final WallpaperConfigRepository wallpaperConfigRepository;
@@ -74,6 +77,7 @@ class StoreFactory {
     required this.weeklyIntentRepository,
     required this.weeklySummaryRepository,
     required this.dayRepository,
+    required this.demoModeRepository,
     RewardUnlockService? rewardUnlockService,
     HomeWidgetService? homeWidgetService,
     required this.wallpaperConfigRepository,
@@ -81,8 +85,8 @@ class StoreFactory {
     required this.analyticsRepository,
     required this.installRepository,
     required this.reviewPromptStore,
-  })  : rewardUnlockService = rewardUnlockService ?? const RewardUnlockService(),
-        homeWidgetService = homeWidgetService ?? HomeWidgetService();
+  }) : rewardUnlockService = rewardUnlockService ?? const RewardUnlockService(),
+       homeWidgetService = homeWidgetService ?? HomeWidgetService();
 
   Store<AppState> createStore({AppState? initialState}) {
     return Store<AppState>(
@@ -92,19 +96,26 @@ class StoreFactory {
         BootstrapMiddleware().call,
         UserMiddleware(userRepository: userRepository).call,
         NavigationMiddleware(navigationRepository: navigationRepository).call,
-        PushNotificationMiddleware(pushNotificationRepository: pushNotificationRepository).call,
+        PushNotificationMiddleware(
+          pushNotificationRepository: pushNotificationRepository,
+        ).call,
         PurchaseMiddleware(
           purchaseRepository: purchaseRepository,
           tikTokEventsRepository: tikTokEventsRepository,
         ).call,
-        WeeklyIntentMiddleware(weeklyIntentRepository: weeklyIntentRepository).call,
-        WeeklySummaryMiddleware(weeklySummaryRepository: weeklySummaryRepository).call,
+        WeeklyIntentMiddleware(
+          weeklyIntentRepository: weeklyIntentRepository,
+        ).call,
+        WeeklySummaryMiddleware(
+          weeklySummaryRepository: weeklySummaryRepository,
+        ).call,
         HomeWidgetMiddleware(homeWidgetService: homeWidgetService).call,
         WallpaperMiddleware(
           repository: wallpaperConfigRepository,
           promptStore: wallpaperPromptStore,
         ).call,
         DayMiddleware(dayRepository: dayRepository).call,
+        DemoModeMiddleware(demoModeRepository: demoModeRepository).call,
         ReviewPromptMiddleware(
           reviewPromptStore: reviewPromptStore,
         ).call,

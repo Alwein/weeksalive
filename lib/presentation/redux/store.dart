@@ -8,6 +8,7 @@ import 'package:weeksalive/data/crashlytics/crashlytics_repository.dart';
 import 'package:weeksalive/data/install/install_repository.dart';
 import 'package:weeksalive/data/day/app_database.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
+import 'package:weeksalive/data/demo_mode/demo_mode_repository.dart';
 import 'package:weeksalive/data/grid_motif/grid_motif_repository.dart';
 import 'package:weeksalive/data/navigation/navigation_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
@@ -59,6 +60,7 @@ Future<Store<AppState>> initializeReduxStore(
       preferences: sharedPreferences,
     ),
     dayRepository: DayRepository(database: appDatabase),
+    demoModeRepository: DemoModeRepository(preferences: sharedPreferences),
     wallpaperConfigRepository: WallpaperConfigRepository(
       preferences: sharedPreferences,
     ),

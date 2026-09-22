@@ -25,9 +25,14 @@ abstract class ProfilePageViewModel with _$ProfilePageViewModel {
     required String gridMotif,
     required String appIcon,
     required String wallpaperStatus,
+    required bool demoModeEnabled,
   }) = _ProfilePageViewModel;
 
-  factory ProfilePageViewModel.create(Store<AppState> store, DateTime now, {required String locale}) {
+  factory ProfilePageViewModel.create(
+    Store<AppState> store,
+    DateTime now, {
+    required String locale,
+  }) {
     final user = store.state.userState.userOrNull;
     final age = _userAge(user, now);
     final lifespan = user?.lifespan ?? 0;
@@ -45,10 +50,13 @@ abstract class ProfilePageViewModel with _$ProfilePageViewModel {
       dateOfBirth: DateFormat.yMMMd(locale).format(user?.dateOfBirth ?? now),
       lifespan: Strings.profilePageLifespanValue(lifespan),
       gender: (user?.gender ?? Gender.other).titleCase,
-      notificationsEnabled: store.state.pushNotificationState.pushNotificationEnabled
+      notificationsEnabled:
+          store.state.pushNotificationState.pushNotificationEnabled
           ? Strings.profilePageNotificationsEnabled
           : Strings.profilePageNotificationsDisabled,
-      weekStartDay: Strings.weekdayFullNames[((user?.weekStartDay ?? DateTime.monday) - 1).clamp(0, 6)],
+      weekStartDay:
+          Strings.weekdayFullNames[((user?.weekStartDay ?? DateTime.monday) - 1)
+              .clamp(0, 6)],
       weeklyIntents: selectedWeeklyIntents,
       theme: store.state.themeState.selectedTheme.label,
       gridMotif: store.state.gridMotifState.selectedMotif.label,
@@ -56,6 +64,7 @@ abstract class ProfilePageViewModel with _$ProfilePageViewModel {
       wallpaperStatus: store.state.wallpaperState.config.enabled
           ? Strings.profilePageWallpaperConfigured
           : Strings.profilePageWallpaperNotConfigured,
+      demoModeEnabled: store.state.demoModeState.enabled,
     );
   }
 }

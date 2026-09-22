@@ -7,6 +7,7 @@ import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/domain/life_week_grid.dart';
+import 'package:weeksalive/domain/year_grid/year_grid_demo.dart';
 import 'package:weeksalive/presentation/home/view_model/home_page_view_model.dart';
 import 'package:weeksalive/presentation/home/widgets/fire_rive_player.dart';
 import 'package:weeksalive/presentation/paywall/show_in_app_paywall.dart';
@@ -26,7 +27,8 @@ class HomeAppBar extends StatefulWidget {
   State<HomeAppBar> createState() => HomeAppBarState();
 }
 
-class HomeAppBarState extends State<HomeAppBar> with SingleTickerProviderStateMixin {
+class HomeAppBarState extends State<HomeAppBar>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _fireController;
   bool _showFire = false;
 
@@ -78,8 +80,11 @@ class HomeAppBarState extends State<HomeAppBar> with SingleTickerProviderStateMi
                 child: child,
               ),
               child: isLifeGridMode
-                  ? _UserNameTitle(userName: widget.vm.userName, grid: widget.vm.lifeWeekGrid)
-                  : const _YearGridTitle(),
+                  ? _UserNameTitle(
+                      userName: widget.vm.userName,
+                      grid: widget.vm.lifeWeekGrid,
+                    )
+                  : _YearGridTitle(isDemoMode: widget.vm.isDemoMode),
             ),
           ),
           Row(
@@ -123,7 +128,9 @@ class _UserNameTitle extends StatelessWidget {
       children: [
         Text(
           Strings.homePageTitle(userName),
-          style: TextStyles.primarySemiBold.copyWith(color: AppColors.content(context)),
+          style: TextStyles.primarySemiBold.copyWith(
+            color: AppColors.content(context),
+          ),
         ),
         const SizedBox(height: Margins.spacingXs),
         Texts.primaryXsCounter(
@@ -137,7 +144,9 @@ class _UserNameTitle extends StatelessWidget {
 }
 
 class _YearGridTitle extends StatelessWidget {
-  const _YearGridTitle();
+  const _YearGridTitle({required this.isDemoMode});
+
+  final bool isDemoMode;
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +154,12 @@ class _YearGridTitle extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(year, style: TextStyles.primarySemiBold.copyWith(color: AppColors.content(context))),
+        Text(
+          year,
+          style: TextStyles.primarySemiBold.copyWith(
+            color: AppColors.content(context),
+          ),
+        ),
         const SizedBox(height: Margins.spacingXs),
         Texts.primaryXsCounter(
           context,
@@ -160,7 +174,9 @@ class _YearGridTitle extends StatelessWidget {
     final now = DateTime.now();
     final year = now.year;
     final totalDays = daysInGregorianYear(year);
-    final livedDays = dayOfYearIndex(now) + 1;
+    final livedDays = isDemoMode
+        ? yearGridDemoFilledCount(totalDays)
+        : dayOfYearIndex(now) + 1;
     return '$livedDays / $totalDays';
   }
 }
@@ -179,7 +195,9 @@ class _StreaksButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final streakIcon = isYesterdayGracePeriod ? MingCuteIcons.mgc_hours_line : MingCuteIcons.mgc_fire_fill;
+    final streakIcon = isYesterdayGracePeriod
+        ? MingCuteIcons.mgc_hours_line
+        : MingCuteIcons.mgc_fire_fill;
 
     return TextButton(
       style: TextButton.styleFrom(
@@ -187,7 +205,9 @@ class _StreaksButton extends StatelessWidget {
           horizontal: Margins.spacingBase,
           vertical: Margins.spacingS,
         ),
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(200))),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(200)),
+        ),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         foregroundColor: AppColors.content(context),
         textStyle: TextStyles.primaryRegularBold,
@@ -240,8 +260,13 @@ class _PremiumButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: IconButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: Margins.spacingS, vertical: Margins.spacingS),
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(200))),
+        padding: const EdgeInsets.symmetric(
+          horizontal: Margins.spacingS,
+          vertical: Margins.spacingS,
+        ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(200)),
+        ),
         minimumSize: Size.zero,
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         foregroundColor: AppColors.accentOrange(context),
@@ -265,8 +290,13 @@ class _ProfileButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: IconButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: Margins.spacingS, vertical: Margins.spacingS),
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(200))),
+        padding: const EdgeInsets.symmetric(
+          horizontal: Margins.spacingS,
+          vertical: Margins.spacingS,
+        ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(200)),
+        ),
         minimumSize: Size.zero,
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         foregroundColor: AppColors.content(context),

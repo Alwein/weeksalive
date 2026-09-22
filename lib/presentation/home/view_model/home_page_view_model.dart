@@ -23,6 +23,7 @@ abstract class HomePageViewModel with _$HomePageViewModel {
     @Default(false) bool isTodayDone,
     @Default(false) bool isYesterdayGracePeriod,
     @Default(false) bool isPro,
+    @Default(false) bool isDemoMode,
   }) = _HomePageViewModel;
 
   factory HomePageViewModel.create(Store<AppState> store) {
@@ -35,8 +36,12 @@ abstract class HomePageViewModel with _$HomePageViewModel {
       weekStartDay: _weekStartDay(store),
       recordedDays: recordedDays,
       isTodayDone: recordedDays.contains(normalizeDay(now)),
-      isYesterdayGracePeriod: isYesterdayGracePeriod(recordedDays: recordedDays, now: now),
+      isYesterdayGracePeriod: isYesterdayGracePeriod(
+        recordedDays: recordedDays,
+        now: now,
+      ),
       isPro: store.state.purchaseState.isPro,
+      isDemoMode: store.state.demoModeState.enabled,
     );
   }
 }

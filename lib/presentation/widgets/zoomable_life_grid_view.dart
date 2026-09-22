@@ -9,6 +9,7 @@ import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/domain/life_week_grid.dart';
+import 'package:weeksalive/domain/year_grid/year_grid_demo.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/day/day_state.dart';
 import 'package:weeksalive/presentation/widgets/life_grid_view.dart';
@@ -43,7 +44,8 @@ class ZoomableLifeGridView extends StatefulWidget {
   State<ZoomableLifeGridView> createState() => ZoomableLifeGridViewState();
 }
 
-class ZoomableLifeGridViewState extends State<ZoomableLifeGridView> with TickerProviderStateMixin {
+class ZoomableLifeGridViewState extends State<ZoomableLifeGridView>
+    with TickerProviderStateMixin {
   late final AnimationController _appearController;
 
   int _appearIndex = -1;
@@ -52,8 +54,10 @@ class ZoomableLifeGridViewState extends State<ZoomableLifeGridView> with TickerP
   @override
   void initState() {
     super.initState();
-    _appearController = AnimationController(vsync: this, duration: ZoomableLifeGridView.appearDuration)
-      ..addListener(_onAppearTick);
+    _appearController = AnimationController(
+      vsync: this,
+      duration: ZoomableLifeGridView.appearDuration,
+    )..addListener(_onAppearTick);
   }
 
   void _onAppearTick() {
@@ -67,7 +71,8 @@ class ZoomableLifeGridViewState extends State<ZoomableLifeGridView> with TickerP
   Future<void> animateToYearView() => _animateToTab(1);
 
   Future<void> _animateToTab(int index) async {
-    if (widget.tabController.index == index && !widget.tabController.indexIsChanging) {
+    if (widget.tabController.index == index &&
+        !widget.tabController.indexIsChanging) {
       await WidgetsBinding.instance.endOfFrame;
       return;
     }
@@ -166,10 +171,15 @@ class ZoomableLifeGridViewState extends State<ZoomableLifeGridView> with TickerP
 }
 
 class _YearGridViewModel {
-  const _YearGridViewModel({required this.dayState, required this.motif});
+  const _YearGridViewModel({
+    required this.dayState,
+    required this.motif,
+    required this.isDemoMode,
+  });
 
   final DayState dayState;
   final GridMotifId motif;
+  final bool isDemoMode;
 }
 
 class _YearDayGridLayer extends StatelessWidget {
@@ -198,15 +208,22 @@ class _YearDayGridLayer extends StatelessWidget {
       converter: (store) => _YearGridViewModel(
         dayState: store.state.dayState,
         motif: store.state.gridMotifState.selectedMotif,
+        isDemoMode: store.state.demoModeState.enabled,
       ),
       builder: (context, viewModel) {
         final dayState = viewModel.dayState;
-        final fillSizes = _fillSizesForYear(dayState, now, totalDays);
+        final isDemoMode = viewModel.isDemoMode;
+        final fillSizes = isDemoMode
+            ? yearGridDemoFillSizes(totalDays: totalDays)
+            : _fillSizesForYear(dayState, now, totalDays);
+        final demoFilledCount = yearGridDemoFilledCount(totalDays);
+        final highlightGridIndex = isDemoMode ? demoFilledCount - 1 : -1;
 
         return LayoutBuilder(
           builder: (context, constraints) {
             final isLargeScreen =
-                MediaQuery.sizeOf(context).shortestSide >= ZoomableLifeGridView.tabletShortestSide;
+                MediaQuery.sizeOf(context).shortestSide >=
+                ZoomableLifeGridView.tabletShortestSide;
             final paintWidth = isLargeScreen
                 ? math.min(
                     constraints.maxWidth,
@@ -232,13 +249,15 @@ class _YearDayGridLayer extends StatelessWidget {
               height: exactHeight,
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTapUp: (details) => _handleTap(
-                  localPosition: details.localPosition,
-                  size: Size(paintWidth, exactHeight),
-                  totalDays: totalDays,
-                  now: now,
-                  dayState: dayState,
-                ),
+                onTapUp: isDemoMode
+                    ? null
+                    : (details) => _handleTap(
+                        localPosition: details.localPosition,
+                        size: Size(paintWidth, exactHeight),
+                        totalDays: totalDays,
+                        now: now,
+                        dayState: dayState,
+                      ),
                 child: CustomPaint(
                   painter: YearGridPainter(
                     columns: ZoomableLifeGridView.yearGridColumns,
@@ -247,13 +266,19 @@ class _YearDayGridLayer extends StatelessWidget {
                     emptyStrokeColor: strokeColor,
                     motif: viewModel.motif,
                     fillColor: fillColor,
-                    pastEmptyColor: pastEmptyColor,
-                    todayEmptyColor: AppColors.accentOrange(context),
-                    filledCount: totalDays,
+                    pastEmptyColor: isDemoMode ? null : pastEmptyColor,
+                    todayEmptyColor: isDemoMode
+                        ? null
+                        : AppColors.accentOrange(context),
+                    filledCount: isDemoMode ? demoFilledCount : totalDays,
                     fillSizes: fillSizes,
                     padding: padding,
                     appearIndex: appearIndex,
                     appearProgress: appearProgress,
+                    highlightGridIndex: highlightGridIndex,
+                    highlightColor: isDemoMode
+                        ? AppColors.accentOrange(context)
+                        : null,
                   ),
                 ),
               ),
@@ -273,7 +298,12 @@ class _YearDayGridLayer extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 stops: const [0.0, 0.0, 0.90, 1.0],
-                colors: [bgColor, Colors.transparent, Colors.transparent, bgColor],
+                colors: [
+                  bgColor,
+                  Colors.transparent,
+                  Colors.transparent,
+                  bgColor,
+                ],
               ).createShader(rect),
               blendMode: BlendMode.dstOut,
               child: scrollContent,
@@ -318,7 +348,11 @@ class _YearDayGridLayer extends StatelessWidget {
   /// - `-2` means "past day with no record" (drawn filled with [AppColors.bgSoft]).
   /// - `-1` means "future day with no record" (drawn as an empty circle).
   /// - `[0, 4]` is the recorded size level.
-  static List<int> _fillSizesForYear(DayState dayState, DateTime now, int totalDays) {
+  static List<int> _fillSizesForYear(
+    DayState dayState,
+    DateTime now,
+    int totalDays,
+  ) {
     final year = now.year;
     final todayIndex = dayOfYearIndex(now);
     final sizes = List<int>.generate(totalDays, (i) {

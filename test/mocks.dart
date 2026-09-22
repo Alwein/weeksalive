@@ -6,6 +6,7 @@ import 'package:weeksalive/core/grid_motif/grid_motif_id.dart';
 import 'package:weeksalive/core/styles/app_theme_id.dart';
 import 'package:weeksalive/data/app_icon/app_icon_repository.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
+import 'package:weeksalive/data/demo_mode/demo_mode_repository.dart';
 import 'package:weeksalive/data/grid_motif/grid_motif_repository.dart';
 import 'package:weeksalive/data/home_widget/home_widget_service.dart';
 import 'package:weeksalive/data/navigation/navigation_repository.dart';
@@ -32,7 +33,8 @@ import 'fixtures/user_fixtures.dart';
 
 class _FakeUser extends Fake implements User {}
 
-class MockTikTokEventsRepository extends Mock implements TikTokEventsRepository {
+class MockTikTokEventsRepository extends Mock
+    implements TikTokEventsRepository {
   MockTikTokEventsRepository() {
     when(() => isInitialized).thenReturn(true);
     when(
@@ -73,18 +75,25 @@ class MockUserRepository extends Mock implements UserRepository {
   }
 }
 
-class MockRemoteConfigRepository extends Mock implements RemoteConfigRepository {}
+class MockRemoteConfigRepository extends Mock
+    implements RemoteConfigRepository {}
 
-class MockPushNotificationRepository extends Mock implements PushNotificationRepository {
+class MockPushNotificationRepository extends Mock
+    implements PushNotificationRepository {
   MockPushNotificationRepository() {
     registerFallbackValue(<TimeOfDay>[]);
     registerFallbackValue(NotificationSlots.defaults());
     registerFallbackValue(
-      const WeeklySummarySchedule(time: TimeOfDay(hour: 21, minute: 0), weekStartDay: DateTime.monday),
+      const WeeklySummarySchedule(
+        time: TimeOfDay(hour: 21, minute: 0),
+        weekStartDay: DateTime.monday,
+      ),
     );
     when(() => areNotificationsEnabled()).thenAnswer((_) async => false);
     when(() => requestNotificationPermission()).thenAnswer((_) async => true);
-    when(() => getNotificationSlots()).thenAnswer((_) async => NotificationSlots.defaults());
+    when(
+      () => getNotificationSlots(),
+    ).thenAnswer((_) async => NotificationSlots.defaults());
     when(() => setNotificationSlots(any())).thenAnswer((_) async {});
     when(() => clearNotificationSlots()).thenAnswer((_) async {});
     when(
@@ -105,9 +114,15 @@ class FakeCustomerInfo extends Fake implements CustomerInfo {}
 class MockPurchaseRepository extends Mock implements PurchaseRepository {
   MockPurchaseRepository() {
     registerFallbackValue(FakeCustomerInfo());
-    when(() => fetchCurrentOffering()).thenAnswer((_) => Future.sync(() => null));
-    when(() => fetchOfferings()).thenAnswer((_) => Future.sync(() => (current: null, alternate: null)));
-    when(() => getCustomerInfo()).thenAnswer((_) => Future.sync(() => FakeCustomerInfo()));
+    when(
+      () => fetchCurrentOffering(),
+    ).thenAnswer((_) => Future.sync(() => null));
+    when(
+      () => fetchOfferings(),
+    ).thenAnswer((_) => Future.sync(() => (current: null, alternate: null)));
+    when(
+      () => getCustomerInfo(),
+    ).thenAnswer((_) => Future.sync(() => FakeCustomerInfo()));
     when(() => isPro(any())).thenReturn(false);
   }
 }
@@ -123,7 +138,9 @@ class MockThemeRepository extends Mock implements ThemeRepository {
 class MockAppIconRepository extends Mock implements AppIconRepository {
   MockAppIconRepository() {
     registerFallbackValue(AppIconId.defaultIcon);
-    when(() => getSelectedIcon()).thenAnswer((_) async => AppIconId.defaultIcon);
+    when(
+      () => getSelectedIcon(),
+    ).thenAnswer((_) async => AppIconId.defaultIcon);
     when(() => setSelectedIcon(any())).thenAnswer((_) async {});
   }
 }
@@ -151,14 +168,20 @@ class MockNavigationRepository extends Mock implements NavigationRepository {
   }
 }
 
-class MockWeeklySummaryRepository extends Mock implements WeeklySummaryRepository {
+class MockWeeklySummaryRepository extends Mock
+    implements WeeklySummaryRepository {
   MockWeeklySummaryRepository() {
-    when(() => getLastCompletedWeekKey()).thenAnswer((_) => Future.sync(() => null));
-    when(() => setLastCompletedWeekKey(any())).thenAnswer((_) => Future.sync(() {}));
+    when(
+      () => getLastCompletedWeekKey(),
+    ).thenAnswer((_) => Future.sync(() => null));
+    when(
+      () => setLastCompletedWeekKey(any()),
+    ).thenAnswer((_) => Future.sync(() {}));
   }
 }
 
-class MockWeeklyIntentRepository extends Mock implements WeeklyIntentRepository {
+class MockWeeklyIntentRepository extends Mock
+    implements WeeklyIntentRepository {
   MockWeeklyIntentRepository() {
     registerFallbackValue(<WeeklyIntent>[]);
     registerFallbackValue(<String>[]);
@@ -183,6 +206,13 @@ class MockDayRepository extends Mock implements DayRepository {
     when(() => getAll()).thenAnswer((_) => Future.sync(() => <DayEntry>[]));
     when(() => getByDate(any())).thenAnswer((_) => Future.sync(() => null));
     when(() => upsert(any())).thenAnswer((_) => Future.sync(() {}));
+  }
+}
+
+class MockDemoModeRepository extends Mock implements DemoModeRepository {
+  MockDemoModeRepository() {
+    when(() => isEnabled()).thenReturn(false);
+    when(() => setEnabled(any())).thenAnswer((_) async {});
   }
 }
 
@@ -219,7 +249,8 @@ class FakeReviewPromptStore implements ReviewPromptStore {
   }
 }
 
-class MockWallpaperConfigRepository extends Mock implements WallpaperConfigRepository {
+class MockWallpaperConfigRepository extends Mock
+    implements WallpaperConfigRepository {
   MockWallpaperConfigRepository() {
     registerFallbackValue(const WallpaperConfig());
     when(() => getConfig()).thenReturn(const WallpaperConfig());

@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:weeksalive/presentation/redux/app_icon/app_icon_state.dart';
 import 'package:weeksalive/presentation/redux/day/day_state.dart';
+import 'package:weeksalive/presentation/redux/demo_mode/demo_mode_state.dart';
 import 'package:weeksalive/presentation/redux/grid_motif/grid_motif_state.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_state.dart';
@@ -33,6 +34,7 @@ abstract class AppState with _$AppState {
     required NavigationState navigationState,
     required WeeklySummaryState weeklySummaryState,
     required WallpaperState wallpaperState,
+    required DemoModeState demoModeState,
   }) = _AppState;
 
   factory AppState.initial() {
@@ -51,6 +53,7 @@ abstract class AppState with _$AppState {
       navigationState: const NavigationState(),
       weeklySummaryState: const WeeklySummaryState(),
       wallpaperState: const WallpaperState(),
+      demoModeState: const DemoModeState(),
     );
   }
 }

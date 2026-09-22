@@ -1,6 +1,7 @@
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/app_icon/app_icon_reducer.dart';
 import 'package:weeksalive/presentation/redux/day/day_reducer.dart';
+import 'package:weeksalive/presentation/redux/demo_mode/demo_mode_reducer.dart';
 import 'package:weeksalive/presentation/redux/grid_motif/grid_motif_reducer.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_reducer.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_reducer.dart';
@@ -26,9 +27,13 @@ AppState appReducer(AppState state, dynamic action) {
     streakState: streakReducer(state.streakState, action),
     weeklyIntentState: weeklyIntentReducer(state.weeklyIntentState, action),
     dayState: dayReducer(state.dayState, action),
-    pushNotificationState: pushNotificationReducer(state.pushNotificationState, action),
+    pushNotificationState: pushNotificationReducer(
+      state.pushNotificationState,
+      action,
+    ),
     navigationState: navigationReducer(state.navigationState, action),
     weeklySummaryState: weeklySummaryReducer(state.weeklySummaryState, action),
     wallpaperState: wallpaperReducer(state.wallpaperState, action),
+    demoModeState: demoModeReducer(state.demoModeState, action),
   );
 }
