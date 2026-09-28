@@ -9,6 +9,7 @@ import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/data/wallpaper/wallpaper_installer.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
+import 'package:weeksalive/presentation/wallpaper/demo_shortcut_player.dart';
 import 'package:weeksalive/presentation/widgets/primary_appbar.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
@@ -18,7 +19,10 @@ class WallpaperSetupPage extends StatefulWidget {
   const WallpaperSetupPage({super.key});
 
   static Route<void> route() {
-    return MaterialPageRoute<void>(builder: (context) => const WallpaperSetupPage(), fullscreenDialog: true);
+    return MaterialPageRoute<void>(
+      builder: (context) => const WallpaperSetupPage(),
+      fullscreenDialog: true,
+    );
   }
 
   static Future<void> show(BuildContext context) {
@@ -30,15 +34,37 @@ class WallpaperSetupPage extends StatefulWidget {
 }
 
 class _WallpaperSetupPageState extends State<WallpaperSetupPage> {
-  static const _illustratedStepIndices = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+  static const _illustratedStepIndices = {
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+  };
+
+  final _demoPlayer = DemoShortcutPlayerController();
 
   late final Map<int, ExpansibleController> _expansionControllers = {
     for (final index in _illustratedStepIndices) index: ExpansibleController(),
   };
 
-  bool get _areAllExpanded => _expansionControllers.values.every((controller) => controller.isExpanded);
+  bool get _areAllExpanded =>
+      _expansionControllers.values.every((controller) => controller.isExpanded);
 
   void _onExpansionChanged(bool _) => setState(() {});
+
+  Future<void> _openShortcuts() async {
+    await _demoPlayer.playInMiniPlayer();
+    if (!mounted) return;
+    await WallpaperInstaller().openShortcutsApp();
+  }
 
   void _toggleAllExpansionTiles() {
     if (_areAllExpanded) {
@@ -79,7 +105,9 @@ class _WallpaperSetupPageState extends State<WallpaperSetupPage> {
       backgroundColor: AppColors.bg(context),
       appBar: PrimaryAppBar(title: Strings.wallpaperSetupTitle),
       floatingActionButton: FloatingActionButton(
-        tooltip: _areAllExpanded ? Strings.wallpaperSetupCollapseAll : Strings.wallpaperSetupExpandAll,
+        tooltip: _areAllExpanded
+            ? Strings.wallpaperSetupCollapseAll
+            : Strings.wallpaperSetupExpandAll,
         backgroundColor: AppColors.content(context),
         foregroundColor: AppColors.contentMuted(context),
         elevation: 0,
@@ -115,6 +143,8 @@ class _WallpaperSetupPageState extends State<WallpaperSetupPage> {
                 ],
               ),
             ),
+            const SizedBox(height: Margins.spacingM),
+            WallpaperDemoVideoSlot(controller: _demoPlayer),
             const _SectionDivider(),
             _timelineRow(
               _TimelineItem(
@@ -137,7 +167,7 @@ class _WallpaperSetupPageState extends State<WallpaperSetupPage> {
                       icon: MingCuteIcons.mgc_external_link_line,
                       iconRight: true,
                       text: Strings.wallpaperOpenShortcuts,
-                      onPressed: () => WallpaperInstaller().openShortcutsApp(),
+                      onPressed: _openShortcuts,
                     ),
                   ],
                 ),
@@ -204,7 +234,8 @@ class _WallpaperSetupPageState extends State<WallpaperSetupPage> {
               _TimelineItem(
                 index: 10,
                 label: Strings.wallpaperSetupUnselectHomeScreen,
-                description: Strings.wallpaperSetupUnselectHomeScreenDescription,
+                description:
+                    Strings.wallpaperSetupUnselectHomeScreenDescription,
                 assetIllustration: 'assets/images/step09_1x.webp',
               ),
             ),
@@ -218,8 +249,10 @@ class _WallpaperSetupPageState extends State<WallpaperSetupPage> {
             _timelineRow(
               _TimelineItem(
                 index: 12,
-                label: Strings.wallpaperSetupUnselectShowPreviewAndCropToSubject,
-                description: Strings.wallpaperSetupUnselectShowPreviewAndCropToSubjectDescription,
+                label:
+                    Strings.wallpaperSetupUnselectShowPreviewAndCropToSubject,
+                description: Strings
+                    .wallpaperSetupUnselectShowPreviewAndCropToSubjectDescription,
                 assetIllustration: 'assets/images/step11_1x.webp',
               ),
             ),
@@ -308,7 +341,11 @@ class _TimelineRow extends StatelessWidget {
       ),
       child: Center(
         child: item.isLast
-            ? Icon(MingCuteIcons.mgc_check_line, size: Dimens.iconSizeS, color: AppColors.contentSoft(context))
+            ? Icon(
+                MingCuteIcons.mgc_check_line,
+                size: Dimens.iconSizeS,
+                color: AppColors.contentSoft(context),
+              )
             : Texts.primaryMediumBold(
                 item.index.toString(),
                 color: AppColors.contentSoft(context),
@@ -356,7 +393,9 @@ class _TimelineRow extends StatelessWidget {
                   const SizedBox(height: Margins.spacingBase),
                   Text(
                     item.description!,
-                    style: TextStyles.primaryRegular.copyWith(color: AppColors.contentSoft(context)),
+                    style: TextStyles.primaryRegular.copyWith(
+                      color: AppColors.contentSoft(context),
+                    ),
                   ),
                 ],
                 if (item.additionalContent != null) ...[

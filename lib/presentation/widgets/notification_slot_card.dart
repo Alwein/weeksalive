@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
+import 'package:weeksalive/core/l10n/time_utils.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
@@ -24,12 +25,6 @@ class NotificationSlotCard extends StatelessWidget {
   final ValueChanged<bool> onToggle;
   final ValueChanged<TimeOfDay> onTimeChanged;
   final String? label;
-
-  String _formatTime(TimeOfDay time) {
-    final h = time.hour.toString().padLeft(2, '0');
-    final m = time.minute.toString().padLeft(2, '0');
-    return '$h:$m';
-  }
 
   Future<void> _pickTime(BuildContext context) async {
     final picked = await showCustomTimePicker(context, initialTime: slot.time);
@@ -71,7 +66,7 @@ class NotificationSlotCard extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            _formatTime(slot.time),
+                            TimeUtils.formatTime(context, slot.time),
                             style: TextStyles.primaryLargeBold.copyWith(
                               color: AppColors.content(context),
                             ),

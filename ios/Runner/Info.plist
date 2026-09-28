@@ -109,6 +109,10 @@
 		</array>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>UIBackgroundModes</key>
+		<array>
+			<string>audio</string>
+		</array>
 		<key>NSUserTrackingUsageDescription</key>
 		<string>This lets us know which ad brought you to WeeksAlive. We don't show ads in the app, and we don't sell your data.</string>
 		<key>com.posthog.posthog.AUTO_INIT</key>

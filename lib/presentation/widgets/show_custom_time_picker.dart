@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:weeksalive/core/l10n/time_utils.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
@@ -43,7 +44,9 @@ Future<TimeOfDay?> showCustomTimePicker(
           ),
         ),
         child: MediaQuery(
-          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          data: MediaQuery.of(context).copyWith(
+            alwaysUse24HourFormat: TimeUtils.prefers24HourFormat(context),
+          ),
           child: child!,
         ),
       );

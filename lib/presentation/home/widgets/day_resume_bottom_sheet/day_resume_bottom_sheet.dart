@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
@@ -11,29 +12,73 @@ import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/presentation/day_form/day_form.dart';
 import 'package:weeksalive/presentation/home/widgets/day_resume_bottom_sheet/day_resume_bottom_sheet_view_model.dart';
+import 'package:weeksalive/presentation/home/widgets/day_resume_bottom_sheet/day_resume_session.dart';
 import 'package:weeksalive/presentation/home/widgets/day_summaries.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/user/user_state.dart';
 import 'package:weeksalive/presentation/widgets/circle.dart';
 import 'package:weeksalive/presentation/widgets/image_carousel_page.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/show_custom_bottom_sheet.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
-class DayResumeBottomSheet extends StatelessWidget {
-  const DayResumeBottomSheet({super.key, required this.date});
-  final DateTime date;
+class DayResumeBottomSheet extends StatefulWidget {
+  const DayResumeBottomSheet({super.key, required this.session});
+
+  final DayResumeSession session;
 
   static Future<void> show(BuildContext context, {required DateTime date}) {
+    final birth = StoreProvider.of<AppState>(
+      context,
+      listen: false,
+    ).state.userState.userOrNull?.dateOfBirth;
+    final session = DayResumeSession(
+      date: normalizeDay(date),
+      earliestDate: birth == null ? null : normalizeDay(birth),
+    );
     return showCustomBottomSheet<void>(
       context,
-      (sheetContext) => DayResumeBottomSheet(date: date),
-      previewBuilder: (context) => _FilePreview(date: date),
+      (sheetContext) => DayResumeBottomSheet(session: session),
+      previewBuilder: (context) => _FilePreview(session: session),
+    ).whenComplete(session.dispose);
+  }
+
+  @override
+  State<DayResumeBottomSheet> createState() => _DayResumeBottomSheetState();
+}
+
+class _DayResumeBottomSheetState extends State<DayResumeBottomSheet> with TickerProviderStateMixin {
+  @override
+  void initState() {
+    super.initState();
+    widget.session.attach(this);
+  }
+
+  @override
+  void dispose() {
+    widget.session.detach();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _DaySwipeViewport(
+      session: widget.session,
+      reportsWidth: true,
+      pageBuilder: (date) => _DayPage(date: date),
     );
   }
+}
+
+class _DayPage extends StatelessWidget {
+  const _DayPage({required this.date});
+
+  final DateTime date;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +87,9 @@ class DayResumeBottomSheet extends StatelessWidget {
       builder: (context, viewModel) {
         return switch (viewModel) {
           DayResumeBottomSheetViewModelEmpty() => _EmptyDayContent(date: date),
-          DayResumeBottomSheetViewModelFilled() => _FilledDayContent(viewModel: viewModel),
+          DayResumeBottomSheetViewModelFilled() => _FilledDayContent(
+            viewModel: viewModel,
+          ),
           DayResumeBottomSheetViewModel() => throw UnimplementedError(),
         };
       },
@@ -131,7 +178,11 @@ class _FilledDayContent extends StatelessWidget {
             text: Strings.edit,
             onPressed: () {
               Navigator.of(context).pop();
-              DayForm.showBottomSheet(context, viewModel.entry.date, source: 'resume');
+              DayForm.showBottomSheet(
+                context,
+                viewModel.entry.date,
+                source: 'resume',
+              );
             },
           ),
           const SizedBox(height: Margins.spacingM),
@@ -152,7 +203,9 @@ class _Description extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       '"$leaveATraceText"',
-      style: TextStyles.primaryMediumMedium.copyWith(color: AppColors.content(context)),
+      style: TextStyles.primaryMediumMedium.copyWith(
+        color: AppColors.content(context),
+      ),
     );
   }
 }
@@ -167,7 +220,10 @@ class _CardEntry extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Dimens.radiusL),
-        border: Border.all(color: AppColors.strokeColor(context), width: Dimens.strokeWidthS),
+        border: Border.all(
+          color: AppColors.strokeColor(context),
+          width: Dimens.strokeWidthS,
+        ),
       ),
       clipBehavior: Clip.hardEdge,
       child: Column(
@@ -204,7 +260,9 @@ class _CardEntry extends StatelessWidget {
             title: Strings.livingIntentionsSectionTitle,
             isLast: true,
             summary: entry.livingIntentionIds.isNotEmpty
-                ? LivingIntentionsSummary(selectedIds: entry.livingIntentionIds.toSet())
+                ? LivingIntentionsSummary(
+                    selectedIds: entry.livingIntentionIds.toSet(),
+                  )
                 : const _EmptySummary(),
           ),
         ],
@@ -216,7 +274,11 @@ class _CardEntry extends StatelessWidget {
 }
 
 class _DayHeader extends StatelessWidget {
-  const _DayHeader({required this.circleSize, required this.dayCount, required this.date});
+  const _DayHeader({
+    required this.circleSize,
+    required this.dayCount,
+    required this.date,
+  });
   final int dayCount;
   final double circleSize;
   final DateTime date;
@@ -300,13 +362,17 @@ class _DaySection extends StatelessWidget {
               children: [
                 Text(
                   index,
-                  style: TextStyles.primaryMediumBold.copyWith(color: indexColor),
+                  style: TextStyles.primaryMediumBold.copyWith(
+                    color: indexColor,
+                  ),
                 ),
                 const SizedBox(width: Margins.spacingS),
                 Expanded(
                   child: Text(
                     title,
-                    style: TextStyles.primaryMediumBold.copyWith(color: titleColor),
+                    style: TextStyles.primaryMediumBold.copyWith(
+                      color: titleColor,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -338,8 +404,195 @@ class _EmptySummary extends StatelessWidget {
   }
 }
 
+class _DaySwipeViewport extends StatefulWidget {
+  const _DaySwipeViewport({
+    required this.session,
+    required this.pageBuilder,
+    this.reportsWidth = false,
+  });
+
+  final DayResumeSession session;
+  final Widget Function(DateTime date) pageBuilder;
+  final bool reportsWidth;
+
+  @override
+  State<_DaySwipeViewport> createState() => _DaySwipeViewportState();
+}
+
+class _DaySwipeViewportState extends State<_DaySwipeViewport> {
+  final Map<DateTime, double> _heights = {};
+  final Map<DateTime, GlobalKey> _keys = {};
+
+  GlobalKey _keyFor(DateTime date) => _keys.putIfAbsent(date, GlobalKey.new);
+
+  void _setHeight(DateTime date, double height) {
+    if (!mounted) return;
+    final current = _heights[date];
+    if (current != null && (current - height).abs() < 0.5) return;
+    setState(() => _heights[date] = height);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: widget.session,
+      builder: (context, _) {
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final layoutWidth = constraints.maxWidth;
+            final session = widget.session;
+            if (widget.reportsWidth) session.updateWidth(layoutWidth);
+
+            final width = session.width > 1 ? session.width : layoutWidth;
+            final progress = width == 0 ? 0.0 : (session.offset / width).clamp(-1.0, 1.0);
+            final previous = session.previousDate;
+            final next = session.nextDate;
+            final visible = <DateTime>{
+              session.date,
+              if (previous != null) previous,
+              if (next != null) next,
+            };
+            _keys.removeWhere((date, _) => !visible.contains(date));
+            _heights.removeWhere((date, _) => !visible.contains(date));
+
+            final neighbor = progress > 0
+                ? previous
+                : progress < 0
+                ? next
+                : null;
+            final currentHeight = _heights[session.date];
+            final neighborHeight = neighbor == null ? null : _heights[neighbor];
+            final displayHeight = currentHeight != null && neighborHeight != null && progress != 0
+                ? ui.lerpDouble(currentHeight, neighborHeight, progress.abs())
+                : null;
+
+            return GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onHorizontalDragDown: (_) => session.onDragStart(),
+              onHorizontalDragStart: (_) => session.onDragStart(),
+              onHorizontalDragUpdate: (details) => session.onDragUpdate(details.delta.dx),
+              onHorizontalDragEnd: (details) => session.onDragEnd(details.primaryVelocity ?? 0),
+              onHorizontalDragCancel: session.onDragCancel,
+              child: ClipRect(
+                child: SizedBox(
+                  width: layoutWidth,
+                  height: displayHeight,
+                  child: Stack(
+                    clipBehavior: Clip.hardEdge,
+                    alignment: Alignment.topCenter,
+                    children: [
+                      if (previous != null)
+                        _slot(
+                          date: previous,
+                          dx: -width + session.offset,
+                          laysOutHeight: false,
+                        ),
+                      if (next != null)
+                        _slot(
+                          date: next,
+                          dx: width + session.offset,
+                          laysOutHeight: false,
+                        ),
+                      _slot(
+                        date: session.date,
+                        dx: session.offset,
+                        laysOutHeight: displayHeight == null,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _slot({
+    required DateTime date,
+    required double dx,
+    required bool laysOutHeight,
+  }) {
+    final page = Transform.translate(
+      offset: Offset(dx, 0),
+      child: KeyedSubtree(
+        key: _keyFor(date),
+        child: _ReportHeight(
+          onHeight: (height) => _setHeight(date, height),
+          child: widget.pageBuilder(date),
+        ),
+      ),
+    );
+
+    if (laysOutHeight) return page;
+
+    return Positioned(
+      top: 0,
+      left: 0,
+      right: 0,
+      child: OverflowBox(
+        alignment: Alignment.topCenter,
+        fit: OverflowBoxFit.deferToChild,
+        minHeight: 0,
+        maxHeight: double.infinity,
+        child: page,
+      ),
+    );
+  }
+}
+
+class _ReportHeight extends SingleChildRenderObjectWidget {
+  const _ReportHeight({required this.onHeight, required super.child});
+
+  final ValueChanged<double> onHeight;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) => _RenderReportHeight(onHeight);
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    covariant _RenderReportHeight renderObject,
+  ) {
+    renderObject.onHeight = onHeight;
+  }
+}
+
+class _RenderReportHeight extends RenderProxyBox {
+  _RenderReportHeight(this.onHeight);
+
+  ValueChanged<double> onHeight;
+  double? _last;
+
+  @override
+  void performLayout() {
+    super.performLayout();
+    final height = child?.size.height;
+    if (height == null || (_last != null && (_last! - height).abs() < 0.5)) return;
+    _last = height;
+    final reported = height;
+    WidgetsBinding.instance.addPostFrameCallback((_) => onHeight(reported));
+  }
+}
+
 class _FilePreview extends StatelessWidget {
-  const _FilePreview({required this.date});
+  const _FilePreview({required this.session});
+
+  final DayResumeSession session;
+
+  @override
+  Widget build(BuildContext context) {
+    return _DaySwipeViewport(
+      session: session,
+      pageBuilder: (date) => _DayPreview(date: date),
+    );
+  }
+}
+
+class _DayPreview extends StatelessWidget {
+  const _DayPreview({required this.date});
+
   final DateTime date;
 
   @override
@@ -349,7 +602,9 @@ class _FilePreview extends StatelessWidget {
       builder: (context, viewModel) {
         return switch (viewModel) {
           DayResumeBottomSheetViewModelEmpty() => const SizedBox.shrink(),
-          DayResumeBottomSheetViewModelFilled() => _ImagesPreview(viewModel: viewModel),
+          DayResumeBottomSheetViewModelFilled() => _ImagesPreview(
+            viewModel: viewModel,
+          ),
           DayResumeBottomSheetViewModel() => throw UnimplementedError(),
         };
       },
@@ -475,7 +730,10 @@ class _AnimatedImagesStackState extends State<_AnimatedImagesStack> with SingleT
     final anim = _staggered(index);
     final finalRotation = _rotations[index % _rotations.length];
     final startRotation = finalRotation + (index.isEven ? -0.25 : 0.25);
-    final rotation = Tween<double>(begin: startRotation, end: finalRotation).animate(anim);
+    final rotation = Tween<double>(
+      begin: startRotation,
+      end: finalRotation,
+    ).animate(anim);
     final opacity = Tween<double>(begin: 0.0, end: 1.0).animate(anim);
     final dy = Tween<double>(begin: rise, end: 0.0).animate(anim);
 
@@ -549,7 +807,9 @@ class _PhotoFrameState extends State<_PhotoFrame> {
         ),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(Dimens.radiusBase - Dimens.storkeWidthM),
+        borderRadius: BorderRadius.circular(
+          Dimens.radiusBase - Dimens.storkeWidthM,
+        ),
         child: Image.file(
           File(widget.path),
           fit: BoxFit.cover,

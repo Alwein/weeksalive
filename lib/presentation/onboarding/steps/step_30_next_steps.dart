@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:weeksalive/core/l10n/time_utils.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
@@ -142,7 +143,9 @@ class _TodaySection extends StatelessWidget {
         return _Section(
           index: "01",
           title: Strings.onboarding24TodaySection,
-          description: Strings.onboarding24TodayDescription(_preferredNotificationTime(controller)),
+          description: Strings.onboarding24TodayDescription(
+            _preferredNotificationTime(context, controller),
+          ),
         );
       },
     );
@@ -193,17 +196,12 @@ class _NextWeek extends StatelessWidget {
   }
 }
 
-String _formatNotificationTime(TimeOfDay time) {
-  final h = time.hour.toString().padLeft(2, '0');
-  final m = time.minute.toString().padLeft(2, '0');
-  return '$h:$m';
-}
-
-String _preferredNotificationTime(OnboardingFormController controller) {
+String _preferredNotificationTime(BuildContext context, OnboardingFormController controller) {
   final times = controller.notificationTimes;
-  if (times.isNotEmpty) return _formatNotificationTime(times.first);
-  final fallback = controller.slot1.enabled ? controller.slot1.time : controller.slot2.time;
-  return _formatNotificationTime(fallback);
+  final time = times.isNotEmpty
+      ? times.first
+      : (controller.slot1.enabled ? controller.slot1.time : controller.slot2.time);
+  return TimeUtils.formatTime(context, time);
 }
 
 List<String> _selectedIntentLabels(OnboardingFormController controller, List<WeeklyIntent> intents) {

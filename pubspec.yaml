@@ -11,6 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   # firebase - ⚠️ update ios/Podfile l35 when updating firebase packages
   firebase_core: "4.2.1"

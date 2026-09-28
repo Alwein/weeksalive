@@ -21,6 +21,11 @@ import flutter_local_notifications
     if let controller = window?.rootViewController as? FlutterViewController {
       WallpaperPlugin.register(with: controller.registrar(forPlugin: "WallpaperPlugin")!)
       AppIconPlugin.register(with: controller.registrar(forPlugin: "AppIconPlugin")!)
+      let demoRegistrar = controller.registrar(forPlugin: "DemoShortcutPlayer")!
+      demoRegistrar.register(
+        DemoShortcutPlayerFactory(messenger: demoRegistrar.messenger(), registrar: demoRegistrar),
+        withId: "weeksalive/demo_shortcut_player"
+      )
     }
 
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
