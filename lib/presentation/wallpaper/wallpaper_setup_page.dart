@@ -55,8 +55,7 @@ class _WallpaperSetupPageState extends State<WallpaperSetupPage> {
     for (final index in _illustratedStepIndices) index: ExpansibleController(),
   };
 
-  bool get _areAllExpanded =>
-      _expansionControllers.values.every((controller) => controller.isExpanded);
+  bool get _areAllExpanded => _expansionControllers.values.every((controller) => controller.isExpanded);
 
   void _onExpansionChanged(bool _) => setState(() {});
 
@@ -105,9 +104,7 @@ class _WallpaperSetupPageState extends State<WallpaperSetupPage> {
       backgroundColor: AppColors.bg(context),
       appBar: PrimaryAppBar(title: Strings.wallpaperSetupTitle),
       floatingActionButton: FloatingActionButton(
-        tooltip: _areAllExpanded
-            ? Strings.wallpaperSetupCollapseAll
-            : Strings.wallpaperSetupExpandAll,
+        tooltip: _areAllExpanded ? Strings.wallpaperSetupCollapseAll : Strings.wallpaperSetupExpandAll,
         backgroundColor: AppColors.content(context),
         foregroundColor: AppColors.contentMuted(context),
         elevation: 0,
@@ -234,8 +231,7 @@ class _WallpaperSetupPageState extends State<WallpaperSetupPage> {
               _TimelineItem(
                 index: 10,
                 label: Strings.wallpaperSetupUnselectHomeScreen,
-                description:
-                    Strings.wallpaperSetupUnselectHomeScreenDescription,
+                description: Strings.wallpaperSetupUnselectHomeScreenDescription,
                 assetIllustration: 'assets/images/step09_1x.webp',
               ),
             ),
@@ -249,10 +245,8 @@ class _WallpaperSetupPageState extends State<WallpaperSetupPage> {
             _timelineRow(
               _TimelineItem(
                 index: 12,
-                label:
-                    Strings.wallpaperSetupUnselectShowPreviewAndCropToSubject,
-                description: Strings
-                    .wallpaperSetupUnselectShowPreviewAndCropToSubjectDescription,
+                label: Strings.wallpaperSetupUnselectShowPreviewAndCropToSubject,
+                description: Strings.wallpaperSetupUnselectShowPreviewAndCropToSubjectDescription,
                 assetIllustration: 'assets/images/step11_1x.webp',
               ),
             ),
@@ -268,7 +262,6 @@ class _WallpaperSetupPageState extends State<WallpaperSetupPage> {
                 isLast: true,
                 index: 14,
                 label: Strings.wallpaperSetupYouAreAllSet,
-                assetIllustration: 'assets/images/step13_1x.webp',
               ),
             ),
           ],
