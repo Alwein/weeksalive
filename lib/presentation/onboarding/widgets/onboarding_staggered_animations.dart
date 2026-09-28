@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
@@ -36,15 +38,23 @@ class OnboardingStaggeredColumn extends StatefulWidget {
 
 class _OnboardingStaggeredColumnState extends State<OnboardingStaggeredColumn> {
   bool started = false;
+  Timer? _startTimer;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(widget.delay).then((value) {
+    _startTimer = Timer(widget.delay, () {
+      if (!mounted) return;
       setState(() {
         started = true;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    _startTimer?.cancel();
+    super.dispose();
   }
 
   @override

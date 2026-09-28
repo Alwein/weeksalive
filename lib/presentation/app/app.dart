@@ -11,6 +11,7 @@ import 'package:redux/redux.dart';
 import 'package:weeksalive/core/styles/app_theme_builder.dart';
 import 'package:weeksalive/core/styles/app_theme_id.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
+import 'package:weeksalive/core/utils/jiffy_locale.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/presentation/bootstrap/bootstrap_page.dart';
@@ -38,6 +39,7 @@ class App extends StatefulWidget {
 class _AppState extends State<App> with WidgetsBindingObserver {
   final _backgroundScaleController = AppBackgroundScaleController();
   final _navigatorKey = GlobalKey<NavigatorState>();
+  String? _appliedJiffyLocale;
 
   @override
   void initState() {
@@ -49,6 +51,13 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  void _syncJiffyLocale(String languageCode) {
+    final jiffyLocale = jiffyLocaleFor(languageCode);
+    if (_appliedJiffyLocale == jiffyLocale) return;
+    _appliedJiffyLocale = jiffyLocale;
+    Jiffy.setLocale(jiffyLocale).ignore();
   }
 
   @override
@@ -91,7 +100,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                 ],
                 themeMode: config.themeMode,
                 builder: (context, child) {
-                  Jiffy.setLocale(Localizations.localeOf(context).languageCode);
+                  _syncJiffyLocale(Localizations.localeOf(context).languageCode);
                   return AnnotatedRegion<SystemUiOverlayStyle>(
                     value: AppSystemUiStyle.forContext(context),
                     child: HiddenLogo(

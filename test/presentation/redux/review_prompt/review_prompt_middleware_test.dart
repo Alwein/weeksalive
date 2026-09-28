@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:redux/redux.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
+import 'package:weeksalive/domain/feedback/feedback_sentiment.dart';
 import 'package:weeksalive/presentation/redux/analytics/analytics_middleware.dart';
 import 'package:weeksalive/presentation/redux/app_reducer.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
@@ -74,13 +75,10 @@ void main() {
       store.teardown();
     });
 
-    test('does not request review before the third check-in', () async {
+    test('does not show the feedback pulse before the third check-in', () async {
       final store = _reviewPromptStore(
         reviewPromptStore: reviewPromptStore,
         analyticsRepository: analyticsRepository,
-        requestReview: () async {
-          reviewRequested = true;
-        },
       );
 
       store.dispatch(SaveDayAction(todayEntry()));
@@ -88,13 +86,13 @@ void main() {
       store.dispatch(const TryReviewPromptAction());
       await _waitForMiddleware();
 
-      expect(reviewRequested, isFalse);
+      expect(store.state.reviewPromptState.pulsePending, isFalse);
       expect(reviewPromptStore.hasRequested, isFalse);
 
       store.teardown();
     });
 
-    test('requests review on the third check-in', () async {
+    test('shows the feedback pulse, not the native review, on the third check-in', () async {
       final store = _reviewPromptStore(
         reviewPromptStore: reviewPromptStore,
         analyticsRepository: analyticsRepository,
@@ -111,20 +109,19 @@ void main() {
       store.dispatch(const TryReviewPromptAction());
       await _waitForMiddleware();
 
-      expect(reviewRequested, isTrue);
+      expect(store.state.reviewPromptState.pulsePending, isTrue);
+      expect(store.state.reviewPromptState.pulseSource, 'third_check_in');
       expect(reviewPromptStore.hasRequested, isTrue);
-      expect(analyticsRepository.propertiesOf('review_prompt_shown')?['source'], 'third_check_in');
+      expect(reviewRequested, isFalse);
+      expect(analyticsRepository.propertiesOf('feedback_pulse_shown')?['source'], 'third_check_in');
 
       store.teardown();
     });
 
-    test('does not request review again after it has already been shown', () async {
+    test('does not show the feedback pulse again after it has been shown', () async {
       final store = _reviewPromptStore(
         reviewPromptStore: reviewPromptStore,
         analyticsRepository: analyticsRepository,
-        requestReview: () async {
-          reviewRequested = true;
-        },
       );
 
       for (var i = 0; i < 3; i++) {
@@ -134,23 +131,41 @@ void main() {
 
       store.dispatch(const TryReviewPromptAction());
       await _waitForMiddleware();
-      reviewRequested = false;
+      store.dispatch(const FeedbackPulseResolvedAction(answered: true));
 
       store.dispatch(SaveDayAction(todayEntry()));
       await _waitForMiddleware();
       store.dispatch(const TryReviewPromptAction());
       await _waitForMiddleware();
 
-      expect(reviewRequested, isFalse);
+      expect(store.state.reviewPromptState.pulsePending, isFalse);
       expect(
-        analyticsRepository.capturedNames.where((name) => name == 'review_prompt_shown'),
+        analyticsRepository.capturedNames.where((name) => name == 'feedback_pulse_shown'),
         hasLength(1),
       );
 
       store.teardown();
     });
 
-    test('does not request review when the native prompt is unavailable', () async {
+    test('requests the native review after a positive answer', () async {
+      final store = _reviewPromptStore(
+        reviewPromptStore: reviewPromptStore,
+        analyticsRepository: analyticsRepository,
+        requestReview: () async {
+          reviewRequested = true;
+        },
+      );
+
+      store.dispatch(const RequestStoreReviewAction(source: 'third_check_in'));
+      await _waitForMiddleware();
+
+      expect(reviewRequested, isTrue);
+      expect(analyticsRepository.propertiesOf('review_prompt_shown')?['source'], 'third_check_in');
+
+      store.teardown();
+    });
+
+    test('does not request the native review when it is unavailable', () async {
       final store = _reviewPromptStore(
         reviewPromptStore: reviewPromptStore,
         analyticsRepository: analyticsRepository,
@@ -160,17 +175,47 @@ void main() {
         },
       );
 
-      for (var i = 0; i < 3; i++) {
-        store.dispatch(SaveDayAction(todayEntry()));
-        await _waitForMiddleware();
-      }
-
-      store.dispatch(const TryReviewPromptAction());
+      store.dispatch(const RequestStoreReviewAction(source: 'third_check_in'));
       await _waitForMiddleware();
 
       expect(reviewRequested, isFalse);
-      expect(reviewPromptStore.hasRequested, isFalse);
       expect(analyticsRepository.capturedNames, isNot(contains('review_prompt_shown')));
+
+      store.teardown();
+    });
+
+    test('tracks pulse answers, dismissals and submitted feedback', () async {
+      final store = _reviewPromptStore(
+        reviewPromptStore: reviewPromptStore,
+        analyticsRepository: analyticsRepository,
+      );
+
+      store.dispatch(const FeedbackPulseRequestedAction(source: 'third_check_in'));
+      store.dispatch(const FeedbackPulseResolvedAction(answered: false));
+      store.dispatch(
+        const FeedbackPulseAnsweredAction(sentiment: FeedbackSentiment.negative, source: 'third_check_in'),
+      );
+      store.dispatch(
+        const FeedbackSubmittedAction(
+          message: 'More themes',
+          source: 'third_check_in',
+          sentiment: FeedbackSentiment.negative,
+        ),
+      );
+      await _waitForMiddleware();
+
+      expect(store.state.reviewPromptState.pulsePending, isFalse);
+      expect(analyticsRepository.propertiesOf('feedback_pulse_dismissed')?['source'], 'third_check_in');
+      expect(analyticsRepository.propertiesOf('feedback_pulse_answered'), {
+        'sentiment': 'negative',
+        'source': 'third_check_in',
+      });
+      expect(analyticsRepository.propertiesOf('feedback_submitted'), {
+        'message': 'More themes',
+        'message_length': 11,
+        'source': 'third_check_in',
+        'sentiment': 'negative',
+      });
 
       store.teardown();
     });

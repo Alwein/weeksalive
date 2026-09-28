@@ -10,6 +10,7 @@ import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/presentation/day_form/day_form.dart';
 import 'package:weeksalive/presentation/home/view_model/home_page_view_model.dart';
 import 'package:weeksalive/presentation/home/widgets/day_resume_bottom_sheet/day_resume_bottom_sheet.dart';
+import 'package:weeksalive/presentation/home/widgets/feedback_pulse_listener.dart';
 import 'package:weeksalive/presentation/home/widgets/home_appbar.dart';
 import 'package:weeksalive/presentation/home/widgets/home_week_calendar.dart';
 import 'package:weeksalive/presentation/home/widgets/rewards_celebration_listener.dart';
@@ -38,9 +39,11 @@ class HomePage extends StatelessWidget {
           body: RewardsCelebrationListener(
             child: StreakGraceReminderListener(
               child: WallpaperPromptListener(
-                child: _Body(
-                  vm: vm,
-                  initialTabIndex: store.state.navigationState.homeTabIndex,
+                child: FeedbackPulseListener(
+                  child: _Body(
+                    vm: vm,
+                    initialTabIndex: store.state.navigationState.homeTabIndex,
+                  ),
                 ),
               ),
             ),

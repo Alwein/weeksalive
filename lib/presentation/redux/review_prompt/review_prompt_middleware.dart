@@ -9,6 +9,8 @@ import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/day/day_actions.dart';
 import 'package:weeksalive/presentation/redux/review_prompt/review_prompt_actions.dart';
 
+/// Decides when to show the one-time feedback pulse, and asks the platform for
+/// its native review prompt only once the user answered it positively.
 class ReviewPromptMiddleware extends MiddlewareClass<AppState> {
   ReviewPromptMiddleware({
     required ReviewPromptStore reviewPromptStore,
@@ -34,7 +36,11 @@ class ReviewPromptMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is TryReviewPromptAction) {
-      await _maybeRequestReview(store, action.source);
+      await _maybeShowPulse(store, action.source);
+    }
+
+    if (action is RequestStoreReviewAction) {
+      await _requestStoreReview(store, action.source);
     }
   }
 
@@ -47,16 +53,25 @@ class ReviewPromptMiddleware extends MiddlewareClass<AppState> {
     await _reviewPromptStore.incrementCheckInCount();
   }
 
-  Future<void> _maybeRequestReview(Store<AppState> store, String source) async {
+  Future<void> _maybeShowPulse(Store<AppState> store, String source) async {
     if (_reviewPromptStore.hasRequested) return;
     if (_reviewPromptStore.checkInCount < ReviewPromptRepository.triggerAtCheckIn) return;
+    if (store.state.reviewPromptState.pulsePending) return;
 
+    await _reviewPromptStore.markRequested();
+
+    try {
+      store.dispatch(FeedbackPulseRequestedAction(source: source));
+    } catch (_) {
+      // Store torn down (e.g. in tests) during the async gap.
+    }
+  }
+
+  Future<void> _requestStoreReview(Store<AppState> store, String source) async {
     final isAvailable = _isReviewAvailable != null
         ? await _isReviewAvailable()
         : await _inAppReview.isAvailable();
     if (!isAvailable) return;
-
-    await _reviewPromptStore.markRequested();
 
     try {
       store.dispatch(

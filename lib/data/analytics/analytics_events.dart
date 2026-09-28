@@ -87,6 +87,37 @@ class AnalyticsEvent {
   factory AnalyticsEvent.reviewPromptShown({required String source}) =>
       AnalyticsEvent._('review_prompt_shown', {'source': source});
 
+  // --- Feedback --------------------------------------------------------------
+
+  factory AnalyticsEvent.feedbackPulseShown({required String source}) =>
+      AnalyticsEvent._('feedback_pulse_shown', {'source': source});
+
+  factory AnalyticsEvent.feedbackPulseAnswered({
+    required String sentiment,
+    required String source,
+  }) =>
+      AnalyticsEvent._('feedback_pulse_answered', {
+        'sentiment': sentiment,
+        'source': source,
+      });
+
+  factory AnalyticsEvent.feedbackPulseDismissed({required String source}) =>
+      AnalyticsEvent._('feedback_pulse_dismissed', {'source': source});
+
+  /// The one event that carries free text: a message the user wrote and
+  /// explicitly sent to us from the feedback form. Never journal content.
+  factory AnalyticsEvent.feedbackSubmitted({
+    required String message,
+    required String source,
+    String? sentiment,
+  }) =>
+      AnalyticsEvent._('feedback_submitted', _props({
+        'message': message,
+        'message_length': message.length,
+        'source': source,
+        'sentiment': sentiment,
+      }));
+
   // --- Paywall and purchase ------------------------------------------------
 
   factory AnalyticsEvent.paywallViewed({

@@ -783,6 +783,22 @@ class Strings {
   static String get wallpaperPromptCta => tr('wallpaper_prompt_cta');
   static String get wallpaperPromptDismiss => tr('wallpaper_prompt_dismiss');
 
+  // feedback
+  static String get feedbackPulseTitle => tr('feedback_pulse_title');
+  static String get feedbackPulseBody => tr('feedback_pulse_body');
+  static String get feedbackPulseNegative => tr('feedback_pulse_negative');
+  static String get feedbackPulseNeutral => tr('feedback_pulse_neutral');
+  static String get feedbackPulsePositive => tr('feedback_pulse_positive');
+  static String get feedbackFormTitleNegative => tr('feedback_form_title_negative');
+  static String get feedbackFormTitleNeutral => tr('feedback_form_title_neutral');
+  static String get feedbackFormTitleOpen => tr('feedback_form_title_open');
+  static String get feedbackFormBody => tr('feedback_form_body');
+  static String get feedbackFormHint => tr('feedback_form_hint');
+  static String get feedbackFormSend => tr('feedback_form_send');
+  static String get feedbackThanksTitle => tr('feedback_thanks_title');
+  static String get feedbackThanksBody => tr('feedback_thanks_body');
+  static String get profilePageShareFeedback => tr('profile_page_share_feedback');
+
   // widgets page
   static String get profilePageWidgetsLifeGrid =>
       tr('profile_page_widgets_life_grid');

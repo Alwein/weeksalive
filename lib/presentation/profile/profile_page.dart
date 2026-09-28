@@ -17,6 +17,7 @@ import 'package:weeksalive/core/texts/app_links.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/mail_handler.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
+import 'package:weeksalive/presentation/feedback/feedback_sheet.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_page.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/profile/pages/app_icon_picker/app_icon_picker_page.dart';
@@ -513,6 +514,12 @@ class _GetInTouchCard extends StatelessWidget {
     return _ProfileCardContainer(
       child: Column(
         children: [
+          _PreferencesButton(
+            title: Strings.profilePageShareFeedback,
+            onTap: () => FeedbackSheet.show(context, source: 'profile', openForm: true),
+            icon: MingCuteIcons.mgc_chat_1_line,
+          ),
+          const SmallDivider(width: double.infinity),
           _PreferencesButton(
             title: Strings.profilePageRateTheApp,
             onTap: () {

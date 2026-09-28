@@ -16,6 +16,7 @@ import 'package:weeksalive/presentation/redux/navigation/navigation_actions.dart
 import 'package:weeksalive/presentation/redux/purchase/purchase_actions.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
+import 'package:weeksalive/presentation/redux/review_prompt/review_prompt_actions.dart';
 import 'package:weeksalive/presentation/redux/rewards/rewards_actions.dart';
 import 'package:weeksalive/presentation/redux/streak/streak_actions.dart';
 import 'package:weeksalive/presentation/redux/theme/theme_actions.dart';
@@ -196,6 +197,29 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
       case WallpaperPromptResolvedAction():
         analyticsRepository.capture(
           AnalyticsEvent.wallpaperPromptResolved(accepted: action.accepted),
+        );
+
+      case FeedbackPulseRequestedAction():
+        analyticsRepository.capture(AnalyticsEvent.feedbackPulseShown(source: action.source));
+
+      case FeedbackPulseAnsweredAction():
+        analyticsRepository.capture(
+          AnalyticsEvent.feedbackPulseAnswered(sentiment: action.sentiment.name, source: action.source),
+        );
+        analyticsRepository.setPersonProperties({'feedback_sentiment': action.sentiment.name});
+
+      case FeedbackPulseResolvedAction(answered: false):
+        analyticsRepository.capture(
+          AnalyticsEvent.feedbackPulseDismissed(source: store.state.reviewPromptState.pulseSource),
+        );
+
+      case FeedbackSubmittedAction():
+        analyticsRepository.capture(
+          AnalyticsEvent.feedbackSubmitted(
+            message: action.message,
+            source: action.source,
+            sentiment: action.sentiment?.name,
+          ),
         );
 
       case UpdateUserAction():

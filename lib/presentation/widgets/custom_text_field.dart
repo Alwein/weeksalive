@@ -18,6 +18,8 @@ class CustomTextField extends StatefulWidget {
     this.maxLength,
     this.autofocus = false,
     this.controller,
+    this.minLines,
+    this.maxLines = 1,
   });
 
   final String hintText;
@@ -32,6 +34,8 @@ class CustomTextField extends StatefulWidget {
   final int? maxLength;
   final bool autofocus;
   final TextEditingController? controller;
+  final int? minLines;
+  final int? maxLines;
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
 }
@@ -58,6 +62,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
       textCapitalization: widget.textCapitalization ?? TextCapitalization.none,
       cursorColor: AppColors.contentSoftOnSoft(context),
       maxLength: widget.maxLength,
+      minLines: widget.minLines,
+      maxLines: widget.maxLines,
       decoration: InputDecoration(
         suffixIcon: widget.suffixIcon != null
             ? Icon(

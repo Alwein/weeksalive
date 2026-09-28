@@ -6,6 +6,7 @@ import 'package:weeksalive/presentation/redux/grid_motif/grid_motif_reducer.dart
 import 'package:weeksalive/presentation/redux/purchase/purchase_reducer.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_reducer.dart';
 import 'package:weeksalive/presentation/redux/remote_config/remote_config_reducer.dart';
+import 'package:weeksalive/presentation/redux/review_prompt/review_prompt_reducer.dart';
 import 'package:weeksalive/presentation/redux/rewards/rewards_reducer.dart';
 import 'package:weeksalive/presentation/redux/streak/streak_reducer.dart';
 import 'package:weeksalive/presentation/redux/theme/theme_reducer.dart';
@@ -35,5 +36,6 @@ AppState appReducer(AppState state, dynamic action) {
     weeklySummaryState: weeklySummaryReducer(state.weeklySummaryState, action),
     wallpaperState: wallpaperReducer(state.wallpaperState, action),
     demoModeState: demoModeReducer(state.demoModeState, action),
+    reviewPromptState: reviewPromptReducer(state.reviewPromptState, action),
   );
 }

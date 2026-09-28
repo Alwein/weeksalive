@@ -6,6 +6,7 @@ import 'package:weeksalive/presentation/redux/grid_motif/grid_motif_state.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_state.dart';
 import 'package:weeksalive/presentation/redux/remote_config/remote_config_state.dart';
+import 'package:weeksalive/presentation/redux/review_prompt/review_prompt_state.dart';
 import 'package:weeksalive/presentation/redux/rewards/rewards_state.dart';
 import 'package:weeksalive/presentation/redux/streak/streak_state.dart';
 import 'package:weeksalive/presentation/redux/theme/theme_state.dart';
@@ -35,6 +36,7 @@ abstract class AppState with _$AppState {
     required WeeklySummaryState weeklySummaryState,
     required WallpaperState wallpaperState,
     required DemoModeState demoModeState,
+    required ReviewPromptState reviewPromptState,
   }) = _AppState;
 
   factory AppState.initial() {
@@ -54,6 +56,7 @@ abstract class AppState with _$AppState {
       weeklySummaryState: const WeeklySummaryState(),
       wallpaperState: const WallpaperState(),
       demoModeState: const DemoModeState(),
+      reviewPromptState: const ReviewPromptState(),
     );
   }
 }
