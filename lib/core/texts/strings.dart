@@ -804,4 +804,73 @@ class Strings {
       tr('profile_page_widgets_life_grid');
   static String get profilePageWidgetsYearGrid =>
       tr('profile_page_widgets_year_grid');
+
+  // backup
+  static String get profilePageData => tr('profile_page_data');
+  static String get profilePageBackup => tr('profile_page_backup');
+  static String profilePageBackupICloud(String when) =>
+      tr('profile_page_backup_icloud', namedArgs: {'when': when});
+  static String get profilePageBackupOff => tr('profile_page_backup_off');
+  static String get dataBackupPageTitle => tr('data_backup_page_title');
+  static String backupDays(int count) => plural('backup_days', count);
+  static String get dataBackupICloudSection => tr('data_backup_icloud_section');
+  static String get dataBackupICloudTitle => tr('data_backup_icloud_title');
+  static String get dataBackupICloudDescription =>
+      tr('data_backup_icloud_description');
+  static String dataBackupICloudLast(String when) =>
+      tr('data_backup_icloud_last', namedArgs: {'when': when});
+  static String get dataBackupICloudNever => tr('data_backup_icloud_never');
+  static String get dataBackupICloudInProgress =>
+      tr('data_backup_icloud_in_progress');
+  static String get dataBackupICloudFailed => tr('data_backup_icloud_failed');
+  static String get dataBackupICloudBackupNow =>
+      tr('data_backup_icloud_backup_now');
+  static String get dataBackupICloudBackupDone =>
+      tr('data_backup_icloud_backup_done');
+  static String get dataBackupICloudUnavailableTitle =>
+      tr('data_backup_icloud_unavailable_title');
+  static String get dataBackupICloudUnavailableDescription =>
+      tr('data_backup_icloud_unavailable_description');
+  static String get dataBackupOpenSettings => tr('data_backup_open_settings');
+  static String get dataBackupICloudFoundTitle =>
+      tr('data_backup_icloud_found_title');
+  static String dataBackupSummary({required String days, required String date}) =>
+      tr('data_backup_summary', namedArgs: {'days': days, 'date': date});
+  static String get dataBackupICloudFoundHint =>
+      tr('data_backup_icloud_found_hint');
+  static String get dataBackupRestore => tr('data_backup_restore');
+  static String get dataBackupReplace => tr('data_backup_replace');
+  static String get dataBackupReplaceConfirmTitle =>
+      tr('data_backup_replace_confirm_title');
+  static String get dataBackupReplaceConfirmBody =>
+      tr('data_backup_replace_confirm_body');
+  static String get dataBackupReplaceConfirm =>
+      tr('data_backup_replace_confirm');
+  static String get dataBackupCancel => tr('data_backup_cancel');
+  static String get dataBackupManualSection =>
+      tr('data_backup_manual_section');
+  static String get dataBackupExport => tr('data_backup_export');
+  static String get dataBackupExportDescription =>
+      tr('data_backup_export_description');
+  static String dataBackupLastExport(String when) =>
+      tr('data_backup_last_export', namedArgs: {'when': when});
+  static String get dataBackupImport => tr('data_backup_import');
+  static String get dataBackupRestoreConfirmTitle =>
+      tr('data_backup_restore_confirm_title');
+  static String get dataBackupRestoreConfirmBody =>
+      tr('data_backup_restore_confirm_body');
+  static String get dataBackupRestoreInProgress =>
+      tr('data_backup_restore_in_progress');
+  static String dataBackupRestored(int count) =>
+      plural('data_backup_restored', count);
+  static String get dataBackupErrorInvalid => tr('data_backup_error_invalid');
+  static String get dataBackupErrorVersion => tr('data_backup_error_version');
+  static String get dataBackupErrorGeneric => tr('data_backup_error_generic');
+  static String get backupRestorePromptTitle =>
+      tr('backup_restore_prompt_title');
+  static String backupRestorePromptBody({required String days, required String date}) =>
+      tr('backup_restore_prompt_body', namedArgs: {'days': days, 'date': date});
+  static String get backupRestorePromptLater =>
+      tr('backup_restore_prompt_later');
+  static String get onboardingRestoreBackup => tr('onboarding_restore_backup');
 }

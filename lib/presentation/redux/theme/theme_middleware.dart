@@ -3,6 +3,7 @@ import 'package:weeksalive/core/styles/app_theme_id.dart';
 import 'package:weeksalive/data/theme/theme_repository.dart';
 import 'package:weeksalive/domain/rewards/reward_id.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/backup/backup_actions.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/rewards/rewards_actions.dart';
 import 'package:weeksalive/presentation/redux/theme/theme_actions.dart';
@@ -16,7 +17,7 @@ class ThemeMiddleware extends MiddlewareClass<AppState> {
   void call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
-    if (action is BootstrapAction) {
+    if (action is BootstrapAction || action is DataRestoredAction) {
       final selectedTheme = await themeRepository.getSelectedTheme();
       try {
         store.dispatch(

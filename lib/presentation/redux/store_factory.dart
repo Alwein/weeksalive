@@ -1,6 +1,7 @@
 import 'package:redux/redux.dart';
 import 'package:weeksalive/data/analytics/analytics_repository.dart';
 import 'package:weeksalive/data/app_icon/app_icon_repository.dart';
+import 'package:weeksalive/data/backup/backup_repository.dart';
 import 'package:weeksalive/data/install/install_repository.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
 import 'package:weeksalive/data/demo_mode/demo_mode_repository.dart';
@@ -24,6 +25,7 @@ import 'package:weeksalive/presentation/redux/analytics/analytics_middleware.dar
 import 'package:weeksalive/presentation/redux/app_reducer.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/app_icon/app_icon_middleware.dart';
+import 'package:weeksalive/presentation/redux/backup/backup_middleware.dart';
 import 'package:weeksalive/presentation/redux/grid_motif/grid_motif_middleware.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_middleware.dart';
 import 'package:weeksalive/presentation/redux/day/day_middleware.dart';
@@ -62,6 +64,7 @@ class StoreFactory {
   final AnalyticsRepository analyticsRepository;
   final InstallRepository installRepository;
   final ReviewPromptStore reviewPromptStore;
+  final BackupRepository backupRepository;
 
   StoreFactory({
     required this.remoteConfigRepository,
@@ -85,6 +88,7 @@ class StoreFactory {
     required this.analyticsRepository,
     required this.installRepository,
     required this.reviewPromptStore,
+    required this.backupRepository,
   }) : rewardUnlockService = rewardUnlockService ?? const RewardUnlockService(),
        homeWidgetService = homeWidgetService ?? HomeWidgetService();
 
@@ -126,6 +130,7 @@ class StoreFactory {
         AppIconMiddleware(appIconRepository: appIconRepository).call,
         GridMotifMiddleware(gridMotifRepository: gridMotifRepository).call,
         ThemeMiddleware(themeRepository: themeRepository).call,
+        BackupMiddleware(backupRepository: backupRepository).call,
         // Last, so that every event is derived from a fully reduced state.
         AnalyticsMiddleware(
           analyticsRepository: analyticsRepository,

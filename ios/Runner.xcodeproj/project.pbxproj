@@ -25,6 +25,7 @@
 		AA7EEA4431B1003315D6ED98 /* GetWallpaperIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367B99939D449E42FA2F5C9A /* GetWallpaperIntent.swift */; };
 		B59DE5C0654368FD9AEEBEB3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 863D059FF981C26FCE4C0086 /* Foundation.framework */; };
 		B8E4F1A29C3D5E7081A4B2C6 /* AppIconPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F5A2B38D4E6F8192B5C3D7 /* AppIconPlugin.swift */; };
+		D1A6B3C49E5F7A8293C6D4E8 /* ICloudBackupPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B7C4D5AF6A8B93A4D7E5F9 /* ICloudBackupPlugin.swift */; };
 		C7EE6F2F8A0FCEFEACB2E8D3 /* WeeksAliveWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2AE87A5FAE93125E9A1E5D /* WeeksAliveWidget.swift */; };
 		E6E56D1473BA9CD7DF043F9F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EEDBD54A5B668101DD0AB1B4 /* GoogleService-Info.plist */; };
 		F205A4EE6CFCB33EBFC255E1 /* WeeksAliveWallpaperIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5208A55994708B17D276487 /* WeeksAliveWallpaperIntent.swift */; };
@@ -127,6 +128,7 @@
 		AC95548DEDD119803DFDC135 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = WeeksAliveWidget/Info.plist; sourceTree = "<group>"; };
 		B5208A55994708B17D276487 /* WeeksAliveWallpaperIntent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WeeksAliveWallpaperIntent.swift; path = WeeksAliveWallpaperIntent/WeeksAliveWallpaperIntent.swift; sourceTree = "<group>"; };
 		C9F5A2B38D4E6F8192B5C3D7 /* AppIconPlugin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppIconPlugin.swift; sourceTree = "<group>"; };
+		E2B7C4D5AF6A8B93A4D7E5F9 /* ICloudBackupPlugin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ICloudBackupPlugin.swift; sourceTree = "<group>"; };
 		CB9468FE3D850621BAC1B5CD /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
 		CD88BA09C9EFA9D98D4479EA /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		EEDBD54A5B668101DD0AB1B4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -274,6 +276,7 @@
 				479D9F056F34F457AAC6C6B4 /* WallpaperPlugin.swift */,
 				D7A1C4E82B6F49A0A1C3E5F7 /* DemoShortcutPlayer.swift */,
 				C9F5A2B38D4E6F8192B5C3D7 /* AppIconPlugin.swift */,
+				E2B7C4D5AF6A8B93A4D7E5F9 /* ICloudBackupPlugin.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -631,6 +634,7 @@
 				69FD3C63A3EF5AF0FBB801C2 /* WallpaperPlugin.swift in Sources */,
 				E8B2D5F93C704AB1B2D4F608 /* DemoShortcutPlayer.swift in Sources */,
 				B8E4F1A29C3D5E7081A4B2C6 /* AppIconPlugin.swift in Sources */,
+				D1A6B3C49E5F7A8293C6D4E8 /* ICloudBackupPlugin.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

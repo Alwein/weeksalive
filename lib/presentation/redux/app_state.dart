@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:weeksalive/presentation/redux/app_icon/app_icon_state.dart';
+import 'package:weeksalive/presentation/redux/backup/backup_state.dart';
 import 'package:weeksalive/presentation/redux/day/day_state.dart';
 import 'package:weeksalive/presentation/redux/demo_mode/demo_mode_state.dart';
 import 'package:weeksalive/presentation/redux/grid_motif/grid_motif_state.dart';
@@ -37,6 +38,7 @@ abstract class AppState with _$AppState {
     required WallpaperState wallpaperState,
     required DemoModeState demoModeState,
     required ReviewPromptState reviewPromptState,
+    required BackupState backupState,
   }) = _AppState;
 
   factory AppState.initial() {
@@ -57,6 +59,7 @@ abstract class AppState with _$AppState {
       wallpaperState: const WallpaperState(),
       demoModeState: const DemoModeState(),
       reviewPromptState: const ReviewPromptState(),
+      backupState: const BackupState(),
     );
   }
 }

@@ -4,6 +4,8 @@ import 'package:redux/redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weeksalive/data/analytics/analytics_repository.dart';
 import 'package:weeksalive/data/app_icon/app_icon_repository.dart';
+import 'package:weeksalive/data/backup/backup_repository.dart';
+import 'package:weeksalive/data/backup/backup_service.dart';
 import 'package:weeksalive/data/crashlytics/crashlytics_repository.dart';
 import 'package:weeksalive/data/install/install_repository.dart';
 import 'package:weeksalive/data/day/app_database.dart';
@@ -71,6 +73,13 @@ Future<Store<AppState>> initializeReduxStore(
     installRepository:
         installRepository ?? InstallRepository(preferences: sharedPreferences),
     reviewPromptStore: ReviewPromptRepository(preferences: sharedPreferences),
+    backupRepository: BackupRepository(
+      service: BackupService(
+        database: appDatabase,
+        preferences: sharedPreferences,
+      ),
+      preferences: sharedPreferences,
+    ),
   ).createStore();
 
   return reduxStore;

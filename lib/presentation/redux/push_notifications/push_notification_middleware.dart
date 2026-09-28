@@ -3,6 +3,7 @@ import 'package:weeksalive/data/push_notifications/push_notification_repository.
 import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/domain/notifications/notification_slots.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/backup/backup_actions.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/day/day_actions.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_actions.dart';
@@ -22,7 +23,7 @@ class PushNotificationMiddleware extends MiddlewareClass<AppState> {
   void call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
-    if (action is BootstrapAction) {
+    if (action is BootstrapAction || action is DataRestoredAction) {
       final results = await Future.wait([
         pushNotificationRepository.areNotificationsEnabled(),
         pushNotificationRepository.getNotificationSlots(),
@@ -35,6 +36,7 @@ class PushNotificationMiddleware extends MiddlewareClass<AppState> {
           slots: slots,
         ),
       );
+      if (action is DataRestoredAction) await _reschedule(store);
     }
 
     if (action is RequestNotificationPermissionAction) {

@@ -1,5 +1,6 @@
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/app_icon/app_icon_reducer.dart';
+import 'package:weeksalive/presentation/redux/backup/backup_reducer.dart';
 import 'package:weeksalive/presentation/redux/day/day_reducer.dart';
 import 'package:weeksalive/presentation/redux/demo_mode/demo_mode_reducer.dart';
 import 'package:weeksalive/presentation/redux/grid_motif/grid_motif_reducer.dart';
@@ -37,5 +38,6 @@ AppState appReducer(AppState state, dynamic action) {
     wallpaperState: wallpaperReducer(state.wallpaperState, action),
     demoModeState: demoModeReducer(state.demoModeState, action),
     reviewPromptState: reviewPromptReducer(state.reviewPromptState, action),
+    backupState: backupReducer(state.backupState, action),
   );
 }

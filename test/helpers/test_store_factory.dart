@@ -1,5 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:weeksalive/data/app_icon/app_icon_repository.dart';
+import 'package:weeksalive/data/backup/backup_repository.dart';
 import 'package:weeksalive/data/install/install_repository.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
 import 'package:weeksalive/data/demo_mode/demo_mode_repository.dart';
@@ -52,6 +53,7 @@ class TestStoreFactory {
   FakeAnalyticsRepository analyticsRepository = FakeAnalyticsRepository();
   InstallRepository installRepository = FakeInstallRepository();
   FakeReviewPromptStore reviewPromptStore = FakeReviewPromptStore();
+  BackupRepository backupRepository = MockBackupRepository();
 
   Store<AppState> initializeReduxStore(AppState initialState) {
     return StoreFactory(
@@ -76,6 +78,7 @@ class TestStoreFactory {
       analyticsRepository: analyticsRepository,
       installRepository: installRepository,
       reviewPromptStore: reviewPromptStore,
+      backupRepository: backupRepository,
     ).createStore(initialState: initialState);
   }
 }

@@ -5,6 +5,7 @@ import 'package:weeksalive/core/app_icon/app_icon_id.dart';
 import 'package:weeksalive/core/grid_motif/grid_motif_id.dart';
 import 'package:weeksalive/core/styles/app_theme_id.dart';
 import 'package:weeksalive/data/app_icon/app_icon_repository.dart';
+import 'package:weeksalive/data/backup/backup_repository.dart';
 import 'package:weeksalive/data/day/day_repository.dart';
 import 'package:weeksalive/data/demo_mode/demo_mode_repository.dart';
 import 'package:weeksalive/data/grid_motif/grid_motif_repository.dart';
@@ -142,6 +143,16 @@ class MockAppIconRepository extends Mock implements AppIconRepository {
       () => getSelectedIcon(),
     ).thenAnswer((_) async => AppIconId.defaultIcon);
     when(() => setSelectedIcon(any())).thenAnswer((_) async {});
+  }
+}
+
+class MockBackupRepository extends Mock implements BackupRepository {
+  MockBackupRepository() {
+    when(() => isICloudAvailable()).thenAnswer((_) async => false);
+    when(() => lastICloudBackupAt).thenReturn(null);
+    when(() => lastExportAt).thenReturn(null);
+    when(() => findICloudBackup()).thenAnswer((_) async => null);
+    when(() => markExported()).thenAnswer((_) async {});
   }
 }
 

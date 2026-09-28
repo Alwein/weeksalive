@@ -3,6 +3,7 @@ import 'package:weeksalive/core/grid_motif/grid_motif_id.dart';
 import 'package:weeksalive/data/grid_motif/grid_motif_repository.dart';
 import 'package:weeksalive/domain/rewards/reward_id.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/backup/backup_actions.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/grid_motif/grid_motif_actions.dart';
 import 'package:weeksalive/presentation/redux/rewards/rewards_actions.dart';
@@ -16,7 +17,7 @@ class GridMotifMiddleware extends MiddlewareClass<AppState> {
   void call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
-    if (action is BootstrapAction) {
+    if (action is BootstrapAction || action is DataRestoredAction) {
       final selectedMotif = await gridMotifRepository.getSelectedMotif();
       try {
         store.dispatch(

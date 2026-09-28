@@ -17,6 +17,7 @@ import 'package:weeksalive/core/texts/app_links.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/mail_handler.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
+import 'package:weeksalive/presentation/backup/data_backup_page.dart';
 import 'package:weeksalive/presentation/feedback/feedback_sheet.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_page.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
@@ -111,6 +112,20 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       const SizedBox(height: Margins.spacingBase),
                       _PreferencesCard(viewModel: viewModel),
+                      const SizedBox(height: Margins.spacingM),
+                      Texts.primaryRegularMedium(
+                        Strings.profilePageData,
+                        color: AppColors.contentSoft(context),
+                      ),
+                      const SizedBox(height: Margins.spacingBase),
+                      _ProfileCardContainer(
+                        child: _PreferencesButton(
+                          title: Strings.profilePageBackup,
+                          value: viewModel.backupStatus,
+                          onTap: () => Navigator.push(context, DataBackupPage.route()),
+                          icon: MingCuteIcons.mgc_right_line,
+                        ),
+                      ),
                       const SizedBox(height: Margins.spacingM),
                       Texts.primaryRegularMedium(
                         Strings.profilePageGetInTouch,

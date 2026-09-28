@@ -21,6 +21,7 @@ import flutter_local_notifications
     if let controller = window?.rootViewController as? FlutterViewController {
       WallpaperPlugin.register(with: controller.registrar(forPlugin: "WallpaperPlugin")!)
       AppIconPlugin.register(with: controller.registrar(forPlugin: "AppIconPlugin")!)
+      ICloudBackupPlugin.register(with: controller.registrar(forPlugin: "ICloudBackupPlugin")!)
       let demoRegistrar = controller.registrar(forPlugin: "DemoShortcutPlayer")!
       demoRegistrar.register(
         DemoShortcutPlayerFactory(messenger: demoRegistrar.messenger(), registrar: demoRegistrar),

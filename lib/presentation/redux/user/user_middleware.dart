@@ -1,6 +1,7 @@
 import 'package:redux/redux.dart';
 import 'package:weeksalive/data/user/user_repository.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/backup/backup_actions.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/user/user_actions.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
@@ -14,7 +15,7 @@ class UserMiddleware extends MiddlewareClass<AppState> {
   void call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
-    if (action is BootstrapAction) {
+    if (action is BootstrapAction || action is DataRestoredAction) {
       final user = await userRepository.getUser();
       store.dispatch(UserLoadedAction(user));
     }

@@ -4,7 +4,9 @@ import 'package:uuid/uuid.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
+import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
+import 'package:weeksalive/presentation/backup/backup_flows.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_scope.dart';
@@ -16,6 +18,7 @@ import 'package:weeksalive/presentation/redux/push_notifications/push_notificati
 import 'package:weeksalive/presentation/redux/user/user_actions.dart';
 import 'package:weeksalive/presentation/redux/weekly_intent/weekly_intent_actions.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
+import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({
@@ -250,12 +253,44 @@ class _Footer extends StatelessWidget {
         bottom: Margins.spacingS,
         top: Margins.spacingS,
       ),
-      child: SizedBox(
-        width: double.infinity,
-        child: PrimaryButton(
-          text: step.primaryLabel(context),
-          onPressed: canContinue ? onPrimary : null,
-        ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: PrimaryButton(
+              text: step.primaryLabel(context),
+              onPressed: canContinue ? onPrimary : null,
+            ),
+          ),
+          if (controller.isFirst) const _RestoreBackupButton(),
+        ],
+      ),
+    );
+  }
+}
+
+/// Lets a returning user restore instead of going through onboarding again:
+/// the iCloud backup when one was found, a backup file otherwise. A
+/// successful restore loads the user, which takes the app to home.
+class _RestoreBackupButton extends StatelessWidget {
+  const _RestoreBackupButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        final hasICloudBackup =
+            StoreProvider.of<AppState>(context, listen: false).state.backupState.restorableICloudBackup != null;
+        if (hasICloudBackup) {
+          BackupFlows.restoreFromICloud(context);
+        } else {
+          BackupFlows.importFromFile(context);
+        }
+      },
+      child: Texts.primaryRegularMedium(
+        Strings.onboardingRestoreBackup,
+        color: AppColors.contentSoft(context),
       ),
     );
   }

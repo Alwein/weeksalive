@@ -2,6 +2,7 @@ import 'package:redux/redux.dart';
 import 'package:weeksalive/data/weekly_intent/weekly_intent_repository.dart';
 import 'package:weeksalive/domain/weekly_intent/weekly_intent.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/backup/backup_actions.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/weekly_intent/weekly_intent_actions.dart';
 import 'package:weeksalive/presentation/redux/weekly_intent/weekly_intent_state.dart';
@@ -15,7 +16,7 @@ class WeeklyIntentMiddleware extends MiddlewareClass<AppState> {
   void call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
-    if (action is BootstrapAction) {
+    if (action is BootstrapAction || action is DataRestoredAction) {
       await _load(store);
     }
 

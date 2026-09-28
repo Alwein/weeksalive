@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:redux/redux.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/domain/user/user.dart';
+import 'package:weeksalive/presentation/backup/data_backup_view_model.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
 import 'package:weeksalive/presentation/widgets/theme_picker.dart';
@@ -25,6 +26,7 @@ abstract class ProfilePageViewModel with _$ProfilePageViewModel {
     required String gridMotif,
     required String appIcon,
     required String wallpaperStatus,
+    required String backupStatus,
     required bool demoModeEnabled,
   }) = _ProfilePageViewModel;
 
@@ -64,9 +66,18 @@ abstract class ProfilePageViewModel with _$ProfilePageViewModel {
       wallpaperStatus: store.state.wallpaperState.config.enabled
           ? Strings.profilePageWallpaperConfigured
           : Strings.profilePageWallpaperNotConfigured,
+      backupStatus: _backupStatus(store.state),
       demoModeEnabled: store.state.demoModeState.enabled,
     );
   }
+}
+
+String _backupStatus(AppState state) {
+  final lastICloud = state.backupState.lastICloudBackupAt;
+  if (lastICloud != null) return Strings.profilePageBackupICloud(relativeTime(lastICloud));
+  final lastExport = state.backupState.lastExportAt;
+  if (lastExport != null) return relativeTime(lastExport);
+  return Strings.profilePageBackupOff;
 }
 
 int _userAge(User? user, DateTime now) {

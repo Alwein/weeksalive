@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AppState {
 
- RemoteConfigState get remoteConfigState; UserState get userState; PurchaseState get purchaseState; ThemeState get themeState; AppIconState get appIconState; GridMotifState get gridMotifState; RewardsState get rewardsState; StreakState get streakState; WeeklyIntentState get weeklyIntentState; DayState get dayState; PushNotificationState get pushNotificationState; NavigationState get navigationState; WeeklySummaryState get weeklySummaryState; WallpaperState get wallpaperState; DemoModeState get demoModeState; ReviewPromptState get reviewPromptState;
+ RemoteConfigState get remoteConfigState; UserState get userState; PurchaseState get purchaseState; ThemeState get themeState; AppIconState get appIconState; GridMotifState get gridMotifState; RewardsState get rewardsState; StreakState get streakState; WeeklyIntentState get weeklyIntentState; DayState get dayState; PushNotificationState get pushNotificationState; NavigationState get navigationState; WeeklySummaryState get weeklySummaryState; WallpaperState get wallpaperState; DemoModeState get demoModeState; ReviewPromptState get reviewPromptState; BackupState get backupState;
 /// Create a copy of AppState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $AppStateCopyWith<AppState> get copyWith => _$AppStateCopyWithImpl<AppState>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppState&&(identical(other.remoteConfigState, remoteConfigState) || other.remoteConfigState == remoteConfigState)&&(identical(other.userState, userState) || other.userState == userState)&&(identical(other.purchaseState, purchaseState) || other.purchaseState == purchaseState)&&(identical(other.themeState, themeState) || other.themeState == themeState)&&(identical(other.appIconState, appIconState) || other.appIconState == appIconState)&&(identical(other.gridMotifState, gridMotifState) || other.gridMotifState == gridMotifState)&&(identical(other.rewardsState, rewardsState) || other.rewardsState == rewardsState)&&(identical(other.streakState, streakState) || other.streakState == streakState)&&(identical(other.weeklyIntentState, weeklyIntentState) || other.weeklyIntentState == weeklyIntentState)&&(identical(other.dayState, dayState) || other.dayState == dayState)&&(identical(other.pushNotificationState, pushNotificationState) || other.pushNotificationState == pushNotificationState)&&(identical(other.navigationState, navigationState) || other.navigationState == navigationState)&&(identical(other.weeklySummaryState, weeklySummaryState) || other.weeklySummaryState == weeklySummaryState)&&(identical(other.wallpaperState, wallpaperState) || other.wallpaperState == wallpaperState)&&(identical(other.demoModeState, demoModeState) || other.demoModeState == demoModeState)&&(identical(other.reviewPromptState, reviewPromptState) || other.reviewPromptState == reviewPromptState));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppState&&(identical(other.remoteConfigState, remoteConfigState) || other.remoteConfigState == remoteConfigState)&&(identical(other.userState, userState) || other.userState == userState)&&(identical(other.purchaseState, purchaseState) || other.purchaseState == purchaseState)&&(identical(other.themeState, themeState) || other.themeState == themeState)&&(identical(other.appIconState, appIconState) || other.appIconState == appIconState)&&(identical(other.gridMotifState, gridMotifState) || other.gridMotifState == gridMotifState)&&(identical(other.rewardsState, rewardsState) || other.rewardsState == rewardsState)&&(identical(other.streakState, streakState) || other.streakState == streakState)&&(identical(other.weeklyIntentState, weeklyIntentState) || other.weeklyIntentState == weeklyIntentState)&&(identical(other.dayState, dayState) || other.dayState == dayState)&&(identical(other.pushNotificationState, pushNotificationState) || other.pushNotificationState == pushNotificationState)&&(identical(other.navigationState, navigationState) || other.navigationState == navigationState)&&(identical(other.weeklySummaryState, weeklySummaryState) || other.weeklySummaryState == weeklySummaryState)&&(identical(other.wallpaperState, wallpaperState) || other.wallpaperState == wallpaperState)&&(identical(other.demoModeState, demoModeState) || other.demoModeState == demoModeState)&&(identical(other.reviewPromptState, reviewPromptState) || other.reviewPromptState == reviewPromptState)&&(identical(other.backupState, backupState) || other.backupState == backupState));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,remoteConfigState,userState,purchaseState,themeState,appIconState,gridMotifState,rewardsState,streakState,weeklyIntentState,dayState,pushNotificationState,navigationState,weeklySummaryState,wallpaperState,demoModeState,reviewPromptState);
+int get hashCode => Object.hash(runtimeType,remoteConfigState,userState,purchaseState,themeState,appIconState,gridMotifState,rewardsState,streakState,weeklyIntentState,dayState,pushNotificationState,navigationState,weeklySummaryState,wallpaperState,demoModeState,reviewPromptState,backupState);
 
 @override
 String toString() {
-  return 'AppState(remoteConfigState: $remoteConfigState, userState: $userState, purchaseState: $purchaseState, themeState: $themeState, appIconState: $appIconState, gridMotifState: $gridMotifState, rewardsState: $rewardsState, streakState: $streakState, weeklyIntentState: $weeklyIntentState, dayState: $dayState, pushNotificationState: $pushNotificationState, navigationState: $navigationState, weeklySummaryState: $weeklySummaryState, wallpaperState: $wallpaperState, demoModeState: $demoModeState, reviewPromptState: $reviewPromptState)';
+  return 'AppState(remoteConfigState: $remoteConfigState, userState: $userState, purchaseState: $purchaseState, themeState: $themeState, appIconState: $appIconState, gridMotifState: $gridMotifState, rewardsState: $rewardsState, streakState: $streakState, weeklyIntentState: $weeklyIntentState, dayState: $dayState, pushNotificationState: $pushNotificationState, navigationState: $navigationState, weeklySummaryState: $weeklySummaryState, wallpaperState: $wallpaperState, demoModeState: $demoModeState, reviewPromptState: $reviewPromptState, backupState: $backupState)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $AppStateCopyWith<$Res>  {
   factory $AppStateCopyWith(AppState value, $Res Function(AppState) _then) = _$AppStateCopyWithImpl;
 @useResult
 $Res call({
- RemoteConfigState remoteConfigState, UserState userState, PurchaseState purchaseState, ThemeState themeState, AppIconState appIconState, GridMotifState gridMotifState, RewardsState rewardsState, StreakState streakState, WeeklyIntentState weeklyIntentState, DayState dayState, PushNotificationState pushNotificationState, NavigationState navigationState, WeeklySummaryState weeklySummaryState, WallpaperState wallpaperState, DemoModeState demoModeState, ReviewPromptState reviewPromptState
+ RemoteConfigState remoteConfigState, UserState userState, PurchaseState purchaseState, ThemeState themeState, AppIconState appIconState, GridMotifState gridMotifState, RewardsState rewardsState, StreakState streakState, WeeklyIntentState weeklyIntentState, DayState dayState, PushNotificationState pushNotificationState, NavigationState navigationState, WeeklySummaryState weeklySummaryState, WallpaperState wallpaperState, DemoModeState demoModeState, ReviewPromptState reviewPromptState, BackupState backupState
 });
 
 
@@ -62,7 +62,7 @@ class _$AppStateCopyWithImpl<$Res>
 
 /// Create a copy of AppState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? remoteConfigState = null,Object? userState = null,Object? purchaseState = null,Object? themeState = null,Object? appIconState = null,Object? gridMotifState = null,Object? rewardsState = null,Object? streakState = null,Object? weeklyIntentState = null,Object? dayState = null,Object? pushNotificationState = null,Object? navigationState = null,Object? weeklySummaryState = null,Object? wallpaperState = null,Object? demoModeState = null,Object? reviewPromptState = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? remoteConfigState = null,Object? userState = null,Object? purchaseState = null,Object? themeState = null,Object? appIconState = null,Object? gridMotifState = null,Object? rewardsState = null,Object? streakState = null,Object? weeklyIntentState = null,Object? dayState = null,Object? pushNotificationState = null,Object? navigationState = null,Object? weeklySummaryState = null,Object? wallpaperState = null,Object? demoModeState = null,Object? reviewPromptState = null,Object? backupState = null,}) {
   return _then(_self.copyWith(
 remoteConfigState: null == remoteConfigState ? _self.remoteConfigState : remoteConfigState // ignore: cast_nullable_to_non_nullable
 as RemoteConfigState,userState: null == userState ? _self.userState : userState // ignore: cast_nullable_to_non_nullable
@@ -80,7 +80,8 @@ as NavigationState,weeklySummaryState: null == weeklySummaryState ? _self.weekly
 as WeeklySummaryState,wallpaperState: null == wallpaperState ? _self.wallpaperState : wallpaperState // ignore: cast_nullable_to_non_nullable
 as WallpaperState,demoModeState: null == demoModeState ? _self.demoModeState : demoModeState // ignore: cast_nullable_to_non_nullable
 as DemoModeState,reviewPromptState: null == reviewPromptState ? _self.reviewPromptState : reviewPromptState // ignore: cast_nullable_to_non_nullable
-as ReviewPromptState,
+as ReviewPromptState,backupState: null == backupState ? _self.backupState : backupState // ignore: cast_nullable_to_non_nullable
+as BackupState,
   ));
 }
 /// Create a copy of AppState
@@ -192,10 +193,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RemoteConfigState remoteConfigState,  UserState userState,  PurchaseState purchaseState,  ThemeState themeState,  AppIconState appIconState,  GridMotifState gridMotifState,  RewardsState rewardsState,  StreakState streakState,  WeeklyIntentState weeklyIntentState,  DayState dayState,  PushNotificationState pushNotificationState,  NavigationState navigationState,  WeeklySummaryState weeklySummaryState,  WallpaperState wallpaperState,  DemoModeState demoModeState,  ReviewPromptState reviewPromptState)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RemoteConfigState remoteConfigState,  UserState userState,  PurchaseState purchaseState,  ThemeState themeState,  AppIconState appIconState,  GridMotifState gridMotifState,  RewardsState rewardsState,  StreakState streakState,  WeeklyIntentState weeklyIntentState,  DayState dayState,  PushNotificationState pushNotificationState,  NavigationState navigationState,  WeeklySummaryState weeklySummaryState,  WallpaperState wallpaperState,  DemoModeState demoModeState,  ReviewPromptState reviewPromptState,  BackupState backupState)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AppState() when $default != null:
-return $default(_that.remoteConfigState,_that.userState,_that.purchaseState,_that.themeState,_that.appIconState,_that.gridMotifState,_that.rewardsState,_that.streakState,_that.weeklyIntentState,_that.dayState,_that.pushNotificationState,_that.navigationState,_that.weeklySummaryState,_that.wallpaperState,_that.demoModeState,_that.reviewPromptState);case _:
+return $default(_that.remoteConfigState,_that.userState,_that.purchaseState,_that.themeState,_that.appIconState,_that.gridMotifState,_that.rewardsState,_that.streakState,_that.weeklyIntentState,_that.dayState,_that.pushNotificationState,_that.navigationState,_that.weeklySummaryState,_that.wallpaperState,_that.demoModeState,_that.reviewPromptState,_that.backupState);case _:
   return orElse();
 
 }
@@ -213,10 +214,10 @@ return $default(_that.remoteConfigState,_that.userState,_that.purchaseState,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RemoteConfigState remoteConfigState,  UserState userState,  PurchaseState purchaseState,  ThemeState themeState,  AppIconState appIconState,  GridMotifState gridMotifState,  RewardsState rewardsState,  StreakState streakState,  WeeklyIntentState weeklyIntentState,  DayState dayState,  PushNotificationState pushNotificationState,  NavigationState navigationState,  WeeklySummaryState weeklySummaryState,  WallpaperState wallpaperState,  DemoModeState demoModeState,  ReviewPromptState reviewPromptState)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RemoteConfigState remoteConfigState,  UserState userState,  PurchaseState purchaseState,  ThemeState themeState,  AppIconState appIconState,  GridMotifState gridMotifState,  RewardsState rewardsState,  StreakState streakState,  WeeklyIntentState weeklyIntentState,  DayState dayState,  PushNotificationState pushNotificationState,  NavigationState navigationState,  WeeklySummaryState weeklySummaryState,  WallpaperState wallpaperState,  DemoModeState demoModeState,  ReviewPromptState reviewPromptState,  BackupState backupState)  $default,) {final _that = this;
 switch (_that) {
 case _AppState():
-return $default(_that.remoteConfigState,_that.userState,_that.purchaseState,_that.themeState,_that.appIconState,_that.gridMotifState,_that.rewardsState,_that.streakState,_that.weeklyIntentState,_that.dayState,_that.pushNotificationState,_that.navigationState,_that.weeklySummaryState,_that.wallpaperState,_that.demoModeState,_that.reviewPromptState);case _:
+return $default(_that.remoteConfigState,_that.userState,_that.purchaseState,_that.themeState,_that.appIconState,_that.gridMotifState,_that.rewardsState,_that.streakState,_that.weeklyIntentState,_that.dayState,_that.pushNotificationState,_that.navigationState,_that.weeklySummaryState,_that.wallpaperState,_that.demoModeState,_that.reviewPromptState,_that.backupState);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -233,10 +234,10 @@ return $default(_that.remoteConfigState,_that.userState,_that.purchaseState,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RemoteConfigState remoteConfigState,  UserState userState,  PurchaseState purchaseState,  ThemeState themeState,  AppIconState appIconState,  GridMotifState gridMotifState,  RewardsState rewardsState,  StreakState streakState,  WeeklyIntentState weeklyIntentState,  DayState dayState,  PushNotificationState pushNotificationState,  NavigationState navigationState,  WeeklySummaryState weeklySummaryState,  WallpaperState wallpaperState,  DemoModeState demoModeState,  ReviewPromptState reviewPromptState)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RemoteConfigState remoteConfigState,  UserState userState,  PurchaseState purchaseState,  ThemeState themeState,  AppIconState appIconState,  GridMotifState gridMotifState,  RewardsState rewardsState,  StreakState streakState,  WeeklyIntentState weeklyIntentState,  DayState dayState,  PushNotificationState pushNotificationState,  NavigationState navigationState,  WeeklySummaryState weeklySummaryState,  WallpaperState wallpaperState,  DemoModeState demoModeState,  ReviewPromptState reviewPromptState,  BackupState backupState)?  $default,) {final _that = this;
 switch (_that) {
 case _AppState() when $default != null:
-return $default(_that.remoteConfigState,_that.userState,_that.purchaseState,_that.themeState,_that.appIconState,_that.gridMotifState,_that.rewardsState,_that.streakState,_that.weeklyIntentState,_that.dayState,_that.pushNotificationState,_that.navigationState,_that.weeklySummaryState,_that.wallpaperState,_that.demoModeState,_that.reviewPromptState);case _:
+return $default(_that.remoteConfigState,_that.userState,_that.purchaseState,_that.themeState,_that.appIconState,_that.gridMotifState,_that.rewardsState,_that.streakState,_that.weeklyIntentState,_that.dayState,_that.pushNotificationState,_that.navigationState,_that.weeklySummaryState,_that.wallpaperState,_that.demoModeState,_that.reviewPromptState,_that.backupState);case _:
   return null;
 
 }
@@ -248,7 +249,7 @@ return $default(_that.remoteConfigState,_that.userState,_that.purchaseState,_tha
 
 
 class _AppState implements AppState {
-  const _AppState({required this.remoteConfigState, required this.userState, required this.purchaseState, required this.themeState, required this.appIconState, required this.gridMotifState, required this.rewardsState, required this.streakState, required this.weeklyIntentState, required this.dayState, required this.pushNotificationState, required this.navigationState, required this.weeklySummaryState, required this.wallpaperState, required this.demoModeState, required this.reviewPromptState});
+  const _AppState({required this.remoteConfigState, required this.userState, required this.purchaseState, required this.themeState, required this.appIconState, required this.gridMotifState, required this.rewardsState, required this.streakState, required this.weeklyIntentState, required this.dayState, required this.pushNotificationState, required this.navigationState, required this.weeklySummaryState, required this.wallpaperState, required this.demoModeState, required this.reviewPromptState, required this.backupState});
   
 
 @override final  RemoteConfigState remoteConfigState;
@@ -267,6 +268,7 @@ class _AppState implements AppState {
 @override final  WallpaperState wallpaperState;
 @override final  DemoModeState demoModeState;
 @override final  ReviewPromptState reviewPromptState;
+@override final  BackupState backupState;
 
 /// Create a copy of AppState
 /// with the given fields replaced by the non-null parameter values.
@@ -278,16 +280,16 @@ _$AppStateCopyWith<_AppState> get copyWith => __$AppStateCopyWithImpl<_AppState>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppState&&(identical(other.remoteConfigState, remoteConfigState) || other.remoteConfigState == remoteConfigState)&&(identical(other.userState, userState) || other.userState == userState)&&(identical(other.purchaseState, purchaseState) || other.purchaseState == purchaseState)&&(identical(other.themeState, themeState) || other.themeState == themeState)&&(identical(other.appIconState, appIconState) || other.appIconState == appIconState)&&(identical(other.gridMotifState, gridMotifState) || other.gridMotifState == gridMotifState)&&(identical(other.rewardsState, rewardsState) || other.rewardsState == rewardsState)&&(identical(other.streakState, streakState) || other.streakState == streakState)&&(identical(other.weeklyIntentState, weeklyIntentState) || other.weeklyIntentState == weeklyIntentState)&&(identical(other.dayState, dayState) || other.dayState == dayState)&&(identical(other.pushNotificationState, pushNotificationState) || other.pushNotificationState == pushNotificationState)&&(identical(other.navigationState, navigationState) || other.navigationState == navigationState)&&(identical(other.weeklySummaryState, weeklySummaryState) || other.weeklySummaryState == weeklySummaryState)&&(identical(other.wallpaperState, wallpaperState) || other.wallpaperState == wallpaperState)&&(identical(other.demoModeState, demoModeState) || other.demoModeState == demoModeState)&&(identical(other.reviewPromptState, reviewPromptState) || other.reviewPromptState == reviewPromptState));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppState&&(identical(other.remoteConfigState, remoteConfigState) || other.remoteConfigState == remoteConfigState)&&(identical(other.userState, userState) || other.userState == userState)&&(identical(other.purchaseState, purchaseState) || other.purchaseState == purchaseState)&&(identical(other.themeState, themeState) || other.themeState == themeState)&&(identical(other.appIconState, appIconState) || other.appIconState == appIconState)&&(identical(other.gridMotifState, gridMotifState) || other.gridMotifState == gridMotifState)&&(identical(other.rewardsState, rewardsState) || other.rewardsState == rewardsState)&&(identical(other.streakState, streakState) || other.streakState == streakState)&&(identical(other.weeklyIntentState, weeklyIntentState) || other.weeklyIntentState == weeklyIntentState)&&(identical(other.dayState, dayState) || other.dayState == dayState)&&(identical(other.pushNotificationState, pushNotificationState) || other.pushNotificationState == pushNotificationState)&&(identical(other.navigationState, navigationState) || other.navigationState == navigationState)&&(identical(other.weeklySummaryState, weeklySummaryState) || other.weeklySummaryState == weeklySummaryState)&&(identical(other.wallpaperState, wallpaperState) || other.wallpaperState == wallpaperState)&&(identical(other.demoModeState, demoModeState) || other.demoModeState == demoModeState)&&(identical(other.reviewPromptState, reviewPromptState) || other.reviewPromptState == reviewPromptState)&&(identical(other.backupState, backupState) || other.backupState == backupState));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,remoteConfigState,userState,purchaseState,themeState,appIconState,gridMotifState,rewardsState,streakState,weeklyIntentState,dayState,pushNotificationState,navigationState,weeklySummaryState,wallpaperState,demoModeState,reviewPromptState);
+int get hashCode => Object.hash(runtimeType,remoteConfigState,userState,purchaseState,themeState,appIconState,gridMotifState,rewardsState,streakState,weeklyIntentState,dayState,pushNotificationState,navigationState,weeklySummaryState,wallpaperState,demoModeState,reviewPromptState,backupState);
 
 @override
 String toString() {
-  return 'AppState(remoteConfigState: $remoteConfigState, userState: $userState, purchaseState: $purchaseState, themeState: $themeState, appIconState: $appIconState, gridMotifState: $gridMotifState, rewardsState: $rewardsState, streakState: $streakState, weeklyIntentState: $weeklyIntentState, dayState: $dayState, pushNotificationState: $pushNotificationState, navigationState: $navigationState, weeklySummaryState: $weeklySummaryState, wallpaperState: $wallpaperState, demoModeState: $demoModeState, reviewPromptState: $reviewPromptState)';
+  return 'AppState(remoteConfigState: $remoteConfigState, userState: $userState, purchaseState: $purchaseState, themeState: $themeState, appIconState: $appIconState, gridMotifState: $gridMotifState, rewardsState: $rewardsState, streakState: $streakState, weeklyIntentState: $weeklyIntentState, dayState: $dayState, pushNotificationState: $pushNotificationState, navigationState: $navigationState, weeklySummaryState: $weeklySummaryState, wallpaperState: $wallpaperState, demoModeState: $demoModeState, reviewPromptState: $reviewPromptState, backupState: $backupState)';
 }
 
 
@@ -298,7 +300,7 @@ abstract mixin class _$AppStateCopyWith<$Res> implements $AppStateCopyWith<$Res>
   factory _$AppStateCopyWith(_AppState value, $Res Function(_AppState) _then) = __$AppStateCopyWithImpl;
 @override @useResult
 $Res call({
- RemoteConfigState remoteConfigState, UserState userState, PurchaseState purchaseState, ThemeState themeState, AppIconState appIconState, GridMotifState gridMotifState, RewardsState rewardsState, StreakState streakState, WeeklyIntentState weeklyIntentState, DayState dayState, PushNotificationState pushNotificationState, NavigationState navigationState, WeeklySummaryState weeklySummaryState, WallpaperState wallpaperState, DemoModeState demoModeState, ReviewPromptState reviewPromptState
+ RemoteConfigState remoteConfigState, UserState userState, PurchaseState purchaseState, ThemeState themeState, AppIconState appIconState, GridMotifState gridMotifState, RewardsState rewardsState, StreakState streakState, WeeklyIntentState weeklyIntentState, DayState dayState, PushNotificationState pushNotificationState, NavigationState navigationState, WeeklySummaryState weeklySummaryState, WallpaperState wallpaperState, DemoModeState demoModeState, ReviewPromptState reviewPromptState, BackupState backupState
 });
 
 
@@ -315,7 +317,7 @@ class __$AppStateCopyWithImpl<$Res>
 
 /// Create a copy of AppState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? remoteConfigState = null,Object? userState = null,Object? purchaseState = null,Object? themeState = null,Object? appIconState = null,Object? gridMotifState = null,Object? rewardsState = null,Object? streakState = null,Object? weeklyIntentState = null,Object? dayState = null,Object? pushNotificationState = null,Object? navigationState = null,Object? weeklySummaryState = null,Object? wallpaperState = null,Object? demoModeState = null,Object? reviewPromptState = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? remoteConfigState = null,Object? userState = null,Object? purchaseState = null,Object? themeState = null,Object? appIconState = null,Object? gridMotifState = null,Object? rewardsState = null,Object? streakState = null,Object? weeklyIntentState = null,Object? dayState = null,Object? pushNotificationState = null,Object? navigationState = null,Object? weeklySummaryState = null,Object? wallpaperState = null,Object? demoModeState = null,Object? reviewPromptState = null,Object? backupState = null,}) {
   return _then(_AppState(
 remoteConfigState: null == remoteConfigState ? _self.remoteConfigState : remoteConfigState // ignore: cast_nullable_to_non_nullable
 as RemoteConfigState,userState: null == userState ? _self.userState : userState // ignore: cast_nullable_to_non_nullable
@@ -333,7 +335,8 @@ as NavigationState,weeklySummaryState: null == weeklySummaryState ? _self.weekly
 as WeeklySummaryState,wallpaperState: null == wallpaperState ? _self.wallpaperState : wallpaperState // ignore: cast_nullable_to_non_nullable
 as WallpaperState,demoModeState: null == demoModeState ? _self.demoModeState : demoModeState // ignore: cast_nullable_to_non_nullable
 as DemoModeState,reviewPromptState: null == reviewPromptState ? _self.reviewPromptState : reviewPromptState // ignore: cast_nullable_to_non_nullable
-as ReviewPromptState,
+as ReviewPromptState,backupState: null == backupState ? _self.backupState : backupState // ignore: cast_nullable_to_non_nullable
+as BackupState,
   ));
 }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
+import 'package:weeksalive/presentation/backup/icloud_restore_prompt.dart';
 import 'package:weeksalive/presentation/bootstrap/view_model/bootstrap_page_view_model.dart';
 import 'package:weeksalive/presentation/home/home_page.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_page.dart';
@@ -17,17 +18,19 @@ class BootstrapPage extends StatelessWidget {
       converter: BootstrapPageViewModel.create,
       onInit: (store) => store.dispatch(BootstrapAction()),
       builder: (context, viewModel) {
-        return AnimatedSwitcher(
-          duration: AnimationDurations.base,
-          transitionBuilder: (child, animation) => FadeTransition(
-            opacity: animation,
-            child: child,
+        return ICloudRestorePromptListener(
+          child: AnimatedSwitcher(
+            duration: AnimationDurations.base,
+            transitionBuilder: (child, animation) => FadeTransition(
+              opacity: animation,
+              child: child,
+            ),
+            child: switch (viewModel.redirect) {
+              BootstrapPageRedirect.splash => const SplashPage(),
+              BootstrapPageRedirect.onboarding => const OnboardingPage(),
+              BootstrapPageRedirect.home => const HomePage(),
+            },
           ),
-          child: switch (viewModel.redirect) {
-            BootstrapPageRedirect.splash => const SplashPage(),
-            BootstrapPageRedirect.onboarding => const OnboardingPage(),
-            BootstrapPageRedirect.home => const HomePage(),
-          },
         );
       },
     );
