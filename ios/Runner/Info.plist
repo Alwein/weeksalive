@@ -23,7 +23,7 @@
 		<key>CFBundleSignature</key>
 		<string>????</string>
 		<key>CFBundleVersion</key>
-		<string>1</string>
+		<string>3</string>
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
 		<key>CFBundleIcons</key>
@@ -113,6 +113,8 @@
 		<array>
 			<string>audio</string>
 		</array>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>WeeksAlive lets you choose photos from your library to attach to a day or to use as your wallpaper background. Your photos stay on your device.</string>
 		<key>NSUserTrackingUsageDescription</key>
 		<string>This lets us know which ad brought you to WeeksAlive. We don't show ads in the app, and we don't sell your data.</string>
 		<key>com.posthog.posthog.AUTO_INIT</key>

@@ -7,7 +7,7 @@ class ThemeState {
   const ThemeState({
     this.selectedTheme = AppThemeId.system,
     Set<AppThemeId>? unlockedThemes,
-  }) : unlockedThemes = unlockedThemes ?? const {AppThemeId.system, AppThemeId.dark, AppThemeId.light};
+  }) : unlockedThemes = unlockedThemes ?? AppThemeId.alwaysUnlocked;
 
   ThemeState copyWith({
     AppThemeId? selectedTheme,

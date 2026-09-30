@@ -1,3 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:ui';
+
+import 'package:easy_localization/src/localization.dart';
+import 'package:easy_localization/src/translations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weeksalive/domain/day/day.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
@@ -13,6 +19,14 @@ import '../../helpers/test_app_state.dart';
 import '../../helpers/test_store_factory.dart';
 
 void main() {
+  setUpAll(() {
+    final json = File('assets/translations/en-US.json').readAsStringSync();
+    Localization.load(
+      const Locale('en', 'US'),
+      translations: Translations(jsonDecode(json) as Map<String, dynamic>),
+    );
+  });
+
   group('WeeklySummaryPageViewModel', () {
     const intentBePresent = WeeklyIntent(id: 'intent-a', label: 'Be present');
     const intentExplore = WeeklyIntent(id: 'intent-b', label: 'Explore');

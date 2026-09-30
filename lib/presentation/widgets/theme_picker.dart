@@ -43,7 +43,7 @@ class ThemePicker extends StatelessWidget {
         unlockedThemes: store.state.themeState.unlockedThemes,
       ),
       builder: (context, viewModel) {
-        final themes = scope == ThemePickerScope.onboarding ? AppThemeId.alwaysUnlocked : AppThemeId.all;
+        final themes = scope == ThemePickerScope.onboarding ? AppThemeId.alwaysUnlocked.toList() : AppThemeId.all;
         return _ThemeGrid(
           themes: themes,
           viewModel: viewModel,

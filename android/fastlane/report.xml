@@ -10,7 +10,7 @@
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: upload_to_play_store" time="49.0107">
+      <testcase classname="fastlane.lanes" name="1: upload_to_play_store" time="44.269125">
         
       </testcase>
     

@@ -51,10 +51,21 @@ class ThemeMiddleware extends MiddlewareClass<AppState> {
         ...AppThemeId.alwaysUnlocked,
         ...rewardIdsToThemeIds(action.unlocked),
       };
-      final selected = store.state.themeState.selectedTheme;
+      // Read the persisted choice rather than the state: at bootstrap the theme
+      // is loaded before rewards, so a reward theme was downgraded to system.
+      final selected = await themeRepository.getSelectedTheme();
       try {
         store.dispatch(ThemesUnlockedAction(unlockedThemes));
-        if (!unlockedThemes.contains(selected)) {
+        if (unlockedThemes.contains(selected)) {
+          if (store.state.themeState.selectedTheme != selected) {
+            store.dispatch(
+              AppThemeLoadedAction(
+                selectedTheme: selected,
+                unlockedThemes: unlockedThemes,
+              ),
+            );
+          }
+        } else {
           await themeRepository.setSelectedTheme(AppThemeId.system);
           store.dispatch(
             AppThemeLoadedAction(

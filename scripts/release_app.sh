@@ -28,14 +28,19 @@ git commit -m "🚀 Release $NEW_VERSION+$NEW_BUILD" || echo "ℹ️ Rien à com
 git tag -a "v$NEW_VERSION" -m "Release $NEW_VERSION" || echo "ℹ️ Tag déjà existant ?"
 git push origin main --tags
 
-echo "🚀 Compilation et upload Android et iOS en parallèle..."
+# Les builds Flutter ne doivent pas tourner en parallèle : chacun régénère
+# GeneratedPluginRegistrant.java, et `flutter build ipa` y remet les plugins
+# dev_dependency (flutter_native_splash) que le build Android release exclut.
+echo "📦 Build Android (AAB)"
+flutter build appbundle
+
+echo "🚀 Upload Android et build/upload iOS en parallèle..."
 
 (
-  echo "📦 Build Android (AAB)"
-  flutter build appbundle &&
   cd android &&
   fastlane upload_aab
 ) &
+ANDROID_PID=$!
 
 (
   echo "🍏 Build iOS (IPA + TestFlight + soumission App Store)"
@@ -43,7 +48,14 @@ echo "🚀 Compilation et upload Android et iOS en parallèle..."
   cd ios &&
   fastlane release_store
 ) &
+IOS_PID=$!
 
-wait
+FAILED=0
+wait "$ANDROID_PID" || { echo "❌ Upload Android échoué"; FAILED=1; }
+wait "$IOS_PID" || { echo "❌ Build/upload iOS échoué"; FAILED=1; }
+
+if [ "$FAILED" -ne 0 ]; then
+  exit 1
+fi
 
 echo "✅ Déploiement terminé ! 🎉"

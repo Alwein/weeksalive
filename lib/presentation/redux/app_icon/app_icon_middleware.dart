@@ -61,6 +61,8 @@ class AppIconMiddleware extends MiddlewareClass<AppState> {
         ...AppIconId.alwaysUnlocked,
         ...rewardIdsToAppIconIds(action.unlocked),
       };
+      // Expose unlocked icons right away: reading the persisted icon may be slow.
+      store.dispatch(AppIconsUnlockedAction(unlockedIcons));
       final persisted = await appIconRepository.getSelectedIcon();
       final selected = unlockedIcons.contains(persisted)
           ? persisted
@@ -68,7 +70,6 @@ class AppIconMiddleware extends MiddlewareClass<AppState> {
               ? store.state.appIconState.selectedIcon
               : AppIconId.defaultIcon;
       try {
-        store.dispatch(AppIconsUnlockedAction(unlockedIcons));
         if (!unlockedIcons.contains(persisted)) {
           await appIconRepository.setSelectedIcon(selected);
           await _appIconService.setIcon(selected);

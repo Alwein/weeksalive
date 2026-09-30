@@ -12,7 +12,7 @@ enum AppThemeId {
 
   static const all = [system, dark, light, petale, cafe, lavande, matcha, pivoine, terracotta, ardoise];
 
-  static const alwaysUnlocked = [system, dark, light, petale, cafe, lavande];
+  static const alwaysUnlocked = {system, dark, light, petale, cafe, lavande};
 
   bool get isAlwaysUnlocked => alwaysUnlocked.contains(this);
 
