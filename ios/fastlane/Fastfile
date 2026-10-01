@@ -45,7 +45,7 @@ platform :ios do
       in_house: false
     )
 
-    ipa_path = Dir["../build/ios/ipa/*.ipa"].first
+    ipa_path = Dir[File.expand_path("../../build/ios/ipa/*.ipa", __dir__)].first
     UI.user_error!("IPA introuvable dans build/ios/ipa") if ipa_path.nil?
 
     upload_to_testflight(
