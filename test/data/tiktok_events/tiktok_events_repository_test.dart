@@ -1,3 +1,5 @@
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -85,6 +87,77 @@ void main() {
 
       expect(repository.isInitialized, isFalse);
       expect(calls, isEmpty);
+    });
+
+    group('on iOS', () {
+      setUp(() => debugDefaultTargetPlatformOverride = TargetPlatform.iOS);
+      tearDown(() => debugDefaultTargetPlatformOverride = null);
+
+      DotEnv configuredEnv() => DotEnv()
+        ..testLoad(
+          fileInput: 'TIKTOK_IOS_APP_ID=6766545614\n'
+              'TIKTOK_IOS_ID=7686138983100907541\n'
+              'TIKTOK_ANDROID_APP_ID=com.weeksalive\n'
+              'TIKTOK_ANDROID_ID=7686139200067977237\n',
+        );
+
+      TikTokEventsRepository repositoryWithAtt(TrackingStatus status) {
+        return TikTokEventsRepository(readAttStatus: () async => status);
+      }
+
+      test('holds the SDK back on a first launch until onboarding asks for ATT', () async {
+        // Started now, the SDK would send the install before the prompt, with no
+        // IDFA to attribute it to the ad that brought the user.
+        final repository = repositoryWithAtt(TrackingStatus.notDetermined);
+        await repository.initializeFromEnv(configuredEnv(), isDebugMode: true, isFirstLaunch: true);
+
+        expect(repository.isInitialized, isFalse);
+        expect(repository.isWaitingForAtt, isTrue);
+        expect(calls, isEmpty);
+      });
+
+      test('starts and identifies the user once ATT is answered', () async {
+        final repository = repositoryWithAtt(TrackingStatus.notDetermined);
+        await repository.initializeFromEnv(
+          configuredEnv(),
+          isDebugMode: true,
+          isFirstLaunch: true,
+          externalId: 'install-id',
+        );
+
+        await repository.onAttResolved();
+
+        expect(repository.isInitialized, isTrue);
+        expect(repository.isWaitingForAtt, isFalse);
+        expect(calls.map((call) => call.method), containsAllInOrder(['initialize', 'identify']));
+        expect(calls.last.arguments['externalId'], 'install-id');
+      });
+
+      test('starts at launch when ATT was already answered', () async {
+        final repository = repositoryWithAtt(TrackingStatus.authorized);
+        await repository.initializeFromEnv(configuredEnv(), isDebugMode: true, isFirstLaunch: true);
+
+        expect(repository.isInitialized, isTrue);
+      });
+
+      test('starts at launch after the first one, even without an ATT answer', () async {
+        // Later launches no longer carry an install to lose, while holding the SDK
+        // back would leave an onboarding that never reaches the prompt untracked.
+        final repository = repositoryWithAtt(TrackingStatus.notDetermined);
+        await repository.initializeFromEnv(configuredEnv(), isDebugMode: true);
+
+        expect(repository.isInitialized, isTrue);
+      });
+
+      test('ignores an ATT answer when nothing was held back', () async {
+        final repository = repositoryWithAtt(TrackingStatus.authorized);
+        await repository.initializeFromEnv(configuredEnv(), isDebugMode: true);
+        calls.clear();
+
+        await repository.onAttResolved();
+
+        expect(calls, isEmpty);
+      });
     });
   });
 }

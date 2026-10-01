@@ -60,14 +60,16 @@ Future<AppDependencies> initializeApp() async {
   );
 
   final tikTokEventsRepository = TikTokEventsRepository();
+  // The external id is the same install id as PostHog, RevenueCat and
+  // Crashlytics: it is what will let server-side Events API calls (trial
+  // conversion, churn) be attributed to the user the SDK already knows. It is
+  // applied when the SDK starts, which on a first launch is after the ATT step.
   await tikTokEventsRepository.initializeFromEnv(
     dotenv,
     isDebugMode: kDebugMode,
+    isFirstLaunch: isFirstLaunch,
+    externalId: installId,
   );
-  // Same install id as PostHog, RevenueCat and Crashlytics: it is what will let
-  // server-side Events API calls (trial conversion, churn) be attributed to the
-  // user the SDK already knows.
-  await tikTokEventsRepository.identifyUser(externalId: installId);
 
   await AppPurchaseConfig.initializeFromEnv(dotenv, appUserId: installId);
 

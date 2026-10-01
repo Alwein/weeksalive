@@ -16,6 +16,7 @@ import 'package:weeksalive/core/utils/display_state.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/rive_theme_mixin.dart';
+import 'package:weeksalive/presentation/paywall/paywall_plans.dart';
 import 'package:weeksalive/presentation/paywall/paywall_presentation.dart';
 import 'package:weeksalive/presentation/paywall/paywall_view_model.dart';
 import 'package:weeksalive/presentation/redux/analytics/analytics_actions.dart';
@@ -59,11 +60,16 @@ base class _PaywallScrubController extends RiveWidgetController {
 }
 
 class PaywallPage extends StatelessWidget {
-  const PaywallPage({super.key, this.presentation = PaywallPresentation.onboarding});
+  const PaywallPage({
+    super.key,
+    this.presentation = PaywallPresentation.onboarding,
+  });
 
   final PaywallPresentation presentation;
 
-  static Route<bool> route({PaywallPresentation presentation = PaywallPresentation.onboarding}) {
+  static Route<bool> route({
+    PaywallPresentation presentation = PaywallPresentation.onboarding,
+  }) {
     return MaterialPageRoute<bool>(
       builder: (_) => PaywallPage(presentation: presentation),
       fullscreenDialog: presentation == PaywallPresentation.inApp,
@@ -77,15 +83,18 @@ class PaywallPage extends StatelessWidget {
       onInit: (store) => store.dispatch(const FetchOfferingAction()),
       distinct: true,
       builder: (context, vm) {
+        final store = StoreProvider.of<AppState>(context, listen: false);
         return _PaywallView(
           presentation: presentation,
           primaryPlan: vm.primaryPlan,
           alternatePlan: vm.alternatePlan,
+          plans: vm.plans,
           hasAlternatePlan: vm.hasAlternatePlan,
           isLoading: vm.isLoading,
           errorMessage: vm.errorMessage,
-          onPurchase: vm.onPurchase,
-          onRestore: () => vm.onRestore(context),
+          onPurchase: (package) =>
+              store.dispatch(PurchasePackageAction(package)),
+          onRestore: () => store.dispatch(const RestorePurchasesAction()),
           onDismiss: () => Navigator.of(context).pop(false),
           isPro: vm.isPro,
         );
@@ -99,6 +108,7 @@ class _PaywallView extends StatefulWidget {
     required this.presentation,
     required this.primaryPlan,
     required this.alternatePlan,
+    required this.plans,
     required this.hasAlternatePlan,
     required this.isLoading,
     required this.isPro,
@@ -111,11 +121,12 @@ class _PaywallView extends StatefulWidget {
   final PaywallPresentation presentation;
   final PaywallPlanData? primaryPlan;
   final PaywallPlanData? alternatePlan;
+  final List<PaywallPlanOption> plans;
   final bool hasAlternatePlan;
   final bool isLoading;
   final bool isPro;
   final String? errorMessage;
-  final void Function(BuildContext, Package) onPurchase;
+  final ValueChanged<Package> onPurchase;
   final VoidCallback onRestore;
   final VoidCallback onDismiss;
 
@@ -135,6 +146,7 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
   _MascotIntroPhase _mascotIntroPhase = _MascotIntroPhase.hidden;
   Store<AppState>? _store;
   bool _purchaseAttempted = false;
+  PaywallPlanKind? _selectedPlanKind;
 
   @override
   void initState() {
@@ -147,7 +159,10 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
       vsync: this,
       duration: AnimationDurations.long,
     );
-    _fadeAnimation = CurvedAnimation(parent: _successAnimController, curve: Curves.easeOut);
+    _fadeAnimation = CurvedAnimation(
+      parent: _successAnimController,
+      curve: Curves.easeOut,
+    );
     _mascotIntroController = AnimationController(
       vsync: this,
       duration: _mascotIntroReverseDuration,
@@ -194,7 +209,10 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
   @override
   void dispose() {
     _store?.dispatch(
-      PaywallClosedAction(presentation: widget.presentation.name, purchased: widget.isPro),
+      PaywallClosedAction(
+        presentation: widget.presentation.name,
+        purchased: widget.isPro,
+      ),
     );
     _scrollController.dispose();
     _mascotFileLoader.dispose();
@@ -229,10 +247,6 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
   void didUpdateWidget(_PaywallView old) {
     super.didUpdateWidget(old);
 
-    if (widget.errorMessage != null && old.errorMessage == null) {
-      _purchaseAttempted = false;
-    }
-
     // Only treat isPro flipping true as "just purchased" if the user actually
     // tapped purchase/restore on this screen. Otherwise a background
     // entitlement refresh resolving while the paywall happens to be open
@@ -242,11 +256,22 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
       setState(() => _showSuccess = true);
       _successAnimController.forward();
     }
+
+    // The store has answered, whether bought, cancelled or failed.
+    if (old.isLoading && !widget.isLoading) {
+      _purchaseAttempted = false;
+    }
   }
+
+  /// A purchase or restore the store has not answered yet. Closing the paywall
+  /// now would report "not subscribed" to the caller of a transaction that may
+  /// still charge the user. Loading the offerings, by contrast, must never
+  /// trap the user on the paywall.
+  bool get _transactionInFlight => _purchaseAttempted && widget.isLoading;
 
   void _purchase(Package package) {
     _purchaseAttempted = true;
-    widget.onPurchase(context, package);
+    widget.onPurchase(package);
   }
 
   void _restore() {
@@ -260,10 +285,28 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
     _purchase(package);
   }
 
+  PaywallPlanOption? _selection(List<PaywallPlanOption> plans) {
+    if (plans.isEmpty) return null;
+    final selected = _selectedPlanKind;
+    if (selected != null) {
+      for (final plan in plans) {
+        if (plan.kind == selected) return plan;
+      }
+    }
+    for (final plan in plans) {
+      if (plan.kind == PaywallPlanKind.annual) return plan;
+    }
+    return plans.first;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final canPop = _showSuccess || widget.presentation.isDismissible;
+    final canPop =
+        _showSuccess ||
+        (widget.presentation.isDismissible && !_transactionInFlight);
     final primaryPlan = widget.primaryPlan;
+    final showPlans = widget.presentation == PaywallPresentation.inApp;
+    final selectedPlan = _selection(widget.plans);
 
     return PopScope(
       canPop: canPop,
@@ -274,6 +317,7 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
           child: _showSuccess
               ? _SuccessView(
                   fadeAnimation: _fadeAnimation,
+                  subtitle: showPlans ? Strings.paywallSuccessSubtitlePaid : Strings.paywallSuccessSubtitle,
                   onGetStarted: () => Navigator.of(context).pop(true),
                 )
               : Stack(
@@ -285,32 +329,55 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
                             alignment: Alignment.topCenter,
                             child: ConstrainedBox(
                               constraints: const BoxConstraints(maxWidth: 520),
-                              child: _TimelineOffer(
-                                scrollController: _scrollController,
-                                trialWeeks: primaryPlan?.trialWeeks,
-                                trialEndDate: primaryPlan?.trialEndDate,
-                                alternateTrialDays: widget.alternatePlan?.trialDays,
-                                onStartAlternateTrial: widget.hasAlternatePlan ? _startAlternateTrial : null,
-                                isLoading: widget.isLoading,
-                              ),
+                              child: showPlans
+                                  ? _PlansOffer(
+                                      scrollController: _scrollController,
+                                      plans: widget.plans,
+                                      selected: selectedPlan?.kind,
+                                      isLoading: widget.isLoading,
+                                      onSelect: (kind) {
+                                        if (widget.isLoading) return;
+                                        setState(
+                                          () => _selectedPlanKind = kind,
+                                        );
+                                      },
+                                    )
+                                  : _TimelineOffer(
+                                      scrollController: _scrollController,
+                                      trialWeeks: primaryPlan?.trialWeeks,
+                                      trialEndDate: primaryPlan?.trialEndDate,
+                                      alternateTrialDays: widget.alternatePlan?.trialDays,
+                                      onStartAlternateTrial: widget.hasAlternatePlan ? _startAlternateTrial : null,
+                                      isLoading: widget.isLoading,
+                                    ),
                             ),
                           ),
                         ),
                         Stack(
                           clipBehavior: Clip.none,
                           children: [
-                            _FooterSection(
-                              errorMessage: widget.errorMessage,
-                              pricePerYear: primaryPlan?.pricePerYear,
-                              pricePerWeek: primaryPlan?.pricePerWeek,
-                              trialWeeks: primaryPlan?.trialWeeks,
-                              isLoading: widget.isLoading,
-                              onStartTrial: primaryPlan?.annualPackage != null
-                                  ? () => _purchase(primaryPlan!.annualPackage!)
-                                  : null,
-                              onRestore: _restore,
-                              onDismiss: widget.onDismiss,
-                            ),
+                            showPlans
+                                ? _PlansFooter(
+                                    errorMessage: widget.errorMessage,
+                                    plansUnavailable: widget.plans.isEmpty && !widget.isLoading,
+                                    isLoading: widget.isLoading,
+                                    onContinue: selectedPlan != null ? () => _purchase(selectedPlan.package) : null,
+                                    onRestore: _restore,
+                                  )
+                                : _FooterSection(
+                                    errorMessage: widget.errorMessage,
+                                    pricePerYear: primaryPlan?.pricePerYear,
+                                    pricePerWeek: primaryPlan?.pricePerWeek,
+                                    trialWeeks: primaryPlan?.trialWeeks,
+                                    isLoading: widget.isLoading,
+                                    onStartTrial: primaryPlan?.annualPackage != null
+                                        ? () => _purchase(
+                                            primaryPlan!.annualPackage!,
+                                          )
+                                        : null,
+                                    onRestore: _restore,
+                                    onDismiss: widget.onDismiss,
+                                  ),
                             Positioned(
                               top: -_paywallMascotVisibleHeight,
                               left: 0,
@@ -350,7 +417,9 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
                         top: Margins.spacingXs,
                         right: Margins.spacingS,
                         child: IconButton(
-                          onPressed: widget.onDismiss,
+                          onPressed: _transactionInFlight
+                              ? null
+                              : widget.onDismiss,
                           icon: Icon(
                             MingCuteIcons.mgc_close_line,
                             color: AppColors.contentSoft(context),
@@ -368,10 +437,12 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
 class _SuccessView extends StatelessWidget {
   const _SuccessView({
     required this.fadeAnimation,
+    required this.subtitle,
     required this.onGetStarted,
   });
 
   final Animation<double> fadeAnimation;
+  final String subtitle;
   final VoidCallback onGetStarted;
 
   @override
@@ -389,12 +460,14 @@ class _SuccessView extends StatelessWidget {
             const SizedBox(height: Margins.spacingL),
             Text(
               Strings.paywallSuccessTitle,
-              style: TextStyles.xlBold.copyWith(color: AppColors.content(context)),
+              style: TextStyles.xlBold.copyWith(
+                color: AppColors.content(context),
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: Margins.spacingBase),
             Text(
-              Strings.paywallSuccessSubtitle,
+              subtitle,
               style: TextStyles.primaryRegular.copyWith(
                 color: AppColors.contentSoft(context),
                 height: 1.6,
@@ -431,6 +504,126 @@ class _SuccessIcon extends StatelessWidget {
           color: AppColors.contentMuted(context),
           size: Dimens.iconSizeM,
         ),
+      ),
+    );
+  }
+}
+
+class _PlansOffer extends StatelessWidget {
+  const _PlansOffer({
+    required this.scrollController,
+    required this.plans,
+    required this.selected,
+    required this.isLoading,
+    required this.onSelect,
+  });
+
+  final ScrollController scrollController;
+  final List<PaywallPlanOption> plans;
+  final PaywallPlanKind? selected;
+  final bool isLoading;
+  final ValueChanged<PaywallPlanKind> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      controller: scrollController,
+      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SizedBox(height: Margins.spacingHuge),
+          Texts.xlBold(Strings.paywallPlansTitle),
+          const SizedBox(height: Margins.spacingS),
+          Text(
+            Strings.paywallPlansSubtitle,
+            style: TextStyles.primaryRegular.copyWith(
+              color: AppColors.contentSoft(context),
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: Margins.spacingL),
+          PaywallPlanPicker(
+            plans: plans,
+            selected: selected,
+            isLoading: isLoading,
+            onSelect: onSelect,
+          ),
+          const SizedBox(height: Margins.spacingXHuge),
+          const _BenefitsSection(),
+          const SizedBox(height: Margins.spacingL),
+          const SizedBox(
+            height: 160,
+            child: OverflowBox(
+              maxHeight: 220,
+              alignment: Alignment.bottomCenter,
+              child: ParallaxRive(
+                maxOffset: 0,
+                assetPath: 'assets/animations/outline_looking_up.riv',
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PlansFooter extends StatelessWidget {
+  const _PlansFooter({
+    required this.onRestore,
+    required this.errorMessage,
+    required this.plansUnavailable,
+    required this.isLoading,
+    required this.onContinue,
+  });
+
+  final VoidCallback onRestore;
+  final String? errorMessage;
+  final bool plansUnavailable;
+  final bool isLoading;
+  final VoidCallback? onContinue;
+
+  @override
+  Widget build(BuildContext context) {
+    final message = errorMessage ?? (plansUnavailable ? Strings.paywallPlansUnavailable : null);
+    return Container(
+      decoration: BoxDecoration(color: AppColors.bg(context)),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SmallDivider(width: double.infinity),
+          const SizedBox(height: Margins.spacingBase),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+            child: Column(
+              children: [
+                if (message != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: Margins.spacingBase),
+                    child: Text(
+                      message,
+                      style: TextStyles.primarySmallBold.copyWith(
+                        color: AppColors.redWarning(context),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                SizedBox(
+                  width: double.infinity,
+                  child: PrimaryButton.animated(
+                    text: Strings.continueString,
+                    onPressed: onContinue != null && !isLoading ? onContinue : null,
+                    displayState: isLoading ? DisplayState.loading : DisplayState.success,
+                  ),
+                ),
+                const SizedBox(height: Margins.spacingBase),
+                _Links(onRestore: onRestore),
+              ],
+            ),
+          ),
+          const SizedBox(height: Margins.spacingBase),
+        ],
       ),
     );
   }
@@ -475,7 +668,9 @@ class _FooterSection extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: Margins.spacingBase),
                     child: Text(
                       errorMessage!,
-                      style: TextStyles.primarySmallBold.copyWith(color: AppColors.redWarning(context)),
+                      style: TextStyles.primarySmallBold.copyWith(
+                        color: AppColors.redWarning(context),
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -610,7 +805,9 @@ class _BenefitRow extends StatelessWidget {
             padding: const EdgeInsets.only(top: 2),
             child: Text(
               label,
-              style: TextStyles.primarySmallMedium.copyWith(color: AppColors.contentSoft(context)),
+              style: TextStyles.primarySmallMedium.copyWith(
+                color: AppColors.contentSoft(context),
+              ),
             ),
           ),
         ),
@@ -691,7 +888,10 @@ class _ReviewCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.bgSoft(context),
         borderRadius: BorderRadius.circular(Dimens.radiusBase),
-        border: Border.all(color: AppColors.strokeColor(context), width: Dimens.strokeWidthS),
+        border: Border.all(
+          color: AppColors.strokeColor(context),
+          width: Dimens.strokeWidthS,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -784,7 +984,9 @@ class _TrialTimeline extends StatelessWidget {
       _TimelineItem(
         isActive: false,
         icon: MingCuteIcons.mgc_notification_line,
-        label: Strings.paywallTimelineStep3Label(trialWeeks != null ? trialWeeks! - 1 : 0),
+        label: Strings.paywallTimelineStep3Label(
+          trialWeeks != null ? trialWeeks! - 1 : 0,
+        ),
         sublabel: Strings.paywallTimelineStep3Sublabel,
       ),
       _TimelineItem(
@@ -837,7 +1039,11 @@ class _TimelineRow extends StatelessWidget {
         width: dotSize,
         height: dotSize,
         decoration: BoxDecoration(shape: BoxShape.circle, color: dotColor),
-        child: Icon(item.icon, size: Dimens.iconSizeXs, color: AppColors.bg(context)),
+        child: Icon(
+          item.icon,
+          size: Dimens.iconSizeXs,
+          color: AppColors.bg(context),
+        ),
       );
     } else if (item.isActive) {
       dotColor = AppColors.accentOrange(context);
@@ -862,7 +1068,11 @@ class _TimelineRow extends StatelessWidget {
             width: lineWidth,
           ),
         ),
-        child: Icon(item.icon, size: Dimens.iconSizeXs, color: AppColors.contentSoft(context)),
+        child: Icon(
+          item.icon,
+          size: Dimens.iconSizeXs,
+          color: AppColors.contentSoft(context),
+        ),
       );
     }
 
@@ -892,7 +1102,9 @@ class _TimelineRow extends StatelessWidget {
           const SizedBox(width: Margins.spacingBase),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(bottom: item.isLast ? 0 : Margins.spacingL),
+              padding: EdgeInsets.only(
+                bottom: item.isLast ? 0 : Margins.spacingL,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -908,7 +1120,9 @@ class _TimelineRow extends StatelessWidget {
                   if (item.sublabel != null) ...[
                     Text(
                       item.sublabel!,
-                      style: TextStyles.primaryRegular.copyWith(color: AppColors.contentSoft(context)),
+                      style: TextStyles.primaryRegular.copyWith(
+                        color: AppColors.contentSoft(context),
+                      ),
                     ),
                   ],
                 ],
@@ -938,13 +1152,17 @@ class _PriceBlock extends StatelessWidget {
       children: [
         Text(
           Strings.paywallPricePerWeek(pricePerWeek),
-          style: TextStyles.primarySmallRegular.copyWith(color: AppColors.contentSoft(context)),
+          style: TextStyles.primarySmallRegular.copyWith(
+            color: AppColors.contentSoft(context),
+          ),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: Margins.spacingS),
         Text(
           Strings.paywallPriceSubtitle(trialWeeks, pricePerYear),
-          style: TextStyles.primaryMediumBlack.copyWith(color: AppColors.content(context)),
+          style: TextStyles.primaryMediumBlack.copyWith(
+            color: AppColors.content(context),
+          ),
           textAlign: TextAlign.center,
         ),
       ],
@@ -1016,13 +1234,19 @@ class _PriceBlockSkeleton extends StatelessWidget {
         Container(
           height: 14,
           width: 220,
-          decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(4),
+          ),
         ),
         const SizedBox(height: Margins.spacingXs),
         Container(
           height: 16,
           width: 120,
-          decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(4),
+          ),
         ),
       ],
     );
@@ -1040,9 +1264,15 @@ class _Links extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _FooterLink(label: Strings.paywallFooterTerms, onTap: () => _open(AppLinks.terms)),
+            _FooterLink(
+              label: Strings.paywallFooterTerms,
+              onTap: () => _open(AppLinks.terms),
+            ),
             _dot(context),
-            _FooterLink(label: Strings.paywallFooterPrivacy, onTap: () => _open(AppLinks.privacy)),
+            _FooterLink(
+              label: Strings.paywallFooterPrivacy,
+              onTap: () => _open(AppLinks.privacy),
+            ),
             _dot(context),
             _FooterLink(label: Strings.paywallFooterRestore, onTap: onRestore),
           ],
@@ -1055,7 +1285,9 @@ class _Links extends StatelessWidget {
     padding: const EdgeInsets.symmetric(horizontal: 6),
     child: Text(
       '·',
-      style: TextStyles.primarySmallRegular.copyWith(color: AppColors.contentSoftOnSoft(context)),
+      style: TextStyles.primarySmallRegular.copyWith(
+        color: AppColors.contentSoftOnSoft(context),
+      ),
     ),
   );
 

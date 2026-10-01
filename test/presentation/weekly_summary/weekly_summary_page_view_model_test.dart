@@ -184,7 +184,7 @@ void main() {
         final vm = buildViewModel(
           entries: const {},
           userState: UserState.success(makeUser()),
-          purchaseState: const PurchaseState.success(offering: null, isPro: false),
+          purchaseState: const PurchaseState.success(isPro: false),
         );
 
         expect(vm.isFirstWeek, isFalse);
@@ -195,7 +195,7 @@ void main() {
         final vm = buildViewModel(
           entries: const {},
           userState: UserState.success(makeUser()),
-          purchaseState: const PurchaseState.success(offering: null, isPro: true),
+          purchaseState: const PurchaseState.success(isPro: true),
         );
 
         expect(vm.detailsLocked, isFalse);

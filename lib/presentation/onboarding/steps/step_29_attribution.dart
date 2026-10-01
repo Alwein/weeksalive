@@ -11,6 +11,7 @@ import 'package:weeksalive/presentation/onboarding/widgets/onboarding_staggered_
 import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
 import 'package:weeksalive/presentation/redux/analytics/analytics_actions.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/attribution/attribution_actions.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class Step29Attribution extends OnboardingStep {
@@ -26,6 +27,7 @@ class Step29Attribution extends OnboardingStep {
     store.dispatch(
       TrackAnalyticsEventAction(AnalyticsEvent.attPermissionResult(status: status.name)),
     );
+    store.dispatch(const AttPermissionResolvedAction());
     await controller.goNext();
   };
 

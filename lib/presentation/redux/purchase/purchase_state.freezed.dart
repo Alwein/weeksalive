@@ -125,13 +125,13 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function( Offering? offering,  Offering? alternateOffering)?  loading,TResult Function( Offering? offering,  Offering? alternateOffering,  bool isPro)?  success,TResult Function( String message,  Offering? offering,  Offering? alternateOffering,  bool isPro)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function( PurchaseOfferings offerings)?  loading,TResult Function( PurchaseOfferings offerings,  bool isPro)?  success,TResult Function( String message,  PurchaseOfferings offerings,  bool isPro)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case PurchaseStateInitial() when initial != null:
 return initial();case PurchaseStateLoading() when loading != null:
-return loading(_that.offering,_that.alternateOffering);case PurchaseStateSuccess() when success != null:
-return success(_that.offering,_that.alternateOffering,_that.isPro);case PurchaseStateError() when error != null:
-return error(_that.message,_that.offering,_that.alternateOffering,_that.isPro);case _:
+return loading(_that.offerings);case PurchaseStateSuccess() when success != null:
+return success(_that.offerings,_that.isPro);case PurchaseStateError() when error != null:
+return error(_that.message,_that.offerings,_that.isPro);case _:
   return orElse();
 
 }
@@ -149,13 +149,13 @@ return error(_that.message,_that.offering,_that.alternateOffering,_that.isPro);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function( Offering? offering,  Offering? alternateOffering)  loading,required TResult Function( Offering? offering,  Offering? alternateOffering,  bool isPro)  success,required TResult Function( String message,  Offering? offering,  Offering? alternateOffering,  bool isPro)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function( PurchaseOfferings offerings)  loading,required TResult Function( PurchaseOfferings offerings,  bool isPro)  success,required TResult Function( String message,  PurchaseOfferings offerings,  bool isPro)  error,}) {final _that = this;
 switch (_that) {
 case PurchaseStateInitial():
 return initial();case PurchaseStateLoading():
-return loading(_that.offering,_that.alternateOffering);case PurchaseStateSuccess():
-return success(_that.offering,_that.alternateOffering,_that.isPro);case PurchaseStateError():
-return error(_that.message,_that.offering,_that.alternateOffering,_that.isPro);}
+return loading(_that.offerings);case PurchaseStateSuccess():
+return success(_that.offerings,_that.isPro);case PurchaseStateError():
+return error(_that.message,_that.offerings,_that.isPro);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -169,13 +169,13 @@ return error(_that.message,_that.offering,_that.alternateOffering,_that.isPro);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function( Offering? offering,  Offering? alternateOffering)?  loading,TResult? Function( Offering? offering,  Offering? alternateOffering,  bool isPro)?  success,TResult? Function( String message,  Offering? offering,  Offering? alternateOffering,  bool isPro)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function( PurchaseOfferings offerings)?  loading,TResult? Function( PurchaseOfferings offerings,  bool isPro)?  success,TResult? Function( String message,  PurchaseOfferings offerings,  bool isPro)?  error,}) {final _that = this;
 switch (_that) {
 case PurchaseStateInitial() when initial != null:
 return initial();case PurchaseStateLoading() when loading != null:
-return loading(_that.offering,_that.alternateOffering);case PurchaseStateSuccess() when success != null:
-return success(_that.offering,_that.alternateOffering,_that.isPro);case PurchaseStateError() when error != null:
-return error(_that.message,_that.offering,_that.alternateOffering,_that.isPro);case _:
+return loading(_that.offerings);case PurchaseStateSuccess() when success != null:
+return success(_that.offerings,_that.isPro);case PurchaseStateError() when error != null:
+return error(_that.message,_that.offerings,_that.isPro);case _:
   return null;
 
 }
@@ -219,11 +219,10 @@ String toString() {
 
 
 class PurchaseStateLoading implements PurchaseState {
-  const PurchaseStateLoading({this.offering, this.alternateOffering});
+  const PurchaseStateLoading({this.offerings = PurchaseOfferings.none});
   
 
- final  Offering? offering;
- final  Offering? alternateOffering;
+@JsonKey() final  PurchaseOfferings offerings;
 
 /// Create a copy of PurchaseState
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +234,16 @@ $PurchaseStateLoadingCopyWith<PurchaseStateLoading> get copyWith => _$PurchaseSt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PurchaseStateLoading&&(identical(other.offering, offering) || other.offering == offering)&&(identical(other.alternateOffering, alternateOffering) || other.alternateOffering == alternateOffering));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PurchaseStateLoading&&(identical(other.offerings, offerings) || other.offerings == offerings));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,offering,alternateOffering);
+int get hashCode => Object.hash(runtimeType,offerings);
 
 @override
 String toString() {
-  return 'PurchaseState.loading(offering: $offering, alternateOffering: $alternateOffering)';
+  return 'PurchaseState.loading(offerings: $offerings)';
 }
 
 
@@ -255,11 +254,11 @@ abstract mixin class $PurchaseStateLoadingCopyWith<$Res> implements $PurchaseSta
   factory $PurchaseStateLoadingCopyWith(PurchaseStateLoading value, $Res Function(PurchaseStateLoading) _then) = _$PurchaseStateLoadingCopyWithImpl;
 @useResult
 $Res call({
- Offering? offering, Offering? alternateOffering
+ PurchaseOfferings offerings
 });
 
 
-
+$PurchaseOfferingsCopyWith<$Res> get offerings;
 
 }
 /// @nodoc
@@ -272,26 +271,33 @@ class _$PurchaseStateLoadingCopyWithImpl<$Res>
 
 /// Create a copy of PurchaseState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? offering = freezed,Object? alternateOffering = freezed,}) {
+@pragma('vm:prefer-inline') $Res call({Object? offerings = null,}) {
   return _then(PurchaseStateLoading(
-offering: freezed == offering ? _self.offering : offering // ignore: cast_nullable_to_non_nullable
-as Offering?,alternateOffering: freezed == alternateOffering ? _self.alternateOffering : alternateOffering // ignore: cast_nullable_to_non_nullable
-as Offering?,
+offerings: null == offerings ? _self.offerings : offerings // ignore: cast_nullable_to_non_nullable
+as PurchaseOfferings,
   ));
 }
 
-
+/// Create a copy of PurchaseState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$PurchaseOfferingsCopyWith<$Res> get offerings {
+  
+  return $PurchaseOfferingsCopyWith<$Res>(_self.offerings, (value) {
+    return _then(_self.copyWith(offerings: value));
+  });
+}
 }
 
 /// @nodoc
 
 
 class PurchaseStateSuccess implements PurchaseState {
-  const PurchaseStateSuccess({required this.offering, this.alternateOffering, required this.isPro});
+  const PurchaseStateSuccess({this.offerings = PurchaseOfferings.none, required this.isPro});
   
 
- final  Offering? offering;
- final  Offering? alternateOffering;
+@JsonKey() final  PurchaseOfferings offerings;
  final  bool isPro;
 
 /// Create a copy of PurchaseState
@@ -304,16 +310,16 @@ $PurchaseStateSuccessCopyWith<PurchaseStateSuccess> get copyWith => _$PurchaseSt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PurchaseStateSuccess&&(identical(other.offering, offering) || other.offering == offering)&&(identical(other.alternateOffering, alternateOffering) || other.alternateOffering == alternateOffering)&&(identical(other.isPro, isPro) || other.isPro == isPro));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PurchaseStateSuccess&&(identical(other.offerings, offerings) || other.offerings == offerings)&&(identical(other.isPro, isPro) || other.isPro == isPro));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,offering,alternateOffering,isPro);
+int get hashCode => Object.hash(runtimeType,offerings,isPro);
 
 @override
 String toString() {
-  return 'PurchaseState.success(offering: $offering, alternateOffering: $alternateOffering, isPro: $isPro)';
+  return 'PurchaseState.success(offerings: $offerings, isPro: $isPro)';
 }
 
 
@@ -324,11 +330,11 @@ abstract mixin class $PurchaseStateSuccessCopyWith<$Res> implements $PurchaseSta
   factory $PurchaseStateSuccessCopyWith(PurchaseStateSuccess value, $Res Function(PurchaseStateSuccess) _then) = _$PurchaseStateSuccessCopyWithImpl;
 @useResult
 $Res call({
- Offering? offering, Offering? alternateOffering, bool isPro
+ PurchaseOfferings offerings, bool isPro
 });
 
 
-
+$PurchaseOfferingsCopyWith<$Res> get offerings;
 
 }
 /// @nodoc
@@ -341,28 +347,35 @@ class _$PurchaseStateSuccessCopyWithImpl<$Res>
 
 /// Create a copy of PurchaseState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? offering = freezed,Object? alternateOffering = freezed,Object? isPro = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? offerings = null,Object? isPro = null,}) {
   return _then(PurchaseStateSuccess(
-offering: freezed == offering ? _self.offering : offering // ignore: cast_nullable_to_non_nullable
-as Offering?,alternateOffering: freezed == alternateOffering ? _self.alternateOffering : alternateOffering // ignore: cast_nullable_to_non_nullable
-as Offering?,isPro: null == isPro ? _self.isPro : isPro // ignore: cast_nullable_to_non_nullable
+offerings: null == offerings ? _self.offerings : offerings // ignore: cast_nullable_to_non_nullable
+as PurchaseOfferings,isPro: null == isPro ? _self.isPro : isPro // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
 
-
+/// Create a copy of PurchaseState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$PurchaseOfferingsCopyWith<$Res> get offerings {
+  
+  return $PurchaseOfferingsCopyWith<$Res>(_self.offerings, (value) {
+    return _then(_self.copyWith(offerings: value));
+  });
+}
 }
 
 /// @nodoc
 
 
 class PurchaseStateError implements PurchaseState {
-  const PurchaseStateError({required this.message, this.offering, this.alternateOffering, required this.isPro});
+  const PurchaseStateError({required this.message, this.offerings = PurchaseOfferings.none, required this.isPro});
   
 
  final  String message;
- final  Offering? offering;
- final  Offering? alternateOffering;
+@JsonKey() final  PurchaseOfferings offerings;
  final  bool isPro;
 
 /// Create a copy of PurchaseState
@@ -375,16 +388,16 @@ $PurchaseStateErrorCopyWith<PurchaseStateError> get copyWith => _$PurchaseStateE
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PurchaseStateError&&(identical(other.message, message) || other.message == message)&&(identical(other.offering, offering) || other.offering == offering)&&(identical(other.alternateOffering, alternateOffering) || other.alternateOffering == alternateOffering)&&(identical(other.isPro, isPro) || other.isPro == isPro));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PurchaseStateError&&(identical(other.message, message) || other.message == message)&&(identical(other.offerings, offerings) || other.offerings == offerings)&&(identical(other.isPro, isPro) || other.isPro == isPro));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message,offering,alternateOffering,isPro);
+int get hashCode => Object.hash(runtimeType,message,offerings,isPro);
 
 @override
 String toString() {
-  return 'PurchaseState.error(message: $message, offering: $offering, alternateOffering: $alternateOffering, isPro: $isPro)';
+  return 'PurchaseState.error(message: $message, offerings: $offerings, isPro: $isPro)';
 }
 
 
@@ -395,11 +408,11 @@ abstract mixin class $PurchaseStateErrorCopyWith<$Res> implements $PurchaseState
   factory $PurchaseStateErrorCopyWith(PurchaseStateError value, $Res Function(PurchaseStateError) _then) = _$PurchaseStateErrorCopyWithImpl;
 @useResult
 $Res call({
- String message, Offering? offering, Offering? alternateOffering, bool isPro
+ String message, PurchaseOfferings offerings, bool isPro
 });
 
 
-
+$PurchaseOfferingsCopyWith<$Res> get offerings;
 
 }
 /// @nodoc
@@ -412,17 +425,25 @@ class _$PurchaseStateErrorCopyWithImpl<$Res>
 
 /// Create a copy of PurchaseState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? message = null,Object? offering = freezed,Object? alternateOffering = freezed,Object? isPro = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? message = null,Object? offerings = null,Object? isPro = null,}) {
   return _then(PurchaseStateError(
 message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String,offering: freezed == offering ? _self.offering : offering // ignore: cast_nullable_to_non_nullable
-as Offering?,alternateOffering: freezed == alternateOffering ? _self.alternateOffering : alternateOffering // ignore: cast_nullable_to_non_nullable
-as Offering?,isPro: null == isPro ? _self.isPro : isPro // ignore: cast_nullable_to_non_nullable
+as String,offerings: null == offerings ? _self.offerings : offerings // ignore: cast_nullable_to_non_nullable
+as PurchaseOfferings,isPro: null == isPro ? _self.isPro : isPro // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
 
-
+/// Create a copy of PurchaseState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$PurchaseOfferingsCopyWith<$Res> get offerings {
+  
+  return $PurchaseOfferingsCopyWith<$Res>(_self.offerings, (value) {
+    return _then(_self.copyWith(offerings: value));
+  });
+}
 }
 
 // dart format on

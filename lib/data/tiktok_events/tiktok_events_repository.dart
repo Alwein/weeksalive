@@ -5,9 +5,18 @@ import 'package:tiktok_events_sdk/tiktok_events_sdk.dart';
 import 'package:weeksalive/core/utils/logger.dart';
 
 class TikTokEventsRepository {
+  TikTokEventsRepository({Future<TrackingStatus> Function()? readAttStatus})
+      : _readAttStatus = readAttStatus ?? (() => AppTrackingTransparency.trackingAuthorizationStatus);
+
+  final Future<TrackingStatus> Function() _readAttStatus;
+
   bool _isInitialized = false;
+  ({DotEnv dotenv, bool isDebugMode, String? externalId})? _deferredStart;
 
   bool get isInitialized => _isInitialized;
+
+  /// Whether the SDK is waiting for the onboarding ATT answer before it starts.
+  bool get isWaitingForAtt => _deferredStart != null;
 
   static bool isConfigured(DotEnv dotenv) {
     const keys = [
@@ -22,12 +31,49 @@ class TikTokEventsRepository {
     });
   }
 
-  Future<void> initializeFromEnv(DotEnv dotenv, {required bool isDebugMode}) async {
+  /// On an iOS first launch the SDK is held back until onboarding has asked for
+  /// ATT (see [onAttResolved]). The SDK reads the IDFA when it sends its queue,
+  /// and it sends the automatic InstallApp within seconds of starting: started
+  /// at launch, the install leaves minutes before the ATT prompt, with no IDFA,
+  /// and TikTok can attribute the trial that follows but not the install the
+  /// campaign optimizes on. SKAdNetwork registration does not wait — the app
+  /// delegate registers at launch, so installs that never reach the prompt are
+  /// still counted.
+  Future<void> initializeFromEnv(
+    DotEnv dotenv, {
+    required bool isDebugMode,
+    bool isFirstLaunch = false,
+    String? externalId,
+  }) async {
     if (!isConfigured(dotenv)) {
       log.w('TikTok Events SDK not configured. Skipping initialization.');
       return;
     }
 
+    if (isFirstLaunch && await _attIsUndetermined()) {
+      log.i('TikTok Events SDK deferred until the onboarding ATT answer.');
+      _deferredStart = (dotenv: dotenv, isDebugMode: isDebugMode, externalId: externalId);
+      return;
+    }
+
+    await _start(dotenv, isDebugMode: isDebugMode, externalId: externalId);
+  }
+
+  /// Starts the SDK held back by [initializeFromEnv], now that the IDFA it will
+  /// send with the install is whatever the user just chose.
+  Future<void> onAttResolved() async {
+    final deferred = _deferredStart;
+    if (deferred == null || _isInitialized) return;
+    _deferredStart = null;
+    await _start(deferred.dotenv, isDebugMode: deferred.isDebugMode, externalId: deferred.externalId);
+  }
+
+  Future<bool> _attIsUndetermined() async {
+    if (defaultTargetPlatform != TargetPlatform.iOS) return false;
+    return await _readAttStatus() == TrackingStatus.notDetermined;
+  }
+
+  Future<void> _start(DotEnv dotenv, {required bool isDebugMode, String? externalId}) async {
     try {
       log.i('Initializing TikTok Events SDK...');
 
@@ -57,7 +103,10 @@ class TikTokEventsRepository {
       log.i('TikTok Events SDK initialized successfully');
     } catch (e, stackTrace) {
       log.e('Failed to initialize TikTok Events SDK', error: e, stackTrace: stackTrace);
+      return;
     }
+
+    if (externalId != null) await identifyUser(externalId: externalId);
   }
 
   /// Kept apart from [initializeFromEnv] because the method channel only
@@ -94,9 +143,9 @@ class TikTokEventsRepository {
   /// The plugin refuses to suppress its own ATT dialog without an audit trail
   /// of the consent obtained elsewhere. It keeps this locally — nothing is sent
   /// to TikTok — so the honest value is whatever iOS reports right now.
-  static Future<String> _attConsentStatus() async {
+  Future<String> _attConsentStatus() async {
     if (defaultTargetPlatform != TargetPlatform.iOS) return 'denied';
-    final status = await AppTrackingTransparency.trackingAuthorizationStatus;
+    final status = await _readAttStatus();
     return status == TrackingStatus.authorized ? 'granted' : 'denied';
   }
 

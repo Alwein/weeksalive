@@ -3,10 +3,13 @@ import 'package:weeksalive/data/analytics/analytics_events.dart';
 import 'package:weeksalive/data/analytics/analytics_person_properties.dart';
 import 'package:weeksalive/data/analytics/analytics_repository.dart';
 import 'package:weeksalive/data/install/install_repository.dart';
+import 'package:weeksalive/data/purchases/offering_trial.dart';
+import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/domain/rewards/reward_id.dart';
 import 'package:weeksalive/domain/user/user.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_steps.dart';
+import 'package:weeksalive/presentation/paywall/paywall_presentation.dart';
 import 'package:weeksalive/presentation/redux/analytics/analytics_actions.dart';
 import 'package:weeksalive/presentation/redux/app_icon/app_icon_actions.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
@@ -26,6 +29,17 @@ import 'package:weeksalive/presentation/redux/wallpaper/wallpaper_actions.dart';
 import 'package:weeksalive/presentation/redux/weekly_intent/weekly_intent_actions.dart';
 import 'package:weeksalive/presentation/redux/weekly_summary/weekly_summary_actions.dart';
 
+/// What the user is buying, kept from the tap until the store answers. The
+/// paywall can be closed in between, so none of it may be read back from there.
+typedef _PendingPurchase = ({
+  String presentation,
+  String productId,
+  double price,
+  String currency,
+  String plan,
+  int? trialDays,
+});
+
 /// Derives analytics events from state changes.
 ///
 /// Instrumenting here rather than in widgets means an event fires wherever the
@@ -37,8 +51,8 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
     required this.installRepository,
     int? totalOnboardingSteps,
     DateTime Function()? now,
-  })  : totalOnboardingSteps = totalOnboardingSteps ?? kOnboardingSteps.length,
-        _now = now ?? DateTime.now;
+  }) : totalOnboardingSteps = totalOnboardingSteps ?? kOnboardingSteps.length,
+       _now = now ?? DateTime.now;
 
   final AnalyticsRepository analyticsRepository;
   final InstallRepository installRepository;
@@ -50,7 +64,7 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
   DateTime? _stepViewedAt;
   String? _paywallPresentation;
   DateTime? _paywallOpenedAt;
-  bool _purchaseInFlight = false;
+  _PendingPurchase? _pendingPurchase;
   bool _restoreInFlight = false;
   bool _notificationPermissionRequested = false;
   String? _checkInSource;
@@ -111,21 +125,17 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
       case PaywallClosedAction():
         _onPaywallClosed(action);
 
-      case OfferingLoadedAction(offering: null):
-        analyticsRepository.capture(
-          AnalyticsEvent.paywallOfferingUnavailable(
-            presentation: _paywallPresentation ?? 'background',
-          ),
-        );
+      case OfferingLoadedAction() || OfferingLoadFailedAction():
+        _onOfferingsResolved(store);
 
       case PurchasePackageAction():
-        _onPurchaseStarted(action);
+        _onPurchaseStarted(store, action);
 
       case RestorePurchasesAction():
         _restoreInFlight = true;
 
       case PurchaseSucceededAction():
-        _onPurchaseResolved(store, wasPro: wasPro);
+        _onPurchaseResolved(store, action, wasPro: wasPro);
 
       case PurchaseErrorAction():
         _onPurchaseFailed(action);
@@ -152,11 +162,15 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
             intentIds: action.ids,
           ),
         );
-        analyticsRepository.setPersonProperties({'intents_count': action.ids.length});
+        analyticsRepository.setPersonProperties({
+          'intents_count': action.ids.length,
+        });
 
       case WeeklySummaryCompletedAction():
         analyticsRepository.capture(
-          AnalyticsEvent.weeklySummaryCompleted(daysRecorded: _daysRecordedLastWeek(store)),
+          AnalyticsEvent.weeklySummaryCompleted(
+            daysRecorded: _daysRecordedLastWeek(store),
+          ),
         );
 
       case RequestNotificationPermissionAction():
@@ -172,21 +186,31 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
 
       case SetHomeTabIndexAction():
         analyticsRepository.capture(
-          AnalyticsEvent.gridViewChanged(tab: action.index == 0 ? 'life' : 'year'),
+          AnalyticsEvent.gridViewChanged(
+            tab: action.index == 0 ? 'life' : 'year',
+          ),
         );
 
       case NotificationTappedAction():
-        analyticsRepository.capture(AnalyticsEvent.notificationTapped(type: action.payload));
+        analyticsRepository.capture(
+          AnalyticsEvent.notificationTapped(type: action.payload),
+        );
 
       case SetAppThemeAction():
-        analyticsRepository.capture(AnalyticsEvent.themeChanged(themeId: action.themeId.name));
+        analyticsRepository.capture(
+          AnalyticsEvent.themeChanged(themeId: action.themeId.name),
+        );
         analyticsRepository.setPersonProperties({'theme': action.themeId.name});
 
       case SetAppIconAction():
-        analyticsRepository.capture(AnalyticsEvent.appIconChanged(appIconId: action.iconId.name));
+        analyticsRepository.capture(
+          AnalyticsEvent.appIconChanged(appIconId: action.iconId.name),
+        );
 
       case SetGridMotifAction():
-        analyticsRepository.capture(AnalyticsEvent.gridMotifChanged(motifId: action.motifId.name));
+        analyticsRepository.capture(
+          AnalyticsEvent.gridMotifChanged(motifId: action.motifId.name),
+        );
 
       case WallpaperInstallCompletedAction(success: true):
         analyticsRepository.capture(AnalyticsEvent.wallpaperExported());
@@ -200,17 +224,26 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
         );
 
       case FeedbackPulseRequestedAction():
-        analyticsRepository.capture(AnalyticsEvent.feedbackPulseShown(source: action.source));
+        analyticsRepository.capture(
+          AnalyticsEvent.feedbackPulseShown(source: action.source),
+        );
 
       case FeedbackPulseAnsweredAction():
         analyticsRepository.capture(
-          AnalyticsEvent.feedbackPulseAnswered(sentiment: action.sentiment.name, source: action.source),
+          AnalyticsEvent.feedbackPulseAnswered(
+            sentiment: action.sentiment.name,
+            source: action.source,
+          ),
         );
-        analyticsRepository.setPersonProperties({'feedback_sentiment': action.sentiment.name});
+        analyticsRepository.setPersonProperties({
+          'feedback_sentiment': action.sentiment.name,
+        });
 
       case FeedbackPulseResolvedAction(answered: false):
         analyticsRepository.capture(
-          AnalyticsEvent.feedbackPulseDismissed(source: store.state.reviewPromptState.pulseSource),
+          AnalyticsEvent.feedbackPulseDismissed(
+            source: store.state.reviewPromptState.pulseSource,
+          ),
         );
 
       case FeedbackSubmittedAction():
@@ -234,16 +267,20 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
     _paywallPresentation = action.presentation;
     _paywallOpenedAt = _now();
 
-    final package = store.state.purchaseState.offering?.annual;
-    final product = package?.storeProduct;
+    final isPlansPaywall =
+        action.presentation == PaywallPresentation.inApp.name;
+    final offering = isPlansPaywall
+        ? store.state.purchaseState.plansOffering
+        : store.state.purchaseState.offering;
+    final product = offering?.annual?.storeProduct;
     analyticsRepository.capture(
       AnalyticsEvent.paywallViewed(
         presentation: action.presentation,
-        offeringId: store.state.purchaseState.offering?.identifier,
+        offeringId: offering?.identifier,
         productId: product?.identifier,
         price: product?.price,
         currency: product?.currencyCode,
-        trialDays: _trialDays(store),
+        trialDays: isPlansPaywall ? null : offering?.trialDays,
       ),
     );
   }
@@ -262,47 +299,101 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
     _paywallOpenedAt = null;
   }
 
-  void _onPurchaseStarted(PurchasePackageAction action) {
-    _purchaseInFlight = true;
-    final product = action.package.storeProduct;
+  /// A paywall with nothing to sell is a revenue outage. An open paywall only
+  /// needs the offering it sells; with none open, both are checked so that a
+  /// missing offering shows up before anyone reaches it.
+  void _onOfferingsResolved(Store<AppState> store) {
+    final offerings = store.state.purchaseState.offerings;
+    final presentation = _paywallPresentation;
+    final isPlansPaywall = presentation == PaywallPresentation.inApp.name;
+    final checkCurrent = presentation == null || !isPlansPaywall;
+    final checkPlans = presentation == null || isPlansPaywall;
+
+    if (checkCurrent && offerings.current == null) {
+      analyticsRepository.capture(
+        AnalyticsEvent.paywallOfferingUnavailable(
+          presentation: presentation ?? 'background',
+          offering: 'current',
+        ),
+      );
+    }
+    if (checkPlans && offerings.plans == null) {
+      analyticsRepository.capture(
+        AnalyticsEvent.paywallOfferingUnavailable(
+          presentation: presentation ?? 'background',
+          offering: PurchaseRepository.plansOfferingId,
+        ),
+      );
+    }
+  }
+
+  void _onPurchaseStarted(Store<AppState> store, PurchasePackageAction action) {
+    final package = action.package;
+    final product = package.storeProduct;
+    final pending = (
+      presentation: _paywallPresentation ?? 'unknown',
+      productId: product.identifier,
+      price: product.price,
+      currency: product.currencyCode,
+      plan: package.packageType.name,
+      trialDays: store.state.purchaseState.offerings.trialDaysOf(package),
+    );
+    _pendingPurchase = pending;
     analyticsRepository.capture(
       AnalyticsEvent.paywallPurchaseStarted(
-        presentation: _paywallPresentation ?? 'unknown',
-        productId: product.identifier,
-        price: product.price,
-        currency: product.currencyCode,
+        presentation: pending.presentation,
+        productId: pending.productId,
+        price: pending.price,
+        currency: pending.currency,
       ),
     );
   }
 
   /// A purchase, a restore and a plain status refresh all land on
   /// [PurchaseSucceededAction]; only the pending flags say which happened.
-  void _onPurchaseResolved(Store<AppState> store, {required bool wasPro}) {
+  ///
+  /// Trial or paid is the store's answer, not the paywall's: a trial offer
+  /// can be charged at once to a user who already used an intro offer.
+  void _onPurchaseResolved(
+    Store<AppState> store,
+    PurchaseSucceededAction action, {
+    required bool wasPro,
+  }) {
     final isPro = store.state.purchaseState.isPro;
 
     if (_restoreInFlight) {
       _restoreInFlight = false;
-      analyticsRepository.capture(AnalyticsEvent.paywallRestoreResult(found: isPro));
+      analyticsRepository.capture(
+        AnalyticsEvent.paywallRestoreResult(found: isPro),
+      );
     }
 
-    if (_purchaseInFlight) {
-      _purchaseInFlight = false;
+    final pending = _pendingPurchase;
+    if (pending != null) {
+      _pendingPurchase = null;
       if (isPro && !wasPro) {
-        final product = store.state.purchaseState.offering?.annual?.storeProduct;
         analyticsRepository.capture(
-          AnalyticsEvent.trialStarted(
-            presentation: _paywallPresentation ?? 'unknown',
-            productId: product?.identifier,
-            price: product?.price,
-            currency: product?.currencyCode,
-            trialDays: _trialDays(store),
-          ),
+          action.isTrial
+              ? AnalyticsEvent.trialStarted(
+                  presentation: pending.presentation,
+                  productId: pending.productId,
+                  price: pending.price,
+                  currency: pending.currency,
+                  trialDays: pending.trialDays,
+                )
+              : AnalyticsEvent.subscriptionStarted(
+                  presentation: pending.presentation,
+                  productId: pending.productId,
+                  price: pending.price,
+                  currency: pending.currency,
+                  plan: pending.plan,
+                ),
         );
       } else if (!isPro) {
         analyticsRepository.capture(
           AnalyticsEvent.purchaseCancelled(
-            presentation: _paywallPresentation ?? 'unknown',
-            productId: store.state.purchaseState.offering?.annual?.storeProduct.identifier,
+            presentation: pending.presentation,
+            productId: pending.productId,
           ),
         );
       }
@@ -316,15 +407,18 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
   void _onPurchaseFailed(PurchaseErrorAction action) {
     if (_restoreInFlight) {
       _restoreInFlight = false;
-      analyticsRepository.capture(AnalyticsEvent.paywallRestoreResult(found: false));
+      analyticsRepository.capture(
+        AnalyticsEvent.paywallRestoreResult(found: false),
+      );
       return;
     }
-    if (!_purchaseInFlight) return;
+    final pending = _pendingPurchase;
+    if (pending == null) return;
 
-    _purchaseInFlight = false;
+    _pendingPurchase = null;
     analyticsRepository.capture(
       AnalyticsEvent.purchaseFailed(
-        presentation: _paywallPresentation ?? 'unknown',
+        presentation: pending.presentation,
         errorCode: action.errorCode,
       ),
     );
@@ -334,7 +428,10 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
     _checkInSource = action.source;
     _checkInStartedAt = _now();
     analyticsRepository.capture(
-      AnalyticsEvent.checkInStarted(source: action.source, dayOffset: action.dayOffset),
+      AnalyticsEvent.checkInStarted(
+        source: action.source,
+        dayOffset: action.dayOffset,
+      ),
     );
   }
 
@@ -354,7 +451,9 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
   void _onDaySaved(SaveDayAction action) {
     final entry = action.entry;
     final startedAt = _checkInStartedAt;
-    final dayOffset = normalizeDay(_now()).difference(normalizeDay(entry.date)).inDays;
+    final dayOffset = normalizeDay(
+      _now(),
+    ).difference(normalizeDay(entry.date)).inDays;
 
     analyticsRepository.capture(
       AnalyticsEvent.checkInCompleted(
@@ -367,13 +466,18 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
         feeling: entry.averageFeeling?.name,
         meaningScore: entry.meaningScore?.name,
         newExperience: entry.hasNewExperience,
-        secondsToComplete: startedAt == null ? null : _now().difference(startedAt).inSeconds,
+        secondsToComplete: startedAt == null
+            ? null
+            : _now().difference(startedAt).inSeconds,
       ),
     );
     _clearCheckIn();
   }
 
-  void _onStreakRecalculated(StreakRecalculatedAction action, {required int previousStreak}) {
+  void _onStreakRecalculated(
+    StreakRecalculatedAction action, {
+    required int previousStreak,
+  }) {
     if (action.count > previousStreak) {
       analyticsRepository.capture(
         AnalyticsEvent.streakContinued(
@@ -382,7 +486,9 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
         ),
       );
     } else if (previousStreak > 0 && action.count < previousStreak) {
-      analyticsRepository.capture(AnalyticsEvent.streakBroken(previousLength: previousStreak));
+      analyticsRepository.capture(
+        AnalyticsEvent.streakBroken(previousLength: previousStreak),
+      );
     }
   }
 
@@ -405,12 +511,16 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
     }
   }
 
-  void _onNotificationPermissionResolved(PushNotificationEnabledLoadedAction action) {
+  void _onNotificationPermissionResolved(
+    PushNotificationEnabledLoadedAction action,
+  ) {
     if (!_notificationPermissionRequested) return;
 
     _notificationPermissionRequested = false;
     analyticsRepository.capture(
-      AnalyticsEvent.notificationPermissionResult(granted: action.pushNotificationEnabled),
+      AnalyticsEvent.notificationPermissionResult(
+        granted: action.pushNotificationEnabled,
+      ),
     );
     analyticsRepository.setPersonProperties({
       'notification_permission': action.pushNotificationEnabled,
@@ -472,7 +582,9 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
     );
 
     analyticsRepository.capture(
-      AnalyticsEvent.profileUpdated(fieldsChanged: _changedProfileFields(previousUser, action)),
+      AnalyticsEvent.profileUpdated(
+        fieldsChanged: _changedProfileFields(previousUser, action),
+      ),
     );
     analyticsRepository.setPersonProperties(
       profilePersonProperties(
@@ -483,14 +595,20 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
     );
   }
 
-  int _secondsSince(DateTime? start) => start == null ? 0 : _now().difference(start).inSeconds;
+  int _secondsSince(DateTime? start) =>
+      start == null ? 0 : _now().difference(start).inSeconds;
 
   int _daysRecordedLastWeek(Store<AppState> store) {
     final firstDay = normalizeDay(_now()).subtract(const Duration(days: 6));
-    return store.state.dayState.entries.keys.where((date) => !date.isBefore(firstDay)).length;
+    return store.state.dayState.entries.keys
+        .where((date) => !date.isBefore(firstDay))
+        .length;
   }
 
-  static List<String> _changedProfileFields(User? previous, UpdateUserAction action) {
+  static List<String> _changedProfileFields(
+    User? previous,
+    UpdateUserAction action,
+  ) {
     if (previous == null) return const [];
 
     return [
@@ -505,15 +623,5 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
   void _clearCheckIn() {
     _checkInSource = null;
     _checkInStartedAt = null;
-  }
-
-  static int? _trialDays(Store<AppState> store) {
-    final raw = store.state.purchaseState.offering?.metadata['trial_days'];
-    return switch (raw) {
-      final int days => days,
-      final double days => days.toInt(),
-      final String days => int.tryParse(days),
-      _ => null,
-    };
   }
 }

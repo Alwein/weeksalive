@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/services.dart';
 import 'package:purchases_flutter/purchases_flutter.dart' hide Store;
 import 'package:redux/redux.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/logger.dart';
+import 'package:weeksalive/data/purchases/purchase_offerings.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/tiktok_events/tiktok_events_repository.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
@@ -44,24 +47,48 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
     }
   }
 
+  /// Offerings and entitlement are fetched together but fail independently: a
+  /// subscriber must not lose Pro because the offerings could not be loaded.
   Future<void> _loadOfferingAndStatus(Store<AppState> store) async {
-    try {
-      final results = await Future.wait([
-        purchaseRepository.fetchOfferings(),
-        purchaseRepository.getCustomerInfo(),
-      ]);
-      final offerings = results[0] as ({Offering? current, Offering? alternate});
-      final customerInfo = results[1] as CustomerInfo;
+    final (offerings, customerInfo) = await (
+      _fetchOfferings(),
+      _fetchCustomerInfo(),
+    ).wait;
+    store.dispatch(
+      offerings == null
+          ? const OfferingLoadFailedAction()
+          : OfferingLoadedAction(offerings),
+    );
+    if (customerInfo != null) {
       store.dispatch(
-        OfferingLoadedAction(
-          offerings.current,
-          alternateOffering: offerings.alternate,
-        ),
+        PurchaseSucceededAction(isPro: purchaseRepository.isPro(customerInfo)),
       );
-      store.dispatch(PurchaseSucceededAction(isPro: purchaseRepository.isPro(customerInfo)));
+    }
+  }
+
+  Future<PurchaseOfferings?> _fetchOfferings() async {
+    try {
+      return await purchaseRepository.fetchOfferings();
     } catch (e, st) {
-      log.e('PurchaseMiddleware: failed to load offering/status', error: e, stackTrace: st);
-      store.dispatch(const OfferingLoadedAction(null));
+      log.e(
+        'PurchaseMiddleware: failed to load offerings',
+        error: e,
+        stackTrace: st,
+      );
+      return null;
+    }
+  }
+
+  Future<CustomerInfo?> _fetchCustomerInfo() async {
+    try {
+      return await purchaseRepository.getCustomerInfo();
+    } catch (e, st) {
+      log.e(
+        'PurchaseMiddleware: failed to load purchase status',
+        error: e,
+        stackTrace: st,
+      );
+      return null;
     }
   }
 
@@ -69,48 +96,73 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
     try {
       final customerInfo = await purchaseRepository.purchasePackage(package);
       final isPro = purchaseRepository.isPro(customerInfo);
+      final isTrial = isPro && purchaseRepository.isInTrial(customerInfo);
       if (isPro) {
         await _trackPurchaseForTikTok(
           package,
-          isTrial: purchaseRepository.isInTrial(customerInfo),
+          isTrial: isTrial,
+          trialDays: store.state.purchaseState.offerings.trialDaysOf(package),
         );
       }
-      store.dispatch(PurchaseSucceededAction(isPro: isPro));
+      store.dispatch(PurchaseSucceededAction(isPro: isPro, isTrial: isTrial));
     } on PurchasesErrorCode catch (e) {
       if (e == PurchasesErrorCode.purchaseCancelledError) {
-        store.dispatch(PurchaseSucceededAction(isPro: store.state.purchaseState.isPro));
+        store.dispatch(
+          PurchaseSucceededAction(isPro: store.state.purchaseState.isPro),
+        );
         return;
       }
-      store.dispatch(PurchaseErrorAction(_messageForPurchaseError(e), errorCode: e.name));
+      store.dispatch(
+        PurchaseErrorAction(_messageForPurchaseError(e), errorCode: e.name),
+      );
     } on PlatformException catch (e) {
       if (_isCancelledPlatformException(e)) {
-        store.dispatch(PurchaseSucceededAction(isPro: store.state.purchaseState.isPro));
+        store.dispatch(
+          PurchaseSucceededAction(isPro: store.state.purchaseState.isPro),
+        );
         return;
       }
       log.e('PurchaseMiddleware: purchase platform error', error: e);
       store.dispatch(
-        PurchaseErrorAction(_messageForPlatformException(e), errorCode: _errorCodeForPlatformException(e)),
+        PurchaseErrorAction(
+          _messageForPlatformException(e),
+          errorCode: _errorCodeForPlatformException(e),
+        ),
       );
     } catch (e, st) {
       log.e('PurchaseMiddleware: purchase failed', error: e, stackTrace: st);
-      store.dispatch(PurchaseErrorAction(Strings.paywallErrorGeneric, errorCode: 'unknown'));
+      store.dispatch(
+        PurchaseErrorAction(Strings.paywallErrorGeneric, errorCode: 'unknown'),
+      );
     }
   }
 
   Future<void> _handleRestore(Store<AppState> store) async {
     try {
       final customerInfo = await purchaseRepository.restorePurchases();
-      store.dispatch(PurchaseSucceededAction(isPro: purchaseRepository.isPro(customerInfo)));
+      store.dispatch(
+        PurchaseSucceededAction(isPro: purchaseRepository.isPro(customerInfo)),
+      );
     } on PurchasesErrorCode catch (e) {
-      store.dispatch(PurchaseErrorAction(_messageForRestoreError(e), errorCode: e.name));
+      store.dispatch(
+        PurchaseErrorAction(_messageForRestoreError(e), errorCode: e.name),
+      );
     } on PlatformException catch (e) {
       log.e('PurchaseMiddleware: restore platform error', error: e);
       store.dispatch(
-        PurchaseErrorAction(_messageForPlatformException(e), errorCode: _errorCodeForPlatformException(e)),
+        PurchaseErrorAction(
+          _messageForPlatformException(e),
+          errorCode: _errorCodeForPlatformException(e),
+        ),
       );
     } catch (e, st) {
       log.e('PurchaseMiddleware: restore failed', error: e, stackTrace: st);
-      store.dispatch(PurchaseErrorAction(Strings.paywallErrorRestoreGeneric, errorCode: 'unknown'));
+      store.dispatch(
+        PurchaseErrorAction(
+          Strings.paywallErrorRestoreGeneric,
+          errorCode: 'unknown',
+        ),
+      );
     }
   }
 
@@ -120,7 +172,11 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
   /// and leaves the campaign with no StartTrial to bid on. The conversion that
   /// follows the trial happens outside the app, so only a server-side Events
   /// API call (RevenueCat webhook) can ever report it.
-  Future<void> _trackPurchaseForTikTok(Package package, {required bool isTrial}) async {
+  Future<void> _trackPurchaseForTikTok(
+    Package package, {
+    required bool isTrial,
+    required int? trialDays,
+  }) async {
     if (!tikTokEventsRepository.isInitialized) return;
 
     try {
@@ -132,7 +188,7 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
           currency: product.currencyCode,
           contentId: product.identifier,
           contentName: package.packageType.name,
-          trialDays: _trialDays(product),
+          trialDays: trialDays,
         );
         return;
       }
@@ -143,6 +199,9 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
         contentId: product.identifier,
         contentName: package.packageType.name,
       );
+      // Lifetime is a one-time purchase: reporting it as a subscription would
+      // inflate Subscribe for any campaign optimizing on it.
+      if (!_isSubscription(package)) return;
       await tikTokEventsRepository.logSubscribe(
         value: product.price,
         currency: product.currencyCode,
@@ -150,29 +209,25 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
         contentName: package.packageType.name,
       );
     } catch (e, st) {
-      log.e('PurchaseMiddleware: failed to track TikTok purchase', error: e, stackTrace: st);
+      log.e(
+        'PurchaseMiddleware: failed to track TikTok purchase',
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
-  static int? _trialDays(StoreProduct product) {
-    final intro = product.introductoryPrice;
-    if (intro == null) return null;
-    final units = intro.periodNumberOfUnits;
-    return switch (intro.periodUnit) {
-      PeriodUnit.day => units,
-      PeriodUnit.week => units * 7,
-      PeriodUnit.month => units * 30,
-      PeriodUnit.year => units * 365,
-      PeriodUnit.unknown => null,
-    };
-  }
+  static bool _isSubscription(Package package) =>
+      package.packageType != PackageType.lifetime &&
+      package.storeProduct.productCategory != ProductCategory.nonSubscription;
 
   static bool _isCancelledPlatformException(PlatformException e) {
     final details = e.details;
     if (details is Map) {
       final userCancelled = details['userCancelled'];
       if (userCancelled == true) return true;
-      final code = details['readableErrorCode'] ?? details['readable_error_code'];
+      final code =
+          details['readableErrorCode'] ?? details['readable_error_code'];
       if (code == 'PURCHASE_CANCELLED') return true;
     }
     return false;
@@ -205,7 +260,8 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
   static String _errorCodeForPlatformException(PlatformException e) {
     final details = e.details;
     if (details is Map) {
-      final code = details['readableErrorCode'] ?? details['readable_error_code'];
+      final code =
+          details['readableErrorCode'] ?? details['readable_error_code'];
       if (code is String) return code;
     }
     return e.code;
@@ -214,7 +270,8 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
   static String _messageForPlatformException(PlatformException e) {
     final details = e.details;
     if (details is Map) {
-      final code = details['readableErrorCode'] ?? details['readable_error_code'];
+      final code =
+          details['readableErrorCode'] ?? details['readable_error_code'];
       if (code == 'NETWORK_ERROR') return Strings.paywallErrorNetwork;
       if (code == 'PURCHASE_NOT_ALLOWED') return Strings.paywallErrorNotAllowed;
     }

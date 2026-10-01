@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:purchases_flutter/purchases_flutter.dart' hide Store;
 import 'package:redux/redux.dart';
+import 'package:weeksalive/data/purchases/purchase_offerings.dart';
 import 'package:weeksalive/presentation/redux/app_reducer.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
@@ -31,38 +32,76 @@ void main() {
     test('each variant is typed correctly', () {
       expect(const PurchaseState.initial(), isA<PurchaseStateInitial>());
       expect(const PurchaseState.loading(), isA<PurchaseStateLoading>());
-      expect(const PurchaseState.success(offering: null, isPro: false), isA<PurchaseStateSuccess>());
-      expect(const PurchaseState.error(message: 'err', isPro: false), isA<PurchaseStateError>());
+      expect(
+        const PurchaseState.success(isPro: false),
+        isA<PurchaseStateSuccess>(),
+      );
+      expect(
+        const PurchaseState.error(message: 'err', isPro: false),
+        isA<PurchaseStateError>(),
+      );
     });
 
     test('isPro extension returns false unless idle/error with isPro:true', () {
       expect(const PurchaseState.initial().isPro, isFalse);
       expect(const PurchaseState.loading().isPro, isFalse);
-      expect(const PurchaseState.success(offering: null, isPro: false).isPro, isFalse);
-      expect(const PurchaseState.success(offering: null, isPro: true).isPro, isTrue);
-      expect(const PurchaseState.error(message: 'e', isPro: false).isPro, isFalse);
-      expect(const PurchaseState.error(message: 'e', isPro: true).isPro, isTrue);
+      expect(
+        const PurchaseState.success(isPro: false).isPro,
+        isFalse,
+      );
+      expect(
+        const PurchaseState.success(isPro: true).isPro,
+        isTrue,
+      );
+      expect(
+        const PurchaseState.error(message: 'e', isPro: false).isPro,
+        isFalse,
+      );
+      expect(
+        const PurchaseState.error(message: 'e', isPro: true).isPro,
+        isTrue,
+      );
     });
 
     test('isLoading extension returns true only for loading variant', () {
       expect(const PurchaseState.initial().isLoading, isFalse);
       expect(const PurchaseState.loading().isLoading, isTrue);
-      expect(const PurchaseState.success(offering: null, isPro: false).isLoading, isFalse);
+      expect(
+        const PurchaseState.success(isPro: false).isLoading,
+        isFalse,
+      );
     });
 
     test('isResolved extension returns false until success or error', () {
       expect(const PurchaseState.initial().isResolved, isFalse);
       expect(const PurchaseState.loading().isResolved, isFalse);
-      expect(const PurchaseState.success(offering: null, isPro: false).isResolved, isTrue);
-      expect(const PurchaseState.error(message: 'e', isPro: false).isResolved, isTrue);
+      expect(
+        const PurchaseState.success(isPro: false).isResolved,
+        isTrue,
+      );
+      expect(
+        const PurchaseState.error(message: 'e', isPro: false).isResolved,
+        isTrue,
+      );
     });
 
     test('offering extension propagates through all stateful variants', () {
       final offering = offeringFixture();
+      final offerings = PurchaseOfferings(current: offering);
       expect(const PurchaseState.initial().offering, isNull);
-      expect(PurchaseState.loading(offering: offering).offering, offering);
-      expect(PurchaseState.success(offering: offering, isPro: false).offering, offering);
-      expect(PurchaseState.error(message: 'e', offering: offering, isPro: false).offering, offering);
+      expect(PurchaseState.loading(offerings: offerings).offering, offering);
+      expect(
+        PurchaseState.success(offerings: offerings, isPro: false).offering,
+        offering,
+      );
+      expect(
+        PurchaseState.error(
+          message: 'e',
+          offerings: offerings,
+          isPro: false,
+        ).offering,
+        offering,
+      );
     });
   });
 
@@ -82,37 +121,58 @@ void main() {
       ],
     );
 
-    test('transitions initial → idle(isPro:false) when user has no subscription', () async {
-      when(() => purchaseRepo.fetchOfferings()).thenAnswer((_) async => (current: null, alternate: null));
-      when(() => purchaseRepo.getCustomerInfo()).thenAnswer((_) async => customerInfoFixture());
-      when(() => purchaseRepo.isPro(any())).thenReturn(false);
+    test(
+      'transitions initial → idle(isPro:false) when user has no subscription',
+      () async {
+        when(() => purchaseRepo.fetchOfferings()).thenAnswer(
+          (_) async => PurchaseOfferings.none,
+        );
+        when(
+          () => purchaseRepo.getCustomerInfo(),
+        ).thenAnswer((_) async => customerInfoFixture());
+        when(() => purchaseRepo.isPro(any())).thenReturn(false);
 
-      final store = purchaseBootstrapStore();
-      await store.dispatch(BootstrapAction());
-      await pumpEventQueue();
+        final store = purchaseBootstrapStore();
+        await store.dispatch(BootstrapAction());
+        await pumpEventQueue();
 
-      expect(store.state.purchaseState, isA<PurchaseStateSuccess>());
-      expect(store.state.purchaseState.isPro, isFalse);
-      expect(store.state.purchaseState.offering, isNull);
-    });
+        expect(store.state.purchaseState, isA<PurchaseStateSuccess>());
+        expect(store.state.purchaseState.isPro, isFalse);
+        expect(store.state.purchaseState.offering, isNull);
+      },
+    );
 
-    test('transitions initial → idle(isPro:true) when user is already subscribed', () async {
-      final customerInfo = customerInfoFixture(isPro: true);
-      when(() => purchaseRepo.fetchOfferings()).thenAnswer((_) async => (current: null, alternate: null));
-      when(() => purchaseRepo.getCustomerInfo()).thenAnswer((_) async => customerInfo);
-      when(() => purchaseRepo.isPro(any())).thenReturn(true);
+    test(
+      'transitions initial → idle(isPro:true) when user is already subscribed',
+      () async {
+        final customerInfo = customerInfoFixture(isPro: true);
+        when(() => purchaseRepo.fetchOfferings()).thenAnswer(
+          (_) async => PurchaseOfferings.none,
+        );
+        when(
+          () => purchaseRepo.getCustomerInfo(),
+        ).thenAnswer((_) async => customerInfo);
+        when(() => purchaseRepo.isPro(any())).thenReturn(true);
 
-      final store = purchaseBootstrapStore();
-      await store.dispatch(BootstrapAction());
-      await pumpEventQueue();
+        final store = purchaseBootstrapStore();
+        await store.dispatch(BootstrapAction());
+        await pumpEventQueue();
 
-      expect(store.state.purchaseState, isA<PurchaseStateSuccess>().having((s) => s.isPro, 'isPro', isTrue));
-    });
+        expect(
+          store.state.purchaseState,
+          isA<PurchaseStateSuccess>().having((s) => s.isPro, 'isPro', isTrue),
+        );
+      },
+    );
 
     test('loads the offering and exposes it on idle state', () async {
       final offering = offeringFixture(id: 'trial_14d', trialDays: 14);
-      when(() => purchaseRepo.fetchOfferings()).thenAnswer((_) async => (current: offering, alternate: null));
-      when(() => purchaseRepo.getCustomerInfo()).thenAnswer((_) async => customerInfoFixture());
+      when(() => purchaseRepo.fetchOfferings()).thenAnswer(
+        (_) async => PurchaseOfferings(current: offering),
+      );
+      when(
+        () => purchaseRepo.getCustomerInfo(),
+      ).thenAnswer((_) async => customerInfoFixture());
       when(() => purchaseRepo.isPro(any())).thenReturn(false);
 
       final store = purchaseBootstrapStore();
@@ -127,9 +187,15 @@ void main() {
       final offering = offeringFixture(id: 'trial_30d', trialDays: 30);
       final alternate = offeringFixture(id: 'trial_14d', trialDays: 14);
       when(() => purchaseRepo.fetchOfferings()).thenAnswer(
-        (_) async => (current: offering, alternate: alternate),
+        (_) async => PurchaseOfferings(
+          current: offering,
+          alternate: alternate,
+          plans: plansOfferingFixture(),
+        ),
       );
-      when(() => purchaseRepo.getCustomerInfo()).thenAnswer((_) async => customerInfoFixture());
+      when(
+        () => purchaseRepo.getCustomerInfo(),
+      ).thenAnswer((_) async => customerInfoFixture());
       when(() => purchaseRepo.isPro(any())).thenReturn(false);
 
       final store = purchaseBootstrapStore();
@@ -137,19 +203,66 @@ void main() {
       await pumpEventQueue();
 
       expect(store.state.purchaseState.offering?.identifier, 'trial_30d');
-      expect(store.state.purchaseState.alternateOffering?.identifier, 'trial_14d');
+      expect(
+        store.state.purchaseState.alternateOffering?.identifier,
+        'trial_14d',
+      );
+      expect(store.state.purchaseState.plansOffering?.identifier, 'no_trial');
     });
 
     test('stays idle with null offering when fetchOfferings throws', () async {
-      when(() => purchaseRepo.fetchOfferings()).thenThrow(Exception('network error'));
-      when(() => purchaseRepo.getCustomerInfo()).thenAnswer((_) async => customerInfoFixture());
+      when(
+        () => purchaseRepo.fetchOfferings(),
+      ).thenThrow(Exception('network error'));
+      when(
+        () => purchaseRepo.getCustomerInfo(),
+      ).thenAnswer((_) async => customerInfoFixture());
       when(() => purchaseRepo.isPro(any())).thenReturn(false);
 
       final store = purchaseBootstrapStore();
       await store.dispatch(BootstrapAction());
       await pumpEventQueue();
 
-      expect(store.state.purchaseState, isA<PurchaseStateSuccess>().having((s) => s.offering, 'offering', isNull));
+      expect(
+        store.state.purchaseState,
+        isA<PurchaseStateSuccess>().having(
+          (s) => s.offering,
+          'offering',
+          isNull,
+        ),
+      );
+    });
+
+    test('a subscriber stays pro when the offerings fail to load', () async {
+      when(
+        () => purchaseRepo.fetchOfferings(),
+      ).thenThrow(Exception('network error'));
+      when(
+        () => purchaseRepo.getCustomerInfo(),
+      ).thenAnswer((_) async => customerInfoFixture(isPro: true));
+      when(() => purchaseRepo.isPro(any())).thenReturn(true);
+
+      final store = purchaseBootstrapStore();
+      await store.dispatch(BootstrapAction());
+      await pumpEventQueue();
+
+      expect(store.state.purchaseState.isPro, isTrue);
+    });
+
+    test('offerings still load when the status cannot be fetched', () async {
+      when(() => purchaseRepo.fetchOfferings()).thenAnswer(
+        (_) async => PurchaseOfferings(plans: plansOfferingFixture()),
+      );
+      when(
+        () => purchaseRepo.getCustomerInfo(),
+      ).thenThrow(Exception('network error'));
+
+      final store = purchaseBootstrapStore();
+      await store.dispatch(BootstrapAction());
+      await pumpEventQueue();
+
+      expect(store.state.purchaseState, isA<PurchaseStateSuccess>());
+      expect(store.state.purchaseState.plansOffering?.identifier, 'no_trial');
     });
   });
 
@@ -161,8 +274,12 @@ void main() {
 
     test('refreshes the offering independently of bootstrap', () {
       final offering = offeringFixture(id: 'trial_30d', trialDays: 30);
-      when(() => repository.fetchOfferings()).thenAnswer((_) async => (current: offering, alternate: null));
-      when(() => repository.getCustomerInfo()).thenAnswer((_) async => customerInfoFixture());
+      when(() => repository.fetchOfferings()).thenAnswer(
+        (_) async => PurchaseOfferings(current: offering),
+      );
+      when(
+        () => repository.getCustomerInfo(),
+      ).thenAnswer((_) async => customerInfoFixture());
       when(() => repository.isPro(any())).thenReturn(false);
 
       storeTester.givenStore(
@@ -183,6 +300,37 @@ void main() {
               .where((s) => s.offering?.metadata['trial_days'], 30),
         ),
       ]);
+    });
+  });
+
+  group('FetchOfferingAction failure', () {
+    test('keeps the offerings already loaded', () async {
+      final purchaseRepo = MockPurchaseRepository();
+      final plans = plansOfferingFixture();
+      when(
+        () => purchaseRepo.fetchOfferings(),
+      ).thenThrow(Exception('network error'));
+
+      final store = Store<AppState>(
+        appReducer,
+        initialState: initialAppState().copyWith(
+          purchaseState: PurchaseState.success(
+            offerings: PurchaseOfferings(plans: plans),
+            isPro: false,
+          ),
+        ),
+        middleware: [
+          PurchaseMiddleware(
+            purchaseRepository: purchaseRepo,
+            tikTokEventsRepository: TikTokEventsRepository(),
+          ).call,
+        ],
+      );
+      await store.dispatch(const FetchOfferingAction());
+      await pumpEventQueue();
+
+      expect(store.state.purchaseState, isA<PurchaseStateSuccess>());
+      expect(store.state.purchaseState.plansOffering, plans);
     });
   });
 
@@ -213,7 +361,11 @@ void main() {
     test('reports a free trial as StartTrial and never as revenue', () async {
       when(() => purchaseRepo.isInTrial(any())).thenReturn(true);
       final package = packageFixture(
-        introPrice: introPriceFixture(period: 'P2W', periodUnit: 'WEEK', periodNumberOfUnits: 2),
+        introPrice: introPriceFixture(
+          period: 'P2W',
+          periodUnit: 'WEEK',
+          periodNumberOfUnits: 2,
+        ),
       );
 
       final store = purchaseStore();
@@ -248,39 +400,111 @@ void main() {
       );
     });
 
-    test('reports a purchase without trial as Purchase and Subscribe', () async {
-      when(() => purchaseRepo.isInTrial(any())).thenReturn(false);
+    test('takes the trial length from the offering metadata', () async {
+      when(() => purchaseRepo.isInTrial(any())).thenReturn(true);
+      // StoreKit reports the whole subscription group's intro as one month.
+      final offering = offeringFixture(
+        id: 'trial_14d',
+        trialDays: 14,
+        introPrice: introPriceFixture(
+          period: 'P1M',
+          periodUnit: 'MONTH',
+          periodNumberOfUnits: 1,
+        ),
+      );
 
-      final store = purchaseStore();
-      await store.dispatch(PurchasePackageAction(packageFixture()));
+      final store = Store<AppState>(
+        appReducer,
+        initialState: initialAppState().copyWith(
+          purchaseState: PurchaseState.success(
+            offerings: PurchaseOfferings(current: offering),
+            isPro: false,
+          ),
+        ),
+        middleware: [
+          PurchaseMiddleware(
+            purchaseRepository: purchaseRepo,
+            tikTokEventsRepository: tikTokRepo,
+          ).call,
+        ],
+      );
+      await store.dispatch(PurchasePackageAction(offering.annual!));
       await pumpEventQueue();
 
       verify(
-        () => tikTokRepo.logPurchase(
-          value: 49.99,
-          currency: 'USD',
-          contentId: 'yearly',
-          contentName: 'annual',
-        ),
-      ).called(1);
-      verify(
-        () => tikTokRepo.logSubscribe(
-          value: 49.99,
-          currency: 'USD',
-          contentId: 'yearly',
-          contentName: 'annual',
-        ),
-      ).called(1);
-      verifyNever(
         () => tikTokRepo.logStartTrial(
           value: any(named: 'value'),
           currency: any(named: 'currency'),
           contentId: any(named: 'contentId'),
           contentName: any(named: 'contentName'),
-          trialDays: any(named: 'trialDays'),
+          trialDays: 14,
+        ),
+      ).called(1);
+    });
+
+    test('reports lifetime as a Purchase, never as a Subscribe', () async {
+      when(() => purchaseRepo.isInTrial(any())).thenReturn(false);
+
+      final store = purchaseStore();
+      await store.dispatch(
+        PurchasePackageAction(plansOfferingFixture().lifetime!),
+      );
+      await pumpEventQueue();
+
+      verify(
+        () => tikTokRepo.logPurchase(
+          value: 119.99,
+          currency: 'USD',
+          contentId: 'lifetime',
+          contentName: 'lifetime',
+        ),
+      ).called(1);
+      verifyNever(
+        () => tikTokRepo.logSubscribe(
+          value: any(named: 'value'),
+          currency: any(named: 'currency'),
+          contentId: any(named: 'contentId'),
+          contentName: any(named: 'contentName'),
         ),
       );
     });
+
+    test(
+      'reports a purchase without trial as Purchase and Subscribe',
+      () async {
+        when(() => purchaseRepo.isInTrial(any())).thenReturn(false);
+
+        final store = purchaseStore();
+        await store.dispatch(PurchasePackageAction(packageFixture()));
+        await pumpEventQueue();
+
+        verify(
+          () => tikTokRepo.logPurchase(
+            value: 49.99,
+            currency: 'USD',
+            contentId: 'yearly',
+            contentName: 'annual',
+          ),
+        ).called(1);
+        verify(
+          () => tikTokRepo.logSubscribe(
+            value: 49.99,
+            currency: 'USD',
+            contentId: 'yearly',
+            contentName: 'annual',
+          ),
+        ).called(1);
+        verifyNever(
+          () => tikTokRepo.logStartTrial(
+            value: any(named: 'value'),
+            currency: any(named: 'currency'),
+            contentId: any(named: 'contentId'),
+            contentName: any(named: 'contentName'),
+            trialDays: any(named: 'trialDays'),
+          ),
+        );
+      },
+    );
   });
 
   group('PurchasePackageAction', () {
@@ -292,7 +516,9 @@ void main() {
 
     test('transitions to loading then idle(isPro:true) on success', () {
       final customerInfo = customerInfoFixture(isPro: true);
-      when(() => repository.purchasePackage(any())).thenAnswer((_) async => customerInfo);
+      when(
+        () => repository.purchasePackage(any()),
+      ).thenAnswer((_) async => customerInfo);
       when(() => repository.isPro(any())).thenReturn(true);
       when(() => repository.isInTrial(any())).thenReturn(true);
 
@@ -307,95 +533,120 @@ void main() {
 
       storeTester.thenExpectStatesInOrder([
         stateWith((s) => s.purchaseState, isA<PurchaseStateLoading>()),
-        stateWith((s) => s.purchaseState, isA<PurchaseStateSuccess>().where((s) => s.isPro, isTrue)),
+        stateWith(
+          (s) => s.purchaseState,
+          isA<PurchaseStateSuccess>().where((s) => s.isPro, isTrue),
+        ),
       ]);
     });
 
-    test('transitions to error state when purchase throws a non-cancel error', () {
-      when(() => repository.purchasePackage(any())).thenThrow(Exception('payment declined'));
-      when(() => repository.isPro(any())).thenReturn(false);
+    test(
+      'transitions to error state when purchase throws a non-cancel error',
+      () {
+        when(
+          () => repository.purchasePackage(any()),
+        ).thenThrow(Exception('payment declined'));
+        when(() => repository.isPro(any())).thenReturn(false);
 
-      storeTester.givenStore(
-        initialAppState(),
-        configure: (f) {
-          f.purchaseRepository = repository;
-        },
-      );
-
-      storeTester.whenDispatching(() => PurchasePackageAction(package));
-
-      storeTester.thenExpectStatesInOrder([
-        stateWith((s) => s.purchaseState, isA<PurchaseStateLoading>()),
-        stateWith((s) => s.purchaseState, isA<PurchaseStateError>().where((s) => s.isPro, isFalse)),
-      ]);
-    });
-
-    test('does not emit error state when purchase is cancelled by user (PurchasesErrorCode)', () {
-      when(() => repository.purchasePackage(any())).thenThrow(PurchasesErrorCode.purchaseCancelledError);
-
-      storeTester.givenStore(
-        initialAppState(),
-        configure: (f) {
-          f.purchaseRepository = repository;
-        },
-      );
-
-      storeTester.whenDispatching(() => PurchasePackageAction(package));
-
-      storeTester.thenExpectNever(
-        stateWith((s) => s.purchaseState, isA<PurchaseStateError>()),
-      );
-    });
-
-    test('does not emit error state when purchase is cancelled via PlatformException', () {
-      when(() => repository.purchasePackage(any())).thenThrow(
-        PlatformException(
-          code: '1',
-          message: 'Purchase was cancelled.',
-          details: {
-            'userCancelled': true,
-            'readableErrorCode': 'PURCHASE_CANCELLED',
+        storeTester.givenStore(
+          initialAppState(),
+          configure: (f) {
+            f.purchaseRepository = repository;
           },
-        ),
-      );
+        );
 
-      storeTester.givenStore(
-        initialAppState(),
-        configure: (f) {
-          f.purchaseRepository = repository;
-        },
-      );
+        storeTester.whenDispatching(() => PurchasePackageAction(package));
 
-      storeTester.whenDispatching(() => PurchasePackageAction(package));
+        storeTester.thenExpectStatesInOrder([
+          stateWith((s) => s.purchaseState, isA<PurchaseStateLoading>()),
+          stateWith(
+            (s) => s.purchaseState,
+            isA<PurchaseStateError>().where((s) => s.isPro, isFalse),
+          ),
+        ]);
+      },
+    );
 
-      storeTester.thenExpectNever(
-        stateWith((s) => s.purchaseState, isA<PurchaseStateError>()),
-      );
-    });
+    test(
+      'does not emit error state when purchase is cancelled by user (PurchasesErrorCode)',
+      () {
+        when(
+          () => repository.purchasePackage(any()),
+        ).thenThrow(PurchasesErrorCode.purchaseCancelledError);
 
-    test('transitions back to success after cancellation via PlatformException', () {
-      when(() => repository.purchasePackage(any())).thenThrow(
-        PlatformException(
-          code: '1',
-          message: 'Purchase was cancelled.',
-          details: {'userCancelled': true, 'readableErrorCode': 'PURCHASE_CANCELLED'},
-        ),
-      );
+        storeTester.givenStore(
+          initialAppState(),
+          configure: (f) {
+            f.purchaseRepository = repository;
+          },
+        );
 
-      storeTester.givenStore(
-        initialAppState(),
-        configure: (f) {
-          f.purchaseRepository = repository;
-        },
-      );
+        storeTester.whenDispatching(() => PurchasePackageAction(package));
 
-      storeTester.whenDispatching(() => PurchasePackageAction(package));
+        storeTester.thenExpectNever(
+          stateWith((s) => s.purchaseState, isA<PurchaseStateError>()),
+        );
+      },
+    );
 
-      storeTester.thenExpectStatesInOrder([
-        stateWith((s) => s.purchaseState, isA<PurchaseStateLoading>()),
-        stateWith((s) => s.purchaseState, isA<PurchaseStateSuccess>()),
-      ]);
-    });
+    test(
+      'does not emit error state when purchase is cancelled via PlatformException',
+      () {
+        when(() => repository.purchasePackage(any())).thenThrow(
+          PlatformException(
+            code: '1',
+            message: 'Purchase was cancelled.',
+            details: {
+              'userCancelled': true,
+              'readableErrorCode': 'PURCHASE_CANCELLED',
+            },
+          ),
+        );
+
+        storeTester.givenStore(
+          initialAppState(),
+          configure: (f) {
+            f.purchaseRepository = repository;
+          },
+        );
+
+        storeTester.whenDispatching(() => PurchasePackageAction(package));
+
+        storeTester.thenExpectNever(
+          stateWith((s) => s.purchaseState, isA<PurchaseStateError>()),
+        );
+      },
+    );
+
+    test(
+      'transitions back to success after cancellation via PlatformException',
+      () {
+        when(() => repository.purchasePackage(any())).thenThrow(
+          PlatformException(
+            code: '1',
+            message: 'Purchase was cancelled.',
+            details: {
+              'userCancelled': true,
+              'readableErrorCode': 'PURCHASE_CANCELLED',
+            },
+          ),
+        );
+
+        storeTester.givenStore(
+          initialAppState(),
+          configure: (f) {
+            f.purchaseRepository = repository;
+          },
+        );
+
+        storeTester.whenDispatching(() => PurchasePackageAction(package));
+
+        storeTester.thenExpectStatesInOrder([
+          stateWith((s) => s.purchaseState, isA<PurchaseStateLoading>()),
+          stateWith((s) => s.purchaseState, isA<PurchaseStateSuccess>()),
+        ]);
+      },
+    );
   });
 
   group('RestorePurchasesAction', () {
@@ -404,47 +655,65 @@ void main() {
 
     setUp(() => storeTester = StoreTester());
 
-    test('transitions to idle(isPro:true) when active subscription is found', () {
-      final customerInfo = customerInfoFixture(isPro: true);
-      when(() => repository.restorePurchases()).thenAnswer((_) async => customerInfo);
-      when(() => repository.isPro(any())).thenReturn(true);
+    test(
+      'transitions to idle(isPro:true) when active subscription is found',
+      () {
+        final customerInfo = customerInfoFixture(isPro: true);
+        when(
+          () => repository.restorePurchases(),
+        ).thenAnswer((_) async => customerInfo);
+        when(() => repository.isPro(any())).thenReturn(true);
 
-      storeTester.givenStore(
-        initialAppState(),
-        configure: (f) {
-          f.purchaseRepository = repository;
-        },
-      );
+        storeTester.givenStore(
+          initialAppState(),
+          configure: (f) {
+            f.purchaseRepository = repository;
+          },
+        );
 
-      storeTester.whenDispatching(() => const RestorePurchasesAction());
+        storeTester.whenDispatching(() => const RestorePurchasesAction());
 
-      storeTester.thenExpectStatesInOrder([
-        stateWith((s) => s.purchaseState, isA<PurchaseStateLoading>()),
-        stateWith((s) => s.purchaseState, isA<PurchaseStateSuccess>().where((s) => s.isPro, isTrue)),
-      ]);
-    });
+        storeTester.thenExpectStatesInOrder([
+          stateWith((s) => s.purchaseState, isA<PurchaseStateLoading>()),
+          stateWith(
+            (s) => s.purchaseState,
+            isA<PurchaseStateSuccess>().where((s) => s.isPro, isTrue),
+          ),
+        ]);
+      },
+    );
 
-    test('transitions to idle(isPro:false) when no active subscription found', () {
-      when(() => repository.restorePurchases()).thenAnswer((_) async => customerInfoFixture());
-      when(() => repository.isPro(any())).thenReturn(false);
+    test(
+      'transitions to idle(isPro:false) when no active subscription found',
+      () {
+        when(
+          () => repository.restorePurchases(),
+        ).thenAnswer((_) async => customerInfoFixture());
+        when(() => repository.isPro(any())).thenReturn(false);
 
-      storeTester.givenStore(
-        initialAppState(),
-        configure: (f) {
-          f.purchaseRepository = repository;
-        },
-      );
+        storeTester.givenStore(
+          initialAppState(),
+          configure: (f) {
+            f.purchaseRepository = repository;
+          },
+        );
 
-      storeTester.whenDispatching(() => const RestorePurchasesAction());
+        storeTester.whenDispatching(() => const RestorePurchasesAction());
 
-      storeTester.thenExpectStatesInOrder([
-        stateWith((s) => s.purchaseState, isA<PurchaseStateLoading>()),
-        stateWith((s) => s.purchaseState, isA<PurchaseStateSuccess>().where((s) => s.isPro, isFalse)),
-      ]);
-    });
+        storeTester.thenExpectStatesInOrder([
+          stateWith((s) => s.purchaseState, isA<PurchaseStateLoading>()),
+          stateWith(
+            (s) => s.purchaseState,
+            isA<PurchaseStateSuccess>().where((s) => s.isPro, isFalse),
+          ),
+        ]);
+      },
+    );
 
     test('transitions to error state when restore throws', () {
-      when(() => repository.restorePurchases()).thenThrow(Exception('network error'));
+      when(
+        () => repository.restorePurchases(),
+      ).thenThrow(Exception('network error'));
 
       storeTester.givenStore(
         initialAppState(),
@@ -476,7 +745,7 @@ void main() {
         initialAppState().copyWith(
           purchaseState: PurchaseState.error(
             message: 'previous error',
-            offering: offering,
+            offerings: PurchaseOfferings(current: offering),
             isPro: false,
           ),
         ),
@@ -488,7 +757,9 @@ void main() {
       storeTester.thenExpectStatesInOrder([
         stateWith(
           (s) => s.purchaseState,
-          isA<PurchaseStateSuccess>().where((s) => s.isPro, isFalse).where((s) => s.offering, offering),
+          isA<PurchaseStateSuccess>()
+              .where((s) => s.isPro, isFalse)
+              .where((s) => s.offering, offering),
         ),
       ]);
     });

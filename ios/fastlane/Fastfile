@@ -34,6 +34,27 @@ platform :ios do
   end
 
 
+  desc "Upload an existing IPA to TestFlight without submitting it for App Store review"
+  lane :upload_testflight do
+    decoded_key = `echo "#{ENV['ASC_KEY_CONTENT_B64']}" | base64 -d`
+
+    app_store_connect_api_key(
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_content: decoded_key,
+      in_house: false
+    )
+
+    ipa_path = Dir["../build/ios/ipa/*.ipa"].first
+    UI.user_error!("IPA introuvable dans build/ios/ipa") if ipa_path.nil?
+
+    upload_to_testflight(
+      ipa: ipa_path,
+      changelog: "Bug fixes and improvements.",
+      skip_waiting_for_build_processing: true
+    )
+  end
+
   desc "Upload TestFlight (attend processing) + soumission App Store avec mêmes notes"
   lane :release_store do |options|
     decoded_key = `echo "#{ENV['ASC_KEY_CONTENT_B64']}" | base64 -d`

@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:weeksalive/data/purchases/purchase_offerings.dart';
 
 part 'purchase_state.freezed.dart';
 
@@ -8,20 +9,17 @@ sealed class PurchaseState with _$PurchaseState {
   const factory PurchaseState.initial() = PurchaseStateInitial;
 
   const factory PurchaseState.loading({
-    Offering? offering,
-    Offering? alternateOffering,
+    @Default(PurchaseOfferings.none) PurchaseOfferings offerings,
   }) = PurchaseStateLoading;
 
   const factory PurchaseState.success({
-    required Offering? offering,
-    Offering? alternateOffering,
+    @Default(PurchaseOfferings.none) PurchaseOfferings offerings,
     required bool isPro,
   }) = PurchaseStateSuccess;
 
   const factory PurchaseState.error({
     required String message,
-    Offering? offering,
-    Offering? alternateOffering,
+    @Default(PurchaseOfferings.none) PurchaseOfferings offerings,
     required bool isPro,
   }) = PurchaseStateError;
 }
@@ -33,19 +31,18 @@ extension PurchaseStateX on PurchaseState {
     _ => false,
   };
 
-  Offering? get offering => switch (this) {
-    PurchaseStateLoading(:final offering) => offering,
-    PurchaseStateSuccess(:final offering) => offering,
-    PurchaseStateError(:final offering) => offering,
-    _ => null,
+  PurchaseOfferings get offerings => switch (this) {
+    PurchaseStateLoading(:final offerings) => offerings,
+    PurchaseStateSuccess(:final offerings) => offerings,
+    PurchaseStateError(:final offerings) => offerings,
+    _ => PurchaseOfferings.none,
   };
 
-  Offering? get alternateOffering => switch (this) {
-    PurchaseStateLoading(:final alternateOffering) => alternateOffering,
-    PurchaseStateSuccess(:final alternateOffering) => alternateOffering,
-    PurchaseStateError(:final alternateOffering) => alternateOffering,
-    _ => null,
-  };
+  Offering? get offering => offerings.current;
+
+  Offering? get alternateOffering => offerings.alternate;
+
+  Offering? get plansOffering => offerings.plans;
 
   bool get isLoading => this is PurchaseStateLoading;
 

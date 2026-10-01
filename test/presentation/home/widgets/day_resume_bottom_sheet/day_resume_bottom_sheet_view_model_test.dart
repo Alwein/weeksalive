@@ -15,7 +15,7 @@ void main() {
     final store = Store<AppState>(
       appReducer,
       initialState: AppState.initial().copyWith(
-        purchaseState: PurchaseState.success(offering: null, isPro: isPro),
+        purchaseState: PurchaseState.success(isPro: isPro),
         dayState: DayState(
           entries: {for (final day in recorded) day: DayEntry(date: day, sizeLevel: 3)},
         ),

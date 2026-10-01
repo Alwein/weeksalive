@@ -10,6 +10,7 @@ import 'package:weeksalive/data/home_widget/home_widget_service.dart';
 import 'package:weeksalive/data/navigation/navigation_repository.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/tiktok_events/tiktok_events_repository.dart';
+import 'package:weeksalive/presentation/redux/attribution/attribution_middleware.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/data/remote_config/remote_config_repository.dart';
 import 'package:weeksalive/data/review/review_prompt_store.dart';
@@ -105,6 +106,9 @@ class StoreFactory {
         ).call,
         PurchaseMiddleware(
           purchaseRepository: purchaseRepository,
+          tikTokEventsRepository: tikTokEventsRepository,
+        ).call,
+        AttributionMiddleware(
           tikTokEventsRepository: tikTokEventsRepository,
         ).call,
         WeeklyIntentMiddleware(

@@ -2,32 +2,29 @@ import 'package:weeksalive/presentation/redux/purchase/purchase_actions.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 
 PurchaseState purchaseReducer(PurchaseState state, dynamic action) {
-  if (action is FetchOfferingAction) {
-    return PurchaseState.loading(
-      offering: state.offering,
-      alternateOffering: state.alternateOffering,
-    );
-  }
-
-  if (action is PurchasePackageAction || action is RestorePurchasesAction) {
-    return PurchaseState.loading(
-      offering: state.offering,
-      alternateOffering: state.alternateOffering,
-    );
+  if (action is FetchOfferingAction ||
+      action is PurchasePackageAction ||
+      action is RestorePurchasesAction) {
+    return PurchaseState.loading(offerings: state.offerings);
   }
 
   if (action is OfferingLoadedAction) {
     return PurchaseState.success(
-      offering: action.offering,
-      alternateOffering: action.alternateOffering,
+      offerings: action.offerings,
+      isPro: state.isPro,
+    );
+  }
+
+  if (action is OfferingLoadFailedAction) {
+    return PurchaseState.success(
+      offerings: state.offerings,
       isPro: state.isPro,
     );
   }
 
   if (action is PurchaseSucceededAction) {
     return PurchaseState.success(
-      offering: state.offering,
-      alternateOffering: state.alternateOffering,
+      offerings: state.offerings,
       isPro: action.isPro,
     );
   }
@@ -35,16 +32,14 @@ PurchaseState purchaseReducer(PurchaseState state, dynamic action) {
   if (action is PurchaseErrorAction) {
     return PurchaseState.error(
       message: action.message,
-      offering: state.offering,
-      alternateOffering: state.alternateOffering,
+      offerings: state.offerings,
       isPro: state.isPro,
     );
   }
 
   if (action is ClearPurchaseErrorAction) {
     return PurchaseState.success(
-      offering: state.offering,
-      alternateOffering: state.alternateOffering,
+      offerings: state.offerings,
       isPro: state.isPro,
     );
   }

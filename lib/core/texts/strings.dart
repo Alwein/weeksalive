@@ -400,7 +400,24 @@ class Strings {
   // paywall success
   static String get paywallSuccessTitle => tr('paywall_success_title');
   static String get paywallSuccessSubtitle => tr('paywall_success_subtitle');
+  static String get paywallSuccessSubtitlePaid =>
+      tr('paywall_success_subtitle_paid');
   static String get paywallSuccessCta => tr('paywall_success_cta');
+
+  static String get paywallPlansTitle => tr('paywall_plans_title');
+  static String get paywallPlansSubtitle => tr('paywall_plans_subtitle');
+  static String get paywallPlanAnnual => tr('paywall_plan_annual');
+  static String get paywallPlanWeekly => tr('paywall_plan_weekly');
+  static String get paywallPlanLifetime => tr('paywall_plan_lifetime');
+  static String paywallPlanSavePercent(int percent) =>
+      tr('paywall_plan_save_percent', namedArgs: {'percent': '$percent'});
+  static String paywallPlanPricePerYear(String price) =>
+      tr('paywall_plan_price_per_year', namedArgs: {'price': price});
+  static String paywallPlanPricePerWeek(String price) =>
+      tr('paywall_plan_price_per_week', namedArgs: {'price': price});
+  static String paywallPlanPriceOnce(String price) =>
+      tr('paywall_plan_price_once', namedArgs: {'price': price});
+  static String get paywallPlansUnavailable => tr('paywall_plans_unavailable');
 
   // theme
   static String get themePickerTitle => tr('theme_picker_title');
@@ -809,15 +826,18 @@ class Strings {
   static String get feedbackPulseNegative => tr('feedback_pulse_negative');
   static String get feedbackPulseNeutral => tr('feedback_pulse_neutral');
   static String get feedbackPulsePositive => tr('feedback_pulse_positive');
-  static String get feedbackFormTitleNegative => tr('feedback_form_title_negative');
-  static String get feedbackFormTitleNeutral => tr('feedback_form_title_neutral');
+  static String get feedbackFormTitleNegative =>
+      tr('feedback_form_title_negative');
+  static String get feedbackFormTitleNeutral =>
+      tr('feedback_form_title_neutral');
   static String get feedbackFormTitleOpen => tr('feedback_form_title_open');
   static String get feedbackFormBody => tr('feedback_form_body');
   static String get feedbackFormHint => tr('feedback_form_hint');
   static String get feedbackFormSend => tr('feedback_form_send');
   static String get feedbackThanksTitle => tr('feedback_thanks_title');
   static String get feedbackThanksBody => tr('feedback_thanks_body');
-  static String get profilePageShareFeedback => tr('profile_page_share_feedback');
+  static String get profilePageShareFeedback =>
+      tr('profile_page_share_feedback');
 
   // widgets page
   static String get profilePageWidgetsLifeGrid =>
@@ -854,8 +874,10 @@ class Strings {
   static String get dataBackupOpenSettings => tr('data_backup_open_settings');
   static String get dataBackupICloudFoundTitle =>
       tr('data_backup_icloud_found_title');
-  static String dataBackupSummary({required String days, required String date}) =>
-      tr('data_backup_summary', namedArgs: {'days': days, 'date': date});
+  static String dataBackupSummary({
+    required String days,
+    required String date,
+  }) => tr('data_backup_summary', namedArgs: {'days': days, 'date': date});
   static String get dataBackupICloudFoundHint =>
       tr('data_backup_icloud_found_hint');
   static String get dataBackupRestore => tr('data_backup_restore');
@@ -867,8 +889,7 @@ class Strings {
   static String get dataBackupReplaceConfirm =>
       tr('data_backup_replace_confirm');
   static String get dataBackupCancel => tr('data_backup_cancel');
-  static String get dataBackupManualSection =>
-      tr('data_backup_manual_section');
+  static String get dataBackupManualSection => tr('data_backup_manual_section');
   static String get dataBackupExport => tr('data_backup_export');
   static String get dataBackupExportDescription =>
       tr('data_backup_export_description');
@@ -888,7 +909,10 @@ class Strings {
   static String get dataBackupErrorGeneric => tr('data_backup_error_generic');
   static String get backupRestorePromptTitle =>
       tr('backup_restore_prompt_title');
-  static String backupRestorePromptBody({required String days, required String date}) =>
+  static String backupRestorePromptBody({
+    required String days,
+    required String date,
+  }) =>
       tr('backup_restore_prompt_body', namedArgs: {'days': days, 'date': date});
   static String get backupRestorePromptLater =>
       tr('backup_restore_prompt_later');

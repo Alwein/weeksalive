@@ -20,44 +20,40 @@ class AnalyticsEvent {
   factory AnalyticsEvent.onboardingStarted({
     required int attempt,
     required int totalSteps,
-  }) =>
-      AnalyticsEvent._('onboarding_started', {
-        'onboarding_attempt': attempt,
-        'total_steps': totalSteps,
-      });
+  }) => AnalyticsEvent._('onboarding_started', {
+    'onboarding_attempt': attempt,
+    'total_steps': totalSteps,
+  });
 
   factory AnalyticsEvent.onboardingStepViewed({
     required int stepIndex,
     required String stepName,
     required int totalSteps,
     required int attempt,
-  }) =>
-      AnalyticsEvent._('onboarding_step_viewed', {
-        'step_index': stepIndex,
-        'step_name': stepName,
-        'total_steps': totalSteps,
-        'onboarding_attempt': attempt,
-      });
+  }) => AnalyticsEvent._('onboarding_step_viewed', {
+    'step_index': stepIndex,
+    'step_name': stepName,
+    'total_steps': totalSteps,
+    'onboarding_attempt': attempt,
+  });
 
   factory AnalyticsEvent.onboardingStepCompleted({
     required int stepIndex,
     required String stepName,
     required int secondsOnStep,
-  }) =>
-      AnalyticsEvent._('onboarding_step_completed', {
-        'step_index': stepIndex,
-        'step_name': stepName,
-        'seconds_on_step': secondsOnStep,
-      });
+  }) => AnalyticsEvent._('onboarding_step_completed', {
+    'step_index': stepIndex,
+    'step_name': stepName,
+    'seconds_on_step': secondsOnStep,
+  });
 
   factory AnalyticsEvent.onboardingBackPressed({
     required int stepIndex,
     required String stepName,
-  }) =>
-      AnalyticsEvent._('onboarding_back_pressed', {
-        'step_index': stepIndex,
-        'step_name': stepName,
-      });
+  }) => AnalyticsEvent._('onboarding_back_pressed', {
+    'step_index': stepIndex,
+    'step_name': stepName,
+  });
 
   factory AnalyticsEvent.onboardingProfileSubmitted({
     required String ageBand,
@@ -67,18 +63,19 @@ class AnalyticsEvent {
     required int intentsCount,
     required int notificationSlotsCount,
     required int secondsTotal,
-  }) =>
-      AnalyticsEvent._('onboarding_profile_submitted', {
-        'age_band': ageBand,
-        'gender': gender,
-        'lifespan': lifespan,
-        'week_start_day': weekStartDay,
-        'intents_count': intentsCount,
-        'notification_slots_count': notificationSlotsCount,
-        'seconds_total': secondsTotal,
-      });
+  }) => AnalyticsEvent._('onboarding_profile_submitted', {
+    'age_band': ageBand,
+    'gender': gender,
+    'lifespan': lifespan,
+    'week_start_day': weekStartDay,
+    'intents_count': intentsCount,
+    'notification_slots_count': notificationSlotsCount,
+    'seconds_total': secondsTotal,
+  });
 
-  factory AnalyticsEvent.notificationPermissionResult({required bool granted}) =>
+  factory AnalyticsEvent.notificationPermissionResult({
+    required bool granted,
+  }) =>
       AnalyticsEvent._('notification_permission_result', {'granted': granted});
 
   factory AnalyticsEvent.attPermissionResult({required String status}) =>
@@ -95,11 +92,10 @@ class AnalyticsEvent {
   factory AnalyticsEvent.feedbackPulseAnswered({
     required String sentiment,
     required String source,
-  }) =>
-      AnalyticsEvent._('feedback_pulse_answered', {
-        'sentiment': sentiment,
-        'source': source,
-      });
+  }) => AnalyticsEvent._('feedback_pulse_answered', {
+    'sentiment': sentiment,
+    'source': source,
+  });
 
   factory AnalyticsEvent.feedbackPulseDismissed({required String source}) =>
       AnalyticsEvent._('feedback_pulse_dismissed', {'source': source});
@@ -110,13 +106,15 @@ class AnalyticsEvent {
     required String message,
     required String source,
     String? sentiment,
-  }) =>
-      AnalyticsEvent._('feedback_submitted', _props({
-        'message': message,
-        'message_length': message.length,
-        'source': source,
-        'sentiment': sentiment,
-      }));
+  }) => AnalyticsEvent._(
+    'feedback_submitted',
+    _props({
+      'message': message,
+      'message_length': message.length,
+      'source': source,
+      'sentiment': sentiment,
+    }),
+  );
 
   // --- Paywall and purchase ------------------------------------------------
 
@@ -127,33 +125,44 @@ class AnalyticsEvent {
     double? price,
     String? currency,
     int? trialDays,
-  }) =>
-      AnalyticsEvent._('paywall_viewed', _props({
-        'presentation': presentation,
-        'offering_id': offeringId,
-        'product_id': productId,
-        'price': price,
-        'currency': currency,
-        'trial_days': trialDays,
-      }));
+  }) => AnalyticsEvent._(
+    'paywall_viewed',
+    _props({
+      'presentation': presentation,
+      'offering_id': offeringId,
+      'product_id': productId,
+      'price': price,
+      'currency': currency,
+      'trial_days': trialDays,
+    }),
+  );
 
   /// The offering failed to load, so the paywall cannot sell anything.
   /// Revenue silently drops to zero when this fires, which is why it is tracked.
-  factory AnalyticsEvent.paywallOfferingUnavailable({required String presentation}) =>
-      AnalyticsEvent._('paywall_offering_unavailable', {'presentation': presentation});
+  /// [offering] names the missing offering: `current` for the onboarding
+  /// trial, or the plans offering id.
+  factory AnalyticsEvent.paywallOfferingUnavailable({
+    required String presentation,
+    required String offering,
+  }) => AnalyticsEvent._('paywall_offering_unavailable', {
+    'presentation': presentation,
+    'offering': offering,
+  });
 
   factory AnalyticsEvent.paywallPurchaseStarted({
     required String presentation,
     String? productId,
     double? price,
     String? currency,
-  }) =>
-      AnalyticsEvent._('paywall_purchase_started', _props({
-        'presentation': presentation,
-        'product_id': productId,
-        'price': price,
-        'currency': currency,
-      }));
+  }) => AnalyticsEvent._(
+    'paywall_purchase_started',
+    _props({
+      'presentation': presentation,
+      'product_id': productId,
+      'price': price,
+      'currency': currency,
+    }),
+  );
 
   factory AnalyticsEvent.trialStarted({
     required String presentation,
@@ -161,32 +170,55 @@ class AnalyticsEvent {
     double? price,
     String? currency,
     int? trialDays,
-  }) =>
-      AnalyticsEvent._('trial_started', _props({
-        'presentation': presentation,
-        'product_id': productId,
-        'price': price,
-        'currency': currency,
-        'trial_days': trialDays,
-      }));
+  }) => AnalyticsEvent._(
+    'trial_started',
+    _props({
+      'presentation': presentation,
+      'product_id': productId,
+      'price': price,
+      'currency': currency,
+      'trial_days': trialDays,
+    }),
+  );
+
+  /// A purchase charged at once, with no free trial: any plan of the in-app
+  /// paywall, or an onboarding trial the store refused because the intro offer
+  /// was already used. Distinct from [trialStarted], which brings no revenue.
+  factory AnalyticsEvent.subscriptionStarted({
+    required String presentation,
+    String? productId,
+    double? price,
+    String? currency,
+    String? plan,
+  }) => AnalyticsEvent._(
+    'subscription_started',
+    _props({
+      'presentation': presentation,
+      'product_id': productId,
+      'price': price,
+      'currency': currency,
+      'plan': plan,
+    }),
+  );
 
   factory AnalyticsEvent.purchaseCancelled({
     required String presentation,
     String? productId,
-  }) =>
-      AnalyticsEvent._('purchase_cancelled', _props({
-        'presentation': presentation,
-        'product_id': productId,
-      }));
+  }) => AnalyticsEvent._(
+    'purchase_cancelled',
+    _props({
+      'presentation': presentation,
+      'product_id': productId,
+    }),
+  );
 
   factory AnalyticsEvent.purchaseFailed({
     required String presentation,
     required String errorCode,
-  }) =>
-      AnalyticsEvent._('purchase_failed', {
-        'presentation': presentation,
-        'error_code': errorCode,
-      });
+  }) => AnalyticsEvent._('purchase_failed', {
+    'presentation': presentation,
+    'error_code': errorCode,
+  });
 
   factory AnalyticsEvent.paywallRestoreResult({required bool found}) =>
       AnalyticsEvent._('paywall_restore_result', {'found': found});
@@ -194,11 +226,10 @@ class AnalyticsEvent {
   factory AnalyticsEvent.paywallDismissed({
     required String presentation,
     required int secondsOnPaywall,
-  }) =>
-      AnalyticsEvent._('paywall_dismissed', {
-        'presentation': presentation,
-        'seconds_on_paywall': secondsOnPaywall,
-      });
+  }) => AnalyticsEvent._('paywall_dismissed', {
+    'presentation': presentation,
+    'seconds_on_paywall': secondsOnPaywall,
+  });
 
   factory AnalyticsEvent.proFeatureGateHit({required String feature}) =>
       AnalyticsEvent._('pro_feature_gate_hit', {'feature': feature});
@@ -208,11 +239,10 @@ class AnalyticsEvent {
   factory AnalyticsEvent.checkInStarted({
     required String source,
     required int dayOffset,
-  }) =>
-      AnalyticsEvent._('check_in_started', {
-        'source': source,
-        'day_offset': dayOffset,
-      });
+  }) => AnalyticsEvent._('check_in_started', {
+    'source': source,
+    'day_offset': dayOffset,
+  });
 
   factory AnalyticsEvent.checkInCompleted({
     required int intentionsLivedCount,
@@ -225,37 +255,37 @@ class AnalyticsEvent {
     String? meaningScore,
     bool? newExperience,
     int? secondsToComplete,
-  }) =>
-      AnalyticsEvent._('check_in_completed', _props({
-        'intentions_lived_count': intentionsLivedCount,
-        'has_trace_text': hasTraceText,
-        'photos_count': photosCount,
-        'size_level': sizeLevel,
-        'is_backfill': isBackfill,
-        'day_offset': dayOffset,
-        'feeling': feeling,
-        'meaning_score': meaningScore,
-        'new_experience': newExperience,
-        'seconds_to_complete': secondsToComplete,
-      }));
+  }) => AnalyticsEvent._(
+    'check_in_completed',
+    _props({
+      'intentions_lived_count': intentionsLivedCount,
+      'has_trace_text': hasTraceText,
+      'photos_count': photosCount,
+      'size_level': sizeLevel,
+      'is_backfill': isBackfill,
+      'day_offset': dayOffset,
+      'feeling': feeling,
+      'meaning_score': meaningScore,
+      'new_experience': newExperience,
+      'seconds_to_complete': secondsToComplete,
+    }),
+  );
 
   factory AnalyticsEvent.checkInAbandoned({
     required String source,
     required int seconds,
-  }) =>
-      AnalyticsEvent._('check_in_abandoned', {
-        'source': source,
-        'seconds': seconds,
-      });
+  }) => AnalyticsEvent._('check_in_abandoned', {
+    'source': source,
+    'seconds': seconds,
+  });
 
   factory AnalyticsEvent.streakContinued({
     required int streakLength,
     required int bestEver,
-  }) =>
-      AnalyticsEvent._('streak_continued', {
-        'streak_length': streakLength,
-        'best_ever': bestEver,
-      });
+  }) => AnalyticsEvent._('streak_continued', {
+    'streak_length': streakLength,
+    'best_ever': bestEver,
+  });
 
   factory AnalyticsEvent.streakBroken({required int previousLength}) =>
       AnalyticsEvent._('streak_broken', {'previous_length': previousLength});
@@ -263,23 +293,23 @@ class AnalyticsEvent {
   factory AnalyticsEvent.weeklyIntentSelected({
     required int intentsCount,
     required List<String> intentIds,
-  }) =>
-      AnalyticsEvent._('weekly_intent_selected', {
-        'intents_count': intentsCount,
-        'intent_ids': intentIds,
-      });
+  }) => AnalyticsEvent._('weekly_intent_selected', {
+    'intents_count': intentsCount,
+    'intent_ids': intentIds,
+  });
 
   factory AnalyticsEvent.weeklySummaryCompleted({required int daysRecorded}) =>
-      AnalyticsEvent._('weekly_summary_completed', {'days_recorded': daysRecorded});
+      AnalyticsEvent._('weekly_summary_completed', {
+        'days_recorded': daysRecorded,
+      });
 
   factory AnalyticsEvent.rewardUnlocked({
     required String rewardId,
     required int streakLength,
-  }) =>
-      AnalyticsEvent._('reward_unlocked', {
-        'reward_id': rewardId,
-        'streak_length': streakLength,
-      });
+  }) => AnalyticsEvent._('reward_unlocked', {
+    'reward_id': rewardId,
+    'streak_length': streakLength,
+  });
 
   /// Which share of check-ins start from a reminder is the clearest read on
   /// whether notifications are carrying the daily habit.
@@ -295,24 +325,28 @@ class AnalyticsEvent {
   factory AnalyticsEvent.gridMotifChanged({required String motifId}) =>
       AnalyticsEvent._('grid_motif_changed', {'motif_id': motifId});
 
-  factory AnalyticsEvent.wallpaperExported() => const AnalyticsEvent._('wallpaper_exported');
+  factory AnalyticsEvent.wallpaperExported() =>
+      const AnalyticsEvent._('wallpaper_exported');
 
   /// The second-launch nudge inviting the user to set up the wallpaper.
-  factory AnalyticsEvent.wallpaperPromptShown() => const AnalyticsEvent._('wallpaper_prompt_shown');
+  factory AnalyticsEvent.wallpaperPromptShown() =>
+      const AnalyticsEvent._('wallpaper_prompt_shown');
 
   factory AnalyticsEvent.wallpaperPromptResolved({required bool accepted}) =>
       AnalyticsEvent._('wallpaper_prompt_resolved', {'accepted': accepted});
 
-  factory AnalyticsEvent.widgetGuideViewed() => const AnalyticsEvent._('widget_guide_viewed');
+  factory AnalyticsEvent.widgetGuideViewed() =>
+      const AnalyticsEvent._('widget_guide_viewed');
 
   factory AnalyticsEvent.gridViewChanged({required String tab}) =>
       AnalyticsEvent._('grid_view_changed', {'tab': tab});
 
-  factory AnalyticsEvent.profileUpdated({required List<String> fieldsChanged}) =>
-      AnalyticsEvent._('profile_updated', {
-        'fields_changed': fieldsChanged,
-        'fields_changed_count': fieldsChanged.length,
-      });
+  factory AnalyticsEvent.profileUpdated({
+    required List<String> fieldsChanged,
+  }) => AnalyticsEvent._('profile_updated', {
+    'fields_changed': fieldsChanged,
+    'fields_changed_count': fieldsChanged.length,
+  });
 
   static Map<String, Object> _props(Map<String, Object?> values) {
     return {
@@ -329,7 +363,8 @@ class AnalyticsEvent {
           const DeepCollectionEquality().equals(other.properties, properties);
 
   @override
-  int get hashCode => Object.hash(name, const DeepCollectionEquality().hash(properties));
+  int get hashCode =>
+      Object.hash(name, const DeepCollectionEquality().hash(properties));
 
   @override
   String toString() => 'AnalyticsEvent($name, $properties)';

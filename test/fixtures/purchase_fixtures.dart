@@ -23,7 +23,11 @@ CustomerInfo customerInfoFixture({bool isPro = false}) {
       : <String, dynamic>{};
 
   return CustomerInfo.fromJson({
-    'entitlements': {'all': entitlementJson, 'active': entitlementJson, 'verification': 'NOT_REQUESTED'},
+    'entitlements': {
+      'all': entitlementJson,
+      'active': entitlementJson,
+      'verification': 'NOT_REQUESTED',
+    },
     'allPurchaseDates': const <String, dynamic>{},
     'activeSubscriptions': isPro ? ['yearly'] : [],
     'allPurchasedProductIdentifiers': isPro ? ['yearly'] : [],
@@ -39,51 +43,100 @@ CustomerInfo customerInfoFixture({bool isPro = false}) {
   });
 }
 
-Package packageFixture({String offeringId = 'default', Map<String, dynamic>? introPrice}) {
+Package packageFixture({
+  String offeringId = 'default',
+  String identifier = r'$rc_annual',
+  String packageType = 'ANNUAL',
+  String productId = 'yearly',
+  double price = 49.99,
+  String priceString = r'$49.99',
+  String currencyCode = 'USD',
+  String productCategory = 'SUBSCRIPTION',
+  String subscriptionPeriod = 'P1Y',
+  Map<String, dynamic>? introPrice,
+}) {
   return Package.fromJson({
-    'identifier': r'$rc_annual',
-    'packageType': 'ANNUAL',
+    'identifier': identifier,
+    'packageType': packageType,
     'presentedOfferingContext': {
       'offeringIdentifier': offeringId,
       'placementIdentifier': null,
       'targetingContext': null,
     },
     'product': {
-      'identifier': 'yearly',
+      'identifier': productId,
       'description': 'WeeksAlive Pro yearly',
       'title': 'WeeksAlive Pro',
-      'price': 49.99,
-      'priceString': r'$49.99',
-      'currencyCode': 'USD',
+      'price': price,
+      'priceString': priceString,
+      'currencyCode': currencyCode,
       'introPrice': introPrice,
       'discounts': null,
-      'productCategory': 'SUBSCRIPTION',
+      'productCategory': productCategory,
       'defaultOption': null,
       'subscriptionOptions': null,
       'presentedOfferingContext': null,
-      'subscriptionPeriod': 'P1Y',
+      'subscriptionPeriod': subscriptionPeriod,
     },
   });
 }
 
 Offering offeringFixture({
   String id = 'default',
+  String productId = 'yearly',
   int trialDays = 14,
   Map<String, dynamic>? introPrice,
   bool includeAnnual = true,
   bool includeTrialMetadata = true,
 }) {
-  final metadata = includeTrialMetadata ? {'trial_days': trialDays} : <String, Object>{};
+  final metadata = includeTrialMetadata
+      ? {'trial_days': trialDays}
+      : <String, Object>{};
   if (!includeAnnual) {
     return Offering(id, 'Standard offering', metadata, const []);
   }
-  final package = packageFixture(offeringId: id, introPrice: introPrice);
+  final package = packageFixture(
+    offeringId: id,
+    productId: productId,
+    introPrice: introPrice,
+  );
   return Offering(
     id,
     'Standard offering',
     metadata,
     [package],
     annual: package,
+  );
+}
+
+Offering plansOfferingFixture() {
+  final annual = packageFixture(offeringId: 'no_trial');
+  final weekly = packageFixture(
+    offeringId: 'no_trial',
+    identifier: r'$rc_weekly',
+    packageType: 'WEEKLY',
+    productId: 'weekly',
+    price: 3.99,
+    priceString: r'$3.99',
+    subscriptionPeriod: 'P1W',
+  );
+  final lifetime = packageFixture(
+    offeringId: 'no_trial',
+    identifier: r'$rc_lifetime',
+    packageType: 'LIFETIME',
+    productId: 'lifetime',
+    price: 119.99,
+    priceString: r'$119.99',
+    productCategory: 'NON_SUBSCRIPTION',
+  );
+  return Offering(
+    'no_trial',
+    'Plans without trial',
+    const {},
+    [annual, weekly, lifetime],
+    annual: annual,
+    weekly: weekly,
+    lifetime: lifetime,
   );
 }
 

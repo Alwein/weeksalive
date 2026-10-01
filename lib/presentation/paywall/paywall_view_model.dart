@@ -1,38 +1,52 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
+
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 import 'package:purchases_flutter/purchases_flutter.dart' hide Store;
 import 'package:redux/redux.dart';
+import 'package:weeksalive/data/purchases/offering_trial.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
-import 'package:weeksalive/presentation/redux/purchase/purchase_actions.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 
-class PaywallPlanData {
-  final Package? annualPackage;
-  final int? trialDays;
-  final int? trialWeeks;
-  final String? pricePerYear;
-  final String? pricePerWeek;
-  final String? trialEndDate;
-  final String? offeringId;
+part 'paywall_view_model.freezed.dart';
 
-  const PaywallPlanData({
-    required this.annualPackage,
-    required this.trialDays,
-    required this.trialWeeks,
-    required this.pricePerYear,
-    required this.pricePerWeek,
-    required this.trialEndDate,
-    required this.offeringId,
-  });
+enum PaywallPlanKind { annual, weekly, lifetime }
+
+@freezed
+abstract class PaywallPlanOption with _$PaywallPlanOption {
+  const factory PaywallPlanOption({
+    required PaywallPlanKind kind,
+    required Package package,
+    required String price,
+
+    /// Weekly equivalent of an annual price, so the annual card can show the comparison.
+    String? equivalentWeeklyPrice,
+
+    /// Percent saved versus paying the weekly price for a year. Null when the
+    /// weekly plan is missing or the annual plan is not cheaper.
+    int? savingsPercent,
+  }) = _PaywallPlanOption;
+}
+
+@freezed
+abstract class PaywallPlanData with _$PaywallPlanData {
+  const factory PaywallPlanData({
+    required Package? annualPackage,
+    required int? trialDays,
+    required int? trialWeeks,
+    required String? pricePerYear,
+    required String? pricePerWeek,
+    required String? trialEndDate,
+    required String? offeringId,
+  }) = _PaywallPlanData;
 
   static PaywallPlanData? fromOffering(Offering? offering) {
     if (offering == null) return null;
     final annual = offering.annual;
-    final trialDays = PaywallViewModel.trialDaysFromOffering(offering);
     final trialWeeks = PaywallViewModel.trialWeeksFromOffering(offering);
     return PaywallPlanData(
       annualPackage: annual,
-      trialDays: trialDays,
+      trialDays: offering.trialDays,
       trialWeeks: trialWeeks,
       pricePerYear: annual?.storeProduct.priceString,
       pricePerWeek: PaywallViewModel.weeklyPrice(annual),
@@ -42,43 +56,80 @@ class PaywallPlanData {
   }
 }
 
-class PaywallViewModel {
-  final PaywallPlanData? primaryPlan;
-  final PaywallPlanData? alternatePlan;
+/// Data only, so that `distinct` can skip the rebuilds caused by unrelated
+/// actions. The page dispatches purchases and restores itself.
+@freezed
+abstract class PaywallViewModel with _$PaywallViewModel {
+  const PaywallViewModel._();
 
-  final bool isLoading;
-  final bool isPro;
-  final String? errorMessage;
-  final void Function(BuildContext, Package) onPurchase;
-  final void Function(BuildContext) onRestore;
-
-  const PaywallViewModel({
-    required this.primaryPlan,
-    required this.alternatePlan,
-    required this.isLoading,
-    required this.isPro,
-    required this.errorMessage,
-    required this.onPurchase,
-    required this.onRestore,
-  });
+  const factory PaywallViewModel({
+    required PaywallPlanData? primaryPlan,
+    required PaywallPlanData? alternatePlan,
+    required List<PaywallPlanOption> plans,
+    required bool isLoading,
+    required bool isPro,
+    required String? errorMessage,
+  }) = _PaywallViewModel;
 
   bool get hasAlternatePlan => alternatePlan?.annualPackage != null;
 
-  static PaywallViewModel create(Store<AppState> store) {
+  factory PaywallViewModel.create(Store<AppState> store) {
     final ps = store.state.purchaseState;
 
     return PaywallViewModel(
       primaryPlan: PaywallPlanData.fromOffering(ps.offering),
       alternatePlan: PaywallPlanData.fromOffering(ps.alternateOffering),
+      plans: plansFromOffering(ps.plansOffering),
       isLoading: ps.isLoading,
       isPro: ps.isPro,
       errorMessage: switch (ps) {
         PurchaseStateError(:final message) => message,
         _ => null,
       },
-      onPurchase: (context, pkg) => store.dispatch(PurchasePackageAction(pkg)),
-      onRestore: (context) => store.dispatch(const RestorePurchasesAction()),
     );
+  }
+
+  static List<PaywallPlanOption> plansFromOffering(Offering? offering) {
+    if (offering == null) return const [];
+    final plans = <PaywallPlanOption>[];
+    final annual = offering.annual;
+    final weekly = offering.weekly;
+    if (annual != null) {
+      plans.add(
+        PaywallPlanOption(
+          kind: PaywallPlanKind.annual,
+          package: annual,
+          price: annual.storeProduct.priceString,
+          equivalentWeeklyPrice: weeklyPrice(annual),
+          savingsPercent: weekly == null
+              ? null
+              : savingsPercent(
+                  annualPrice: annual.storeProduct.price,
+                  weeklyPrice: weekly.storeProduct.price,
+                ),
+        ),
+      );
+    }
+    if (weekly != null) {
+      plans.add(
+        PaywallPlanOption(
+          kind: PaywallPlanKind.weekly,
+          package: weekly,
+          price: weekly.storeProduct.priceString,
+        ),
+      );
+    }
+    final lifetime = offering.lifetime;
+    if (lifetime != null) {
+      plans.add(
+        PaywallPlanOption(
+          kind: PaywallPlanKind.lifetime,
+          package: lifetime,
+          price: lifetime.storeProduct.priceString,
+        ),
+      );
+    }
+    return plans;
   }
 
   static String? formatTrialEndDate(int? trialWeeks) {
@@ -88,67 +139,39 @@ class PaywallViewModel {
   }
 
   static int? trialWeeksFromOffering(Offering? offering) {
-    if (offering == null) return null;
-    final days = trialDaysFromOffering(offering);
+    final days = offering?.trialDays;
     if (days == null) return null;
     return (days / 7).round().clamp(1, 99);
   }
 
-  static int? trialDaysFromOffering(Offering? offering) {
-    if (offering == null) return null;
-    final fromMetadata = trialDaysFromMetadata(offering.metadata['trial_days']);
-    if (fromMetadata != null) return fromMetadata;
-    return trialDaysFromStoreProduct(offering.annual?.storeProduct);
+  /// Share of a year of weekly payments avoided by buying the annual plan.
+  static int? savingsPercent({
+    required double annualPrice,
+    required double weeklyPrice,
+  }) {
+    if (annualPrice <= 0 || weeklyPrice <= 0) return null;
+    final percent = ((1 - annualPrice / (weeklyPrice * 52)) * 100).round();
+    if (percent <= 0) return null;
+    return percent;
   }
 
-  static int? trialDaysFromMetadata(Object? raw) {
-    if (raw is int) return raw;
-    if (raw is double) return raw.toInt();
-    if (raw is String) return int.tryParse(raw);
-    return null;
-  }
-
-  /// Fallback when offering metadata has no `trial_days`. Prefer the ISO period
-  /// (`P2W`, `P1M`) over `periodUnit`, which StoreKit sometimes reports as month
-  /// for every intro offer in the same subscription group.
-  static int? trialDaysFromStoreProduct(StoreProduct? product) {
-    final intro = product?.introductoryPrice;
-    if (intro == null) return null;
-    final fromIso = trialDaysFromIsoPeriod(intro.period);
-    if (fromIso != null) return fromIso;
-    if (intro.periodNumberOfUnits <= 0) return null;
-    return switch (intro.periodUnit) {
-      PeriodUnit.day => intro.periodNumberOfUnits,
-      PeriodUnit.week => intro.periodNumberOfUnits * 7,
-      PeriodUnit.month => intro.periodNumberOfUnits * 30,
-      PeriodUnit.year => intro.periodNumberOfUnits * 365,
-      PeriodUnit.unknown => null,
-    };
-  }
-
-  static int? trialDaysFromIsoPeriod(String? period) {
-    if (period == null || period.isEmpty) return null;
-    final match = RegExp(r'^P(?:(\d+)D)?(?:(\d+)W)?(?:(\d+)M)?(?:(\d+)Y)?$').firstMatch(period);
-    if (match == null) return null;
-    final days = int.tryParse(match[1] ?? '') ?? 0;
-    final weeks = int.tryParse(match[2] ?? '') ?? 0;
-    final months = int.tryParse(match[3] ?? '') ?? 0;
-    final years = int.tryParse(match[4] ?? '') ?? 0;
-    final total = days + weeks * 7 + months * 30 + years * 365;
-    return total > 0 ? total : null;
-  }
-
-  static String? weeklyPrice(Package? annual) {
+  /// Annual price spread over 52 weeks, formatted for the device locale so it
+  /// matches the store's own price string (separator, symbol position, and
+  /// currencies without minor units such as JPY).
+  static String? weeklyPrice(Package? annual, {String? locale}) {
     if (annual == null) return null;
-    final annualPrice = annual.storeProduct.price;
-    final weeklyPrice = annualPrice / 52;
-    final currencyCode = annual.storeProduct.currencyCode;
-    final symbol = _currencySymbol(currencyCode);
-    return '$symbol${weeklyPrice.toStringAsFixed(2)}';
+    final product = annual.storeProduct;
+    return _currencyFormat(
+      product.currencyCode,
+      locale ?? Platform.localeName,
+    ).format(product.price / 52);
   }
 
-  static String _currencySymbol(String currencyCode) {
-    const symbols = {'USD': r'$', 'EUR': '€', 'GBP': '£', 'JPY': '¥', 'CAD': r'CA$', 'AUD': r'A$'};
-    return symbols[currencyCode] ?? '$currencyCode ';
+  static NumberFormat _currencyFormat(String currencyCode, String locale) {
+    try {
+      return NumberFormat.simpleCurrency(locale: locale, name: currencyCode);
+    } on ArgumentError {
+      return NumberFormat.simpleCurrency(name: currencyCode);
+    }
   }
 }

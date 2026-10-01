@@ -1,4 +1,5 @@
 import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:weeksalive/data/purchases/purchase_offerings.dart';
 
 class FetchOfferingAction {
   const FetchOfferingAction();
@@ -14,15 +15,24 @@ class RestorePurchasesAction {
 }
 
 class OfferingLoadedAction {
-  final Offering? offering;
-  final Offering? alternateOffering;
+  final PurchaseOfferings offerings;
+  const OfferingLoadedAction(this.offerings);
+}
 
-  const OfferingLoadedAction(this.offering, {this.alternateOffering});
+/// The offerings could not be fetched. Whatever was loaded before is kept: it
+/// is still sellable, and dropping it would leave the paywall empty.
+class OfferingLoadFailedAction {
+  const OfferingLoadFailedAction();
 }
 
 class PurchaseSucceededAction {
   final bool isPro;
-  const PurchaseSucceededAction({required this.isPro});
+
+  /// Whether the entitlement is served by a free trial, as the store reports
+  /// it after a purchase. Always false for a restore or a status refresh.
+  final bool isTrial;
+
+  const PurchaseSucceededAction({required this.isPro, this.isTrial = false});
 }
 
 class PurchaseErrorAction {

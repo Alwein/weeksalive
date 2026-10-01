@@ -1,4 +1,5 @@
 import Flutter
+import StoreKit
 import UIKit
 import flutter_local_notifications
 
@@ -17,6 +18,12 @@ import flutter_local_notifications
     }
 
     GeneratedPluginRegistrant.register(with: self)
+
+    // On a first launch the TikTok SDK only starts once onboarding has asked for
+    // ATT, and it is the SDK that registers with SKAdNetwork. Registering here
+    // keeps installs that quit before that step counted. It is the same call the
+    // SDK makes on every start, and registering again has no effect.
+    SKAdNetwork.registerAppForAdNetworkAttribution()
 
     if let controller = window?.rootViewController as? FlutterViewController {
       WallpaperPlugin.register(with: controller.registrar(forPlugin: "WallpaperPlugin")!)

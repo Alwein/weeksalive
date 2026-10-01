@@ -21,6 +21,8 @@ import 'package:weeksalive/presentation/backup/data_backup_page.dart';
 import 'package:weeksalive/presentation/feedback/feedback_sheet.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_page.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
+import 'package:weeksalive/presentation/paywall/paywall_page.dart';
+import 'package:weeksalive/presentation/paywall/paywall_presentation.dart';
 import 'package:weeksalive/presentation/profile/pages/app_icon_picker/app_icon_picker_page.dart';
 import 'package:weeksalive/presentation/profile/pages/edit_profile/edit_profile_form.dart';
 import 'package:weeksalive/presentation/profile/pages/grid_motif_picker/grid_motif_picker_page.dart';
@@ -71,8 +73,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final locale = Localizations.localeOf(context).toString();
     return StoreConnector<AppState, ProfilePageViewModel>(
-      converter: (store) =>
-          ProfilePageViewModel.create(store, DateTime.now(), locale: locale),
+      converter: (store) => ProfilePageViewModel.create(store, DateTime.now(), locale: locale),
       builder: (context, viewModel) {
         return Scaffold(
           backgroundColor: AppColors.bg(context),
@@ -386,8 +387,7 @@ class _PreferencesCard extends StatelessWidget {
           _PreferencesButton(
             title: Strings.profilePageNotifications,
             value: viewModel.notificationsEnabled,
-            onTap: () =>
-                Navigator.push(context, NotificationsSettingsPage.route()),
+            onTap: () => Navigator.push(context, NotificationsSettingsPage.route()),
             icon: MingCuteIcons.mgc_right_line,
           ),
         ],
@@ -617,6 +617,19 @@ class _DeveloperCard extends StatelessWidget {
     return _ProfileCardContainer(
       child: Column(
         children: [
+          _PreferencesButton(
+            title: 'Show paywall',
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const PaywallPage(
+                  presentation: PaywallPresentation.inApp,
+                ),
+              ),
+            ),
+            icon: MingCuteIcons.mgc_right_line,
+          ),
+          const SmallDivider(width: double.infinity),
           _PreferencesButton(
             title: 'Show onboarding',
             onTap: () => Navigator.push(

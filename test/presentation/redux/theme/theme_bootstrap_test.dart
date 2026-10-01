@@ -55,7 +55,7 @@ void main() {
     test('falls back to system when the stored reward theme is not unlocked', () async {
       final (store, repository) = await buildStore(
         'matcha',
-        purchaseState: const PurchaseState.success(offering: null, isPro: false),
+        purchaseState: const PurchaseState.success(isPro: false),
       );
 
       await store.dispatch(BootstrapAction());
@@ -95,7 +95,7 @@ void main() {
     test('falls back to system once Pro is lost', () async {
       final (store, repository) = await buildStore(
         'ardoise',
-        purchaseState: const PurchaseState.success(offering: null, isPro: true),
+        purchaseState: const PurchaseState.success(isPro: true),
       );
 
       await store.dispatch(BootstrapAction());
