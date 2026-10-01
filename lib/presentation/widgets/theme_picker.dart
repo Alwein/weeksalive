@@ -11,6 +11,7 @@ import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/domain/rewards/reward_condition.dart';
 import 'package:weeksalive/domain/rewards/reward_rules.dart';
+import 'package:weeksalive/presentation/paywall/show_in_app_paywall.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/theme/theme_actions.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
@@ -86,9 +87,11 @@ class _ThemeGrid extends StatelessWidget {
             themeId: themes[index],
             selected: themes[index] == viewModel.selectedTheme,
             locked: !viewModel.unlockedThemes.contains(themes[index]),
-            onTap: () {
+            onTap: () async {
               if (!viewModel.unlockedThemes.contains(themes[index])) {
-                return;
+                // Pro unlocks every theme without waiting for the streak.
+                final subscribed = await showInAppPaywall(context, feature: 'theme');
+                if (subscribed != true || !context.mounted) return;
               }
               _selectTheme(context, themes[index]);
             },
@@ -435,8 +438,8 @@ class _LockedBarrier extends StatelessWidget {
     final rule = RewardRules.ruleForTheme(themeId);
     if (rule == null) return null;
     return switch (rule.condition) {
-      StreakMilestoneCondition(:final minDays) => Strings.themeLockedStreakHint(minDays),
-      TotalDaysLoggedCondition(:final minDays) => Strings.themeLockedStreakHint(minDays),
+      StreakMilestoneCondition(:final minDays) => Strings.themeLockedStreakOrProHint(minDays),
+      TotalDaysLoggedCondition(:final minDays) => Strings.themeLockedStreakOrProHint(minDays),
     };
   }
 

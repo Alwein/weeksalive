@@ -12,6 +12,7 @@ import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/domain/rewards/reward_condition.dart';
 import 'package:weeksalive/domain/rewards/reward_rules.dart';
+import 'package:weeksalive/presentation/paywall/show_in_app_paywall.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/grid_motif/grid_motif_actions.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
@@ -72,8 +73,12 @@ class _GridMotifGrid extends StatelessWidget {
               motifId: motifId,
               selected: motifId == viewModel.selectedMotif,
               locked: !viewModel.unlockedMotifs.contains(motifId),
-              onTap: () {
-                if (!viewModel.unlockedMotifs.contains(motifId)) return;
+              onTap: () async {
+                if (!viewModel.unlockedMotifs.contains(motifId)) {
+                  // Pro unlocks every motif without waiting for the streak.
+                  final subscribed = await showInAppPaywall(context, feature: 'grid_motif');
+                  if (subscribed != true || !context.mounted) return;
+                }
                 SensorialFeedback.selectionChanged();
                 StoreProvider.of<AppState>(context).dispatch(SetGridMotifAction(motifId));
               },
@@ -211,8 +216,8 @@ class _LockedLabel extends StatelessWidget {
     final rule = RewardRules.ruleForGridMotif(motifId);
     if (rule == null) return null;
     return switch (rule.condition) {
-      StreakMilestoneCondition(:final minDays) => Strings.themeLockedStreakHint(minDays),
-      TotalDaysLoggedCondition(:final minDays) => Strings.themeLockedStreakHint(minDays),
+      StreakMilestoneCondition(:final minDays) => Strings.themeLockedStreakOrProHint(minDays),
+      TotalDaysLoggedCondition(:final minDays) => Strings.themeLockedStreakOrProHint(minDays),
     };
   }
 

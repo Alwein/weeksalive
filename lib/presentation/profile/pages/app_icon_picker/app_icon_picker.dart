@@ -12,6 +12,7 @@ import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/domain/rewards/reward_condition.dart';
 import 'package:weeksalive/domain/rewards/reward_rules.dart';
+import 'package:weeksalive/presentation/paywall/show_in_app_paywall.dart';
 import 'package:weeksalive/presentation/redux/app_icon/app_icon_actions.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
@@ -90,7 +91,11 @@ class _AppIconGrid extends StatelessWidget {
     AppIconPickerViewModel viewModel,
     AppIconId iconId,
   ) async {
-    if (!viewModel.unlockedIcons.contains(iconId)) return;
+    if (!viewModel.unlockedIcons.contains(iconId)) {
+      // Pro unlocks every icon without waiting for the streak.
+      final subscribed = await showInAppPaywall(context, feature: 'app_icon');
+      if (subscribed != true || !context.mounted) return;
+    }
     if (iconId == viewModel.selectedIcon) return;
 
     SensorialFeedback.selectionChanged();
@@ -254,8 +259,8 @@ class _LockedLabel extends StatelessWidget {
     final rule = RewardRules.ruleForAppIcon(iconId);
     if (rule == null) return null;
     return switch (rule.condition) {
-      StreakMilestoneCondition(:final minDays) => Strings.themeLockedStreakHint(minDays),
-      TotalDaysLoggedCondition(:final minDays) => Strings.themeLockedStreakHint(minDays),
+      StreakMilestoneCondition(:final minDays) => Strings.themeLockedStreakOrProHint(minDays),
+      TotalDaysLoggedCondition(:final minDays) => Strings.themeLockedStreakOrProHint(minDays),
     };
   }
 

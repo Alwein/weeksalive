@@ -11,6 +11,7 @@ import 'package:weeksalive/domain/life_week_grid.dart';
 import 'package:weeksalive/domain/user/user.dart';
 import 'package:weeksalive/domain/weekly_intent/weekly_intent.dart';
 import 'package:weeksalive/presentation/redux/day/day_state.dart';
+import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
 import 'package:weeksalive/presentation/redux/weekly_intent/weekly_intent_state.dart';
 import 'package:weeksalive/presentation/weekly_summary/weekly_summary_page_view_model.dart';
@@ -35,24 +36,26 @@ void main() {
     final dateOfBirth = DateTime(1990, 6, 15);
     final at = DateTime(2026, 6, 17);
 
-    User makeUser() => User(
+    User makeUser({DateTime? createdAt}) => User(
       id: '1',
       name: 'Adrien',
       dateOfBirth: dateOfBirth,
       gender: Gender.male,
       lifespan: 90,
-      createdAt: DateTime(2024, 1, 1),
+      createdAt: createdAt ?? DateTime(2024, 1, 1),
     );
 
     WeeklySummaryPageViewModel buildViewModel({
       required Map<DateTime, DayEntry> entries,
       List<String> selectedIntentIds = const ['intent-a', 'intent-b', 'intent-c'],
       UserState userState = const UserState.loading(),
+      PurchaseState purchaseState = const PurchaseState.initial(),
       DateTime? referenceDate,
     }) {
       final store = TestStoreFactory().initializeReduxStore(
         initialAppState().copyWith(
           userState: userState,
+          purchaseState: purchaseState,
           dayState: DayState(entries: entries),
           weeklyIntentState: WeeklyIntentState(
             availableIntents: const [intentBePresent, intentExplore, intentConnect],
@@ -164,6 +167,104 @@ void main() {
       final vm = buildViewModel(entries: const {});
 
       expect(vm.weekNumber, 0);
+    });
+    group('free plan', () {
+      test('keeps the first week free, with nothing to compare it with', () {
+        final vm = buildViewModel(
+          entries: const {},
+          userState: UserState.success(makeUser(createdAt: DateTime(2026, 6, 10, 21))),
+        );
+
+        expect(vm.isFirstWeek, isTrue);
+        expect(vm.detailsLocked, isFalse);
+        expect(vm.comparison, isNull);
+      });
+
+      test('locks the details of a later week for a free user', () {
+        final vm = buildViewModel(
+          entries: const {},
+          userState: UserState.success(makeUser()),
+          purchaseState: const PurchaseState.success(offering: null, isPro: false),
+        );
+
+        expect(vm.isFirstWeek, isFalse);
+        expect(vm.detailsLocked, isTrue);
+      });
+
+      test('opens the details of a later week to a Pro user', () {
+        final vm = buildViewModel(
+          entries: const {},
+          userState: UserState.success(makeUser()),
+          purchaseState: const PurchaseState.success(offering: null, isPro: true),
+        );
+
+        expect(vm.detailsLocked, isFalse);
+      });
+    });
+
+    group('comparison', () {
+      final summarizedWeek = {
+        DateTime(2026, 6, 8): DayEntry(
+          date: DateTime(2026, 6, 8),
+          averageFeeling: AverageFeeling.good,
+          meaningScore: MeaningScore.much,
+          hasNewExperience: true,
+        ),
+        DateTime(2026, 6, 10): DayEntry(
+          date: DateTime(2026, 6, 10),
+          averageFeeling: AverageFeeling.okey,
+          meaningScore: MeaningScore.some,
+          hasNewExperience: false,
+        ),
+      };
+
+      test('reports the change from the week before', () {
+        final vm = buildViewModel(
+          userState: UserState.success(makeUser()),
+          entries: {
+            ...summarizedWeek,
+            DateTime(2026, 6, 3): DayEntry(
+              date: DateTime(2026, 6, 3),
+              averageFeeling: AverageFeeling.okey,
+              meaningScore: MeaningScore.some,
+              hasNewExperience: true,
+            ),
+          },
+        );
+
+        expect(
+          vm.comparison,
+          const WeeklySummaryComparison(
+            loggedDaysDelta: 1,
+            averageFeelingDelta: 0.5,
+            averageMeaningDelta: 0.5,
+            newExperiencesDelta: 0,
+          ),
+        );
+      });
+
+      test('leaves out a score the week before did not record', () {
+        final vm = buildViewModel(
+          userState: UserState.success(makeUser()),
+          entries: {
+            ...summarizedWeek,
+            DateTime(2026, 6, 3): DayEntry(date: DateTime(2026, 6, 3), hasNewExperience: true),
+          },
+        );
+
+        expect(vm.comparison?.averageFeelingDelta, isNull);
+        expect(vm.comparison?.averageMeaningDelta, isNull);
+        expect(vm.comparison?.loggedDaysDelta, 1);
+      });
+
+      test('is absent when the week before has no entry', () {
+        final vm = buildViewModel(
+          userState: UserState.success(makeUser()),
+          entries: summarizedWeek,
+        );
+
+        expect(vm.comparison, isNull);
+      });
     });
   });
 }

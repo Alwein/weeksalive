@@ -56,7 +56,17 @@ class Step23OneMinute extends OnboardingStep {
 const double _kBaseCircleSize = 6;
 const double _kMaxStepCircleContribution = 6;
 
-double _proportionalContribution(int index, int valueCount) => index / (valueCount - 1) * _kMaxStepCircleContribution;
+/// Pauses between the automatic selections on the fake day form.
+class _DemoTimings {
+  static const beforeFirstSelection = Duration(milliseconds: 900);
+  static const afterSelection = Duration(milliseconds: 700);
+  static const afterSectionOpen = Duration(milliseconds: 400);
+  static const betweenIntents = Duration(milliseconds: 550);
+  static const completedHold = Duration(milliseconds: 1800);
+}
+
+double _proportionalContribution(int index, int valueCount) =>
+    index / (valueCount - 1) * _kMaxStepCircleContribution;
 
 double _demoCircleSize({
   required AverageFeeling? feeling,
@@ -70,8 +80,12 @@ double _demoCircleSize({
   final meaningContribution = meaning != null
       ? _proportionalContribution(meaning.index, MeaningScore.values.length)
       : 0.0;
-  final newExperienceContribution = hasNewExperience == true ? _kMaxStepCircleContribution : 0.0;
-  final intentionContribution = intents.isNotEmpty ? _kMaxStepCircleContribution : 0.0;
+  final newExperienceContribution = hasNewExperience == true
+      ? _kMaxStepCircleContribution
+      : 0.0;
+  final intentionContribution = intents.isNotEmpty
+      ? _kMaxStepCircleContribution
+      : 0.0;
 
   return _kBaseCircleSize +
       feelingContribution +
@@ -95,6 +109,9 @@ class _WeekCardState extends State<_WeekCard> {
 
   _DemoSection _expanded = _DemoSection.feeling;
 
+  /// Bumped on dispose so an in-flight demo loop cannot call [setState].
+  int _demoRun = 0;
+
   double get _circleSize => _demoCircleSize(
     feeling: _feeling,
     meaning: _meaning,
@@ -102,8 +119,28 @@ class _WeekCardState extends State<_WeekCard> {
     intents: _intents,
   );
 
-  void _onSectionTap(_DemoSection section) {
-    setState(() => _expanded = section);
+  @override
+  void initState() {
+    super.initState();
+    _playDemo(_demoRun);
+  }
+
+  @override
+  void dispose() {
+    _demoRun++;
+    super.dispose();
+  }
+
+  bool _demoAlive(int run) => mounted && run == _demoRun;
+
+  Future<bool> _pause(Duration duration, int run) async {
+    await Future<void>.delayed(duration);
+    return _demoAlive(run);
+  }
+
+  void _select(VoidCallback apply) {
+    SensorialFeedback.selectionChanged();
+    setState(apply);
   }
 
   Future<void> _advanceToNextSection(_DemoSection from) async {
@@ -115,19 +152,79 @@ class _WeekCardState extends State<_WeekCard> {
     setState(() => _expanded = _DemoSection.values[nextIndex]);
   }
 
+  /// Selects [apply], lets the chip read as tapped, then opens the next section.
+  Future<bool> _revealAnswer(
+    _DemoSection section,
+    VoidCallback apply,
+    int run,
+  ) async {
+    _select(apply);
+    if (!await _pause(_DemoTimings.afterSelection, run)) return false;
+    await _advanceToNextSection(section);
+    if (!_demoAlive(run)) return false;
+    return _pause(_DemoTimings.afterSectionOpen, run);
+  }
+
+  void _resetDemo() {
+    setState(() {
+      _feeling = null;
+      _meaning = null;
+      _hasNewExperience = null;
+      _intents.clear();
+      _expanded = _DemoSection.feeling;
+    });
+  }
+
+  /// Walks the fake form on its own and repeats, so the page reads as a preview.
+  Future<void> _playDemo(int run) async {
+    while (_demoAlive(run)) {
+      if (!await _pause(_DemoTimings.beforeFirstSelection, run)) return;
+      final feelingShown = await _revealAnswer(
+        _DemoSection.feeling,
+        () => _feeling = AverageFeeling.good,
+        run,
+      );
+      if (!feelingShown) return;
+      final meaningShown = await _revealAnswer(
+        _DemoSection.meaning,
+        () => _meaning = MeaningScore.much,
+        run,
+      );
+      if (!meaningShown) return;
+      final experienceShown = await _revealAnswer(
+        _DemoSection.newExperience,
+        () => _hasNewExperience = true,
+        run,
+      );
+      if (!experienceShown) return;
+
+      _select(() => _intents.add(_DemoIntent.bePresent));
+      if (!await _pause(_DemoTimings.betweenIntents, run)) return;
+      _select(() => _intents.add(_DemoIntent.explore));
+      if (!await _pause(_DemoTimings.completedHold, run)) return;
+      if (!_demoAlive(run)) return;
+      _resetDemo();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Dimens.radiusL),
-        border: Border.all(color: AppColors.strokeColor(context), width: Dimens.strokeWidthS),
+        border: Border.all(
+          color: AppColors.strokeColor(context),
+          width: Dimens.strokeWidthS,
+        ),
       ),
       clipBehavior: Clip.hardEdge,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           _WeekHeader(circleSize: _circleSize),
-          _buildFormDemo(),
+          IgnorePointer(
+            child: _buildFormDemo(),
+          ),
         ],
       ),
     );
@@ -142,16 +239,7 @@ class _WeekCardState extends State<_WeekCard> {
           title: Strings.feelingSectionTitle,
           isExpanded: _expanded == _DemoSection.feeling,
           summary: _feeling != null ? _FeelingSummary(value: _feeling!) : null,
-          onTap: () => _onSectionTap(_DemoSection.feeling),
-          child: _FeelingSelector(
-            value: _feeling,
-            onChanged: (v) {
-              SensorialFeedback.selectionChanged();
-              final wasUnanswered = _feeling == null;
-              setState(() => _feeling = v);
-              if (wasUnanswered) _advanceToNextSection(_DemoSection.feeling);
-            },
-          ),
+          child: _FeelingSelector(value: _feeling),
         ),
         const _Divider(),
         _DemoSectionTile(
@@ -159,54 +247,27 @@ class _WeekCardState extends State<_WeekCard> {
           title: Strings.meaningSectionTitle,
           isExpanded: _expanded == _DemoSection.meaning,
           summary: _meaning != null ? _MeaningSummary(value: _meaning!) : null,
-          onTap: () => _onSectionTap(_DemoSection.meaning),
-          child: _MeaningSelector(
-            value: _meaning,
-            onChanged: (v) {
-              SensorialFeedback.selectionChanged();
-              final wasUnanswered = _meaning == null;
-              setState(() => _meaning = v);
-              if (wasUnanswered) _advanceToNextSection(_DemoSection.meaning);
-            },
-          ),
+          child: _MeaningSelector(value: _meaning),
         ),
         const _Divider(),
         _DemoSectionTile(
           index: '03',
           title: Strings.newExperienceSectionTitle,
           isExpanded: _expanded == _DemoSection.newExperience,
-          summary: _hasNewExperience != null ? _NewExperienceSummary(value: _hasNewExperience!) : null,
-          onTap: () => _onSectionTap(_DemoSection.newExperience),
-          child: _NewExperienceSelector(
-            value: _hasNewExperience,
-            onChanged: (v) {
-              SensorialFeedback.selectionChanged();
-              final wasUnanswered = _hasNewExperience == null;
-              setState(() => _hasNewExperience = v);
-              if (wasUnanswered) _advanceToNextSection(_DemoSection.newExperience);
-            },
-          ),
+          summary: _hasNewExperience != null
+              ? _NewExperienceSummary(value: _hasNewExperience!)
+              : null,
+          child: _NewExperienceSelector(value: _hasNewExperience),
         ),
         const _Divider(),
         _DemoSectionTile(
           index: '04',
           title: Strings.livingIntentionsSectionTitle,
           isExpanded: _expanded == _DemoSection.intention,
-          summary: _intents.isNotEmpty ? _IntentionSummary(values: _intents) : null,
-          onTap: () => _onSectionTap(_DemoSection.intention),
-          child: _IntentionSelector(
-            values: _intents,
-            onToggle: (intent) {
-              SensorialFeedback.selectionChanged();
-              setState(() {
-                if (_intents.contains(intent)) {
-                  _intents.remove(intent);
-                } else {
-                  _intents.add(intent);
-                }
-              });
-            },
-          ),
+          summary: _intents.isNotEmpty
+              ? _IntentionSummary(values: _intents)
+              : null,
+          child: _IntentionSelector(values: _intents),
         ),
       ],
     );
@@ -246,7 +307,11 @@ class _WeekHeader extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const SizedBox(height: Margins.spacingS),
-                    Expanded(child: Texts.primaryLargeBold(TimeUtils.formatDate(context, DateTime.now()))),
+                    Expanded(
+                      child: Texts.primaryLargeBold(
+                        TimeUtils.formatDate(context, DateTime.now()),
+                      ),
+                    ),
                     Texts.primaryXsCounter(
                       context,
                       Strings.dayLabel,
@@ -286,7 +351,6 @@ class _DemoSectionTile extends StatelessWidget {
     required this.title,
     required this.isExpanded,
     required this.summary,
-    required this.onTap,
     required this.child,
   });
 
@@ -294,51 +358,47 @@ class _DemoSectionTile extends StatelessWidget {
   final String title;
   final bool isExpanded;
   final Widget? summary;
-  final VoidCallback onTap;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    final Color titleColor = isExpanded ? AppColors.content(context) : AppColors.contentSoftOnSoft(context);
+    final Color titleColor = isExpanded
+        ? AppColors.content(context)
+        : AppColors.contentSoftOnSoft(context);
     final Color indexColor = AppColors.contentExtraSoft(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: Margins.spacingBase,
-              vertical: Margins.spacingBase,
-            ),
-            child: Row(
-              children: [
-                Text(index, style: TextStyles.primaryRegularBold.copyWith(color: indexColor)),
-                const SizedBox(width: Margins.spacingS),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: TextStyles.primaryRegularBold.copyWith(color: titleColor),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Margins.spacingBase,
+            vertical: Margins.spacingBase,
+          ),
+          child: Row(
+            children: [
+              Text(
+                index,
+                style: TextStyles.primaryRegularBold.copyWith(
+                  color: indexColor,
                 ),
-                if (!isExpanded && summary != null) ...[
-                  const SizedBox(width: Margins.spacingS),
-                  Flexible(child: summary!),
-                ],
-                if (isExpanded) ...[
-                  const SizedBox(width: Margins.spacingS),
-                  Icon(
-                    MingCuteIcons.mgc_minimize_line,
-                    size: Dimens.iconSizeXs,
-                    color: AppColors.contentSoft(context),
+              ),
+              const SizedBox(width: Margins.spacingS),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyles.primaryRegularBold.copyWith(
+                    color: titleColor,
                   ),
-                ],
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              if (!isExpanded && summary != null) ...[
+                const SizedBox(width: Margins.spacingS),
+                Flexible(child: summary!),
               ],
-            ),
+            ],
           ),
         ),
         AnimatedSize(
@@ -372,10 +432,9 @@ IconData _feelingIcon(AverageFeeling feeling) => switch (feeling) {
 };
 
 class _FeelingSelector extends StatelessWidget {
-  const _FeelingSelector({required this.value, required this.onChanged});
+  const _FeelingSelector({required this.value});
 
   final AverageFeeling? value;
-  final ValueChanged<AverageFeeling> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -391,7 +450,6 @@ class _FeelingSelector extends StatelessWidget {
               Expanded(
                 child: _SquareChip(
                   selected: value == f,
-                  onTap: () => onChanged(f),
                   icon: _feelingIcon(f),
                   label: f.label,
                 ),
@@ -404,10 +462,9 @@ class _FeelingSelector extends StatelessWidget {
 }
 
 class _MeaningSelector extends StatelessWidget {
-  const _MeaningSelector({required this.value, required this.onChanged});
+  const _MeaningSelector({required this.value});
 
   final MeaningScore? value;
-  final ValueChanged<MeaningScore> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -423,8 +480,8 @@ class _MeaningSelector extends StatelessWidget {
               Expanded(
                 child: _SquareChip(
                   selected: value == m,
-                  onTap: () => onChanged(m),
-                  iconBuilder: (color) => _MeaningBars(filled: m.filledBars, color: color),
+                  iconBuilder: (color) =>
+                      _MeaningBars(filled: m.filledBars, color: color),
                   label: m.label,
                 ),
               ),
@@ -436,10 +493,9 @@ class _MeaningSelector extends StatelessWidget {
 }
 
 class _NewExperienceSelector extends StatelessWidget {
-  const _NewExperienceSelector({required this.value, required this.onChanged});
+  const _NewExperienceSelector({required this.value});
 
   final bool? value;
-  final ValueChanged<bool> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -454,7 +510,6 @@ class _NewExperienceSelector extends StatelessWidget {
             Expanded(
               child: _PillChip(
                 selected: value == false,
-                onTap: () => onChanged(false),
                 icon: MingCuteIcons.mgc_close_line,
                 label: Strings.newExperienceSectionValueNo,
               ),
@@ -462,7 +517,6 @@ class _NewExperienceSelector extends StatelessWidget {
             Expanded(
               child: _PillChip(
                 selected: value == true,
-                onTap: () => onChanged(true),
                 icon: MingCuteIcons.mgc_check_line,
                 label: Strings.newExperienceSectionValueYes,
               ),
@@ -493,17 +547,19 @@ enum _DemoIntent {
 }
 
 class _IntentionSelector extends StatelessWidget {
-  const _IntentionSelector({required this.values, required this.onToggle});
+  const _IntentionSelector({required this.values});
 
   final Set<_DemoIntent> values;
-  final ValueChanged<_DemoIntent> onToggle;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Texts.primaryRegularSoft(context, Strings.livingIntentionsSectionQuestion),
+        Texts.primaryRegularSoft(
+          context,
+          Strings.livingIntentionsSectionQuestion,
+        ),
         const SizedBox(height: Margins.spacingBase),
         Wrap(
           spacing: Margins.spacingS,
@@ -512,17 +568,14 @@ class _IntentionSelector extends StatelessWidget {
             for (final intent in _DemoIntent.values)
               _IntentPillChip(
                 selected: values.contains(intent),
-                onTap: () => onToggle(intent),
                 label: intent.label,
               ),
             _IntentPillChip(
               selected: false,
-              onTap: null,
               label: Strings.livingIntentionsSectionValueNone,
             ),
             _IntentPillChip(
               selected: false,
-              onTap: null,
               icon: MingCuteIcons.mgc_pencil_line,
               label: Strings.livingIntentionsSectionEditLabel,
               hideLeading: true,
@@ -537,50 +590,51 @@ class _IntentionSelector extends StatelessWidget {
 class _SquareChip extends StatelessWidget {
   const _SquareChip({
     required this.selected,
-    required this.onTap,
     required this.label,
     this.icon,
     this.iconBuilder,
   }) : assert(icon != null || iconBuilder != null);
 
   final bool selected;
-  final VoidCallback onTap;
   final String label;
   final IconData? icon;
   final Widget Function(Color color)? iconBuilder;
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = selected ? AppColors.content(context) : AppColors.bgSoft(context);
-    final iconFgColor = selected ? AppColors.contentMuted(context) : AppColors.contentSoftOnSoft(context);
-    final labelFgColor = selected ? AppColors.contentMuted(context) : AppColors.content(context);
+    final bgColor = selected
+        ? AppColors.content(context)
+        : AppColors.bgSoft(context);
+    final iconFgColor = selected
+        ? AppColors.contentMuted(context)
+        : AppColors.contentSoftOnSoft(context);
+    final labelFgColor = selected
+        ? AppColors.contentMuted(context)
+        : AppColors.content(context);
 
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: AnimationDurations.short,
-        curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(vertical: Margins.spacingBase),
-        decoration: BoxDecoration(
-          color: bgColor,
-          borderRadius: BorderRadius.circular(Dimens.radiusBase),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              height: Dimens.iconSizeBase,
-              child: icon != null
-                  ? Icon(icon, color: iconFgColor, size: Dimens.iconSizeBase)
-                  : iconBuilder!(iconFgColor),
-            ),
-            const SizedBox(height: Margins.spacingS),
-            Text(
-              label,
-              style: TextStyles.primaryXsBold.copyWith(color: labelFgColor),
-            ),
-          ],
-        ),
+    return AnimatedContainer(
+      duration: AnimationDurations.short,
+      curve: Curves.easeInOut,
+      padding: const EdgeInsets.symmetric(vertical: Margins.spacingBase),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(Dimens.radiusBase),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: Dimens.iconSizeBase,
+            child: icon != null
+                ? Icon(icon, color: iconFgColor, size: Dimens.iconSizeBase)
+                : iconBuilder!(iconFgColor),
+          ),
+          const SizedBox(height: Margins.spacingS),
+          Text(
+            label,
+            style: TextStyles.primaryXsBold.copyWith(color: labelFgColor),
+          ),
+        ],
       ),
     );
   }
@@ -589,44 +643,45 @@ class _SquareChip extends StatelessWidget {
 class _PillChip extends StatelessWidget {
   const _PillChip({
     required this.selected,
-    required this.onTap,
     required this.icon,
     required this.label,
   });
 
   final bool selected;
-  final VoidCallback onTap;
   final IconData icon;
   final String label;
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = selected ? AppColors.content(context) : AppColors.bgSoft(context);
-    final iconFgColor = selected ? AppColors.contentMuted(context) : AppColors.contentSoftOnSoft(context);
-    final labelFgColor = selected ? AppColors.contentMuted(context) : AppColors.content(context);
+    final bgColor = selected
+        ? AppColors.content(context)
+        : AppColors.bgSoft(context);
+    final iconFgColor = selected
+        ? AppColors.contentMuted(context)
+        : AppColors.contentSoftOnSoft(context);
+    final labelFgColor = selected
+        ? AppColors.contentMuted(context)
+        : AppColors.content(context);
 
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: AnimationDurations.short,
-        curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(vertical: Margins.spacingBase),
-        decoration: BoxDecoration(
-          color: bgColor,
-          borderRadius: BorderRadius.circular(Dimens.radiusXl),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: iconFgColor, size: Dimens.iconSizeS),
-            const SizedBox(width: Margins.spacingS),
-            Text(
-              label,
-              style: TextStyles.primaryRegularBold.copyWith(color: labelFgColor),
-            ),
-          ],
-        ),
+    return AnimatedContainer(
+      duration: AnimationDurations.short,
+      curve: Curves.easeInOut,
+      padding: const EdgeInsets.symmetric(vertical: Margins.spacingBase),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(Dimens.radiusXl),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: iconFgColor, size: Dimens.iconSizeS),
+          const SizedBox(width: Margins.spacingS),
+          Text(
+            label,
+            style: TextStyles.primaryRegularBold.copyWith(color: labelFgColor),
+          ),
+        ],
       ),
     );
   }
@@ -635,22 +690,24 @@ class _PillChip extends StatelessWidget {
 class _IntentPillChip extends StatelessWidget {
   const _IntentPillChip({
     required this.selected,
-    required this.onTap,
     required this.label,
     this.icon,
     this.hideLeading = false,
   });
 
   final bool selected;
-  final VoidCallback? onTap;
   final String label;
   final IconData? icon;
   final bool hideLeading;
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = selected ? AppColors.content(context) : AppColors.bgSoft(context);
-    final fgColor = selected ? AppColors.contentMuted(context) : AppColors.content(context);
+    final bgColor = selected
+        ? AppColors.content(context)
+        : AppColors.bgSoft(context);
+    final fgColor = selected
+        ? AppColors.contentMuted(context)
+        : AppColors.content(context);
 
     final Widget leading;
     if (hideLeading && icon != null) {
@@ -658,33 +715,33 @@ class _IntentPillChip extends StatelessWidget {
     } else if (selected) {
       leading = _SelectedIntentDot(color: fgColor);
     } else {
-      leading = _DashedCircle(color: AppColors.contentSoftOnSoft(context), size: 16);
+      leading = _DashedCircle(
+        color: AppColors.contentSoftOnSoft(context),
+        size: 16,
+      );
     }
 
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: AnimationDurations.short,
-        curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(
-          horizontal: Margins.spacingBase,
-          vertical: Margins.spacingS + Margins.spacingXs,
-        ),
-        decoration: BoxDecoration(
-          color: bgColor,
-          borderRadius: BorderRadius.circular(Dimens.radiusXl),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            leading,
-            const SizedBox(width: Margins.spacingS),
-            Text(
-              label,
-              style: TextStyles.primarySmallBold.copyWith(color: fgColor),
-            ),
-          ],
-        ),
+    return AnimatedContainer(
+      duration: AnimationDurations.short,
+      curve: Curves.easeInOut,
+      padding: const EdgeInsets.symmetric(
+        horizontal: Margins.spacingBase,
+        vertical: Margins.spacingS + Margins.spacingXs,
+      ),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(Dimens.radiusXl),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          leading,
+          const SizedBox(width: Margins.spacingS),
+          Text(
+            label,
+            style: TextStyles.primarySmallBold.copyWith(color: fgColor),
+          ),
+        ],
       ),
     );
   }
@@ -742,7 +799,8 @@ class _DashedCirclePainter extends CustomPainter {
       ..strokeWidth = 1.2;
 
     final center = Offset(size.width / 2, size.height / 2);
-    final radius = math.min(size.width, size.height) / 2 - paint.strokeWidth / 2;
+    final radius =
+        math.min(size.width, size.height) / 2 - paint.strokeWidth / 2;
 
     const dashCount = 10;
     const sweepPerDash = (2 * math.pi) / dashCount;
@@ -761,11 +819,16 @@ class _DashedCirclePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _DashedCirclePainter oldDelegate) => oldDelegate.color != color;
+  bool shouldRepaint(covariant _DashedCirclePainter oldDelegate) =>
+      oldDelegate.color != color;
 }
 
 class _MeaningBars extends StatelessWidget {
-  const _MeaningBars({required this.filled, required this.color, this.size = Dimens.iconSizeBase});
+  const _MeaningBars({
+    required this.filled,
+    required this.color,
+    this.size = Dimens.iconSizeBase,
+  });
 
   final int filled;
   final Color color;
@@ -809,7 +872,11 @@ class _FeelingSummary extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(_feelingIcon(value), size: Dimens.iconSizeXs, color: AppColors.content(context)),
+        Icon(
+          _feelingIcon(value),
+          size: Dimens.iconSizeXs,
+          color: AppColors.content(context),
+        ),
         const SizedBox(width: Margins.spacingS),
         Flexible(
           child: Texts.primaryXsBold(
@@ -833,7 +900,11 @@ class _MeaningSummary extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _MeaningBars(filled: value.filledBars, color: AppColors.content(context), size: Dimens.iconSizeXs),
+        _MeaningBars(
+          filled: value.filledBars,
+          color: AppColors.content(context),
+          size: Dimens.iconSizeXs,
+        ),
         const SizedBox(width: Margins.spacingS),
         Flexible(
           child: Texts.primaryXsBold(
@@ -855,7 +926,9 @@ class _NewExperienceSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Texts.primaryXsBold(
-      value ? Strings.newExperienceSectionValueYes : Strings.newExperienceSectionValueNo,
+      value
+          ? Strings.newExperienceSectionValueYes
+          : Strings.newExperienceSectionValueNo,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       textAlign: TextAlign.end,
@@ -869,7 +942,9 @@ class _IntentionSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = values.isEmpty ? Strings.none : values.map((e) => e.summaryLabel).join(", ");
+    final text = values.isEmpty
+        ? Strings.none
+        : values.map((e) => e.summaryLabel).join(", ");
     return Texts.primaryXsBold(
       text,
       maxLines: 1,

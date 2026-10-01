@@ -416,6 +416,8 @@ class Strings {
   static String get themeArdoise => tr('theme_ardoise');
   static String themeLockedStreakHint(int days) =>
       tr('theme_locked_streak_hint', namedArgs: {'days': '$days'});
+  static String themeLockedStreakOrProHint(int days) =>
+      tr('theme_locked_streak_or_pro_hint', namedArgs: {'days': '$days'});
   static String get themeSelectedLabel => tr('theme_selected_label');
 
   // Home page
@@ -511,6 +513,12 @@ class Strings {
   static String get dayResumeBottomSheetEmptySubtitle =>
       tr('day_resume_bottom_sheet_empty_subtitle');
   static String get startTracking => tr('start_tracking');
+
+  // pro gates
+  static String get proUnlockCta => tr('pro_unlock_cta');
+  static String proHistoryLockedBody(int days) =>
+      tr('pro_history_locked_body', namedArgs: {'days': '$days'});
+  static String get proMissedDayBody => tr('pro_missed_day_body');
 
   // profile page
   static String get profilePageTitle => tr('profile_page_title');
@@ -646,6 +654,18 @@ class Strings {
       tr('weekly_summary_page_regularity');
   static String get weeklySummaryPageSeeMore =>
       tr('weekly_summary_page_see_more');
+  static String get weeklySummarySameAsLastWeek =>
+      tr('weekly_summary_same_as_last_week');
+  static String get weeklySummaryDetailsLockedBody =>
+      tr('weekly_summary_details_locked_body');
+  static String weeklySummaryVsLastWeek(String delta) =>
+      tr('weekly_summary_vs_last_week', namedArgs: {'delta': delta});
+  static String get weeklySummaryCompareTeaserTitle =>
+      tr('weekly_summary_compare_teaser_title');
+  static String get weeklySummaryCompareTeaserBody =>
+      tr('weekly_summary_compare_teaser_body');
+  static String get weeklySummaryCompareTeaserCta =>
+      tr('weekly_summary_compare_teaser_cta');
 
   static String get suggestAFeatureSubject => tr('suggest_a_feature_subject');
   static String get suggestAFeatureBody => tr('suggest_a_feature_body');

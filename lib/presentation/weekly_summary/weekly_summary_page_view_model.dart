@@ -7,6 +7,7 @@ import 'package:weeksalive/domain/life_week_grid.dart';
 import 'package:weeksalive/domain/user/user.dart';
 import 'package:weeksalive/domain/weekly_calendar.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
 
 part 'weekly_summary_page_view_model.freezed.dart';
@@ -23,7 +24,20 @@ abstract class WeeklySummaryPageViewModel with _$WeeklySummaryPageViewModel {
     required List<(int, String)> lastWeekLivingIntentions,
     required List<(String dayLabel, int? sizeLevel)> lastWeekDaySizes,
     required List<String> lastWeekImagePaths,
+
+    /// The summarized week is the one the user started in. Its details are
+    /// free, and there is no earlier week to compare it with.
+    required bool isFirstWeek,
+    required bool isPro,
+
+    /// Change from the week before, or `null` when that week has no entry.
+    required WeeklySummaryComparison? comparison,
   }) = _WeeklySummaryPageViewModel;
+
+  const WeeklySummaryPageViewModel._();
+
+  /// From the second week on, a free user sees regularity only.
+  bool get detailsLocked => !isPro && !isFirstWeek;
 
   factory WeeklySummaryPageViewModel.create(Store<AppState> store, {DateTime? at}) {
     final now = at ?? DateTime.now();
@@ -36,6 +50,8 @@ abstract class WeeklySummaryPageViewModel with _$WeeklySummaryPageViewModel {
     final weekEntries = _entriesForDays(store, previousWeekDays);
     final weekStart = previousWeekDays.first;
     final weekEnd = previousWeekDays.last;
+    final weekBeforeDays = [for (final day in previousWeekDays) day.subtract(const Duration(days: 7))];
+    final weekBeforeEntries = _entriesForDays(store, weekBeforeDays);
 
     return WeeklySummaryPageViewModel(
       weekNumber: _weekNumber(user, weekEnd, weekStartDay),
@@ -47,6 +63,39 @@ abstract class WeeklySummaryPageViewModel with _$WeeklySummaryPageViewModel {
       lastWeekLivingIntentions: _livingIntentions(store, weekEntries),
       lastWeekDaySizes: _weekDaySizes(store, previousWeekDays),
       lastWeekImagePaths: _imagePaths(weekEntries),
+      isFirstWeek: user == null || !normalizeDay(user.createdAt).isBefore(weekStart),
+      isPro: store.state.purchaseState.isPro,
+      comparison: weekBeforeEntries.isEmpty
+          ? null
+          : WeeklySummaryComparison.between(current: weekEntries, previous: weekBeforeEntries),
+    );
+  }
+}
+
+@freezed
+abstract class WeeklySummaryComparison with _$WeeklySummaryComparison {
+  const factory WeeklySummaryComparison({
+    required int loggedDaysDelta,
+
+    /// `null` when either week has no feeling recorded.
+    required double? averageFeelingDelta,
+
+    /// `null` when either week has no meaning score recorded.
+    required double? averageMeaningDelta,
+    required int newExperiencesDelta,
+  }) = _WeeklySummaryComparison;
+
+  factory WeeklySummaryComparison.between({
+    required List<DayEntry> current,
+    required List<DayEntry> previous,
+  }) {
+    double? delta(double? now, double? before) => now == null || before == null ? null : now - before;
+
+    return WeeklySummaryComparison(
+      loggedDaysDelta: current.length - previous.length,
+      averageFeelingDelta: delta(_averageFeelingScoreOrNull(current), _averageFeelingScoreOrNull(previous)),
+      averageMeaningDelta: delta(_averageMeaningScoreOrNull(current), _averageMeaningScoreOrNull(previous)),
+      newExperiencesDelta: _newExperiencesCount(current) - _newExperiencesCount(previous),
     );
   }
 }
@@ -96,16 +145,20 @@ AverageFeeling? _averageFeeling(List<DayEntry> entries) {
   return AverageFeeling.values[averageIndex.round().clamp(0, AverageFeeling.values.length - 1)];
 }
 
-double _averageFeelingScore(List<DayEntry> entries) {
+double _averageFeelingScore(List<DayEntry> entries) => _averageFeelingScoreOrNull(entries) ?? 0;
+
+double? _averageFeelingScoreOrNull(List<DayEntry> entries) {
   final feelings = entries.map((entry) => entry.averageFeeling).whereType<AverageFeeling>().toList();
-  if (feelings.isEmpty) return 0;
+  if (feelings.isEmpty) return null;
 
   return feelings.map((feeling) => feeling.index + 1).reduce((a, b) => a + b) / feelings.length;
 }
 
-double _averageMeaningScore(List<DayEntry> entries) {
+double _averageMeaningScore(List<DayEntry> entries) => _averageMeaningScoreOrNull(entries) ?? 0;
+
+double? _averageMeaningScoreOrNull(List<DayEntry> entries) {
   final scores = entries.map((entry) => entry.meaningScore).whereType<MeaningScore>().toList();
-  if (scores.isEmpty) return 0;
+  if (scores.isEmpty) return null;
 
   return scores.map((score) => score.index + 1).reduce((a, b) => a + b) / scores.length;
 }

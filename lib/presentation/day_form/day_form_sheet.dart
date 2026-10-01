@@ -8,6 +8,7 @@ import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
+import 'package:weeksalive/domain/pro/free_plan.dart';
 import 'package:weeksalive/presentation/day_form/day_form.dart';
 import 'package:weeksalive/presentation/day_form/day_form_confirmation_page.dart';
 import 'package:weeksalive/presentation/day_form/day_form_controller.dart';
@@ -50,20 +51,25 @@ Future<DayFormResult?> showDayFormSheet(
   // Single premium gate for every entry point into the day form. Any caller
   // (today button, calendar, resume sheet, notifications, …) is routed through
   // here, so the paywall cannot be bypassed by opening the form another way.
+  // Today and the recent days are free (see FreePlan); older and missed days
+  // are Pro.
   final store = StoreProvider.of<AppState>(context, listen: false);
-  if (!store.state.purchaseState.isResolved) {
-    // RevenueCat's entitlement fetch may still be in flight (e.g. cold launch
-    // from a push notification racing bootstrap). Wait for it to resolve so we
-    // don't gate on a default "not pro" value that flips true underneath the
-    // paywall a moment later.
-    await store.onChange
-        .firstWhere((state) => state.purchaseState.isResolved)
-        .timeout(const Duration(seconds: 5), onTimeout: () => store.state);
-    if (!context.mounted) return null;
-  }
-  if (!store.state.purchaseState.isPro) {
-    final subscribed = await showInAppPaywall(context, feature: source);
-    if (subscribed != true || !context.mounted) return null;
+  final hasEntry = store.state.dayState.entryFor(date) != null;
+  if (!FreePlan.canOpenDayForm(date: date, hasEntry: hasEntry, now: DateTime.now())) {
+    if (!store.state.purchaseState.isResolved) {
+      // RevenueCat's entitlement fetch may still be in flight (e.g. cold launch
+      // from a push notification racing bootstrap). Wait for it to resolve so we
+      // don't gate on a default "not pro" value that flips true underneath the
+      // paywall a moment later.
+      await store.onChange
+          .firstWhere((state) => state.purchaseState.isResolved)
+          .timeout(const Duration(seconds: 5), onTimeout: () => store.state);
+      if (!context.mounted) return null;
+    }
+    if (!store.state.purchaseState.isPro) {
+      final subscribed = await showInAppPaywall(context, feature: hasEntry ? 'history' : 'missed_day');
+      if (subscribed != true || !context.mounted) return null;
+    }
   }
 
   final controller = SheetController();

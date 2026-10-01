@@ -8,6 +8,8 @@ import 'package:weeksalive/domain/rewards/reward_id.dart';
 import 'package:weeksalive/presentation/redux/app_icon/app_icon_actions.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
+import 'package:weeksalive/presentation/redux/purchase/purchase_actions.dart';
+import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 import 'package:weeksalive/presentation/redux/rewards/rewards_actions.dart';
 
 class AppIconMiddleware extends MiddlewareClass<AppState> {
@@ -57,32 +59,47 @@ class AppIconMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is RewardsLoadedAction) {
-      final unlockedIcons = {
-        ...AppIconId.alwaysUnlocked,
-        ...rewardIdsToAppIconIds(action.unlocked),
-      };
-      // Expose unlocked icons right away: reading the persisted icon may be slow.
-      store.dispatch(AppIconsUnlockedAction(unlockedIcons));
-      final persisted = await appIconRepository.getSelectedIcon();
-      final selected = unlockedIcons.contains(persisted)
-          ? persisted
-          : unlockedIcons.contains(store.state.appIconState.selectedIcon)
-              ? store.state.appIconState.selectedIcon
-              : AppIconId.defaultIcon;
-      try {
-        if (!unlockedIcons.contains(persisted)) {
-          await appIconRepository.setSelectedIcon(selected);
-          await _appIconService.setIcon(selected);
-        }
-        store.dispatch(
-          AppIconLoadedAction(
-            selectedIcon: selected,
-            unlockedIcons: unlockedIcons,
-          ),
-        );
-      } catch (_) {
-        // Store torn down (e.g. in tests) during the async gap.
+      await _syncUnlocked(store, action.unlocked);
+    }
+
+    if (action is PurchaseSucceededAction) {
+      await _syncUnlocked(store, store.state.rewardsState.unlocked);
+    }
+  }
+
+  /// Pro unlocks every icon; otherwise streak rewards decide.
+  Future<void> _syncUnlocked(Store<AppState> store, Set<RewardId> rewards) async {
+    final purchase = store.state.purchaseState;
+    final unlockedIcons = purchase.isPro
+        ? AppIconId.all.toSet()
+        : {
+            ...AppIconId.alwaysUnlocked,
+            ...rewardIdsToAppIconIds(rewards),
+          };
+    // Expose unlocked icons right away: reading the persisted icon may be slow.
+    store.dispatch(AppIconsUnlockedAction(unlockedIcons));
+    final persisted = await appIconRepository.getSelectedIcon();
+    // Only fall back once the entitlement is known: while RevenueCat is still
+    // loading, resetting a Pro user's icon would also pop the system alert.
+    if (!unlockedIcons.contains(persisted) && !purchase.isResolved) return;
+    final selected = unlockedIcons.contains(persisted)
+        ? persisted
+        : unlockedIcons.contains(store.state.appIconState.selectedIcon)
+            ? store.state.appIconState.selectedIcon
+            : AppIconId.defaultIcon;
+    try {
+      if (!unlockedIcons.contains(persisted)) {
+        await appIconRepository.setSelectedIcon(selected);
+        await _appIconService.setIcon(selected);
       }
+      store.dispatch(
+        AppIconLoadedAction(
+          selectedIcon: selected,
+          unlockedIcons: unlockedIcons,
+        ),
+      );
+    } catch (_) {
+      // Store torn down (e.g. in tests) during the async gap.
     }
   }
 }

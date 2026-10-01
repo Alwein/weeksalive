@@ -6,6 +6,8 @@ import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/backup/backup_actions.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/grid_motif/grid_motif_actions.dart';
+import 'package:weeksalive/presentation/redux/purchase/purchase_actions.dart';
+import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 import 'package:weeksalive/presentation/redux/rewards/rewards_actions.dart';
 
 class GridMotifMiddleware extends MiddlewareClass<AppState> {
@@ -47,30 +49,45 @@ class GridMotifMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is RewardsLoadedAction) {
-      final unlockedMotifs = {
-        ...GridMotifId.alwaysUnlocked,
-        ...rewardIdsToGridMotifIds(action.unlocked),
-      };
-      final persisted = await gridMotifRepository.getSelectedMotif();
-      final selected = unlockedMotifs.contains(persisted)
-          ? persisted
-          : unlockedMotifs.contains(store.state.gridMotifState.selectedMotif)
-              ? store.state.gridMotifState.selectedMotif
-              : GridMotifId.dots;
-      try {
-        store.dispatch(GridMotifsUnlockedAction(unlockedMotifs));
-        if (!unlockedMotifs.contains(persisted)) {
-          await gridMotifRepository.setSelectedMotif(selected);
-        }
-        store.dispatch(
-          GridMotifLoadedAction(
-            selectedMotif: selected,
-            unlockedMotifs: unlockedMotifs,
-          ),
-        );
-      } catch (_) {
-        // Store torn down (e.g. in tests) during the async gap.
+      await _syncUnlocked(store, action.unlocked);
+    }
+
+    if (action is PurchaseSucceededAction) {
+      await _syncUnlocked(store, store.state.rewardsState.unlocked);
+    }
+  }
+
+  /// Pro unlocks every motif; otherwise streak rewards decide.
+  Future<void> _syncUnlocked(Store<AppState> store, Set<RewardId> rewards) async {
+    final purchase = store.state.purchaseState;
+    final unlockedMotifs = purchase.isPro
+        ? GridMotifId.all.toSet()
+        : {
+            ...GridMotifId.alwaysUnlocked,
+            ...rewardIdsToGridMotifIds(rewards),
+          };
+    final persisted = await gridMotifRepository.getSelectedMotif();
+    // Only fall back once the entitlement is known: while RevenueCat is still
+    // loading, a Pro user's motif must survive the launch.
+    final keepsPersisted = unlockedMotifs.contains(persisted) || !purchase.isResolved;
+    final selected = keepsPersisted
+        ? persisted
+        : unlockedMotifs.contains(store.state.gridMotifState.selectedMotif)
+            ? store.state.gridMotifState.selectedMotif
+            : GridMotifId.dots;
+    try {
+      store.dispatch(GridMotifsUnlockedAction(unlockedMotifs));
+      if (!keepsPersisted) {
+        await gridMotifRepository.setSelectedMotif(selected);
       }
+      store.dispatch(
+        GridMotifLoadedAction(
+          selectedMotif: selected,
+          unlockedMotifs: unlockedMotifs,
+        ),
+      );
+    } catch (_) {
+      // Store torn down (e.g. in tests) during the async gap.
     }
   }
 }

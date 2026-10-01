@@ -9,6 +9,7 @@ import 'package:weeksalive/presentation/redux/app_reducer.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/day/day_middleware.dart';
+import 'package:weeksalive/presentation/redux/purchase/purchase_actions.dart';
 import 'package:weeksalive/presentation/redux/rewards/rewards_middleware.dart';
 
 import '../../../helpers/test_app_state.dart';
@@ -58,6 +59,30 @@ void main() {
       expect(store.state.appIconState.unlockedIcons, contains(AppIconId.gold));
       expect(store.state.appIconState.selectedIcon, AppIconId.gold);
       expect(store.state.rewardsState.unlocked, contains(RewardId.appIconGold));
+    });
+
+    test('keeps a locked icon while the entitlement loads, then Pro restores it', () async {
+      when(() => appIconRepository.setSelectedIcon(any())).thenAnswer((_) async {});
+      final store = Store<AppState>(
+        appReducer,
+        initialState: initialAppState(),
+        middleware: [
+          DayMiddleware(dayRepository: dayRepository).call,
+          RewardsMiddleware(rewardsRepository: rewardsRepository).call,
+          AppIconMiddleware(appIconRepository: appIconRepository).call,
+        ],
+      );
+
+      await store.dispatch(BootstrapAction());
+      await pumpEventQueue();
+      verifyNever(() => appIconRepository.setSelectedIcon(any()));
+
+      store.dispatch(const PurchaseSucceededAction(isPro: true));
+      await pumpEventQueue();
+
+      expect(store.state.appIconState.unlockedIcons, AppIconId.all.toSet());
+      expect(store.state.appIconState.selectedIcon, AppIconId.gold);
+      verifyNever(() => appIconRepository.setSelectedIcon(any()));
     });
   });
 }

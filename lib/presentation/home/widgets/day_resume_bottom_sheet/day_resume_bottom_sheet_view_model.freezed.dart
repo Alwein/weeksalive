@@ -55,12 +55,13 @@ extension DayResumeBottomSheetViewModelPatterns on DayResumeBottomSheetViewModel
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( DayResumeBottomSheetViewModelEmpty value)?  empty,TResult Function( DayResumeBottomSheetViewModelFilled value)?  filled,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( DayResumeBottomSheetViewModelEmpty value)?  empty,TResult Function( DayResumeBottomSheetViewModelFilled value)?  filled,TResult Function( DayResumeBottomSheetViewModelLocked value)?  locked,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case DayResumeBottomSheetViewModelEmpty() when empty != null:
 return empty(_that);case DayResumeBottomSheetViewModelFilled() when filled != null:
-return filled(_that);case _:
+return filled(_that);case DayResumeBottomSheetViewModelLocked() when locked != null:
+return locked(_that);case _:
   return orElse();
 
 }
@@ -78,12 +79,13 @@ return filled(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( DayResumeBottomSheetViewModelEmpty value)  empty,required TResult Function( DayResumeBottomSheetViewModelFilled value)  filled,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( DayResumeBottomSheetViewModelEmpty value)  empty,required TResult Function( DayResumeBottomSheetViewModelFilled value)  filled,required TResult Function( DayResumeBottomSheetViewModelLocked value)  locked,}){
 final _that = this;
 switch (_that) {
 case DayResumeBottomSheetViewModelEmpty():
 return empty(_that);case DayResumeBottomSheetViewModelFilled():
-return filled(_that);case _:
+return filled(_that);case DayResumeBottomSheetViewModelLocked():
+return locked(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -100,12 +102,13 @@ return filled(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( DayResumeBottomSheetViewModelEmpty value)?  empty,TResult? Function( DayResumeBottomSheetViewModelFilled value)?  filled,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( DayResumeBottomSheetViewModelEmpty value)?  empty,TResult? Function( DayResumeBottomSheetViewModelFilled value)?  filled,TResult? Function( DayResumeBottomSheetViewModelLocked value)?  locked,}){
 final _that = this;
 switch (_that) {
 case DayResumeBottomSheetViewModelEmpty() when empty != null:
 return empty(_that);case DayResumeBottomSheetViewModelFilled() when filled != null:
-return filled(_that);case _:
+return filled(_that);case DayResumeBottomSheetViewModelLocked() when locked != null:
+return locked(_that);case _:
   return null;
 
 }
@@ -122,11 +125,12 @@ return filled(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( DateTime date)?  empty,TResult Function( DayEntry entry,  int dayCount)?  filled,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( DateTime date,  bool canLog)?  empty,TResult Function( DayEntry entry,  int dayCount)?  filled,TResult Function( DateTime date,  int sizeLevel,  int dayCount)?  locked,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case DayResumeBottomSheetViewModelEmpty() when empty != null:
-return empty(_that.date);case DayResumeBottomSheetViewModelFilled() when filled != null:
-return filled(_that.entry,_that.dayCount);case _:
+return empty(_that.date,_that.canLog);case DayResumeBottomSheetViewModelFilled() when filled != null:
+return filled(_that.entry,_that.dayCount);case DayResumeBottomSheetViewModelLocked() when locked != null:
+return locked(_that.date,_that.sizeLevel,_that.dayCount);case _:
   return orElse();
 
 }
@@ -144,11 +148,12 @@ return filled(_that.entry,_that.dayCount);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( DateTime date)  empty,required TResult Function( DayEntry entry,  int dayCount)  filled,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( DateTime date,  bool canLog)  empty,required TResult Function( DayEntry entry,  int dayCount)  filled,required TResult Function( DateTime date,  int sizeLevel,  int dayCount)  locked,}) {final _that = this;
 switch (_that) {
 case DayResumeBottomSheetViewModelEmpty():
-return empty(_that.date);case DayResumeBottomSheetViewModelFilled():
-return filled(_that.entry,_that.dayCount);case _:
+return empty(_that.date,_that.canLog);case DayResumeBottomSheetViewModelFilled():
+return filled(_that.entry,_that.dayCount);case DayResumeBottomSheetViewModelLocked():
+return locked(_that.date,_that.sizeLevel,_that.dayCount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -165,11 +170,12 @@ return filled(_that.entry,_that.dayCount);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( DateTime date)?  empty,TResult? Function( DayEntry entry,  int dayCount)?  filled,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( DateTime date,  bool canLog)?  empty,TResult? Function( DayEntry entry,  int dayCount)?  filled,TResult? Function( DateTime date,  int sizeLevel,  int dayCount)?  locked,}) {final _that = this;
 switch (_that) {
 case DayResumeBottomSheetViewModelEmpty() when empty != null:
-return empty(_that.date);case DayResumeBottomSheetViewModelFilled() when filled != null:
-return filled(_that.entry,_that.dayCount);case _:
+return empty(_that.date,_that.canLog);case DayResumeBottomSheetViewModelFilled() when filled != null:
+return filled(_that.entry,_that.dayCount);case DayResumeBottomSheetViewModelLocked() when locked != null:
+return locked(_that.date,_that.sizeLevel,_that.dayCount);case _:
   return null;
 
 }
@@ -181,10 +187,11 @@ return filled(_that.entry,_that.dayCount);case _:
 
 
 class DayResumeBottomSheetViewModelEmpty implements DayResumeBottomSheetViewModel {
-  const DayResumeBottomSheetViewModelEmpty({required this.date});
+  const DayResumeBottomSheetViewModelEmpty({required this.date, required this.canLog});
   
 
  final  DateTime date;
+ final  bool canLog;
 
 /// Create a copy of DayResumeBottomSheetViewModel
 /// with the given fields replaced by the non-null parameter values.
@@ -196,16 +203,16 @@ $DayResumeBottomSheetViewModelEmptyCopyWith<DayResumeBottomSheetViewModelEmpty> 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DayResumeBottomSheetViewModelEmpty&&(identical(other.date, date) || other.date == date));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DayResumeBottomSheetViewModelEmpty&&(identical(other.date, date) || other.date == date)&&(identical(other.canLog, canLog) || other.canLog == canLog));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,date);
+int get hashCode => Object.hash(runtimeType,date,canLog);
 
 @override
 String toString() {
-  return 'DayResumeBottomSheetViewModel.empty(date: $date)';
+  return 'DayResumeBottomSheetViewModel.empty(date: $date, canLog: $canLog)';
 }
 
 
@@ -216,7 +223,7 @@ abstract mixin class $DayResumeBottomSheetViewModelEmptyCopyWith<$Res> implement
   factory $DayResumeBottomSheetViewModelEmptyCopyWith(DayResumeBottomSheetViewModelEmpty value, $Res Function(DayResumeBottomSheetViewModelEmpty) _then) = _$DayResumeBottomSheetViewModelEmptyCopyWithImpl;
 @useResult
 $Res call({
- DateTime date
+ DateTime date, bool canLog
 });
 
 
@@ -233,10 +240,11 @@ class _$DayResumeBottomSheetViewModelEmptyCopyWithImpl<$Res>
 
 /// Create a copy of DayResumeBottomSheetViewModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? date = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? date = null,Object? canLog = null,}) {
   return _then(DayResumeBottomSheetViewModelEmpty(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as DateTime,canLog: null == canLog ? _self.canLog : canLog // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -304,6 +312,76 @@ class _$DayResumeBottomSheetViewModelFilledCopyWithImpl<$Res>
   return _then(DayResumeBottomSheetViewModelFilled(
 entry: null == entry ? _self.entry : entry // ignore: cast_nullable_to_non_nullable
 as DayEntry,dayCount: null == dayCount ? _self.dayCount : dayCount // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class DayResumeBottomSheetViewModelLocked implements DayResumeBottomSheetViewModel {
+  const DayResumeBottomSheetViewModelLocked({required this.date, required this.sizeLevel, required this.dayCount});
+  
+
+ final  DateTime date;
+ final  int sizeLevel;
+ final  int dayCount;
+
+/// Create a copy of DayResumeBottomSheetViewModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DayResumeBottomSheetViewModelLockedCopyWith<DayResumeBottomSheetViewModelLocked> get copyWith => _$DayResumeBottomSheetViewModelLockedCopyWithImpl<DayResumeBottomSheetViewModelLocked>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DayResumeBottomSheetViewModelLocked&&(identical(other.date, date) || other.date == date)&&(identical(other.sizeLevel, sizeLevel) || other.sizeLevel == sizeLevel)&&(identical(other.dayCount, dayCount) || other.dayCount == dayCount));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,date,sizeLevel,dayCount);
+
+@override
+String toString() {
+  return 'DayResumeBottomSheetViewModel.locked(date: $date, sizeLevel: $sizeLevel, dayCount: $dayCount)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $DayResumeBottomSheetViewModelLockedCopyWith<$Res> implements $DayResumeBottomSheetViewModelCopyWith<$Res> {
+  factory $DayResumeBottomSheetViewModelLockedCopyWith(DayResumeBottomSheetViewModelLocked value, $Res Function(DayResumeBottomSheetViewModelLocked) _then) = _$DayResumeBottomSheetViewModelLockedCopyWithImpl;
+@useResult
+$Res call({
+ DateTime date, int sizeLevel, int dayCount
+});
+
+
+
+
+}
+/// @nodoc
+class _$DayResumeBottomSheetViewModelLockedCopyWithImpl<$Res>
+    implements $DayResumeBottomSheetViewModelLockedCopyWith<$Res> {
+  _$DayResumeBottomSheetViewModelLockedCopyWithImpl(this._self, this._then);
+
+  final DayResumeBottomSheetViewModelLocked _self;
+  final $Res Function(DayResumeBottomSheetViewModelLocked) _then;
+
+/// Create a copy of DayResumeBottomSheetViewModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? date = null,Object? sizeLevel = null,Object? dayCount = null,}) {
+  return _then(DayResumeBottomSheetViewModelLocked(
+date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
+as DateTime,sizeLevel: null == sizeLevel ? _self.sizeLevel : sizeLevel // ignore: cast_nullable_to_non_nullable
+as int,dayCount: null == dayCount ? _self.dayCount : dayCount // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }

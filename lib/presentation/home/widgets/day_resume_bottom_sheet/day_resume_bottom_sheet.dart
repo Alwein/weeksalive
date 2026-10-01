@@ -13,12 +13,14 @@ import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
+import 'package:weeksalive/domain/pro/free_plan.dart';
 import 'package:weeksalive/presentation/day_form/day_form.dart';
 import 'package:weeksalive/presentation/home/widgets/day_resume_bottom_sheet/day_resume_bottom_sheet_view_model.dart';
 import 'package:weeksalive/presentation/home/widgets/day_resume_bottom_sheet/day_resume_session.dart';
 import 'package:weeksalive/presentation/home/widgets/day_summaries.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
+import 'package:weeksalive/presentation/paywall/show_in_app_paywall.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
 import 'package:weeksalive/presentation/widgets/circle.dart';
@@ -86,10 +88,11 @@ class _DayPage extends StatelessWidget {
       converter: (store) => DayResumeBottomSheetViewModel.create(store, date),
       builder: (context, viewModel) {
         return switch (viewModel) {
-          DayResumeBottomSheetViewModelEmpty() => _EmptyDayContent(date: date),
+          DayResumeBottomSheetViewModelEmpty() => _EmptyDayContent(viewModel: viewModel),
           DayResumeBottomSheetViewModelFilled() => _FilledDayContent(
             viewModel: viewModel,
           ),
+          DayResumeBottomSheetViewModelLocked() => _LockedDayContent(viewModel: viewModel),
           DayResumeBottomSheetViewModel() => throw UnimplementedError(),
         };
       },
@@ -98,11 +101,12 @@ class _DayPage extends StatelessWidget {
 }
 
 class _EmptyDayContent extends StatelessWidget {
-  const _EmptyDayContent({required this.date});
-  final DateTime date;
+  const _EmptyDayContent({required this.viewModel});
+  final DayResumeBottomSheetViewModelEmpty viewModel;
 
   @override
   Widget build(BuildContext context) {
+    final date = viewModel.date;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
       child: Column(
@@ -120,7 +124,7 @@ class _EmptyDayContent extends StatelessWidget {
           ),
           const SizedBox(height: Margins.spacingS),
           Text(
-            Strings.dayResumeBottomSheetEmptySubtitle,
+            viewModel.canLog ? Strings.dayResumeBottomSheetEmptySubtitle : Strings.proMissedDayBody,
             textAlign: TextAlign.center,
             style: TextStyles.primaryRegularMedium.copyWith(
               color: AppColors.contentSoft(context),
@@ -139,9 +143,11 @@ class _EmptyDayContent extends StatelessWidget {
             ),
           ),
           PrimaryButton(
-            text: Strings.startTracking,
+            text: viewModel.canLog ? Strings.startTracking : Strings.proUnlockCta,
+            icon: viewModel.canLog ? null : MingCuteIcons.mgc_diamond_2_line,
             onPressed: () {
               Navigator.of(context).pop();
+              // A missed day goes through the day form's premium gate.
               DayForm.showBottomSheet(context, date, source: 'calendar');
             },
           ),
@@ -184,6 +190,60 @@ class _FilledDayContent extends StatelessWidget {
                 source: 'resume',
               );
             },
+          ),
+          const SizedBox(height: Margins.spacingM),
+        ],
+      ),
+    );
+  }
+}
+
+class _LockedDayContent extends StatelessWidget {
+  const _LockedDayContent({required this.viewModel});
+  final DayResumeBottomSheetViewModelLocked viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SizedBox(height: Margins.spacingM),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(Dimens.radiusL),
+              border: Border.all(
+                color: AppColors.strokeColor(context),
+                width: Dimens.strokeWidthS,
+              ),
+            ),
+            clipBehavior: Clip.hardEdge,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _DayHeader(
+                  circleSize: _sizeLevelToCircleSize(viewModel.sizeLevel),
+                  dayCount: viewModel.dayCount,
+                  date: viewModel.date,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(Margins.spacingBase),
+                  child: Text(
+                    Strings.proHistoryLockedBody(FreePlan.historyDays),
+                    style: TextStyles.primaryRegularMedium.copyWith(
+                      color: AppColors.contentSoft(context),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: Margins.spacingM),
+          PrimaryButton(
+            text: Strings.proUnlockCta,
+            icon: MingCuteIcons.mgc_diamond_2_line,
+            onPressed: () => showInAppPaywall(context, feature: 'history'),
           ),
           const SizedBox(height: Margins.spacingM),
         ],
@@ -269,9 +329,9 @@ class _CardEntry extends StatelessWidget {
       ),
     );
   }
-
-  double _sizeLevelToCircleSize(int sizeLevel) => 6 + sizeLevel * 6;
 }
+
+double _sizeLevelToCircleSize(int sizeLevel) => 6 + sizeLevel * 6;
 
 class _DayHeader extends StatelessWidget {
   const _DayHeader({
@@ -601,7 +661,7 @@ class _DayPreview extends StatelessWidget {
       converter: (store) => DayResumeBottomSheetViewModel.create(store, date),
       builder: (context, viewModel) {
         return switch (viewModel) {
-          DayResumeBottomSheetViewModelEmpty() => const SizedBox.shrink(),
+          DayResumeBottomSheetViewModelEmpty() || DayResumeBottomSheetViewModelLocked() => const SizedBox.shrink(),
           DayResumeBottomSheetViewModelFilled() => _ImagesPreview(
             viewModel: viewModel,
           ),

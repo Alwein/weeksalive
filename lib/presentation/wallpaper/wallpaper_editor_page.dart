@@ -19,7 +19,9 @@ import 'package:weeksalive/domain/wallpaper/wallpaper_grid_data.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_grid_tokens.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_grid_type.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
+import 'package:weeksalive/presentation/paywall/show_in_app_paywall.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
 import 'package:weeksalive/presentation/redux/wallpaper/wallpaper_actions.dart';
 import 'package:weeksalive/presentation/wallpaper/wallpaper_editor_controller.dart';
@@ -83,6 +85,11 @@ class _WallpaperEditorPageState extends State<WallpaperEditorPage> {
   }
 
   Future<void> _pickImage() async {
+    // A photo background is Pro; subscribing from the paywall goes on to the picker.
+    if (!StoreProvider.of<AppState>(context, listen: false).state.purchaseState.isPro) {
+      final subscribed = await showInAppPaywall(context, feature: 'wallpaper_photo');
+      if (subscribed != true || !mounted) return;
+    }
     final picked = await _picker.pickImage(source: ImageSource.gallery);
     if (picked == null) return;
     final fileName = await WallpaperBackgroundImageStorage.saveFromPicker(picked.path);
@@ -663,7 +670,23 @@ class _EmptyImagePlaceholder extends StatelessWidget {
             color: AppColors.contentSoft(context),
           ),
           const SizedBox(height: Margins.spacingS),
-          Texts.primaryMedium(Strings.wallpaperAddImage, color: AppColors.contentSoft(context)),
+          StoreConnector<AppState, bool>(
+            converter: (store) => store.state.purchaseState.isPro,
+            builder: (context, isPro) => Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (!isPro) ...[
+                  Icon(
+                    MingCuteIcons.mgc_diamond_2_line,
+                    size: Dimens.iconSizeXs,
+                    color: AppColors.contentSoft(context),
+                  ),
+                  const SizedBox(width: Margins.spacingXs),
+                ],
+                Texts.primaryMedium(Strings.wallpaperAddImage, color: AppColors.contentSoft(context)),
+              ],
+            ),
+          ),
         ],
       ),
     );

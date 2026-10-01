@@ -16,7 +16,9 @@ Future<bool?> showInAppPaywall(BuildContext context, {String? feature}) {
         .dispatch(TrackAnalyticsEventAction(AnalyticsEvent.proFeatureGateHit(feature: feature)));
   }
 
-  return Navigator.of(context).push<bool>(
+  // Root navigator: gates also fire from inside sheets that own a nested
+  // navigator (day form, weekly summary), where the paywall must cover the sheet.
+  return Navigator.of(context, rootNavigator: true).push<bool>(
     PaywallPage.route(
       presentation: PaywallPresentation.inApp,
     ),

@@ -20,8 +20,10 @@ import 'package:weeksalive/presentation/day_form/day_form_sheet.dart';
 import 'package:weeksalive/presentation/day_form/day_form_view_model.dart';
 import 'package:weeksalive/presentation/home/widgets/day_summaries.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
+import 'package:weeksalive/presentation/paywall/show_in_app_paywall.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/day/day_actions.dart';
+import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 import 'package:weeksalive/presentation/redux/weekly_intent/widgets/edit_weekly_intent_bottom_sheet.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
@@ -877,9 +879,18 @@ class _LeaveATraceInputState extends State<_LeaveATraceInput> {
     }
   }
 
+  /// Photos are Pro. A free user who subscribes from the paywall goes straight
+  /// on to the picker.
+  Future<bool> _canAddPhotos() async {
+    if (StoreProvider.of<AppState>(context, listen: false).state.purchaseState.isPro) return true;
+    final subscribed = await showInAppPaywall(context, feature: 'photo');
+    return subscribed == true && mounted;
+  }
+
   Future<void> _pickImages() async {
     final remaining = LeaveATrace.maxImages - widget.value.imagePaths.length;
     if (remaining <= 0) return;
+    if (!await _canAddPhotos()) return;
 
     final picked = await _picker.pickMultiImage(limit: remaining);
     if (picked.isEmpty) return;
@@ -889,6 +900,7 @@ class _LeaveATraceInputState extends State<_LeaveATraceInput> {
   }
 
   Future<void> _replaceImages() async {
+    if (!await _canAddPhotos()) return;
     final picked = await _picker.pickMultiImage(limit: LeaveATrace.maxImages);
     if (picked.isEmpty) return;
 
@@ -1172,10 +1184,28 @@ class _AddPhotoButton extends StatelessWidget {
               colorFilter: ColorFilter.mode(AppColors.contentSoft(context), BlendMode.srcIn),
             ),
             const SizedBox(height: Margins.spacingXs),
-            Text(
-              Strings.leaveATraceSectionAddPhoto,
-              style: TextStyles.primaryXsBold.copyWith(color: AppColors.contentSoft(context)),
-              textAlign: TextAlign.center,
+            StoreConnector<AppState, bool>(
+              converter: (store) => store.state.purchaseState.isPro,
+              builder: (context, isPro) => Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (!isPro) ...[
+                    Icon(
+                      MingCuteIcons.mgc_diamond_2_line,
+                      size: Dimens.iconSizeXs,
+                      color: AppColors.contentSoft(context),
+                    ),
+                    const SizedBox(width: Margins.spacingXs),
+                  ],
+                  Flexible(
+                    child: Text(
+                      Strings.leaveATraceSectionAddPhoto,
+                      style: TextStyles.primaryXsBold.copyWith(color: AppColors.contentSoft(context)),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

@@ -10,12 +10,16 @@ import 'package:weeksalive/data/wallpaper/wallpaper_renderer.dart';
 import 'package:weeksalive/data/wallpaper_prompt/wallpaper_prompt_repository.dart';
 import 'package:weeksalive/data/wallpaper_prompt/wallpaper_prompt_store.dart';
 import 'package:weeksalive/domain/day/day_entry.dart' as day_entry;
+import 'package:weeksalive/domain/wallpaper/wallpaper_background_mode.dart';
+import 'package:weeksalive/domain/wallpaper/wallpaper_config.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_grid_data.dart';
 import 'package:weeksalive/domain/wallpaper/wallpaper_grid_tokens.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/day/day_actions.dart';
 import 'package:weeksalive/presentation/redux/grid_motif/grid_motif_actions.dart';
+import 'package:weeksalive/presentation/redux/purchase/purchase_actions.dart';
+import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 import 'package:weeksalive/presentation/redux/push_notifications/push_notification_state.dart';
 import 'package:weeksalive/presentation/redux/theme/theme_actions.dart';
 import 'package:weeksalive/presentation/redux/user/user_actions.dart';
@@ -91,7 +95,9 @@ class WallpaperMiddleware extends MiddlewareClass<AppState> {
         action is UserLoadedAction;
     final themeChanged = action is AppThemeLoadedAction;
     final gridMotifChanged = action is GridMotifLoadedAction || action is SetGridMotifAction;
-    if ((action is RefreshWallpaperAction || dataChanged || themeChanged || gridMotifChanged) &&
+    // Gaining or losing Pro changes whether a photo background is rendered.
+    final entitlementChanged = action is PurchaseSucceededAction;
+    if ((action is RefreshWallpaperAction || dataChanged || themeChanged || gridMotifChanged || entitlementChanged) &&
         store.state.wallpaperState.config.enabled) {
       _enqueueRender(store, install: false);
     }
@@ -151,6 +157,18 @@ class WallpaperMiddleware extends MiddlewareClass<AppState> {
     }
   }
 
+  /// A photo background is Pro. Once Pro has lapsed, render the solid
+  /// background instead, but keep the saved image so it comes back on
+  /// resubscribing. While the entitlement is still loading, trust the config:
+  /// a launch render must not wipe a Pro user's photo.
+  WallpaperConfig _withinEntitlement(Store<AppState> store, WallpaperConfig config) {
+    final purchase = store.state.purchaseState;
+    if (config.backgroundMode != WallpaperBackgroundMode.image || !purchase.isResolved || purchase.isPro) {
+      return config;
+    }
+    return config.copyWith(backgroundMode: WallpaperBackgroundMode.solid);
+  }
+
   Future<void> _renderAndApply(
     Store<AppState> store, {
     required bool install,
@@ -162,6 +180,7 @@ class WallpaperMiddleware extends MiddlewareClass<AppState> {
     }
 
     final config = store.state.wallpaperState.config;
+    final renderedConfig = _withinEntitlement(store, config);
     var installSuccess = false;
     try {
       if (install) _dispatchSafe(store, const WallpaperInstallingAction(true));
@@ -172,11 +191,11 @@ class WallpaperMiddleware extends MiddlewareClass<AppState> {
         entries: store.state.dayState.entries.values,
         at: DateTime.now(),
       );
-      final wallpaperTokens = resolveWallpaperGridTokens(config);
+      final wallpaperTokens = resolveWallpaperGridTokens(renderedConfig);
       final (size, pixelRatio) = _screenMetrics();
 
       final rendered = await renderer.render(
-        config: config,
+        config: renderedConfig,
         data: data,
         tokens: wallpaperTokens,
         gridTokens: wallpaperTokens,

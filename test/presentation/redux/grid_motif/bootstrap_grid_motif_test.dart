@@ -9,6 +9,7 @@ import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/day/day_middleware.dart';
 import 'package:weeksalive/presentation/redux/grid_motif/grid_motif_middleware.dart';
+import 'package:weeksalive/presentation/redux/purchase/purchase_actions.dart';
 import 'package:weeksalive/presentation/redux/rewards/rewards_middleware.dart';
 
 import '../../../helpers/test_app_state.dart';
@@ -57,6 +58,31 @@ void main() {
       expect(store.state.gridMotifState.unlockedMotifs, contains(GridMotifId.flowers));
       expect(store.state.gridMotifState.selectedMotif, GridMotifId.flowers);
       expect(store.state.rewardsState.unlocked, contains(RewardId.gridMotifFlowers));
+    });
+
+    test('keeps a locked motif while the entitlement loads, then Pro restores it', () async {
+      when(() => gridMotifRepository.getSelectedMotif()).thenAnswer((_) async => GridMotifId.moons);
+      when(() => gridMotifRepository.setSelectedMotif(any())).thenAnswer((_) async {});
+      final store = Store<AppState>(
+        appReducer,
+        initialState: initialAppState(),
+        middleware: [
+          DayMiddleware(dayRepository: dayRepository).call,
+          RewardsMiddleware(rewardsRepository: rewardsRepository).call,
+          GridMotifMiddleware(gridMotifRepository: gridMotifRepository).call,
+        ],
+      );
+
+      await store.dispatch(BootstrapAction());
+      await pumpEventQueue();
+      verifyNever(() => gridMotifRepository.setSelectedMotif(any()));
+
+      store.dispatch(const PurchaseSucceededAction(isPro: true));
+      await pumpEventQueue();
+
+      expect(store.state.gridMotifState.unlockedMotifs, GridMotifId.all.toSet());
+      expect(store.state.gridMotifState.selectedMotif, GridMotifId.moons);
+      verifyNever(() => gridMotifRepository.setSelectedMotif(any()));
     });
   });
 }

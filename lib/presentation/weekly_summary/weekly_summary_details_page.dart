@@ -2,6 +2,7 @@ import 'dart:math' show pi;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
@@ -10,11 +11,13 @@ import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/presentation/home/widgets/day_summaries.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
+import 'package:weeksalive/presentation/paywall/show_in_app_paywall.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/weekly_intent/widgets/edit_weekly_intent_bottom_sheet.dart';
 import 'package:weeksalive/presentation/weekly_summary/weekly_summary_page_view_model.dart';
 import 'package:weeksalive/presentation/weekly_summary/weekly_summary_sheet.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
+import 'package:weeksalive/presentation/widgets/secondary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 class WeeklySummaryDetailsPage extends StatelessWidget {
@@ -40,6 +43,10 @@ class WeeklySummaryDetailsPage extends StatelessWidget {
                   const SizedBox(height: Margins.spacingM),
                   _LastWeekCard(viewModel: viewModel),
                   const SizedBox(height: Margins.spacingM),
+                  if (viewModel.isFirstWeek && !viewModel.isPro) ...[
+                    const _CompareTeaserCard(),
+                    const SizedBox(height: Margins.spacingM),
+                  ],
                   PrimaryButton(
                     text: Strings.weeklySummaryPageSeeMore,
                     onPressed: () {
@@ -81,37 +88,126 @@ class _LastWeekCard extends StatelessWidget {
                 const SizedBox(height: Margins.spacingBase),
                 const SmallDivider(width: double.infinity),
                 const SizedBox(height: Margins.spacingBase),
-                _AverageFeeling(viewModel),
-                const SizedBox(height: Margins.spacingBase),
-                const SmallDivider(width: double.infinity),
-                const SizedBox(height: Margins.spacingBase),
-                IntrinsicHeight(
-                  child: Row(
-                    spacing: Margins.spacingBase,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(
-                        child: _MeaningScore(viewModel),
-                      ),
-                      Container(
-                        color: AppColors.strokeColor(context),
-                        width: Dimens.strokeWidthS,
-                      ),
-                      Expanded(
-                        child: _NewExperiences(viewModel),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: Margins.spacingBase),
-                const SmallDivider(width: double.infinity),
-                const SizedBox(height: Margins.spacingBase),
-                _LivingIntentions(viewModel),
-                const SizedBox(height: Margins.spacingBase),
+                if (viewModel.detailsLocked) ...[
+                  const _LockedDetails(),
+                  const SizedBox(height: Margins.spacingBase),
+                ] else
+                  ..._details(context),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  List<Widget> _details(BuildContext context) {
+    return [
+      _AverageFeeling(viewModel),
+      const SizedBox(height: Margins.spacingBase),
+      const SmallDivider(width: double.infinity),
+      const SizedBox(height: Margins.spacingBase),
+      IntrinsicHeight(
+        child: Row(
+          spacing: Margins.spacingBase,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: _MeaningScore(viewModel),
+            ),
+            Container(
+              color: AppColors.strokeColor(context),
+              width: Dimens.strokeWidthS,
+            ),
+            Expanded(
+              child: _NewExperiences(viewModel),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: Margins.spacingBase),
+      const SmallDivider(width: double.infinity),
+      const SizedBox(height: Margins.spacingBase),
+      _LivingIntentions(viewModel),
+      const SizedBox(height: Margins.spacingBase),
+    ];
+  }
+}
+
+/// Change from the week before, shown under a metric. Empty when there is
+/// nothing to compare with.
+class _DeltaCaption extends StatelessWidget {
+  const _DeltaCaption(this.delta, {this.decimals = 0});
+
+  final num? delta;
+  final int decimals;
+
+  @override
+  Widget build(BuildContext context) {
+    final value = delta;
+    if (value == null) return const SizedBox.shrink();
+
+    final rounded = double.parse(value.toStringAsFixed(decimals));
+    final text = rounded == 0
+        ? Strings.weeklySummarySameAsLastWeek
+        : Strings.weeklySummaryVsLastWeek(
+            '${rounded > 0 ? '+' : '−'}${rounded.abs().toStringAsFixed(decimals)}',
+          );
+    return Text(
+      text,
+      style: TextStyles.primarySmallMedium.copyWith(color: AppColors.contentSoft(context)),
+    );
+  }
+}
+
+class _LockedDetails extends StatelessWidget {
+  const _LockedDetails();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          Strings.weeklySummaryDetailsLockedBody,
+          style: TextStyles.primaryRegularMedium.copyWith(color: AppColors.contentSoft(context)),
+        ),
+        const SizedBox(height: Margins.spacingBase),
+        SecondaryButton(
+          text: Strings.proUnlockCta,
+          icon: MingCuteIcons.mgc_diamond_2_line,
+          onPressed: () => showInAppPaywall(context, feature: 'weekly_details'),
+        ),
+      ],
+    );
+  }
+}
+
+class _CompareTeaserCard extends StatelessWidget {
+  const _CompareTeaserCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return _CardContainer(
+      child: Padding(
+        padding: const EdgeInsets.all(Margins.spacingBase),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Texts.primaryLargeBold(Strings.weeklySummaryCompareTeaserTitle),
+            const SizedBox(height: Margins.spacingXs),
+            Text(
+              Strings.weeklySummaryCompareTeaserBody,
+              style: TextStyles.primaryRegularMedium.copyWith(color: AppColors.contentSoft(context)),
+            ),
+            const SizedBox(height: Margins.spacingBase),
+            SecondaryButton(
+              text: Strings.weeklySummaryCompareTeaserCta,
+              icon: MingCuteIcons.mgc_diamond_2_line,
+              onPressed: () => showInAppPaywall(context, feature: 'weekly_compare'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -171,9 +267,16 @@ class _AverageFeeling extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Texts.primaryRegularMedium(
-          Strings.weeklySummaryPageAverageFeeling,
-          color: AppColors.contentSoft(context),
+        Row(
+          children: [
+            Expanded(
+              child: Texts.primaryRegularMedium(
+                Strings.weeklySummaryPageAverageFeeling,
+                color: AppColors.contentSoft(context),
+              ),
+            ),
+            _DeltaCaption(viewModel.comparison?.averageFeelingDelta, decimals: 1),
+          ],
         ),
         const SizedBox(height: Margins.spacingS),
         Row(
@@ -267,6 +370,10 @@ class _MeaningScore extends StatelessWidget {
         ),
         const SizedBox(height: Margins.spacingS),
         _MeaningScoreCircle(score: viewModel.lastWeekAverageMeaningScore),
+        if (viewModel.comparison?.averageMeaningDelta != null) ...[
+          const SizedBox(height: Margins.spacingS),
+          _DeltaCaption(viewModel.comparison?.averageMeaningDelta, decimals: 1),
+        ],
       ],
     );
   }
@@ -394,6 +501,10 @@ class _NewExperiences extends StatelessWidget {
         ),
         const SizedBox(height: Margins.spacingS),
         Texts.xlBold(viewModel.lastWeekNewExperiencesCount.toString()),
+        if (viewModel.comparison != null) ...[
+          const SizedBox(height: Margins.spacingS),
+          _DeltaCaption(viewModel.comparison?.newExperiencesDelta),
+        ],
       ],
     );
   }
@@ -471,9 +582,17 @@ class _Regularity extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Texts.primaryRegularMedium(
-          Strings.weeklySummaryPageRegularity,
-          color: AppColors.contentSoft(context),
+        Row(
+          children: [
+            Expanded(
+              child: Texts.primaryRegularMedium(
+                Strings.weeklySummaryPageRegularity,
+                color: AppColors.contentSoft(context),
+              ),
+            ),
+            // Comparing weeks is Pro.
+            if (!viewModel.detailsLocked) _DeltaCaption(viewModel.comparison?.loggedDaysDelta),
+          ],
         ),
         const SizedBox(height: Margins.spacingS),
         Row(

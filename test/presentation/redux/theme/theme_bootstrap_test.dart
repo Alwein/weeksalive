@@ -7,6 +7,8 @@ import 'package:weeksalive/domain/rewards/reward_id.dart';
 import 'package:weeksalive/presentation/redux/app_reducer.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
+import 'package:weeksalive/presentation/redux/purchase/purchase_actions.dart';
+import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 import 'package:weeksalive/presentation/redux/rewards/rewards_actions.dart';
 import 'package:weeksalive/presentation/redux/theme/theme_middleware.dart';
 
@@ -14,12 +16,15 @@ import '../../../helpers/test_app_state.dart';
 
 void main() {
   group('theme bootstrap', () {
-    Future<(Store<AppState>, ThemeRepository)> buildStore(String storedTheme) async {
+    Future<(Store<AppState>, ThemeRepository)> buildStore(
+      String storedTheme, {
+      PurchaseState purchaseState = const PurchaseState.initial(),
+    }) async {
       SharedPreferences.setMockInitialValues({'app_theme': storedTheme});
       final repository = ThemeRepository(preferences: await SharedPreferences.getInstance());
       final store = Store<AppState>(
         appReducer,
-        initialState: initialAppState(),
+        initialState: initialAppState().copyWith(purchaseState: purchaseState),
         middleware: [ThemeMiddleware(themeRepository: repository).call],
       );
       return (store, repository);
@@ -48,11 +53,54 @@ void main() {
     });
 
     test('falls back to system when the stored reward theme is not unlocked', () async {
-      final (store, repository) = await buildStore('matcha');
+      final (store, repository) = await buildStore(
+        'matcha',
+        purchaseState: const PurchaseState.success(offering: null, isPro: false),
+      );
 
       await store.dispatch(BootstrapAction());
       await pumpEventQueue();
       store.dispatch(const RewardsLoadedAction(unlocked: {}));
+      await pumpEventQueue();
+
+      expect(store.state.themeState.selectedTheme, AppThemeId.system);
+      expect(await repository.getSelectedTheme(), AppThemeId.system);
+    });
+    test('keeps a locked theme while the entitlement is still loading', () async {
+      final (store, repository) = await buildStore('ardoise');
+
+      await store.dispatch(BootstrapAction());
+      await pumpEventQueue();
+      store.dispatch(const RewardsLoadedAction(unlocked: {}));
+      await pumpEventQueue();
+
+      expect(await repository.getSelectedTheme(), AppThemeId.ardoise);
+    });
+
+    test('Pro unlocks every theme and restores the stored one', () async {
+      final (store, repository) = await buildStore('ardoise');
+
+      await store.dispatch(BootstrapAction());
+      await pumpEventQueue();
+      store.dispatch(const RewardsLoadedAction(unlocked: {}));
+      await pumpEventQueue();
+      store.dispatch(const PurchaseSucceededAction(isPro: true));
+      await pumpEventQueue();
+
+      expect(store.state.themeState.unlockedThemes, AppThemeId.all.toSet());
+      expect(store.state.themeState.selectedTheme, AppThemeId.ardoise);
+      expect(await repository.getSelectedTheme(), AppThemeId.ardoise);
+    });
+
+    test('falls back to system once Pro is lost', () async {
+      final (store, repository) = await buildStore(
+        'ardoise',
+        purchaseState: const PurchaseState.success(offering: null, isPro: true),
+      );
+
+      await store.dispatch(BootstrapAction());
+      await pumpEventQueue();
+      store.dispatch(const PurchaseSucceededAction(isPro: false));
       await pumpEventQueue();
 
       expect(store.state.themeState.selectedTheme, AppThemeId.system);
