@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "Anladım",
   "streaks_page_title": "Seri ödülleri",
   "streaks_page_subtitle": "Tema, uygulama ikonu ve ızgara motiflerinin kilidini açmak için seri kilometre taşlarına ulaş. En iyi serin: {best_streak} gün.",
+  "streaks_page_subtitle_pro": "Pro ile tüm temalar, uygulama ikonları ve ızgara motifleri hemen senin. Kilometre taşları serinin ne kadar ilerlediğini gösterir. En iyi serin: {best_streak} gün.",
+  "streaks_unlock_all_with_pro": "Pro ile şimdi her şeyin kilidini aç",
+  "streaks_included_in_pro": "Pro'ya dahil",
   "streaks_current_streak": "MEVCUT SERİ",
   "streaks_category_theme": "Tema",
   "streaks_category_app_icon": "Uygulama ikonu",
@@ -281,11 +284,16 @@
     "one": "Sonraki ödüle {} gün",
     "other": "Sonraki ödüle {} gün"
   },
+  "streaks_next_milestone_in": {
+    "one": "Sonraki kilometre taşına {} gün",
+    "other": "Sonraki kilometre taşına {} gün"
+  },
   "streaks_reward_unlocked_title": {
     "one": "Yeni ödül açıldı",
     "other": "{} yeni ödül açıldı"
   },
   "streaks_reward_unlocked_body": "Hemen özelleştirebilirsin.",
+  "streaks_milestone_reached_title": "Kilometre taşına ulaşıldı",
   "streaks_open_theme_picker": "Temalara göz at",
   "streaks_open_app_icon_picker": "Uygulama ikonu seç",
   "streaks_open_grid_motif_picker": "Izgara motifi seç",

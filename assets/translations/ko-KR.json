@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "알겠어요",
   "streaks_page_title": "연속 기록 보상",
   "streaks_page_subtitle": "연속 기록 목표에 도달하면 테마, 앱 아이콘, 그리드 모티프가 잠금 해제됩니다. 최고 기록: {best_streak}일.",
+  "streaks_page_subtitle_pro": "Pro에서는 모든 테마, 앱 아이콘, 그리드 모티프를 바로 사용할 수 있습니다. 목표는 연속 기록이 얼마나 이어졌는지 보여줍니다. 최고 기록: {best_streak}일.",
+  "streaks_unlock_all_with_pro": "Pro로 지금 모두 잠금 해제",
+  "streaks_included_in_pro": "Pro에 포함",
   "streaks_current_streak": "현재 연속",
   "streaks_category_theme": "테마",
   "streaks_category_app_icon": "앱 아이콘",
@@ -281,11 +284,16 @@
     "one": "다음 보상까지 {}일",
     "other": "다음 보상까지 {}일"
   },
+  "streaks_next_milestone_in": {
+    "one": "다음 목표까지 {}일",
+    "other": "다음 목표까지 {}일"
+  },
   "streaks_reward_unlocked_title": {
     "one": "새 보상 잠금 해제",
     "other": "새 보상 {}개 잠금 해제"
   },
   "streaks_reward_unlocked_body": "바로 맞춤 설정할 수 있어요.",
+  "streaks_milestone_reached_title": "목표 달성",
   "streaks_open_theme_picker": "테마 둘러보기",
   "streaks_open_app_icon_picker": "앱 아이콘 선택",
   "streaks_open_grid_motif_picker": "그리드 모티프 선택",

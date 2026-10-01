@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "知道了",
   "streaks_page_title": "连续奖励",
   "streaks_page_subtitle": "达成连续里程碑，解锁主题、应用图标和网格图案。你的最佳连续：{best_streak} 天。",
+  "streaks_page_subtitle_pro": "有了 Pro，全部主题、应用图标和网格图案都已为你解锁。里程碑记录你的连续走了多远。你的最佳连续：{best_streak} 天。",
+  "streaks_unlock_all_with_pro": "立即用 Pro 解锁全部",
+  "streaks_included_in_pro": "Pro 已包含",
   "streaks_current_streak": "当前连续",
   "streaks_category_theme": "主题",
   "streaks_category_app_icon": "应用图标",
@@ -281,11 +284,16 @@
     "one": "距下一个奖励还有 {} 天",
     "other": "距下一个奖励还有 {} 天"
   },
+  "streaks_next_milestone_in": {
+    "one": "距下一个里程碑还有 {} 天",
+    "other": "距下一个里程碑还有 {} 天"
+  },
   "streaks_reward_unlocked_title": {
     "one": "解锁了新奖励",
     "other": "解锁了 {} 个新奖励"
   },
   "streaks_reward_unlocked_body": "现在就可以自定义。",
+  "streaks_milestone_reached_title": "达成里程碑",
   "streaks_open_theme_picker": "浏览主题",
   "streaks_open_app_icon_picker": "选择应用图标",
   "streaks_open_grid_motif_picker": "选择网格图案",

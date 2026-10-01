@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "Rozumiem",
   "streaks_page_title": "Nagrody za serie",
   "streaks_page_subtitle": "Osiągaj progi serii, by odblokować motywy, ikony aplikacji i wzory siatki. Twoja najlepsza seria: {best_streak} dni.",
+  "streaks_page_subtitle_pro": "Z Pro masz od razu wszystkie motywy, ikony aplikacji i wzory siatki. Progi pokazują, jak daleko zaszła twoja seria. Twoja najlepsza seria: {best_streak} dni.",
+  "streaks_unlock_all_with_pro": "Odblokuj wszystko teraz z Pro",
+  "streaks_included_in_pro": "W ramach Pro",
   "streaks_current_streak": "OBECNA SERIA",
   "streaks_category_theme": "Motyw",
   "streaks_category_app_icon": "Ikona aplikacji",
@@ -281,11 +284,16 @@
     "one": "Następna nagroda za {} dzień",
     "other": "Następna nagroda za {} dni"
   },
+  "streaks_next_milestone_in": {
+    "one": "Następny próg za {} dzień",
+    "other": "Następny próg za {} dni"
+  },
   "streaks_reward_unlocked_title": {
     "one": "Nowa nagroda odblokowana",
     "other": "{} nowe nagrody odblokowane"
   },
   "streaks_reward_unlocked_body": "Możesz ją spersonalizować od razu.",
+  "streaks_milestone_reached_title": "Próg osiągnięty",
   "streaks_open_theme_picker": "Przeglądaj motywy",
   "streaks_open_app_icon_picker": "Wybierz ikonę aplikacji",
   "streaks_open_grid_motif_picker": "Wybierz wzór siatki",

@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "Понятно",
   "streaks_page_title": "Награды за серии",
   "streaks_page_subtitle": "Достигай рубежей серии, чтобы открывать темы, иконки приложения и мотивы сетки. Твоя лучшая серия: {best_streak} дн.",
+  "streaks_page_subtitle_pro": "С Pro все темы, иконки приложения и мотивы сетки доступны сразу. Рубежи показывают, как далеко зашла твоя серия. Твоя лучшая серия: {best_streak} дн.",
+  "streaks_unlock_all_with_pro": "Открыть всё сейчас с Pro",
+  "streaks_included_in_pro": "Входит в Pro",
   "streaks_current_streak": "ТЕКУЩАЯ СЕРИЯ",
   "streaks_category_theme": "Тема",
   "streaks_category_app_icon": "Иконка приложения",
@@ -281,11 +284,16 @@
     "one": "Следующая награда через {} день",
     "other": "Следующая награда через {} дней"
   },
+  "streaks_next_milestone_in": {
+    "one": "Следующий рубеж через {} день",
+    "other": "Следующий рубеж через {} дней"
+  },
   "streaks_reward_unlocked_title": {
     "one": "Новая награда открыта",
     "other": "Открыто новых наград: {}"
   },
   "streaks_reward_unlocked_body": "Можешь настроить прямо сейчас.",
+  "streaks_milestone_reached_title": "Рубеж достигнут",
   "streaks_open_theme_picker": "Смотреть темы",
   "streaks_open_app_icon_picker": "Выбрать иконку",
   "streaks_open_grid_motif_picker": "Выбрать мотив сетки",

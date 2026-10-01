@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "Entendi",
   "streaks_page_title": "Recompensas de sequência",
   "streaks_page_subtitle": "Alcance marcos de sequência para desbloquear temas, ícones do app e motivos da grade. Sua melhor sequência: {best_streak} dias.",
+  "streaks_page_subtitle_pro": "Com o Pro, todos os temas, ícones do app e motivos da grade já são seus. Os marcos mostram até onde sua sequência chegou. Sua melhor sequência: {best_streak} dias.",
+  "streaks_unlock_all_with_pro": "Desbloqueie tudo agora com o Pro",
+  "streaks_included_in_pro": "Incluído no Pro",
   "streaks_current_streak": "SEQUÊNCIA ATUAL",
   "streaks_category_theme": "Tema",
   "streaks_category_app_icon": "Ícone do app",
@@ -281,11 +284,16 @@
     "one": "Próxima recompensa em {} dia",
     "other": "Próxima recompensa em {} dias"
   },
+  "streaks_next_milestone_in": {
+    "one": "Próximo marco em {} dia",
+    "other": "Próximo marco em {} dias"
+  },
   "streaks_reward_unlocked_title": {
     "one": "Nova recompensa desbloqueada",
     "other": "{} novas recompensas desbloqueadas"
   },
   "streaks_reward_unlocked_body": "Você pode personalizar agora mesmo.",
+  "streaks_milestone_reached_title": "Marco alcançado",
   "streaks_open_theme_picker": "Ver temas",
   "streaks_open_app_icon_picker": "Escolher ícone do app",
   "streaks_open_grid_motif_picker": "Escolher motivo da grade",

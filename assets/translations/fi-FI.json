@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "Selvä",
   "streaks_page_title": "Putkipalkinnot",
   "streaks_page_subtitle": "Saavuta putkivirstanpylväitä avataksesi teemoja, sovelluskuvakkeita ja ruudukkokuvioita. Paras putkesi: {best_streak} päivää.",
+  "streaks_page_subtitle_pro": "Prolla saat heti kaikki teemat, sovelluskuvakkeet ja ruudukkokuviot. Virstanpylväät näyttävät, kuinka pitkälle putkesi on edennyt. Paras putkesi: {best_streak} päivää.",
+  "streaks_unlock_all_with_pro": "Avaa kaikki nyt Prolla",
+  "streaks_included_in_pro": "Sisältyy Prohon",
   "streaks_current_streak": "NYKYINEN PUTKI",
   "streaks_category_theme": "Teema",
   "streaks_category_app_icon": "Sovelluskuvake",
@@ -281,11 +284,16 @@
     "one": "Seuraava palkinto {} päivän päästä",
     "other": "Seuraava palkinto {} päivän päästä"
   },
+  "streaks_next_milestone_in": {
+    "one": "Seuraava virstanpylväs {} päivän päästä",
+    "other": "Seuraava virstanpylväs {} päivän päästä"
+  },
   "streaks_reward_unlocked_title": {
     "one": "Uusi palkinto avattu",
     "other": "{} uutta palkintoa avattu"
   },
   "streaks_reward_unlocked_body": "Voit mukauttaa sen heti.",
+  "streaks_milestone_reached_title": "Virstanpylväs saavutettu",
   "streaks_open_theme_picker": "Selaa teemoja",
   "streaks_open_app_icon_picker": "Valitse sovelluskuvake",
   "streaks_open_grid_motif_picker": "Valitse ruudukkokuvio",

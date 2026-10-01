@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "เข้าใจแล้ว",
   "streaks_page_title": "รางวัลสตรีค",
   "streaks_page_subtitle": "ถึงเป้าหมายสตรีคเพื่อปลดล็อกธีม ไอคอนแอป และลวดลายตาราง สตรีคที่ดีที่สุดของคุณ: {best_streak} วัน",
+  "streaks_page_subtitle_pro": "เมื่อใช้ Pro คุณจะได้ธีม ไอคอนแอป และลวดลายตารางทั้งหมดทันที เป้าหมายแสดงให้เห็นว่าสตรีคของคุณมาไกลแค่ไหน สตรีคที่ดีที่สุดของคุณ: {best_streak} วัน",
+  "streaks_unlock_all_with_pro": "ปลดล็อกทั้งหมดตอนนี้ด้วย Pro",
+  "streaks_included_in_pro": "รวมอยู่ใน Pro",
   "streaks_current_streak": "สตรีคปัจจุบัน",
   "streaks_category_theme": "ธีม",
   "streaks_category_app_icon": "ไอคอนแอป",
@@ -281,11 +284,16 @@
     "one": "รางวัลถัดไปในอีก {} วัน",
     "other": "รางวัลถัดไปในอีก {} วัน"
   },
+  "streaks_next_milestone_in": {
+    "one": "เป้าหมายถัดไปในอีก {} วัน",
+    "other": "เป้าหมายถัดไปในอีก {} วัน"
+  },
   "streaks_reward_unlocked_title": {
     "one": "ปลดล็อกรางวัลใหม่แล้ว",
     "other": "ปลดล็อกรางวัลใหม่ {} รายการ"
   },
   "streaks_reward_unlocked_body": "ปรับแต่งได้ทันทีเลย",
+  "streaks_milestone_reached_title": "ถึงเป้าหมายแล้ว",
   "streaks_open_theme_picker": "ดูธีม",
   "streaks_open_app_icon_picker": "เลือกไอคอนแอป",
   "streaks_open_grid_motif_picker": "เลือกลวดลายตาราง",

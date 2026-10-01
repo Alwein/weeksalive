@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "Begrepen",
   "streaks_page_title": "Reeksbeloningen",
   "streaks_page_subtitle": "Bereik reeksmijlpalen om thema's, app-iconen en gridmotieven te ontgrendelen. Je beste reeks: {best_streak} dagen.",
+  "streaks_page_subtitle_pro": "Met Pro heb je meteen alle thema's, app-iconen en gridmotieven. De mijlpalen laten zien hoe ver je reeks al is gekomen. Je beste reeks: {best_streak} dagen.",
+  "streaks_unlock_all_with_pro": "Ontgrendel nu alles met Pro",
+  "streaks_included_in_pro": "Inbegrepen bij Pro",
   "streaks_current_streak": "HUIDIGE REEKS",
   "streaks_category_theme": "Thema",
   "streaks_category_app_icon": "App-icoon",
@@ -281,11 +284,16 @@
     "one": "Volgende beloning over {} dag",
     "other": "Volgende beloning over {} dagen"
   },
+  "streaks_next_milestone_in": {
+    "one": "Volgende mijlpaal over {} dag",
+    "other": "Volgende mijlpaal over {} dagen"
+  },
   "streaks_reward_unlocked_title": {
     "one": "Nieuwe beloning ontgrendeld",
     "other": "{} nieuwe beloningen ontgrendeld"
   },
   "streaks_reward_unlocked_body": "Je kunt het meteen personaliseren.",
+  "streaks_milestone_reached_title": "Mijlpaal bereikt",
   "streaks_open_theme_picker": "Thema's bekijken",
   "streaks_open_app_icon_picker": "App-icoon kiezen",
   "streaks_open_grid_motif_picker": "Gridmotief kiezen",

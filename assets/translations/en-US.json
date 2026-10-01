@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "Got it",
   "streaks_page_title": "Streak rewards",
   "streaks_page_subtitle": "Reach streak milestones to unlock themes, app icons, and grid motifs. Your best streak: {best_streak} days.",
+  "streaks_page_subtitle_pro": "Pro gives you every theme, app icon, and grid motif right away. Milestones mark how far your streak has come. Your best streak: {best_streak} days.",
+  "streaks_unlock_all_with_pro": "Unlock everything now with Pro",
+  "streaks_included_in_pro": "Included in Pro",
   "streaks_current_streak": "CURRENT STREAK",
   "streaks_category_theme": "Theme",
   "streaks_category_app_icon": "App icon",
@@ -281,11 +284,16 @@
     "one": "Next reward in {} day",
     "other": "Next reward in {} days"
   },
+  "streaks_next_milestone_in": {
+    "one": "Next milestone in {} day",
+    "other": "Next milestone in {} days"
+  },
   "streaks_reward_unlocked_title": {
     "one": "New reward unlocked",
     "other": "{} new rewards unlocked"
   },
   "streaks_reward_unlocked_body": "You can customize it right away.",
+  "streaks_milestone_reached_title": "Milestone reached",
   "streaks_open_theme_picker": "Browse themes",
   "streaks_open_app_icon_picker": "Choose app icon",
   "streaks_open_grid_motif_picker": "Choose grid motif",

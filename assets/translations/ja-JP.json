@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "了解",
   "streaks_page_title": "連続記録の報酬",
   "streaks_page_subtitle": "連続記録のマイルストーンに達すると、テーマ、アプリアイコン、グリッドモチーフが解放されます。最長連続：{best_streak}日。",
+  "streaks_page_subtitle_pro": "Proなら、すべてのテーマ、アプリアイコン、グリッドモチーフをすぐに使えます。マイルストーンは連続記録の歩みを示します。最長連続：{best_streak}日。",
+  "streaks_unlock_all_with_pro": "Proで今すぐすべて解放",
+  "streaks_included_in_pro": "Proに含まれています",
   "streaks_current_streak": "現在の連続",
   "streaks_category_theme": "テーマ",
   "streaks_category_app_icon": "アプリアイコン",
@@ -281,11 +284,16 @@
     "one": "次の報酬まであと{}日",
     "other": "次の報酬まであと{}日"
   },
+  "streaks_next_milestone_in": {
+    "one": "次のマイルストーンまであと{}日",
+    "other": "次のマイルストーンまであと{}日"
+  },
   "streaks_reward_unlocked_title": {
     "one": "新しい報酬が解放されました",
     "other": "{}つの新しい報酬が解放されました"
   },
   "streaks_reward_unlocked_body": "すぐにカスタマイズできます。",
+  "streaks_milestone_reached_title": "マイルストーン達成",
   "streaks_open_theme_picker": "テーマを見る",
   "streaks_open_app_icon_picker": "アプリアイコンを選ぶ",
   "streaks_open_grid_motif_picker": "グリッドモチーフを選ぶ",

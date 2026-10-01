@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "Entendido",
   "streaks_page_title": "Recompensas de racha",
   "streaks_page_subtitle": "Alcanza hitos de racha para desbloquear temas, iconos de la app y motivos de cuadrícula. Tu mejor racha: {best_streak} días.",
+  "streaks_page_subtitle_pro": "Con Pro ya tienes todos los temas, iconos de la app y motivos de cuadrícula. Los hitos marcan hasta dónde ha llegado tu racha. Tu mejor racha: {best_streak} días.",
+  "streaks_unlock_all_with_pro": "Desbloquéalo todo ahora con Pro",
+  "streaks_included_in_pro": "Incluido en Pro",
   "streaks_current_streak": "RACHA ACTUAL",
   "streaks_category_theme": "Tema",
   "streaks_category_app_icon": "Icono de la app",
@@ -281,11 +284,16 @@
     "one": "Próxima recompensa en {} día",
     "other": "Próxima recompensa en {} días"
   },
+  "streaks_next_milestone_in": {
+    "one": "Próximo hito en {} día",
+    "other": "Próximo hito en {} días"
+  },
   "streaks_reward_unlocked_title": {
     "one": "Nueva recompensa desbloqueada",
     "other": "{} nuevas recompensas desbloqueadas"
   },
   "streaks_reward_unlocked_body": "Puedes personalizarla ahora mismo.",
+  "streaks_milestone_reached_title": "Hito alcanzado",
   "streaks_open_theme_picker": "Explorar temas",
   "streaks_open_app_icon_picker": "Elegir icono de la app",
   "streaks_open_grid_motif_picker": "Elegir motivo de cuadrícula",

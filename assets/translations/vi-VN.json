@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "Đã hiểu",
   "streaks_page_title": "Phần thưởng chuỗi",
   "streaks_page_subtitle": "Đạt các mốc chuỗi để mở khóa giao diện, biểu tượng ứng dụng và họa tiết lưới. Chuỗi tốt nhất của bạn: {best_streak} ngày.",
+  "streaks_page_subtitle_pro": "Với Pro, bạn có ngay mọi giao diện, biểu tượng ứng dụng và họa tiết lưới. Các mốc cho thấy chuỗi của bạn đã đi xa đến đâu. Chuỗi tốt nhất của bạn: {best_streak} ngày.",
+  "streaks_unlock_all_with_pro": "Mở khóa tất cả ngay với Pro",
+  "streaks_included_in_pro": "Có trong Pro",
   "streaks_current_streak": "CHUỖI HIỆN TẠI",
   "streaks_category_theme": "Giao diện",
   "streaks_category_app_icon": "Biểu tượng ứng dụng",
@@ -281,11 +284,16 @@
     "one": "Phần thưởng tiếp theo sau {} ngày",
     "other": "Phần thưởng tiếp theo sau {} ngày"
   },
+  "streaks_next_milestone_in": {
+    "one": "Mốc tiếp theo sau {} ngày",
+    "other": "Mốc tiếp theo sau {} ngày"
+  },
   "streaks_reward_unlocked_title": {
     "one": "Đã mở khóa phần thưởng mới",
     "other": "Đã mở khóa {} phần thưởng mới"
   },
   "streaks_reward_unlocked_body": "Bạn có thể tùy chỉnh ngay.",
+  "streaks_milestone_reached_title": "Đã đạt mốc",
   "streaks_open_theme_picker": "Xem giao diện",
   "streaks_open_app_icon_picker": "Chọn biểu tượng ứng dụng",
   "streaks_open_grid_motif_picker": "Chọn họa tiết lưới",

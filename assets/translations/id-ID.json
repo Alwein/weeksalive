@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "Mengerti",
   "streaks_page_title": "Hadiah streak",
   "streaks_page_subtitle": "Capai tonggak streak untuk membuka tema, ikon app, dan motif grid. Streak terbaikmu: {best_streak} hari.",
+  "streaks_page_subtitle_pro": "Dengan Pro, semua tema, ikon app, dan motif grid langsung jadi milikmu. Tonggak menandai sejauh mana streak-mu telah berjalan. Streak terbaikmu: {best_streak} hari.",
+  "streaks_unlock_all_with_pro": "Buka semuanya sekarang dengan Pro",
+  "streaks_included_in_pro": "Termasuk dalam Pro",
   "streaks_current_streak": "STREAK SAAT INI",
   "streaks_category_theme": "Tema",
   "streaks_category_app_icon": "Ikon app",
@@ -281,11 +284,16 @@
     "one": "Hadiah berikutnya dalam {} hari",
     "other": "Hadiah berikutnya dalam {} hari"
   },
+  "streaks_next_milestone_in": {
+    "one": "Tonggak berikutnya dalam {} hari",
+    "other": "Tonggak berikutnya dalam {} hari"
+  },
   "streaks_reward_unlocked_title": {
     "one": "Hadiah baru terbuka",
     "other": "{} hadiah baru terbuka"
   },
   "streaks_reward_unlocked_body": "Kamu bisa menyesuaikannya sekarang juga.",
+  "streaks_milestone_reached_title": "Tonggak tercapai",
   "streaks_open_theme_picker": "Jelajahi tema",
   "streaks_open_app_icon_picker": "Pilih ikon app",
   "streaks_open_grid_motif_picker": "Pilih motif grid",

@@ -17,9 +17,21 @@ import 'package:weeksalive/presentation/profile/pages/app_icon_picker/app_icon_p
 import 'package:weeksalive/presentation/profile/pages/grid_motif_picker/grid_motif_picker_page.dart';
 import 'package:weeksalive/presentation/profile/pages/theme_picker/theme_picker_page.dart';
 
+/// Opens the picker for [rewardId] from the sheet it is shown in, which is
+/// closed first.
 void openRewardPicker(BuildContext context, RewardId rewardId) {
   final navigator = Navigator.of(context, rootNavigator: true);
   navigator.pop();
+  _pushRewardPicker(navigator, rewardId);
+}
+
+/// Opens the picker for [rewardId] above the current page, which stays
+/// underneath to come back to.
+void showRewardPicker(BuildContext context, RewardId rewardId) {
+  _pushRewardPicker(Navigator.of(context), rewardId);
+}
+
+void _pushRewardPicker(NavigatorState navigator, RewardId rewardId) {
   if (rewardId.previewThemeId != null) {
     navigator.push(ThemePickerPage.route());
     return;
@@ -38,19 +50,22 @@ class RewardPreview extends StatelessWidget {
     super.key,
     required this.rewardId,
     this.locked = false,
+    this.onTap,
   });
 
   final RewardId rewardId;
 
-  /// Affiche un cadenas et rend l'aperçu non interactif pour une récompense
-  /// pas encore débloquée.
+  /// Affiche un cadenas sur l'aperçu d'une récompense pas encore débloquée.
   final bool locked;
+
+  /// Null rend l'aperçu non interactif.
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(Dimens.radiusBase),
-      onTap: locked ? null : () => openRewardPicker(context, rewardId),
+      onTap: onTap,
       child: RewardPreviewContent(rewardId: rewardId, locked: locked),
     );
   }

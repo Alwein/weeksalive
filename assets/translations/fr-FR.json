@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "Compris",
   "streaks_page_title": "Récompenses de série",
   "streaks_page_subtitle": "Atteins des paliers de série pour débloquer des thèmes, icônes d'app et motifs de grille. Ta meilleure série : {best_streak} jours.",
+  "streaks_page_subtitle_pro": "Avec Pro, tous les thèmes, icônes d'app et motifs de grille sont déjà à toi. Les paliers marquent le chemin parcouru par ta série. Ta meilleure série : {best_streak} jours.",
+  "streaks_unlock_all_with_pro": "Tout débloquer maintenant avec Pro",
+  "streaks_included_in_pro": "Inclus dans Pro",
   "streaks_current_streak": "SÉRIE EN COURS",
   "streaks_category_theme": "Thème",
   "streaks_category_app_icon": "Icône d'app",
@@ -281,11 +284,16 @@
     "one": "Prochaine récompense dans {} jour",
     "other": "Prochaine récompense dans {} jours"
   },
+  "streaks_next_milestone_in": {
+    "one": "Prochain palier dans {} jour",
+    "other": "Prochain palier dans {} jours"
+  },
   "streaks_reward_unlocked_title": {
     "one": "Nouvelle récompense débloquée",
     "other": "{} nouvelles récompenses débloquées"
   },
   "streaks_reward_unlocked_body": "Tu peux la personnaliser tout de suite.",
+  "streaks_milestone_reached_title": "Palier atteint",
   "streaks_open_theme_picker": "Parcourir les thèmes",
   "streaks_open_app_icon_picker": "Choisir l'icône d'app",
   "streaks_open_grid_motif_picker": "Choisir le motif de grille",

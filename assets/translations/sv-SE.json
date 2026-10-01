@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "Uppfattat",
   "streaks_page_title": "Streak-belöningar",
   "streaks_page_subtitle": "Nå streak-milstolpar för att låsa upp teman, appikoner och rutnätsmotiv. Din bästa streak: {best_streak} dagar.",
+  "streaks_page_subtitle_pro": "Med Pro har du alla teman, appikoner och rutnätsmotiv direkt. Milstolparna visar hur långt din streak har kommit. Din bästa streak: {best_streak} dagar.",
+  "streaks_unlock_all_with_pro": "Lås upp allt nu med Pro",
+  "streaks_included_in_pro": "Ingår i Pro",
   "streaks_current_streak": "AKTUELL STREAK",
   "streaks_category_theme": "Tema",
   "streaks_category_app_icon": "Appikon",
@@ -281,11 +284,16 @@
     "one": "Nästa belöning om {} dag",
     "other": "Nästa belöning om {} dagar"
   },
+  "streaks_next_milestone_in": {
+    "one": "Nästa milstolpe om {} dag",
+    "other": "Nästa milstolpe om {} dagar"
+  },
   "streaks_reward_unlocked_title": {
     "one": "Ny belöning upplåst",
     "other": "{} nya belöningar upplåsta"
   },
   "streaks_reward_unlocked_body": "Du kan anpassa den direkt.",
+  "streaks_milestone_reached_title": "Milstolpe nådd",
   "streaks_open_theme_picker": "Bläddra bland teman",
   "streaks_open_app_icon_picker": "Välj appikon",
   "streaks_open_grid_motif_picker": "Välj rutnätsmotiv",

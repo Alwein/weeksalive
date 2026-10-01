@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "Am înțeles",
   "streaks_page_title": "Recompense pentru serie",
   "streaks_page_subtitle": "Atinge praguri de serie ca să deblochezi teme, iconițe de app și motive de grilă. Cea mai bună serie a ta: {best_streak} zile.",
+  "streaks_page_subtitle_pro": "Cu Pro ai imediat toate temele, iconițele de app și motivele de grilă. Pragurile arată cât de departe a ajuns seria ta. Cea mai bună serie a ta: {best_streak} zile.",
+  "streaks_unlock_all_with_pro": "Deblochează tot acum cu Pro",
+  "streaks_included_in_pro": "Inclus în Pro",
   "streaks_current_streak": "SERIA CURENTĂ",
   "streaks_category_theme": "Temă",
   "streaks_category_app_icon": "Iconiță app",
@@ -281,11 +284,16 @@
     "one": "Următoarea recompensă în {} zi",
     "other": "Următoarea recompensă în {} zile"
   },
+  "streaks_next_milestone_in": {
+    "one": "Următorul prag în {} zi",
+    "other": "Următorul prag în {} zile"
+  },
   "streaks_reward_unlocked_title": {
     "one": "Recompensă nouă deblocată",
     "other": "{} recompense noi deblocate"
   },
   "streaks_reward_unlocked_body": "O poți personaliza imediat.",
+  "streaks_milestone_reached_title": "Prag atins",
   "streaks_open_theme_picker": "Răsfoiește temele",
   "streaks_open_app_icon_picker": "Alege iconița app",
   "streaks_open_grid_motif_picker": "Alege motivul grilei",

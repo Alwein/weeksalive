@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "Το κατάλαβα",
   "streaks_page_title": "Ανταμοιβές σερί",
   "streaks_page_subtitle": "Φτάσε ορόσημα σερί για να ξεκλειδώσεις θέματα, εικονίδια εφαρμογής και μοτίβα πλέγματος. Το καλύτερό σου σερί: {best_streak} ημέρες.",
+  "streaks_page_subtitle_pro": "Με το Pro έχεις αμέσως όλα τα θέματα, τα εικονίδια εφαρμογής και τα μοτίβα πλέγματος. Τα ορόσημα δείχνουν πόσο μακριά έχει φτάσει το σερί σου. Το καλύτερό σου σερί: {best_streak} ημέρες.",
+  "streaks_unlock_all_with_pro": "Ξεκλείδωσε τα πάντα τώρα με το Pro",
+  "streaks_included_in_pro": "Περιλαμβάνεται στο Pro",
   "streaks_current_streak": "ΤΡΕΧΟΝ ΣΕΡΙ",
   "streaks_category_theme": "Θέμα",
   "streaks_category_app_icon": "Εικονίδιο εφαρμογής",
@@ -281,11 +284,16 @@
     "one": "Επόμενη ανταμοιβή σε {} ημέρα",
     "other": "Επόμενη ανταμοιβή σε {} ημέρες"
   },
+  "streaks_next_milestone_in": {
+    "one": "Επόμενο ορόσημο σε {} ημέρα",
+    "other": "Επόμενο ορόσημο σε {} ημέρες"
+  },
   "streaks_reward_unlocked_title": {
     "one": "Νέα ανταμοιβή ξεκλειδώθηκε",
     "other": "{} νέες ανταμοιβές ξεκλειδώθηκαν"
   },
   "streaks_reward_unlocked_body": "Μπορείς να την προσαρμόσεις αμέσως.",
+  "streaks_milestone_reached_title": "Ορόσημο επιτεύχθηκε",
   "streaks_open_theme_picker": "Περιήγηση θεμάτων",
   "streaks_open_app_icon_picker": "Επιλογή εικονιδίου εφαρμογής",
   "streaks_open_grid_motif_picker": "Επιλογή μοτίβου πλέγματος",

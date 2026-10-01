@@ -477,6 +477,17 @@ class Strings {
   static String get streaksPageTitle => tr('streaks_page_title');
   static String streaksPageSubtitle(int bestStreak) =>
       tr('streaks_page_subtitle', namedArgs: {'best_streak': '$bestStreak'});
+  static String streaksPageSubtitlePro(int bestStreak) => tr(
+    'streaks_page_subtitle_pro',
+    namedArgs: {'best_streak': '$bestStreak'},
+  );
+  static String get streaksUnlockAllWithPro =>
+      tr('streaks_unlock_all_with_pro');
+  static String get streaksIncludedInPro => tr('streaks_included_in_pro');
+  static String streaksNextMilestoneIn(int days) =>
+      plural('streaks_next_milestone_in', days);
+  static String get streaksMilestoneReachedTitle =>
+      tr('streaks_milestone_reached_title');
   static String get streaksCurrentStreak => tr('streaks_current_streak');
   static String get streaksCategoryTheme => tr('streaks_category_theme');
   static String get streaksCategoryAppIcon => tr('streaks_category_app_icon');

@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "Capito",
   "streaks_page_title": "Ricompense serie",
   "streaks_page_subtitle": "Raggiungi i traguardi di serie per sbloccare temi, icone dell'app e motivi della griglia. La tua migliore serie: {best_streak} giorni.",
+  "streaks_page_subtitle_pro": "Con Pro hai subito tutti i temi, le icone dell'app e i motivi della griglia. I traguardi segnano fin dove è arrivata la tua serie. La tua migliore serie: {best_streak} giorni.",
+  "streaks_unlock_all_with_pro": "Sblocca tutto ora con Pro",
+  "streaks_included_in_pro": "Incluso in Pro",
   "streaks_current_streak": "SERIE ATTUALE",
   "streaks_category_theme": "Tema",
   "streaks_category_app_icon": "Icona app",
@@ -281,11 +284,16 @@
     "one": "Prossima ricompensa tra {} giorno",
     "other": "Prossima ricompensa tra {} giorni"
   },
+  "streaks_next_milestone_in": {
+    "one": "Prossimo traguardo tra {} giorno",
+    "other": "Prossimo traguardo tra {} giorni"
+  },
   "streaks_reward_unlocked_title": {
     "one": "Nuova ricompensa sbloccata",
     "other": "{} nuove ricompense sbloccate"
   },
   "streaks_reward_unlocked_body": "Puoi personalizzarla subito.",
+  "streaks_milestone_reached_title": "Traguardo raggiunto",
   "streaks_open_theme_picker": "Sfoglia i temi",
   "streaks_open_app_icon_picker": "Scegli l'icona dell'app",
   "streaks_open_grid_motif_picker": "Scegli il motivo della griglia",

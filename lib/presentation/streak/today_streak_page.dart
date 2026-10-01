@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_advanced_haptic/flutter_advanced_haptic.dart';
@@ -9,12 +10,14 @@ import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/domain/rewards/reward_condition.dart';
 import 'package:weeksalive/domain/rewards/reward_display.dart';
 import 'package:weeksalive/domain/rewards/reward_id.dart';
 import 'package:weeksalive/domain/rewards/reward_rules.dart';
 import 'package:weeksalive/presentation/home/widgets/fire_rive_player.dart';
 import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divider.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 import 'package:weeksalive/presentation/redux/rewards/rewards_actions.dart';
 import 'package:weeksalive/presentation/streak/widgets/reward_preview.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
@@ -24,14 +27,34 @@ class TodayStreakViewModel {
   const TodayStreakViewModel({
     required this.streakCount,
     required this.newlyUnlockedRewards,
+    this.isPro = false,
     this.nextRewardId,
     this.daysUntilNextReward,
   });
 
   final int streakCount;
   final List<RewardId> newlyUnlockedRewards;
+
+  /// Pro already gives every reward, so for a subscriber a milestone is
+  /// celebrated for itself rather than for what it unlocks.
+  final bool isPro;
   final RewardId? nextRewardId;
   final int? daysUntilNextReward;
+
+  /// The highest milestone just reached, when rewards were just earned.
+  int? get reachedMilestoneDays =>
+      newlyUnlockedRewards.map(_milestoneDays).nonNulls.maxOrNull;
+
+  int? get nextMilestoneDays {
+    final next = nextRewardId;
+    return next == null ? null : _milestoneDays(next);
+  }
+
+  static int? _milestoneDays(RewardId id) =>
+      switch (RewardRules.ruleFor(id)?.condition) {
+        StreakMilestoneCondition(:final minDays) => minDays,
+        _ => null,
+      };
 
   static TodayStreakViewModel fromStore(Store<AppState> store) {
     final streakCount = store.state.streakState.count;
@@ -49,6 +72,7 @@ class TodayStreakViewModel {
     return TodayStreakViewModel(
       streakCount: streakCount,
       newlyUnlockedRewards: newlyUnlockedRewards,
+      isPro: store.state.purchaseState.isPro,
       nextRewardId: next?.rewardId,
       daysUntilNextReward: next?.daysRemaining,
     );
@@ -59,6 +83,7 @@ class TodayStreakViewModel {
       identical(this, other) ||
       other is TodayStreakViewModel &&
           other.streakCount == streakCount &&
+          other.isPro == isPro &&
           other.newlyUnlockedRewards.length == newlyUnlockedRewards.length &&
           other.newlyUnlockedRewards.toSet().containsAll(newlyUnlockedRewards) &&
           other.nextRewardId == nextRewardId &&
@@ -67,6 +92,7 @@ class TodayStreakViewModel {
   @override
   int get hashCode => Object.hash(
     streakCount,
+    isPro,
     Object.hashAllUnordered(newlyUnlockedRewards),
     nextRewardId,
     daysUntilNextReward,
@@ -145,6 +171,8 @@ class _StreakPageContent extends StatelessWidget {
     final newlyUnlockedRewards = viewModel.newlyUnlockedRewards;
     final nextRewardId = viewModel.nextRewardId;
     final daysUntilNextReward = viewModel.daysUntilNextReward;
+    final reachedMilestoneDays = viewModel.reachedMilestoneDays;
+    final nextMilestoneDays = viewModel.nextMilestoneDays;
 
     return SheetContentScaffold(
       backgroundColor: AppColors.bg(context),
@@ -167,7 +195,26 @@ class _StreakPageContent extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            if (newlyUnlockedRewards.isNotEmpty) ...[
+            if (viewModel.isPro && reachedMilestoneDays != null) ...[
+              const SizedBox(height: Margins.spacingXl),
+              const SmallDivider(width: double.infinity),
+              const SizedBox(height: Margins.spacingL),
+              _Milestone(
+                title: Strings.streaksMilestoneReachedTitle,
+                milestoneDays: reachedMilestoneDays,
+                emphasized: true,
+              ),
+            ] else if (viewModel.isPro &&
+                nextMilestoneDays != null &&
+                daysUntilNextReward != null) ...[
+              const SizedBox(height: Margins.spacingXl),
+              const SmallDivider(width: double.infinity),
+              const SizedBox(height: Margins.spacingL),
+              _Milestone(
+                title: Strings.streaksNextMilestoneIn(daysUntilNextReward),
+                milestoneDays: nextMilestoneDays,
+              ),
+            ] else if (!viewModel.isPro && newlyUnlockedRewards.isNotEmpty) ...[
               const SizedBox(height: Margins.spacingXl),
               const SmallDivider(width: double.infinity),
               const SizedBox(height: Margins.spacingL),
@@ -190,7 +237,9 @@ class _StreakPageContent extends StatelessWidget {
                 const SizedBox(height: Margins.spacingL),
                 _UnlockedRewardCard(rewardId: rewardId),
               ],
-            ] else if (nextRewardId != null && daysUntilNextReward != null) ...[
+            ] else if (!viewModel.isPro &&
+                nextRewardId != null &&
+                daysUntilNextReward != null) ...[
               const SizedBox(height: Margins.spacingXl),
               const SmallDivider(width: double.infinity),
               const SizedBox(height: Margins.spacingL),
@@ -221,6 +270,45 @@ class _StreakPageContent extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// A streak milestone on its own, with no reward attached: what a subscriber
+/// sees, since Pro already gives every reward.
+class _Milestone extends StatelessWidget {
+  const _Milestone({
+    required this.title,
+    required this.milestoneDays,
+    this.emphasized = false,
+  });
+
+  final String title;
+  final int milestoneDays;
+  final bool emphasized;
+
+  @override
+  Widget build(BuildContext context) {
+    final titleColor = emphasized
+        ? AppColors.content(context)
+        : AppColors.contentSoft(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          title,
+          style: TextStyles.primaryBold.copyWith(color: titleColor),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: Margins.spacingXs),
+        Text(
+          Strings.themeLockedStreakHint(milestoneDays),
+          style: TextStyles.primaryRegular.copyWith(
+            color: AppColors.contentSoft(context),
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 }

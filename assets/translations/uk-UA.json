@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "Зрозуміло",
   "streaks_page_title": "Нагороди за серію",
   "streaks_page_subtitle": "Досягай етапів серії, щоб відкривати теми, іконки додатка та мотиви сітки. Твоя найкраща серія: {best_streak} днів.",
+  "streaks_page_subtitle_pro": "З Pro усі теми, іконки додатка та мотиви сітки доступні одразу. Етапи показують, як далеко зайшла твоя серія. Твоя найкраща серія: {best_streak} днів.",
+  "streaks_unlock_all_with_pro": "Відкрий усе зараз із Pro",
+  "streaks_included_in_pro": "Входить у Pro",
   "streaks_current_streak": "ПОТОЧНА СЕРІЯ",
   "streaks_category_theme": "Тема",
   "streaks_category_app_icon": "Іконка додатка",
@@ -281,11 +284,16 @@
     "one": "Наступна нагорода через {} день",
     "other": "Наступна нагорода через {} днів"
   },
+  "streaks_next_milestone_in": {
+    "one": "Наступний етап через {} день",
+    "other": "Наступний етап через {} днів"
+  },
   "streaks_reward_unlocked_title": {
     "one": "Нову нагороду відкрито",
     "other": "Відкрито {} нових нагород"
   },
   "streaks_reward_unlocked_body": "Можеш налаштувати її одразу.",
+  "streaks_milestone_reached_title": "Етап досягнуто",
   "streaks_open_theme_picker": "Переглянути теми",
   "streaks_open_app_icon_picker": "Обрати іконку додатка",
   "streaks_open_grid_motif_picker": "Обрати мотив сітки",

@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "Forstået",
   "streaks_page_title": "Streak-belønninger",
   "streaks_page_subtitle": "Nå streak-milepæle for at låse temaer, app-ikoner og gittermotiver op. Din bedste streak: {best_streak} dage.",
+  "streaks_page_subtitle_pro": "Med Pro har du alle temaer, app-ikoner og gittermotiver med det samme. Milepælene viser, hvor langt din streak er nået. Din bedste streak: {best_streak} dage.",
+  "streaks_unlock_all_with_pro": "Lås alt op nu med Pro",
+  "streaks_included_in_pro": "Inkluderet i Pro",
   "streaks_current_streak": "NUVÆRENDE STREAK",
   "streaks_category_theme": "Tema",
   "streaks_category_app_icon": "App-ikon",
@@ -281,11 +284,16 @@
     "one": "Næste belønning om {} dag",
     "other": "Næste belønning om {} dage"
   },
+  "streaks_next_milestone_in": {
+    "one": "Næste milepæl om {} dag",
+    "other": "Næste milepæl om {} dage"
+  },
   "streaks_reward_unlocked_title": {
     "one": "Ny belønning låst op",
     "other": "{} nye belønninger låst op"
   },
   "streaks_reward_unlocked_body": "Du kan tilpasse det med det samme.",
+  "streaks_milestone_reached_title": "Milepæl nået",
   "streaks_open_theme_picker": "Gennemse temaer",
   "streaks_open_app_icon_picker": "Vælg app-ikon",
   "streaks_open_grid_motif_picker": "Vælg gittermotiv",

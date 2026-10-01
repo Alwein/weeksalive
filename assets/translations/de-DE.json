@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "Alles klar",
   "streaks_page_title": "Serien-Belohnungen",
   "streaks_page_subtitle": "Erreiche Serien-Meilensteine, um Themes, App-Icons und Raster-Motive freizuschalten. Deine beste Serie: {best_streak} Tage.",
+  "streaks_page_subtitle_pro": "Mit Pro gehören dir alle Themes, App-Icons und Raster-Motive sofort. Die Meilensteine zeigen, wie weit deine Serie schon reicht. Deine beste Serie: {best_streak} Tage.",
+  "streaks_unlock_all_with_pro": "Jetzt alles mit Pro freischalten",
+  "streaks_included_in_pro": "In Pro enthalten",
   "streaks_current_streak": "AKTUELLE SERIE",
   "streaks_category_theme": "Theme",
   "streaks_category_app_icon": "App-Icon",
@@ -281,11 +284,16 @@
     "one": "Nächste Belohnung in {} Tag",
     "other": "Nächste Belohnung in {} Tagen"
   },
+  "streaks_next_milestone_in": {
+    "one": "Nächster Meilenstein in {} Tag",
+    "other": "Nächster Meilenstein in {} Tagen"
+  },
   "streaks_reward_unlocked_title": {
     "one": "Neue Belohnung freigeschaltet",
     "other": "{} neue Belohnungen freigeschaltet"
   },
   "streaks_reward_unlocked_body": "Du kannst sie gleich anpassen.",
+  "streaks_milestone_reached_title": "Meilenstein erreicht",
   "streaks_open_theme_picker": "Themes durchstöbern",
   "streaks_open_app_icon_picker": "App-Icon wählen",
   "streaks_open_grid_motif_picker": "Raster-Motiv wählen",

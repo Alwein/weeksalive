@@ -273,6 +273,9 @@
   "streak_grace_reminder_dismiss": "Rozumím",
   "streaks_page_title": "Odměny za sérii",
   "streaks_page_subtitle": "Dosáhni milníků série a odemkni témata, ikony aplikace a motivy mřížky. Tvá nejlepší série: {best_streak} dní.",
+  "streaks_page_subtitle_pro": "S Pro máš všechna témata, ikony aplikace a motivy mřížky hned. Milníky ukazují, kam až tvá série došla. Tvá nejlepší série: {best_streak} dní.",
+  "streaks_unlock_all_with_pro": "Odemkni vše hned s Pro",
+  "streaks_included_in_pro": "Součást Pro",
   "streaks_current_streak": "AKTUÁLNÍ SÉRIE",
   "streaks_category_theme": "Téma",
   "streaks_category_app_icon": "Ikona aplikace",
@@ -281,11 +284,16 @@
     "one": "Další odměna za {} den",
     "other": "Další odměna za {} dní"
   },
+  "streaks_next_milestone_in": {
+    "one": "Další milník za {} den",
+    "other": "Další milník za {} dní"
+  },
   "streaks_reward_unlocked_title": {
     "one": "Nová odměna odemčena",
     "other": "{} nových odměn odemčeno"
   },
   "streaks_reward_unlocked_body": "Můžeš si to hned přizpůsobit.",
+  "streaks_milestone_reached_title": "Milník dosažen",
   "streaks_open_theme_picker": "Procházet témata",
   "streaks_open_app_icon_picker": "Vybrat ikonu aplikace",
   "streaks_open_grid_motif_picker": "Vybrat motiv mřížky",
