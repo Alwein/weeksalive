@@ -13,6 +13,10 @@ void main() {
       expect(jiffyLocaleFor('no'), 'nb');
     });
 
+    test('maps Chinese to Simplified, not Jiffy\'s Traditional zh', () {
+      expect(jiffyLocaleFor('zh'), 'zh_cn');
+    });
+
     test('falls back to English for locales Jiffy does not ship', () {
       expect(jiffyLocaleFor('vi'), 'en');
       expect(jiffyLocaleFor('da'), 'en');

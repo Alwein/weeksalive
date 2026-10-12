@@ -249,7 +249,7 @@ class _CardHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Texts.primaryXsCounter(context, Strings.weekLabel, "#${weekNumber.toString()}"),
+          Texts.primaryXsUnitCounter(context, Strings.weekLabel, "#${weekNumber.toString()}"),
           const SizedBox(height: Margins.spacingXs),
           Texts.primaryLargeBold(weekDates),
         ],

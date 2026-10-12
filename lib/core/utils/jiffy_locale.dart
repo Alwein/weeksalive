@@ -1,7 +1,8 @@
 import 'package:jiffy/jiffy.dart';
 
-/// Jiffy uses Norwegian Bokmål (`nb`) and has no `no` locale.
-const _languageAliases = {'no': 'nb'};
+/// Jiffy uses Norwegian Bokmål (`nb`) and has no `no` locale. Its `zh` is
+/// Traditional Chinese ("幾秒前"); the app ships Simplified, which is `zh_cn`.
+const _languageAliases = {'no': 'nb', 'zh': 'zh_cn'};
 
 /// A Jiffy locale code for [languageCode], or `en` when Jiffy has no match.
 ///

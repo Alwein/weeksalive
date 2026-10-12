@@ -220,7 +220,7 @@ class _LifeGridIllustrationState extends State<_LifeGridIllustration> with Singl
                       Strings.progressLabel,
                       '${(widget.progressFraction * 100).toStringAsFixed(1)}%',
                     ),
-                    Texts.primaryXsCounter(
+                    Texts.primaryXsUnitCounter(
                       context,
                       Strings.weekLabel,
                       widget.livedWeeks.toString(),

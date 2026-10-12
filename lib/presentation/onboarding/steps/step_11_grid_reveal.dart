@@ -308,7 +308,7 @@ class _GridIllustrationState extends State<_GridIllustration> with SingleTickerP
                       Strings.progressLabel,
                       '${(widget.progressFraction * 100).toStringAsFixed(1)}%',
                     ),
-                    Texts.primaryXsCounter(
+                    Texts.primaryXsUnitCounter(
                       context,
                       Strings.weekLabel,
                       widget.livedWeeks.toString(),

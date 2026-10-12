@@ -288,7 +288,7 @@ class _DayHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Texts.primaryXsCounter(
+              Texts.primaryXsUnitCounter(
                 context,
                 Strings.dayLabel,
                 "#${viewModel.dayCount}",

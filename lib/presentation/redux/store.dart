@@ -1,4 +1,3 @@
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:redux/redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,8 +27,7 @@ import 'package:weeksalive/data/weekly_summary/weekly_summary_repository.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/store_factory.dart';
 
-Future<Store<AppState>> initializeReduxStore(
-  FirebaseRemoteConfig? firebaseRemoteConfig, {
+Future<Store<AppState>> initializeReduxStore({
   PushNotificationRepository? pushNotificationRepository,
   TikTokEventsRepository? tikTokEventsRepository,
   AnalyticsRepository? analyticsRepository,

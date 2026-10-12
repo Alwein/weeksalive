@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
@@ -355,6 +356,27 @@ class Texts {
       softColor: softColor,
     );
   }
+
+  /// Like [primaryXsCounter] for a unit label ("DAY", "WEEK"). Chinese,
+  /// Japanese and Korean put the unit after the number ("285 / 365 天").
+  static Widget primaryXsUnitCounter(
+    BuildContext context,
+    String unit,
+    String value, {
+    TextAlign? textAlign,
+    Color? softColor,
+  }) {
+    return _TypeValueText(
+      context: context,
+      type: unit,
+      value: value,
+      textAlign: textAlign,
+      softColor: softColor,
+      typeAfterValue: _unitFollowsNumber.contains(context.locale.languageCode),
+    );
+  }
+
+  static const _unitFollowsNumber = {'zh', 'ja', 'ko'};
 }
 
 class _TypeValueText extends StatelessWidget {
@@ -364,6 +386,7 @@ class _TypeValueText extends StatelessWidget {
     required this.value,
     this.textAlign,
     this.softColor,
+    this.typeAfterValue = false,
   });
 
   final BuildContext context;
@@ -371,22 +394,25 @@ class _TypeValueText extends StatelessWidget {
   final String? value;
   final TextAlign? textAlign;
   final Color? softColor;
+  final bool typeAfterValue;
 
   @override
   Widget build(BuildContext ctx) {
+    final typeSpan = TextSpan(
+      text: typeAfterValue ? ' $type' : '$type ',
+      style: TextStyles.primarySmallMedium.copyWith(color: softColor ?? AppColors.contentSoft(context)),
+    );
+    final valueSpan = value == null
+        ? null
+        : TextSpan(
+            text: value,
+            style: TextStyles.primarySmallMedium.copyWith(color: AppColors.content(context)),
+          );
     return RichText(
       textAlign: textAlign ?? TextAlign.start,
       text: TextSpan(
         children: [
-          TextSpan(
-            text: '$type ',
-            style: TextStyles.primarySmallMedium.copyWith(color: softColor ?? AppColors.contentSoft(context)),
-          ),
-          if (value != null)
-            TextSpan(
-              text: value,
-              style: TextStyles.primarySmallMedium.copyWith(color: AppColors.content(context)),
-            ),
+          if (typeAfterValue) ...[?valueSpan, typeSpan] else ...[typeSpan, ?valueSpan],
         ],
       ),
     );

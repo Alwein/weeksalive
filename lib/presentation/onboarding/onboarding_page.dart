@@ -99,8 +99,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   void _submit() {
-    if (_controller.notificationTimes.isEmpty) return;
-
     final user = _controller.buildUser(
       id: const Uuid().v4(),
       createdAt: DateTime.now(),

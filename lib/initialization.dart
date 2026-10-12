@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -82,14 +81,11 @@ Future<AppDependencies> initializeApp() async {
   );
   await pushNotificationRepository.setupTimezones();
 
-  final remoteConfig = await _remoteConfig();
-
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
   final store = await initializeReduxStore(
-    remoteConfig,
     pushNotificationRepository: pushNotificationRepository,
     tikTokEventsRepository: tikTokEventsRepository,
     analyticsRepository: analyticsRepository,
@@ -103,20 +99,4 @@ Future<AppDependencies> initializeApp() async {
   );
 
   return (store: store, pushNotificationRepository: pushNotificationRepository);
-}
-
-Future<FirebaseRemoteConfig?> _remoteConfig() async {
-  final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
-  await remoteConfig.setConfigSettings(
-    RemoteConfigSettings(
-      fetchTimeout: const Duration(seconds: 5),
-      minimumFetchInterval: const Duration(minutes: 5),
-    ),
-  );
-  try {
-    await remoteConfig.fetchAndActivate();
-  } catch (e) {
-    return null;
-  }
-  return remoteConfig;
 }

@@ -161,7 +161,7 @@ class _YearGridTitle extends StatelessWidget {
           ),
         ),
         const SizedBox(height: Margins.spacingXs),
-        Texts.primaryXsCounter(
+        Texts.primaryXsUnitCounter(
           context,
           Strings.dayLabel,
           _getYearProgress(),

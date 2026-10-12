@@ -88,7 +88,7 @@ class _DotsLine extends StatelessWidget {
                   Strings.yearLabel,
                   '${progress.yearInLife}/${progress.yearsInLife}',
                 ),
-                Texts.primaryXsCounter(
+                Texts.primaryXsUnitCounter(
                   context,
                   Strings.weekLabel,
                   '${progress.weekInYear}/${progress.weeksInYear}',
