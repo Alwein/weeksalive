@@ -42,6 +42,7 @@ class LocalNotificationScheduler {
     final now = tz.TZDateTime.now(tz.local);
     for (var i = 0; i < dailyTimes.length; i++) {
       final time = dailyTimes[i];
+      final nextOccurrence = NotificationScheduleCalculator.nextDailyOccurrence(time.hour, time.minute, now: now);
       final scheduledDate = _nextDailyReminderOccurrence(
         hour: time.hour,
         minute: time.minute,
@@ -49,11 +50,34 @@ class LocalNotificationScheduler {
         now: now,
       );
       final isFollowUpSlot = dailyTimes.length > 1 && i == dailyTimes.length - 1;
+      final title = isFollowUpSlot ? Strings.dailyFollowupNotificationTitle : Strings.dailyNotificationTitle;
+      final body = isFollowUpSlot ? Strings.dailyFollowupNotificationBody : Strings.dailyNotificationBody;
+      final payload = isFollowUpSlot ? NotificationPayloads.dailyFollowup : NotificationPayloads.dailyReminder;
+
+      final skipsToday = hasTodayEntry && _toLocalDateTime(nextOccurrence).day == now.day;
+      if (skipsToday) {
+        // A repeating trigger ignores the date on iOS (it matches hour/minute
+        // only) and would still fire today, so schedule the next days one by one.
+        for (var d = 0; d < LocalNotificationConfig.deferredDailyDays; d++) {
+          final day = scheduledDate.add(Duration(days: d));
+          await _client.scheduleDailyOnce(
+            id:
+                LocalNotificationConfig.deferredDailyNotificationIdStart +
+                i * LocalNotificationConfig.deferredDailyNotificationIdStride +
+                d,
+            title: title,
+            body: body,
+            payload: payload,
+            scheduledDate: _toTz(DateTime(day.year, day.month, day.day, time.hour, time.minute)),
+          );
+        }
+        continue;
+      }
       await _client.scheduleDaily(
         id: LocalNotificationConfig.dailyNotificationIdStart + i,
-        title: isFollowUpSlot ? Strings.dailyFollowupNotificationTitle : Strings.dailyNotificationTitle,
-        body: isFollowUpSlot ? Strings.dailyFollowupNotificationBody : Strings.dailyNotificationBody,
-        payload: isFollowUpSlot ? NotificationPayloads.dailyFollowup : NotificationPayloads.dailyReminder,
+        title: title,
+        body: body,
+        payload: payload,
         scheduledDate: scheduledDate,
       );
     }

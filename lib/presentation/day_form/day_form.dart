@@ -171,7 +171,7 @@ class DayFormContentState extends State<DayFormContent> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: Margins.spacingM),
-          _DayHeader(circleSize: _circleSize, viewModel: widget.viewModel),
+          _DayHeader(circleSize: _circleSize, viewModel: widget.viewModel, date: widget.date),
           const SizedBox(height: Margins.spacingBase),
           const SmallDivider(width: double.infinity),
 
@@ -275,7 +275,8 @@ class DayFormContentState extends State<DayFormContent> {
 }
 
 class _DayHeader extends StatelessWidget {
-  const _DayHeader({required this.circleSize, required this.viewModel});
+  const _DayHeader({required this.circleSize, required this.viewModel, required this.date});
+  final DateTime date;
   final DayFormViewModel viewModel;
   final double circleSize;
 
@@ -295,7 +296,7 @@ class _DayHeader extends StatelessWidget {
                 softColor: AppColors.contentSoftOnSoft(context),
               ),
               const SizedBox(height: Margins.spacingXs),
-              Texts.primaryLargeBold(TimeUtils.formatDate(context, DateTime.now())),
+              Texts.primaryLargeBold(TimeUtils.formatDate(context, date)),
             ],
           ),
         ),

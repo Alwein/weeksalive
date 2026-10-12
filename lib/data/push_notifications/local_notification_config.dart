@@ -10,6 +10,9 @@ abstract final class LocalNotificationConfig {
 
   static const dailyNotificationIdStart = 0;
   static const weeklyNotificationId = 10;
+  static const deferredDailyNotificationIdStart = 100;
+  static const deferredDailyNotificationIdStride = 10;
+  static const deferredDailyDays = 7;
   static const followUpNotificationId = 20;
   static const streakSaveNotificationId = 21;
 

@@ -36,7 +36,17 @@ class PushNotificationMiddleware extends MiddlewareClass<AppState> {
           slots: slots,
         ),
       );
-      if (action is DataRestoredAction) await _reschedule(store);
+      if (action is DataRestoredAction) {
+        // A restore skips onboarding, the only place permission was asked. No-op
+        // prompt-wise when the user already answered.
+        final hasActiveSlot =
+            slots.toNotificationTimes().isNotEmpty || slots.weeklySummarySchedule(DateTime.monday) != null;
+        if (hasActiveSlot && !pushNotificationEnabled) {
+          final granted = await pushNotificationRepository.requestNotificationPermission();
+          store.dispatch(PushNotificationEnabledLoadedAction(granted));
+        }
+        await _reschedule(store);
+      }
     }
 
     if (action is RequestNotificationPermissionAction) {

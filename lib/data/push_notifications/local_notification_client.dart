@@ -85,6 +85,26 @@ class LocalNotificationClient {
     );
   }
 
+  /// One-shot with the daily channel. Unlike [scheduleDaily], iOS honours the
+  /// date, so a reminder can skip today.
+  Future<void> scheduleDailyOnce({
+    required int id,
+    required String title,
+    required String body,
+    required tz.TZDateTime scheduledDate,
+    required String payload,
+  }) async {
+    return _plugin.zonedSchedule(
+      id: id,
+      title: title,
+      body: body,
+      payload: payload,
+      scheduledDate: scheduledDate,
+      notificationDetails: LocalNotificationConfig.dailyNotificationDetails,
+      androidScheduleMode: await _androidScheduleMode(),
+    );
+  }
+
   Future<void> scheduleDaily({
     required int id,
     required String title,
