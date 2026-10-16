@@ -66,7 +66,7 @@ platform :ios do
       in_house: false
     )
 
-    increment_build_number(xcodeproj: "Runner.xcodeproj")
+    build_number = increment_build_number(xcodeproj: "Runner.xcodeproj")
 
     build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
 
@@ -75,13 +75,16 @@ platform :ios do
       skip_waiting_for_build_processing: false
     )
 
+    # Le binaire est déjà sur App Store Connect via TestFlight.
+    # Un second upload du même CFBundleVersion est rejeté.
     deliver(
       submit_for_review: true,
       automatic_release: true,
       force: true,
       skip_screenshots: true,
       skip_metadata: false,
-      skip_binary_upload: false,
+      skip_binary_upload: true,
+      build_number: build_number,
       precheck_include_in_app_purchases: false,
       release_notes: {
         'en-US' => "Bug fixes and improvements.",     # Anglais (États-Unis)
