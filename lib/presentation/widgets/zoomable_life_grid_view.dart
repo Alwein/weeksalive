@@ -10,6 +10,7 @@ import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/domain/life_week_grid.dart';
 import 'package:weeksalive/domain/year_grid/year_grid_demo.dart';
+import 'package:weeksalive/domain/year_grid/year_grid_fill_sizes.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/day/day_state.dart';
 import 'package:weeksalive/presentation/widgets/life_grid_view.dart';
@@ -215,7 +216,7 @@ class _YearDayGridLayer extends StatelessWidget {
         final isDemoMode = viewModel.isDemoMode;
         final fillSizes = isDemoMode
             ? yearGridDemoFillSizes(totalDays: totalDays)
-            : _fillSizesForYear(dayState, now, totalDays);
+            : yearGridFillSizes(entries: dayState.entries.values, now: now);
         final demoFilledCount = yearGridDemoFilledCount(totalDays);
         final highlightGridIndex = isDemoMode ? demoFilledCount - 1 : -1;
 
@@ -341,31 +342,5 @@ class _YearDayGridLayer extends StatelessWidget {
       onPastDayTap?.call(date, dayState.entryFor(date));
     }
     // Future days: do nothing.
-  }
-
-  /// One entry per day of the year.
-  /// - `-3` means "today with no record" (drawn filled with [AppColors.accentOrange]).
-  /// - `-2` means "past day with no record" (drawn filled with [AppColors.bgSoft]).
-  /// - `-1` means "future day with no record" (drawn as an empty circle).
-  /// - `[0, 4]` is the recorded size level.
-  static List<int> _fillSizesForYear(
-    DayState dayState,
-    DateTime now,
-    int totalDays,
-  ) {
-    final year = now.year;
-    final todayIndex = dayOfYearIndex(now);
-    final sizes = List<int>.generate(totalDays, (i) {
-      if (i < todayIndex) return -2;
-      if (i == todayIndex) return -3;
-      return -1;
-    });
-    for (final entry in dayState.entries.values) {
-      if (entry.date.year != year) continue;
-      final dayOfYear = dayOfYearIndex(entry.date);
-      if (dayOfYear < 0 || dayOfYear >= totalDays) continue;
-      sizes[dayOfYear] = entry.sizeLevel;
-    }
-    return sizes;
   }
 }

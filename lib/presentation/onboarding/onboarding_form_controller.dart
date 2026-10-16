@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
+import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/domain/life_week_grid.dart';
 import 'package:weeksalive/domain/notifications/notification_slots.dart';
 import 'package:weeksalive/domain/user/user.dart';
+import 'package:weeksalive/presentation/day_form/day_form_controller.dart';
 
 class OnboardingFormController extends ChangeNotifier {
   OnboardingFormController({required this.totalSteps}) : pageController = PageController();
@@ -78,6 +80,68 @@ class OnboardingFormController extends ChangeNotifier {
   NotificationSlotState get slot2 => _slots.slot2;
 
   List<TimeOfDay> get notificationTimes => _slots.toNotificationTimes();
+
+  /// The time of day onboarding presents as "your check-in time": the first
+  /// enabled reminder, or the slot the user would have picked when none is.
+  TimeOfDay get preferredReminderTime {
+    final times = notificationTimes;
+    if (times.isNotEmpty) return times.first;
+    return slot1.enabled ? slot1.time : slot2.time;
+  }
+
+  DayFormController? _firstCheckInForm;
+  DateTime? _firstCheckInDate;
+  DayEntry? _firstCheckIn;
+
+  /// Answers of the check-in done during onboarding, kept while the user moves
+  /// back and forth between steps.
+  DayFormController? get firstCheckInForm => _firstCheckInForm;
+  DateTime? get firstCheckInDate => _firstCheckInDate;
+
+  /// The check-in recorded during onboarding, or null when the user went past
+  /// the step without one.
+  DayEntry? get firstCheckIn => _firstCheckIn;
+
+  /// Day the onboarding check-in is about. Before the user's reminder time the
+  /// day is not over: they look back on yesterday, and tonight's reminder still
+  /// comes for today. From the reminder time on, it is today.
+  DateTime firstCheckInDay(DateTime now) {
+    final today = normalizeDay(now);
+    final reminder = preferredReminderTime;
+    final minutesNow = now.hour * 60 + now.minute;
+    final minutesReminder = reminder.hour * 60 + reminder.minute;
+    if (minutesNow < minutesReminder) {
+      return today.subtract(const Duration(days: 1));
+    }
+    return today;
+  }
+
+  /// Opens the onboarding check-in on [date]. Coming back to the step on the
+  /// same day keeps the answers; [existingEntry] resumes one saved earlier.
+  DayFormController openFirstCheckIn(DateTime date, {DayEntry? existingEntry}) {
+    final day = normalizeDay(date);
+    final current = _firstCheckInForm;
+    if (current != null && _firstCheckInDate == day) return current;
+
+    current
+      ?..removeListener(notifyListeners)
+      ..dispose();
+    _firstCheckInDate = day;
+    final form = DayFormController(initialEntry: existingEntry)..addListener(notifyListeners);
+    _firstCheckInForm = form;
+    return form;
+  }
+
+  /// Turns the answers into the entry to save, and remembers it for the steps
+  /// that follow.
+  DayEntry? recordFirstCheckIn() {
+    final form = _firstCheckInForm;
+    final date = _firstCheckInDate;
+    if (form == null || date == null || !form.canSave) return null;
+    _firstCheckIn = form.buildEntry(date);
+    notifyListeners();
+    return _firstCheckIn;
+  }
 
   void setName(String value) {
     final trimmed = value.trim();
@@ -201,6 +265,9 @@ class OnboardingFormController extends ChangeNotifier {
 
   @override
   void dispose() {
+    _firstCheckInForm
+      ?..removeListener(notifyListeners)
+      ..dispose();
     pageController.dispose();
     super.dispose();
   }

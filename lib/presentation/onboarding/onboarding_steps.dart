@@ -23,10 +23,10 @@ import 'package:weeksalive/presentation/onboarding/steps/step_19_one_year_but.da
 import 'package:weeksalive/presentation/onboarding/steps/step_20_weeks_that_stay.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_21_weeks_disappear.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_22_daily_habit.dart';
-import 'package:weeksalive/presentation/onboarding/steps/step_23_one_minute.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_24_notification_time.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_25_weekly_intent.dart';
-import 'package:weeksalive/presentation/onboarding/steps/step_26_grid_alive.dart';
+import 'package:weeksalive/presentation/onboarding/steps/step_25b_first_check_in.dart';
+import 'package:weeksalive/presentation/onboarding/steps/step_26_first_dot.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_27_widget.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_28_rating.dart';
 import 'package:weeksalive/presentation/onboarding/steps/step_29_attribution.dart';
@@ -59,10 +59,10 @@ const List<OnboardingStep> kOnboardingSteps = <OnboardingStep>[
   Step20WeeksThatStay(),
   Step21WeeksDisappear(),
   Step22DailyHabit(),
-  Step23OneMinute(),
   Step24NotificationTime(),
   Step25WeeklyIntent(),
-  Step26GridAlive(),
+  Step25bFirstCheckIn(),
+  Step26FirstDot(),
   Step27Widget(),
   Step28Rating(),
   Step29Attribution(),

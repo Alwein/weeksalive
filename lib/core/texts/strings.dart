@@ -74,6 +74,8 @@ class Strings {
       tr('leave_a_trace_section_title');
   static String get leaveATraceSectionSubtitle =>
       tr('leave_a_trace_section_subtitle');
+  static String get leaveATraceSectionSubtitleTextOnly =>
+      tr('leave_a_trace_section_subtitle_text_only');
   static String get leaveATraceSectionTextHint =>
       tr('leave_a_trace_section_text_hint');
   static String get leaveATraceSectionAddPhoto =>
@@ -215,11 +217,20 @@ class Strings {
   static String get onboarding17Title2 => tr('onboarding_17_title_2');
   static String get onboarding17Subtitle => tr('onboarding_17_subtitle');
 
-  static String get onboarding18Title => tr('onboarding_18_title');
-  static String get onboarding18Subtitle => tr('onboarding_18_subtitle');
+  static String get onboardingFirstCheckInTitle => tr('onboarding_first_check_in_title');
+  static String get onboardingFirstCheckInSubtitleToday => tr('onboarding_first_check_in_subtitle_today');
+  static String get onboardingFirstCheckInSubtitleYesterday => tr('onboarding_first_check_in_subtitle_yesterday');
+  static String get onboardingFirstCheckInLater => tr('onboarding_first_check_in_later');
 
-  static String get onboarding19Title => tr('onboarding_19_title');
-  static String get onboarding19Subtitle => tr('onboarding_19_subtitle');
+  static String get onboardingFirstDotTitle => tr('onboarding_first_dot_title');
+  static String get onboardingFirstDotTitleWaiting => tr('onboarding_first_dot_title_waiting');
+  static String get onboardingFirstDotSubtitle => tr('onboarding_first_dot_subtitle');
+  static String get onboardingFirstDotYesterday => tr('onboarding_first_dot_yesterday');
+  static String get onboardingFirstDotToday => tr('onboarding_first_dot_today');
+  static String onboardingFirstDotTodayAt(String time) =>
+      tr('onboarding_first_dot_today_at', namedArgs: {'time': time});
+  static String onboardingFirstDotTomorrowAt(String time) =>
+      tr('onboarding_first_dot_tomorrow_at', namedArgs: {'time': time});
 
   static String get onboarding20Title => tr('onboarding_20_title');
   static String get onboarding20Subtitle => tr('onboarding_20_subtitle');
@@ -261,8 +272,6 @@ class Strings {
       tr('onboarding_weekly_intent_title');
   static String get onboardingWeeklyIntentSubtitle =>
       tr('onboarding_weekly_intent_subtitle');
-  static String get onboardingWeeklyIntentFooter =>
-      tr('onboarding_weekly_intent_footer');
 
   static List<String> get weekdayFullNames => [
     tr('weekday_monday'),
@@ -309,6 +318,7 @@ class Strings {
     'onboarding_24_today_description',
     namedArgs: {'preferred_time': preferedTime},
   );
+  static String get onboarding24TodayDoneDescription => tr('onboarding_24_today_done_description');
   static String get onboarding24ThisWeekSection =>
       tr('onboarding_24_this_week_section');
   static String onboarding24ThisWeekDescription(List<String> intentions) {
@@ -418,6 +428,7 @@ class Strings {
   static String paywallPlanPriceOnce(String price) =>
       tr('paywall_plan_price_once', namedArgs: {'price': price});
   static String get paywallPlansUnavailable => tr('paywall_plans_unavailable');
+  static String get paywallRetry => tr('paywall_retry');
 
   // theme
   static String get themePickerTitle => tr('theme_picker_title');
@@ -451,9 +462,12 @@ class Strings {
 
   // day form
   static String get feelingSectionQuestion => tr('feeling_section_question');
+  static String get feelingSectionQuestionYesterday => tr('feeling_section_question_yesterday');
   static String get meaningSectionQuestion => tr('meaning_section_question');
+  static String get meaningSectionQuestionYesterday => tr('meaning_section_question_yesterday');
   static String get newExperienceSectionQuestion =>
       tr('new_experience_section_question');
+  static String get newExperienceSectionQuestionYesterday => tr('new_experience_section_question_yesterday');
   static String get livingIntentionsSectionQuestion =>
       tr('living_intentions_section_question');
   static String get livingIntentionsSectionValueNone =>

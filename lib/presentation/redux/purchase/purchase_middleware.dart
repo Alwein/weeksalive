@@ -17,9 +17,28 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
   final PurchaseRepository purchaseRepository;
   final TikTokEventsRepository tikTokEventsRepository;
 
+  /// How long the offerings may take before they count as failed. Where
+  /// RevenueCat is hard to reach (mainland China) a request can hang for a
+  /// minute, and the paywall would sit on its skeleton instead of offering a
+  /// retry. A late answer is not lost: RevenueCat caches it for the next call.
+  final Duration offeringsTimeout;
+
+  /// Pauses between background attempts after the launch fetch failed, so the
+  /// offerings are there by the time onboarding reaches its paywall.
+  final List<Duration> offeringsRetryDelays;
+
+  static const defaultOfferingsRetryDelays = [
+    Duration(seconds: 5),
+    Duration(seconds: 20),
+    Duration(seconds: 60),
+    Duration(seconds: 120),
+  ];
+
   PurchaseMiddleware({
     required this.purchaseRepository,
     required this.tikTokEventsRepository,
+    this.offeringsTimeout = const Duration(seconds: 20),
+    this.offeringsRetryDelays = defaultOfferingsRetryDelays,
   });
 
   @override
@@ -27,7 +46,8 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
     next(action);
 
     if (action is BootstrapAction) {
-      await _loadOfferingAndStatus(store);
+      final loaded = await _loadOfferingAndStatus(store);
+      if (!loaded) await _retryOfferingsInBackground(store);
       return;
     }
 
@@ -49,7 +69,8 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
 
   /// Offerings and entitlement are fetched together but fail independently: a
   /// subscriber must not lose Pro because the offerings could not be loaded.
-  Future<void> _loadOfferingAndStatus(Store<AppState> store) async {
+  /// Returns whether the offerings loaded.
+  Future<bool> _loadOfferingAndStatus(Store<AppState> store) async {
     final (offerings, customerInfo) = await (
       _fetchOfferings(),
       _fetchCustomerInfo(),
@@ -64,11 +85,32 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
         PurchaseSucceededAction(isPro: purchaseRepository.isPro(customerInfo)),
       );
     }
+    return offerings != null;
+  }
+
+  /// Retries a failed launch fetch without going through
+  /// [FetchOfferingAction], whose loading state would disable an open paywall.
+  /// Stops as soon as offerings are in the state, whoever loaded them.
+  Future<void> _retryOfferingsInBackground(Store<AppState> store) async {
+    for (final delay in offeringsRetryDelays) {
+      await Future<void>.delayed(delay);
+      if (store.state.purchaseState.offerings != PurchaseOfferings.none) return;
+      final offerings = await _fetchOfferings();
+      if (offerings == null) continue;
+      try {
+        store.dispatch(OfferingRefreshedAction(offerings));
+      } catch (_) {
+        // Store torn down (e.g. in tests) during the async gap.
+      }
+      return;
+    }
   }
 
   Future<PurchaseOfferings?> _fetchOfferings() async {
     try {
-      return await purchaseRepository.fetchOfferings();
+      return await purchaseRepository.fetchOfferings().timeout(
+        offeringsTimeout,
+      );
     } catch (e, st) {
       log.e(
         'PurchaseMiddleware: failed to load offerings',

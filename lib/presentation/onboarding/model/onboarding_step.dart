@@ -15,6 +15,10 @@ abstract class OnboardingStep {
 
   String primaryLabel(BuildContext context);
 
+  /// Label of a discreet action under the primary button, such as skipping the
+  /// step. None when null. Without an [onSecondary], it moves to the next step.
+  String? secondaryLabel(BuildContext context) => null;
+
   bool canContinue(OnboardingFormController controller) => true;
 
   Future<void> Function(BuildContext context, OnboardingFormController controller)? get onPrimary => null;

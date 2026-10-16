@@ -25,6 +25,14 @@ class OfferingLoadFailedAction {
   const OfferingLoadFailedAction();
 }
 
+/// Offerings fetched by a background retry rather than a user-facing load.
+/// They replace the offerings without ending whatever is in flight: a purchase
+/// still loading must stay loading.
+class OfferingRefreshedAction {
+  final PurchaseOfferings offerings;
+  const OfferingRefreshedAction(this.offerings);
+}
+
 class PurchaseSucceededAction {
   final bool isPro;
 

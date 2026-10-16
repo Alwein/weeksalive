@@ -22,6 +22,22 @@ PurchaseState purchaseReducer(PurchaseState state, dynamic action) {
     );
   }
 
+  if (action is OfferingRefreshedAction) {
+    return switch (state) {
+      PurchaseStateInitial() => state,
+      PurchaseStateLoading() => PurchaseState.loading(offerings: action.offerings),
+      PurchaseStateSuccess(:final isPro) => PurchaseState.success(
+        offerings: action.offerings,
+        isPro: isPro,
+      ),
+      PurchaseStateError(:final message, :final isPro) => PurchaseState.error(
+        message: message,
+        offerings: action.offerings,
+        isPro: isPro,
+      ),
+    };
+  }
+
   if (action is PurchaseSucceededAction) {
     return PurchaseState.success(
       offerings: state.offerings,

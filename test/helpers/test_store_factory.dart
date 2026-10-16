@@ -55,6 +55,9 @@ class TestStoreFactory {
   FakeReviewPromptStore reviewPromptStore = FakeReviewPromptStore();
   BackupRepository backupRepository = MockBackupRepository();
 
+  /// No background retries: they would outlive the test that triggered them.
+  List<Duration> offeringsRetryDelays = const [];
+
   Store<AppState> initializeReduxStore(AppState initialState) {
     return StoreFactory(
       remoteConfigRepository: remoteConfigRepository,
@@ -79,6 +82,7 @@ class TestStoreFactory {
       installRepository: installRepository,
       reviewPromptStore: reviewPromptStore,
       backupRepository: backupRepository,
+      offeringsRetryDelays: offeringsRetryDelays,
     ).createStore(initialState: initialState);
   }
 }

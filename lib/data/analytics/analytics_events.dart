@@ -255,9 +255,11 @@ class AnalyticsEvent {
     String? meaningScore,
     bool? newExperience,
     int? secondsToComplete,
+    String? source,
   }) => AnalyticsEvent._(
     'check_in_completed',
     _props({
+      'source': source,
       'intentions_lived_count': intentionsLivedCount,
       'has_trace_text': hasTraceText,
       'photos_count': photosCount,

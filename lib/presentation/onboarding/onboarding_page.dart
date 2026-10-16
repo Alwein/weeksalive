@@ -98,6 +98,18 @@ class _OnboardingPageState extends State<OnboardingPage> {
     await _controller.goNext();
   }
 
+  /// A secondary action leaves the step without completing it, so it reports
+  /// no step completion: the step's own analytics say what happened.
+  Future<void> _handleSecondary(OnboardingStep step) async {
+    _dismissKeyboard();
+    final override = step.onSecondary;
+    if (override != null) {
+      await override(context, _controller);
+      return;
+    }
+    await _controller.goNext();
+  }
+
   void _submit() {
     final user = _controller.buildUser(
       id: const Uuid().v4(),
@@ -169,6 +181,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         SensorialFeedback.navigationChanged();
                         _handlePrimary(step);
                       },
+                      onSecondary: () {
+                        SensorialFeedback.navigationChanged();
+                        _handleSecondary(step);
+                      },
                     ),
                   ],
                 ),
@@ -234,15 +250,18 @@ class _Footer extends StatelessWidget {
     required this.step,
     required this.controller,
     required this.onPrimary,
+    required this.onSecondary,
   });
 
   final OnboardingStep step;
   final OnboardingFormController controller;
   final VoidCallback onPrimary;
+  final VoidCallback onSecondary;
 
   @override
   Widget build(BuildContext context) {
     final canContinue = step.canContinue(controller);
+    final secondaryLabel = step.secondaryLabel(context);
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -261,6 +280,14 @@ class _Footer extends StatelessWidget {
               onPressed: canContinue ? onPrimary : null,
             ),
           ),
+          if (secondaryLabel != null)
+            TextButton(
+              onPressed: onSecondary,
+              child: Texts.primaryRegularMedium(
+                secondaryLabel,
+                color: AppColors.contentSoft(context),
+              ),
+            ),
           if (controller.isFirst) const _RestoreBackupButton(),
         ],
       ),

@@ -469,6 +469,7 @@ void main() {
       );
 
       final properties = analytics.propertiesOf('check_in_completed')!;
+      expect(properties['source'], 'today_button');
       expect(properties['intentions_lived_count'], 2);
       expect(properties['has_trace_text'], isTrue);
       expect(properties['photos_count'], 1);

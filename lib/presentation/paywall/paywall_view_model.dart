@@ -73,6 +73,13 @@ abstract class PaywallViewModel with _$PaywallViewModel {
 
   bool get hasAlternatePlan => alternatePlan?.annualPackage != null;
 
+  /// The onboarding paywall has no trial to sell and nothing on the way, so it
+  /// offers a retry rather than a button that cannot work.
+  bool get isTrialUnavailable => primaryPlan?.annualPackage == null && !isLoading;
+
+  /// Same as [isTrialUnavailable], for the in-app paywall's plans.
+  bool get arePlansUnavailable => plans.isEmpty && !isLoading;
+
   factory PaywallViewModel.create(Store<AppState> store) {
     final ps = store.state.purchaseState;
 

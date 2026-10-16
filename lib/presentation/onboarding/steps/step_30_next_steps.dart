@@ -6,6 +6,7 @@ import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
+import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/domain/weekly_intent/weekly_intent.dart';
 import 'package:weeksalive/presentation/onboarding/model/onboarding_step.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_form_controller.dart';
@@ -140,12 +141,16 @@ class _TodaySection extends StatelessWidget {
     return AnimatedBuilder(
       animation: controller,
       builder: (context, _) {
+        final checkIn = controller.firstCheckIn;
+        final checkedInToday = checkIn != null && checkIn.date == normalizeDay(DateTime.now());
         return _Section(
           index: "01",
           title: Strings.onboarding24TodaySection,
-          description: Strings.onboarding24TodayDescription(
-            _preferredNotificationTime(context, controller),
-          ),
+          description: checkedInToday
+              ? Strings.onboarding24TodayDoneDescription
+              : Strings.onboarding24TodayDescription(
+                  _preferredNotificationTime(context, controller),
+                ),
         );
       },
     );
@@ -197,11 +202,7 @@ class _NextWeek extends StatelessWidget {
 }
 
 String _preferredNotificationTime(BuildContext context, OnboardingFormController controller) {
-  final times = controller.notificationTimes;
-  final time = times.isNotEmpty
-      ? times.first
-      : (controller.slot1.enabled ? controller.slot1.time : controller.slot2.time);
-  return TimeUtils.formatTime(context, time);
+  return TimeUtils.formatTime(context, controller.preferredReminderTime);
 }
 
 List<String> _selectedIntentLabels(OnboardingFormController controller, List<WeeklyIntent> intents) {

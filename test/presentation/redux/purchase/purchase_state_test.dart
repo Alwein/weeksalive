@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -9,6 +11,7 @@ import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_actions.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_middleware.dart';
+import 'package:weeksalive/presentation/redux/purchase/purchase_reducer.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 import 'package:weeksalive/data/tiktok_events/tiktok_events_repository.dart';
 
@@ -117,6 +120,7 @@ void main() {
         PurchaseMiddleware(
           purchaseRepository: purchaseRepo,
           tikTokEventsRepository: TikTokEventsRepository(),
+          offeringsRetryDelays: const [],
         ).call,
       ],
     );
@@ -300,6 +304,111 @@ void main() {
               .where((s) => s.offering?.metadata['trial_days'], 30),
         ),
       ]);
+    });
+  });
+
+  group('offerings recovery', () {
+    late MockPurchaseRepository purchaseRepo;
+
+    setUp(() {
+      purchaseRepo = MockPurchaseRepository();
+      when(
+        () => purchaseRepo.getCustomerInfo(),
+      ).thenAnswer((_) async => customerInfoFixture());
+      when(() => purchaseRepo.isPro(any())).thenReturn(false);
+    });
+
+    Store<AppState> recoveryStore({
+      AppState? initialState,
+      Duration offeringsTimeout = const Duration(seconds: 20),
+      List<Duration> offeringsRetryDelays = const [Duration.zero],
+    }) => Store<AppState>(
+      appReducer,
+      initialState: initialState ?? initialAppState(),
+      middleware: [
+        PurchaseMiddleware(
+          purchaseRepository: purchaseRepo,
+          tikTokEventsRepository: TikTokEventsRepository(),
+          offeringsTimeout: offeringsTimeout,
+          offeringsRetryDelays: offeringsRetryDelays,
+        ).call,
+      ],
+    );
+
+    test('retries in the background when the launch fetch fails', () async {
+      // Where RevenueCat is hard to reach, the launch fetch fails and nothing
+      // tried again before onboarding reached its paywall.
+      var attempts = 0;
+      when(() => purchaseRepo.fetchOfferings()).thenAnswer((_) async {
+        attempts++;
+        if (attempts == 1) throw Exception('network error');
+        return PurchaseOfferings(current: offeringFixture(id: 'trial_14d'));
+      });
+
+      final store = recoveryStore();
+      await store.dispatch(BootstrapAction());
+      await pumpEventQueue();
+
+      expect(attempts, 2);
+      expect(store.state.purchaseState, isA<PurchaseStateSuccess>());
+      expect(store.state.purchaseState.offering?.identifier, 'trial_14d');
+    });
+
+    test('does not retry when the launch fetch succeeds', () async {
+      when(() => purchaseRepo.fetchOfferings()).thenAnswer(
+        (_) async => PurchaseOfferings(current: offeringFixture()),
+      );
+
+      final store = recoveryStore();
+      await store.dispatch(BootstrapAction());
+      await pumpEventQueue();
+
+      verify(() => purchaseRepo.fetchOfferings()).called(1);
+    });
+
+    test('gives up a hung fetch so the paywall can offer a retry', () async {
+      when(
+        () => purchaseRepo.fetchOfferings(),
+      ).thenAnswer((_) => Completer<PurchaseOfferings>().future);
+
+      final store = recoveryStore(
+        offeringsTimeout: const Duration(milliseconds: 10),
+        offeringsRetryDelays: const [],
+      );
+      await store.dispatch(const FetchOfferingAction());
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+
+      expect(store.state.purchaseState, isA<PurchaseStateSuccess>());
+      expect(store.state.purchaseState.offerings, PurchaseOfferings.none);
+    });
+
+    test('a background refresh leaves a purchase in flight loading', () {
+      final refreshed = PurchaseOfferings(plans: plansOfferingFixture());
+
+      final state = purchaseReducer(
+        const PurchaseState.loading(),
+        OfferingRefreshedAction(refreshed),
+      );
+
+      expect(state, isA<PurchaseStateLoading>());
+      expect(state.offerings, refreshed);
+    });
+
+    test('a background refresh keeps the entitlement and the error', () {
+      final refreshed = PurchaseOfferings(plans: plansOfferingFixture());
+
+      final state = purchaseReducer(
+        const PurchaseState.error(message: 'declined', isPro: true),
+        OfferingRefreshedAction(refreshed),
+      );
+
+      expect(
+        state,
+        isA<PurchaseStateError>()
+            .having((s) => s.message, 'message', 'declined')
+            .having((s) => s.isPro, 'isPro', isTrue),
+      );
+      expect(state.offerings, refreshed);
     });
   });
 

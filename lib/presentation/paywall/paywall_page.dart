@@ -91,10 +91,13 @@ class PaywallPage extends StatelessWidget {
           plans: vm.plans,
           hasAlternatePlan: vm.hasAlternatePlan,
           isLoading: vm.isLoading,
+          isTrialUnavailable: vm.isTrialUnavailable,
+          arePlansUnavailable: vm.arePlansUnavailable,
           errorMessage: vm.errorMessage,
           onPurchase: (package) =>
               store.dispatch(PurchasePackageAction(package)),
           onRestore: () => store.dispatch(const RestorePurchasesAction()),
+          onRetry: () => store.dispatch(const FetchOfferingAction()),
           onDismiss: () => Navigator.of(context).pop(false),
           isPro: vm.isPro,
         );
@@ -111,10 +114,13 @@ class _PaywallView extends StatefulWidget {
     required this.plans,
     required this.hasAlternatePlan,
     required this.isLoading,
+    required this.isTrialUnavailable,
+    required this.arePlansUnavailable,
     required this.isPro,
     required this.errorMessage,
     required this.onPurchase,
     required this.onRestore,
+    required this.onRetry,
     required this.onDismiss,
   });
 
@@ -124,10 +130,13 @@ class _PaywallView extends StatefulWidget {
   final List<PaywallPlanOption> plans;
   final bool hasAlternatePlan;
   final bool isLoading;
+  final bool isTrialUnavailable;
+  final bool arePlansUnavailable;
   final bool isPro;
   final String? errorMessage;
   final ValueChanged<Package> onPurchase;
   final VoidCallback onRestore;
+  final VoidCallback onRetry;
   final VoidCallback onDismiss;
 
   @override
@@ -359,10 +368,11 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
                             showPlans
                                 ? _PlansFooter(
                                     errorMessage: widget.errorMessage,
-                                    plansUnavailable: widget.plans.isEmpty && !widget.isLoading,
+                                    plansUnavailable: widget.arePlansUnavailable,
                                     isLoading: widget.isLoading,
                                     onContinue: selectedPlan != null ? () => _purchase(selectedPlan.package) : null,
                                     onRestore: _restore,
+                                    onRetry: widget.onRetry,
                                   )
                                 : _FooterSection(
                                     errorMessage: widget.errorMessage,
@@ -370,12 +380,14 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
                                     pricePerWeek: primaryPlan?.pricePerWeek,
                                     trialWeeks: primaryPlan?.trialWeeks,
                                     isLoading: widget.isLoading,
+                                    trialUnavailable: widget.isTrialUnavailable,
                                     onStartTrial: primaryPlan?.annualPackage != null
                                         ? () => _purchase(
                                             primaryPlan!.annualPackage!,
                                           )
                                         : null,
                                     onRestore: _restore,
+                                    onRetry: widget.onRetry,
                                     onDismiss: widget.onDismiss,
                                   ),
                             Positioned(
@@ -572,6 +584,7 @@ class _PlansOffer extends StatelessWidget {
 class _PlansFooter extends StatelessWidget {
   const _PlansFooter({
     required this.onRestore,
+    required this.onRetry,
     required this.errorMessage,
     required this.plansUnavailable,
     required this.isLoading,
@@ -579,6 +592,7 @@ class _PlansFooter extends StatelessWidget {
   });
 
   final VoidCallback onRestore;
+  final VoidCallback onRetry;
   final String? errorMessage;
   final bool plansUnavailable;
   final bool isLoading;
@@ -609,14 +623,17 @@ class _PlansFooter extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                SizedBox(
-                  width: double.infinity,
-                  child: PrimaryButton.animated(
-                    text: Strings.continueString,
-                    onPressed: onContinue != null && !isLoading ? onContinue : null,
-                    displayState: isLoading ? DisplayState.loading : DisplayState.success,
+                if (plansUnavailable)
+                  _RetryButton(onTap: onRetry)
+                else
+                  SizedBox(
+                    width: double.infinity,
+                    child: PrimaryButton.animated(
+                      text: Strings.continueString,
+                      onPressed: onContinue != null && !isLoading ? onContinue : null,
+                      displayState: isLoading ? DisplayState.loading : DisplayState.success,
+                    ),
                   ),
-                ),
                 const SizedBox(height: Margins.spacingBase),
                 _Links(onRestore: onRestore),
               ],
@@ -632,26 +649,31 @@ class _PlansFooter extends StatelessWidget {
 class _FooterSection extends StatelessWidget {
   const _FooterSection({
     required this.onRestore,
+    required this.onRetry,
     required this.onDismiss,
     required this.errorMessage,
     required this.pricePerYear,
     required this.pricePerWeek,
     required this.trialWeeks,
     required this.isLoading,
+    required this.trialUnavailable,
     required this.onStartTrial,
   });
 
   final VoidCallback onRestore;
+  final VoidCallback onRetry;
   final VoidCallback onDismiss;
   final String? errorMessage;
   final String? pricePerYear;
   final String? pricePerWeek;
   final int? trialWeeks;
   final bool isLoading;
+  final bool trialUnavailable;
   final VoidCallback? onStartTrial;
 
   @override
   Widget build(BuildContext context) {
+    final message = errorMessage ?? (trialUnavailable ? Strings.paywallPlansUnavailable : null);
     return Container(
       decoration: BoxDecoration(color: AppColors.bg(context)),
       child: Column(
@@ -663,11 +685,11 @@ class _FooterSection extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: Margins.spacingM),
             child: Column(
               children: [
-                if (errorMessage != null)
+                if (message != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: Margins.spacingBase),
                     child: Text(
-                      errorMessage!,
+                      message,
                       style: TextStyles.primarySmallBold.copyWith(
                         color: AppColors.redWarning(context),
                       ),
@@ -683,11 +705,14 @@ class _FooterSection extends StatelessWidget {
                 else if (isLoading)
                   const _PriceBlockSkeleton(),
                 const SizedBox(height: Margins.spacingS),
-                _CtaButton(
-                  trialWeeks: trialWeeks,
-                  isLoading: isLoading,
-                  onTap: onStartTrial,
-                ),
+                if (trialUnavailable)
+                  _RetryButton(onTap: onRetry)
+                else
+                  _CtaButton(
+                    trialWeeks: trialWeeks,
+                    isLoading: isLoading,
+                    onTap: onStartTrial,
+                  ),
                 const SizedBox(height: Margins.spacingBase),
                 _Links(onRestore: onRestore),
               ],
@@ -726,9 +751,15 @@ class _TimelineOffer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: Margins.spacingHuge),
-          Texts.xlBold(Strings.paywallTitle(trialWeeks?.toString() ?? "-")),
-          const SizedBox(height: Margins.spacingL),
-          _TrialTimeline(trialWeeks: trialWeeks, trialEndDate: trialEndDate),
+          // Until the trial length is known, a title and a timeline built on it
+          // would read "free for - weeks" and "Week x".
+          Texts.xlBold(
+            trialWeeks != null ? Strings.paywallTitle(trialWeeks.toString()) : Strings.paywallPlansTitle,
+          ),
+          if (trialWeeks != null) ...[
+            const SizedBox(height: Margins.spacingL),
+            _TrialTimeline(trialWeeks: trialWeeks, trialEndDate: trialEndDate),
+          ],
           const SizedBox(height: Margins.spacingXHuge),
           const _BenefitsSection(),
           if (alternateTrialDays != null && onStartAlternateTrial != null) ...[
@@ -1189,6 +1220,26 @@ class _CtaButton extends StatelessWidget {
         text: trialWeeks != null ? Strings.paywallCtaWithWeeks(trialWeeks!) : Strings.paywallCtaWithTrial,
         onPressed: enabled ? onTap : null,
         displayState: isLoading ? DisplayState.loading : DisplayState.success,
+      ),
+    );
+  }
+}
+
+/// Shown in place of the purchase button when there is nothing to sell, which
+/// is where a failed load used to leave a button that could never enable.
+class _RetryButton extends StatelessWidget {
+  const _RetryButton({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: PrimaryButton.animated(
+        text: Strings.paywallRetry,
+        onPressed: onTap,
+        displayState: DisplayState.success,
       ),
     );
   }

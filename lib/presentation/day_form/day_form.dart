@@ -14,6 +14,7 @@ import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/domain/day/day.dart';
+import 'package:weeksalive/domain/day/day_entry.dart';
 import 'package:weeksalive/domain/weekly_intent/weekly_intent.dart';
 import 'package:weeksalive/presentation/day_form/day_form_controller.dart';
 import 'package:weeksalive/presentation/day_form/day_form_sheet.dart';
@@ -36,7 +37,8 @@ class DayForm extends StatefulWidget {
 
   /// [source] is where the check-in was started from, for analytics:
   /// `today_button`, `notification`, `notification_followup`,
-  /// `notification_streak_save`, `calendar` or `resume`.
+  /// `notification_streak_save`, `calendar` or `resume`. The onboarding
+  /// check-in reports `onboarding` without going through this sheet.
   static Future<DayFormResult?> showBottomSheet(
     BuildContext context,
     DateTime date, {
@@ -90,12 +92,26 @@ class DayFormContent extends StatefulWidget {
     required this.date,
     required this.controller,
     required this.onSave,
+    this.showIntentions = true,
+    this.allowPhotos = true,
+    this.showSaveButton = true,
   });
 
   final DayFormViewModel viewModel;
   final DateTime date;
   final DayFormController controller;
   final VoidCallback onSave;
+
+  /// The onboarding check-in hides the intentions question: they were picked
+  /// a moment earlier, so asking whether they were lived means nothing yet.
+  final bool showIntentions;
+
+  /// Photos are Pro, and onboarding must not open a paywall of its own before
+  /// it reaches its last step.
+  final bool allowPhotos;
+
+  /// Off when the host screen provides the save button, as onboarding does.
+  final bool showSaveButton;
 
   @override
   State<DayFormContent> createState() => DayFormContentState();
@@ -112,6 +128,11 @@ class DayFormContentState extends State<DayFormContent> {
   _DaySectionId _expanded = _DaySectionId.feeling;
 
   DayFormController get _controller => widget.controller;
+
+  /// Yesterday is asked about as yesterday: the onboarding check-in and the
+  /// streak grace window both open the form on it.
+  bool get _isYesterday =>
+      normalizeDay(widget.date) == normalizeDay(DateTime.now()).subtract(const Duration(days: 1));
 
   double get _circleSize {
     final feelingContribution = _controller.averageFeeling != null
@@ -157,7 +178,8 @@ class DayFormContentState extends State<DayFormContent> {
       _DaySectionId.feeling => _DaySectionId.meaning,
       _DaySectionId.meaning => _DaySectionId.newExperience,
       _DaySectionId.newExperience => _DaySectionId.newExperience,
-      _DaySectionId.intention => _DaySectionId.intention,
+      _DaySectionId.intention =>
+        widget.showIntentions ? _DaySectionId.intention : _DaySectionId.leaveATrace,
       _DaySectionId.leaveATrace => _DaySectionId.leaveATrace,
     };
     setState(() => _expanded = next);
@@ -183,6 +205,7 @@ class DayFormContentState extends State<DayFormContent> {
             onTap: () => _toggleExpanded(_DaySectionId.feeling),
             summary: _controller.averageFeeling != null ? FeelingSummary(value: _controller.averageFeeling!) : null,
             child: _FeelingSelector(
+              question: _isYesterday ? Strings.feelingSectionQuestionYesterday : Strings.feelingSectionQuestion,
               value: _controller.averageFeeling,
               onChanged: (v) {
                 _controller.setAverageFeeling(v);
@@ -199,6 +222,7 @@ class DayFormContentState extends State<DayFormContent> {
             onTap: () => _toggleExpanded(_DaySectionId.meaning),
             summary: _controller.meaningScore != null ? MeaningSummary(value: _controller.meaningScore!) : null,
             child: _MeaningSelector(
+              question: _isYesterday ? Strings.meaningSectionQuestionYesterday : Strings.meaningSectionQuestion,
               value: _controller.meaningScore,
               onChanged: (v) {
                 _controller.setMeaningScore(v);
@@ -217,6 +241,9 @@ class DayFormContentState extends State<DayFormContent> {
                 ? NewExperienceSummary(value: _controller.hasNewExperience!)
                 : null,
             child: _NewExperienceSelector(
+              question: _isYesterday
+                  ? Strings.newExperienceSectionQuestionYesterday
+                  : Strings.newExperienceSectionQuestion,
               value: _controller.hasNewExperience,
               onChanged: (v) {
                 _controller.setHasNewExperience(v);
@@ -225,26 +252,27 @@ class DayFormContentState extends State<DayFormContent> {
             ),
           ),
 
-          _DaySection(
-            index: '04',
-            title: Strings.livingIntentionsSectionTitle,
-            isExpanded: _expanded == _DaySectionId.intention,
-            isAnswered: _controller.livingIntentions.isNotEmpty,
-            onTap: () => _toggleExpanded(_DaySectionId.intention),
-            summary: _controller.livingIntentions.isNotEmpty
-                ? LivingIntentionsSummary(selectedIds: _controller.livingIntentions)
-                : null,
-            child: _LivingIntentionsSelector(
-              value: _controller.livingIntentions,
-              onToggle: (id) {
-                _controller.toggleLivingIntention(id);
-              },
-              onAllSelected: () => _advanceFrom(_DaySectionId.leaveATrace),
+          if (widget.showIntentions)
+            _DaySection(
+              index: '04',
+              title: Strings.livingIntentionsSectionTitle,
+              isExpanded: _expanded == _DaySectionId.intention,
+              isAnswered: _controller.livingIntentions.isNotEmpty,
+              onTap: () => _toggleExpanded(_DaySectionId.intention),
+              summary: _controller.livingIntentions.isNotEmpty
+                  ? LivingIntentionsSummary(selectedIds: _controller.livingIntentions)
+                  : null,
+              child: _LivingIntentionsSelector(
+                value: _controller.livingIntentions,
+                onToggle: (id) {
+                  _controller.toggleLivingIntention(id);
+                },
+                onAllSelected: () => _advanceFrom(_DaySectionId.leaveATrace),
+              ),
             ),
-          ),
 
           _DaySection(
-            index: '05',
+            index: widget.showIntentions ? '05' : '04',
             title: Strings.leaveATraceSectionTitle,
             isExpanded: _expanded == _DaySectionId.leaveATrace,
             isAnswered: _controller.leaveATrace.isAnswered,
@@ -252,21 +280,24 @@ class DayFormContentState extends State<DayFormContent> {
             summary: _controller.leaveATrace.isAnswered ? _LeaveATraceSummary(value: _controller.leaveATrace) : null,
             child: _LeaveATraceInput(
               value: _controller.leaveATrace,
+              allowPhotos: widget.allowPhotos,
               onChanged: (v) {
                 _controller.setLeaveATrace(v);
               },
             ),
           ),
-          const SizedBox(height: Margins.spacingBase),
-          PrimaryButton(
-            text: Strings.done,
-            onPressed: _controller.canSave
-                ? () {
-                    SensorialFeedback.navigationChanged();
-                    widget.onSave();
-                  }
-                : null,
-          ),
+          if (widget.showSaveButton) ...[
+            const SizedBox(height: Margins.spacingBase),
+            PrimaryButton(
+              text: Strings.done,
+              onPressed: _controller.canSave
+                  ? () {
+                      SensorialFeedback.navigationChanged();
+                      widget.onSave();
+                    }
+                  : null,
+            ),
+          ],
           const SizedBox(height: Margins.spacingM),
         ],
       ),
@@ -408,8 +439,9 @@ class _DaySection extends StatelessWidget {
 }
 
 class _FeelingSelector extends StatelessWidget {
-  const _FeelingSelector({required this.value, required this.onChanged});
+  const _FeelingSelector({required this.question, required this.value, required this.onChanged});
 
+  final String question;
   final AverageFeeling? value;
   final ValueChanged<AverageFeeling> onChanged;
 
@@ -419,7 +451,7 @@ class _FeelingSelector extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          Strings.feelingSectionQuestion,
+          question,
           style: TextStyles.primaryRegularMedium.copyWith(color: AppColors.contentSoft(context)),
         ),
         const SizedBox(height: Margins.spacingBase),
@@ -443,8 +475,9 @@ class _FeelingSelector extends StatelessWidget {
 }
 
 class _MeaningSelector extends StatelessWidget {
-  const _MeaningSelector({required this.value, required this.onChanged});
+  const _MeaningSelector({required this.question, required this.value, required this.onChanged});
 
+  final String question;
   final MeaningScore? value;
   final ValueChanged<MeaningScore> onChanged;
 
@@ -454,7 +487,7 @@ class _MeaningSelector extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          Strings.meaningSectionQuestion,
+          question,
           style: TextStyles.primaryRegularMedium.copyWith(color: AppColors.contentSoft(context)),
         ),
         const SizedBox(height: Margins.spacingBase),
@@ -478,8 +511,9 @@ class _MeaningSelector extends StatelessWidget {
 }
 
 class _NewExperienceSelector extends StatelessWidget {
-  const _NewExperienceSelector({required this.value, required this.onChanged});
+  const _NewExperienceSelector({required this.question, required this.value, required this.onChanged});
 
+  final String question;
   final bool? value;
   final ValueChanged<bool> onChanged;
 
@@ -489,7 +523,7 @@ class _NewExperienceSelector extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          Strings.newExperienceSectionQuestion,
+          question,
           style: TextStyles.primaryRegularMedium.copyWith(color: AppColors.contentSoft(context)),
         ),
         const SizedBox(height: Margins.spacingBase),
@@ -842,10 +876,15 @@ class _LeaveATraceSummary extends StatelessWidget {
 }
 
 class _LeaveATraceInput extends StatefulWidget {
-  const _LeaveATraceInput({required this.value, required this.onChanged});
+  const _LeaveATraceInput({
+    required this.value,
+    required this.onChanged,
+    this.allowPhotos = true,
+  });
 
   final LeaveATrace value;
   final ValueChanged<LeaveATrace> onChanged;
+  final bool allowPhotos;
 
   @override
   State<_LeaveATraceInput> createState() => _LeaveATraceInputState();
@@ -922,7 +961,7 @@ class _LeaveATraceInputState extends State<_LeaveATraceInput> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          Strings.leaveATraceSectionSubtitle,
+          widget.allowPhotos ? Strings.leaveATraceSectionSubtitle : Strings.leaveATraceSectionSubtitleTextOnly,
           style: TextStyles.primaryRegularMedium.copyWith(color: AppColors.contentSoft(context)),
         ),
         const SizedBox(height: Margins.spacingBase),
@@ -960,21 +999,23 @@ class _LeaveATraceInputState extends State<_LeaveATraceInput> {
                   ),
                 ),
               ),
-              const SizedBox(width: Margins.spacingS),
-              Container(
-                width: 1,
-                color: AppColors.strokeColor(context),
-              ),
-              const SizedBox(width: Margins.spacingS),
-              Expanded(
-                child: _ImageMosaic(
-                  images: images,
-                  canAddMore: canAddMore,
-                  onAdd: _pickImages,
-                  onReplace: _replaceImages,
-                  onRemove: _removeImage,
+              if (widget.allowPhotos) ...[
+                const SizedBox(width: Margins.spacingS),
+                Container(
+                  width: 1,
+                  color: AppColors.strokeColor(context),
                 ),
-              ),
+                const SizedBox(width: Margins.spacingS),
+                Expanded(
+                  child: _ImageMosaic(
+                    images: images,
+                    canAddMore: canAddMore,
+                    onAdd: _pickImages,
+                    onReplace: _replaceImages,
+                    onRemove: _removeImage,
+                  ),
+                ),
+              ],
             ],
           ),
         ),

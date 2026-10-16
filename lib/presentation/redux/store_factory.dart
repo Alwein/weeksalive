@@ -66,6 +66,7 @@ class StoreFactory {
   final InstallRepository installRepository;
   final ReviewPromptStore reviewPromptStore;
   final BackupRepository backupRepository;
+  final List<Duration> offeringsRetryDelays;
 
   StoreFactory({
     required this.remoteConfigRepository,
@@ -90,6 +91,7 @@ class StoreFactory {
     required this.installRepository,
     required this.reviewPromptStore,
     required this.backupRepository,
+    this.offeringsRetryDelays = PurchaseMiddleware.defaultOfferingsRetryDelays,
   }) : rewardUnlockService = rewardUnlockService ?? const RewardUnlockService(),
        homeWidgetService = homeWidgetService ?? HomeWidgetService();
 
@@ -107,6 +109,7 @@ class StoreFactory {
         PurchaseMiddleware(
           purchaseRepository: purchaseRepository,
           tikTokEventsRepository: tikTokEventsRepository,
+          offeringsRetryDelays: offeringsRetryDelays,
         ).call,
         AttributionMiddleware(
           tikTokEventsRepository: tikTokEventsRepository,

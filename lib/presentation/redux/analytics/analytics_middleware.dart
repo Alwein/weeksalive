@@ -469,6 +469,7 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
         secondsToComplete: startedAt == null
             ? null
             : _now().difference(startedAt).inSeconds,
+        source: _checkInSource,
       ),
     );
     _clearCheckIn();

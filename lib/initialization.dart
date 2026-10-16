@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -63,11 +65,18 @@ Future<AppDependencies> initializeApp() async {
   // Crashlytics: it is what will let server-side Events API calls (trial
   // conversion, churn) be attributed to the user the SDK already knows. It is
   // applied when the SDK starts, which on a first launch is after the ATT step.
-  await tikTokEventsRepository.initializeFromEnv(
-    dotenv,
-    isDebugMode: kDebugMode,
-    isFirstLaunch: isFirstLaunch,
-    externalId: installId,
+  //
+  // Not awaited: the SDK only answers once TikTok's servers have, and where
+  // they are blocked (mainland China) every launch sat on the splash screen
+  // until the request timed out. Events logged before it is up are dropped,
+  // as they are when it fails to start.
+  unawaited(
+    tikTokEventsRepository.initializeFromEnv(
+      dotenv,
+      isDebugMode: kDebugMode,
+      isFirstLaunch: isFirstLaunch,
+      externalId: installId,
+    ),
   );
 
   await AppPurchaseConfig.initializeFromEnv(dotenv, appUserId: installId);

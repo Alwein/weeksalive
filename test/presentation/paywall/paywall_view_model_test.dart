@@ -105,6 +105,45 @@ void main() {
     });
   });
 
+  group('PaywallViewModel availability', () {
+    PaywallViewModel build({
+      PaywallPlanData? primaryPlan,
+      List<PaywallPlanOption> plans = const [],
+      bool isLoading = false,
+    }) => PaywallViewModel(
+      primaryPlan: primaryPlan,
+      alternatePlan: null,
+      plans: plans,
+      isLoading: isLoading,
+      isPro: false,
+      errorMessage: null,
+    );
+
+    test('offers a retry once a load has ended with nothing to sell', () {
+      final vm = build();
+
+      expect(vm.isTrialUnavailable, isTrue);
+      expect(vm.arePlansUnavailable, isTrue);
+    });
+
+    test('keeps the loading state while the offerings are on their way', () {
+      final vm = build(isLoading: true);
+
+      expect(vm.isTrialUnavailable, isFalse);
+      expect(vm.arePlansUnavailable, isFalse);
+    });
+
+    test('sells what was loaded', () {
+      final vm = build(
+        primaryPlan: PaywallPlanData.fromOffering(offeringFixture()),
+        plans: PaywallViewModel.plansFromOffering(plansOfferingFixture()),
+      );
+
+      expect(vm.isTrialUnavailable, isFalse);
+      expect(vm.arePlansUnavailable, isFalse);
+    });
+  });
+
   group('PaywallViewModel.savingsPercent', () {
     test('rounds the discount versus a year of weekly payments', () {
       expect(
