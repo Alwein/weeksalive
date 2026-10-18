@@ -72,6 +72,7 @@ class _WidgetIllustrationState extends State<_WidgetIllustration> with SingleTic
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       Future.delayed(const Duration(milliseconds: 500), () {
+        if (!mounted) return;
         _controller.forward();
       });
     });

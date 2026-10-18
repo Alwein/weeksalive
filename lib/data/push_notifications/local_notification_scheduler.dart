@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/data/push_notifications/local_notification_client.dart';
 import 'package:weeksalive/data/push_notifications/local_notification_config.dart';
@@ -10,7 +11,8 @@ import 'package:weeksalive/domain/notifications/notification_slots.dart';
 import 'package:weeksalive/domain/notifications/nudge_notification_schedule.dart';
 
 class LocalNotificationScheduler {
-  LocalNotificationScheduler({required LocalNotificationClient client}) : _client = client;
+  LocalNotificationScheduler({required LocalNotificationClient client})
+    : _client = client;
 
   final LocalNotificationClient _client;
 
@@ -22,16 +24,21 @@ class LocalNotificationScheduler {
     bool isYesterdayGracePeriod = false,
   }) async {
     await _client.cancelAll();
-    await _scheduleDailyReminders(dailyTimes, hasTodayEntry: hasTodayEntry);
-    await _scheduleFollowUp(dailyTimes, hasTodayEntry: hasTodayEntry);
-    await _scheduleStreakSave(
-      hasTodayEntry: hasTodayEntry,
-      streakCount: streakCount,
-      isYesterdayGracePeriod: isYesterdayGracePeriod,
-      weeklySummary: weeklySummary,
-    );
-    if (weeklySummary != null) {
-      await _scheduleWeeklySummary(weeklySummary);
+    try {
+      await _scheduleDailyReminders(dailyTimes, hasTodayEntry: hasTodayEntry);
+      await _scheduleFollowUp(dailyTimes, hasTodayEntry: hasTodayEntry);
+      await _scheduleStreakSave(
+        hasTodayEntry: hasTodayEntry,
+        streakCount: streakCount,
+        isYesterdayGracePeriod: isYesterdayGracePeriod,
+        weeklySummary: weeklySummary,
+      );
+      if (weeklySummary != null) {
+        await _scheduleWeeklySummary(weeklySummary);
+      }
+    } on PlatformException catch (e) {
+      // iOS UNErrorDomain 2003: the user has not (or no longer) allowed notifications.
+      if (!e.code.contains('2003')) rethrow;
     }
   }
 
@@ -42,19 +49,31 @@ class LocalNotificationScheduler {
     final now = tz.TZDateTime.now(tz.local);
     for (var i = 0; i < dailyTimes.length; i++) {
       final time = dailyTimes[i];
-      final nextOccurrence = NotificationScheduleCalculator.nextDailyOccurrence(time.hour, time.minute, now: now);
+      final nextOccurrence = NotificationScheduleCalculator.nextDailyOccurrence(
+        time.hour,
+        time.minute,
+        now: now,
+      );
       final scheduledDate = _nextDailyReminderOccurrence(
         hour: time.hour,
         minute: time.minute,
         hasTodayEntry: hasTodayEntry,
         now: now,
       );
-      final isFollowUpSlot = dailyTimes.length > 1 && i == dailyTimes.length - 1;
-      final title = isFollowUpSlot ? Strings.dailyFollowupNotificationTitle : Strings.dailyNotificationTitle;
-      final body = isFollowUpSlot ? Strings.dailyFollowupNotificationBody : Strings.dailyNotificationBody;
-      final payload = isFollowUpSlot ? NotificationPayloads.dailyFollowup : NotificationPayloads.dailyReminder;
+      final isFollowUpSlot =
+          dailyTimes.length > 1 && i == dailyTimes.length - 1;
+      final title = isFollowUpSlot
+          ? Strings.dailyFollowupNotificationTitle
+          : Strings.dailyNotificationTitle;
+      final body = isFollowUpSlot
+          ? Strings.dailyFollowupNotificationBody
+          : Strings.dailyNotificationBody;
+      final payload = isFollowUpSlot
+          ? NotificationPayloads.dailyFollowup
+          : NotificationPayloads.dailyReminder;
 
-      final skipsToday = hasTodayEntry && _toLocalDateTime(nextOccurrence).day == now.day;
+      final skipsToday =
+          hasTodayEntry && _toLocalDateTime(nextOccurrence).day == now.day;
       if (skipsToday) {
         // A repeating trigger ignores the date on iOS (it matches hour/minute
         // only) and would still fire today, so schedule the next days one by one.
@@ -68,7 +87,9 @@ class LocalNotificationScheduler {
             title: title,
             body: body,
             payload: payload,
-            scheduledDate: _toTz(DateTime(day.year, day.month, day.day, time.hour, time.minute)),
+            scheduledDate: _toTz(
+              DateTime(day.year, day.month, day.day, time.hour, time.minute),
+            ),
           );
         }
         continue;
@@ -140,7 +161,11 @@ class LocalNotificationScheduler {
     required bool hasTodayEntry,
     required tz.TZDateTime now,
   }) {
-    final nextOccurrence = NotificationScheduleCalculator.nextDailyOccurrence(hour, minute, now: now);
+    final nextOccurrence = NotificationScheduleCalculator.nextDailyOccurrence(
+      hour,
+      minute,
+      now: now,
+    );
     final deferred = DailyReminderSchedule.deferWhenTodayLogged(
       scheduledDate: _toLocalDateTime(nextOccurrence),
       hasTodayEntry: hasTodayEntry,
@@ -152,10 +177,18 @@ class LocalNotificationScheduler {
   DateTime _toLocalDateTime(tz.TZDateTime value) =>
       DateTime(value.year, value.month, value.day, value.hour, value.minute);
 
-  tz.TZDateTime _toTz(DateTime value) =>
-      tz.TZDateTime(tz.local, value.year, value.month, value.day, value.hour, value.minute);
+  tz.TZDateTime _toTz(DateTime value) => tz.TZDateTime(
+    tz.local,
+    value.year,
+    value.month,
+    value.day,
+    value.hour,
+    value.minute,
+  );
 
-  Future<void> _scheduleWeeklySummary(WeeklySummarySchedule weeklySummary) async {
+  Future<void> _scheduleWeeklySummary(
+    WeeklySummarySchedule weeklySummary,
+  ) async {
     final time = weeklySummary.time;
     await _client.scheduleWeekly(
       id: LocalNotificationConfig.weeklyNotificationId,
