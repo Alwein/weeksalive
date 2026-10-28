@@ -94,8 +94,7 @@ class PaywallPage extends StatelessWidget {
           isTrialUnavailable: vm.isTrialUnavailable,
           arePlansUnavailable: vm.arePlansUnavailable,
           errorMessage: vm.errorMessage,
-          onPurchase: (package) =>
-              store.dispatch(PurchasePackageAction(package)),
+          onPurchase: (package) => store.dispatch(PurchasePackageAction(package)),
           onRestore: () => store.dispatch(const RestorePurchasesAction()),
           onRetry: () => store.dispatch(const FetchOfferingAction()),
           onDismiss: () => Navigator.of(context).pop(false),
@@ -310,9 +309,7 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
 
   @override
   Widget build(BuildContext context) {
-    final canPop =
-        _showSuccess ||
-        (widget.presentation.isDismissible && !_transactionInFlight);
+    final canPop = _showSuccess || (widget.presentation.isDismissible && !_transactionInFlight);
     final primaryPlan = widget.primaryPlan;
     final showPlans = widget.presentation == PaywallPresentation.inApp;
     final selectedPlan = _selection(widget.plans);
@@ -429,9 +426,7 @@ class _PaywallViewState extends State<_PaywallView> with TickerProviderStateMixi
                         top: Margins.spacingXs,
                         right: Margins.spacingS,
                         child: IconButton(
-                          onPressed: _transactionInFlight
-                              ? null
-                              : widget.onDismiss,
+                          onPressed: _transactionInFlight ? null : widget.onDismiss,
                           icon: Icon(
                             MingCuteIcons.mgc_close_line,
                             color: AppColors.contentSoft(context),
@@ -562,6 +557,8 @@ class _PlansOffer extends StatelessWidget {
             onSelect: onSelect,
           ),
           const SizedBox(height: Margins.spacingXHuge),
+          const _SocialProofCarousel(),
+          const SizedBox(height: Margins.spacingHuge),
           const _BenefitsSection(),
           const SizedBox(height: Margins.spacingL),
           const SizedBox(
@@ -760,19 +757,18 @@ class _TimelineOffer extends StatelessWidget {
             const SizedBox(height: Margins.spacingL),
             _TrialTimeline(trialWeeks: trialWeeks, trialEndDate: trialEndDate),
           ],
-          const SizedBox(height: Margins.spacingXHuge),
+          const SizedBox(height: Margins.spacingHuge),
+          const _SocialProofCarousel(),
+          const SizedBox(height: Margins.spacingHuge),
           const _BenefitsSection(),
           if (alternateTrialDays != null && onStartAlternateTrial != null) ...[
-            const SizedBox(height: Margins.spacingL),
+            const SizedBox(height: Margins.spacingHuge),
             _AlternateTrialButton(
               trialDays: alternateTrialDays!,
               isLoading: isLoading,
               onTap: onStartAlternateTrial!,
             ),
           ],
-          // TODO: Social proof hidden during first app store reveiw - set this back when we have more reviews
-          // const SizedBox(height: Margins.spacingL),
-          // const _SocialProofCarousel(),
           const SizedBox(height: Margins.spacingL),
           const SizedBox(
             height: 160,
@@ -851,9 +847,24 @@ class _SocialProofCarousel extends StatefulWidget {
   const _SocialProofCarousel();
 
   static final _reviews = [
-    Strings.paywallReview1,
-    Strings.paywallReview2,
-    Strings.paywallReview3,
+    (
+      author: 'Émilie A.',
+      avatar: 'assets/images/pp_0.webp',
+      title: Strings.paywallReview1Title,
+      quote: Strings.paywallReview1,
+    ),
+    (
+      author: 'Chloé R.',
+      avatar: 'assets/images/pp_1.webp',
+      title: Strings.paywallReview2Title,
+      quote: Strings.paywallReview2,
+    ),
+    (
+      author: 'Jean D.',
+      avatar: 'assets/images/pp_2.webp',
+      title: Strings.paywallReview3Title,
+      quote: Strings.paywallReview3,
+    ),
   ];
 
   @override
@@ -861,7 +872,7 @@ class _SocialProofCarousel extends StatefulWidget {
 }
 
 class _SocialProofCarouselState extends State<_SocialProofCarousel> {
-  static const _cardHeight = 132.0;
+  static const _cardHeight = 222.0;
 
   late final PageController _pageController;
   int _currentPage = 0;
@@ -894,7 +905,12 @@ class _SocialProofCarouselState extends State<_SocialProofCarousel> {
               final isLast = index == reviews.length - 1;
               return Padding(
                 padding: EdgeInsets.only(right: isLast ? 0 : Margins.spacingS),
-                child: _ReviewCard(quote: reviews[index]),
+                child: _ReviewCard(
+                  author: reviews[index].author,
+                  avatar: reviews[index].avatar,
+                  title: reviews[index].title,
+                  quote: reviews[index].quote,
+                ),
               );
             },
           ),
@@ -907,8 +923,18 @@ class _SocialProofCarouselState extends State<_SocialProofCarousel> {
 }
 
 class _ReviewCard extends StatelessWidget {
-  const _ReviewCard({required this.quote});
+  static const _avatarSize = 36.0;
 
+  const _ReviewCard({
+    required this.author,
+    required this.avatar,
+    required this.title,
+    required this.quote,
+  });
+
+  final String author;
+  final String avatar;
+  final String title;
   final String quote;
 
   @override
@@ -929,6 +955,13 @@ class _ReviewCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const _ReviewStars(),
+          const SizedBox(height: Margins.spacingBase),
+          Text(
+            title,
+            style: TextStyles.primaryBold.copyWith(
+              color: AppColors.content(context),
+            ),
+          ),
           const SizedBox(height: Margins.spacingS),
           Text(
             '"$quote"',
@@ -936,6 +969,41 @@ class _ReviewCard extends StatelessWidget {
               color: AppColors.content(context),
               height: 1.45,
             ),
+          ),
+          const SizedBox(height: Margins.spacingBase),
+          Divider(
+            color: AppColors.contentSoft(context),
+            height: Dimens.strokeWidthS,
+          ),
+          const SizedBox(height: Margins.spacingBase),
+          Row(
+            children: [
+              ClipOval(
+                child: Image.asset(
+                  avatar,
+                  width: _avatarSize,
+                  height: _avatarSize,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(width: Margins.spacingS),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      author,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyles.primaryRegular.copyWith(
+                        color: AppColors.content(context),
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),

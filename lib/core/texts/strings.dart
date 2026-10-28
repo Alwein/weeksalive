@@ -373,8 +373,11 @@ class Strings {
   static String get paywallBenefit3 => tr('paywall_benefit_3');
   static String get paywallBenefit4 => tr('paywall_benefit_4');
 
+  static String get paywallReview1Title => tr('paywall_review_1_title');
   static String get paywallReview1 => tr('paywall_review_1');
+  static String get paywallReview2Title => tr('paywall_review_2_title');
   static String get paywallReview2 => tr('paywall_review_2');
+  static String get paywallReview3Title => tr('paywall_review_3_title');
   static String get paywallReview3 => tr('paywall_review_3');
 
   static String paywallPriceSubtitle(int trialWeeks, String pricePerYear) => tr(
