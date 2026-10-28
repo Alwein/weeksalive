@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weeksalive/data/day/app_database.dart';
@@ -7,21 +8,32 @@ import 'package:weeksalive/domain/day/day.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
 
 class _FakeImageStorage implements ImageStorage {
+  final List<String> saved = [];
+  final List<String> deleted = [];
+
   @override
-  Future<String> save(String absolutePath) async => absolutePath.split('/').last;
+  Future<String> save(String absolutePath) async {
+    saved.add(absolutePath);
+    return absolutePath.split('/').last;
+  }
 
   @override
   Future<String> resolve(String fileName) async => '/tmp/$fileName';
+
+  @override
+  Future<void> delete(String fileName) async => deleted.add(fileName);
 }
 
 void main() {
   group('DayRepository', () {
     late AppDatabase database;
+    late _FakeImageStorage imageStorage;
     late DayRepository repository;
 
     setUp(() async {
       database = AppDatabase(NativeDatabase.memory());
-      repository = DayRepository(database: database, imageStorage: _FakeImageStorage());
+      imageStorage = _FakeImageStorage();
+      repository = DayRepository(database: database, imageStorage: imageStorage);
     });
 
     tearDown(() async {
@@ -70,6 +82,70 @@ void main() {
       await repository.upsert(DayEntry(date: DateTime(2026, 6, 1)));
       final stored = await repository.getByDate(DateTime(2026, 6, 1, 18, 45));
       expect(stored, isNotNull);
+    });
+
+    test('keeps photos already saved instead of saving them again', () async {
+      await repository.upsert(
+        DayEntry(
+          date: DateTime(2026, 6, 1),
+          leaveATrace: const LeaveATrace(imagePaths: ['/picker/a.png']),
+        ),
+      );
+      final stored = await repository.getByDate(DateTime(2026, 6, 1));
+
+      await repository.upsert(stored!.copyWith(hasNewExperience: true));
+
+      expect(imageStorage.saved, ['/picker/a.png']);
+      expect(imageStorage.deleted, isEmpty);
+      expect((await repository.getByDate(DateTime(2026, 6, 1)))!.leaveATrace.imagePaths, ['/tmp/a.png']);
+    });
+
+    test('deletes the files of photos removed from an entry', () async {
+      await repository.upsert(
+        DayEntry(
+          date: DateTime(2026, 6, 1),
+          leaveATrace: const LeaveATrace(imagePaths: ['/picker/a.png', '/picker/b.png']),
+        ),
+      );
+      final stored = await repository.getByDate(DateTime(2026, 6, 1));
+
+      await repository.upsert(
+        stored!.copyWith(leaveATrace: stored.leaveATrace.copyWith(imagePaths: ['/tmp/b.png'])),
+      );
+
+      expect(imageStorage.deleted, ['a.png']);
+      expect((await repository.getByDate(DateTime(2026, 6, 1)))!.leaveATrace.imagePaths, ['/tmp/b.png']);
+    });
+
+    test('deleting a day removes it and its photo files', () async {
+      await repository.upsert(
+        DayEntry(
+          date: DateTime(2026, 6, 1),
+          leaveATrace: const LeaveATrace(imagePaths: ['/picker/a.png', '/picker/b.png']),
+        ),
+      );
+
+      await repository.delete(DateTime(2026, 6, 1, 18, 45));
+
+      expect(await repository.getByDate(DateTime(2026, 6, 1)), isNull);
+      expect(imageStorage.deleted, unorderedEquals(['a.png', 'b.png']));
+    });
+
+    test('leaves alone a photo stored as an absolute path by an older version', () async {
+      await database
+          .into(database.days)
+          .insert(
+            DaysCompanion.insert(
+              date: DateTime(2026, 6, 1),
+              savedAt: DateTime(2026, 6, 1, 9),
+              leaveATraceImagePaths: const Value('["/legacy/a.png"]'),
+            ),
+          );
+
+      await repository.delete(DateTime(2026, 6, 1));
+
+      expect(await repository.getByDate(DateTime(2026, 6, 1)), isNull);
+      expect(imageStorage.deleted, isEmpty);
     });
   });
 }

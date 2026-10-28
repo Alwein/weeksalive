@@ -11,6 +11,9 @@ abstract interface class ImageStorage {
 
   /// Resolves a [fileName] to a stable absolute path in the app documents directory.
   Future<String> resolve(String fileName);
+
+  /// Deletes the image saved as [fileName], if it is still there.
+  Future<void> delete(String fileName);
 }
 
 class LocalImageStorage implements ImageStorage {
@@ -32,5 +35,11 @@ class LocalImageStorage implements ImageStorage {
   Future<String> resolve(String fileName) async {
     final appDir = await getApplicationDocumentsDirectory();
     return p.join(appDir.path, fileName);
+  }
+
+  @override
+  Future<void> delete(String fileName) async {
+    final file = File(await resolve(fileName));
+    if (await file.exists()) await file.delete();
   }
 }

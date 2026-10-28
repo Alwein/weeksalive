@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "Een paar woorden om je dag te beschrijven",
   "leave_a_trace_section_text_hint": "Schrijf wat vandaag bijzonder maakte…",
   "leave_a_trace_section_add_photo": "Foto's toevoegen",
+  "leave_a_trace_section_remove_photo": "Foto verwijderen",
+  "leave_a_trace_section_remove_photo_title": "Deze foto verwijderen?",
+  "leave_a_trace_section_remove_photo_confirm": "Verwijderen",
+  "leave_a_trace_section_remove_photo_cancel": "Behouden",
   "leave_a_trace_section_photo_count": {
     "one": "{} foto",
     "other": "{} foto's"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "Toegevoegd aan je dagboek. Telt niet mee voor je reeks.",
   "day_form_confirmation_save": "Opslaan en afronden",
   "day_resume_bottom_sheet_empty_subtitle": "Geen invoer voor deze dag.",
+  "day_delete_cta": "Deze dag verwijderen",
+  "day_delete_title": "Deze dag verwijderen?",
+  "day_delete_body": "Je antwoorden, tekst en foto's van deze dag worden verwijderd. Dit kan niet ongedaan worden gemaakt.",
+  "day_delete_confirm": "Verwijderen",
+  "day_delete_cancel": "Behouden",
   "start_tracking": "Reflecteer op deze dag",
   "pro_unlock_cta": "Ontgrendel met Pro",
   "pro_history_locked_body": "De gratis versie bewaart je laatste {days} dagen. Met Pro lees je elke dag terug die je hebt geleefd.",

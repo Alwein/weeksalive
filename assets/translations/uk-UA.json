@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "Кілька слів, щоб описати свій день",
   "leave_a_trace_section_text_hint": "Напиши, що зробило цей день особливим…",
   "leave_a_trace_section_add_photo": "Додати фото",
+  "leave_a_trace_section_remove_photo": "Прибрати фото",
+  "leave_a_trace_section_remove_photo_title": "Видалити це фото?",
+  "leave_a_trace_section_remove_photo_confirm": "Видалити",
+  "leave_a_trace_section_remove_photo_cancel": "Залишити",
   "leave_a_trace_section_photo_count": {
     "one": "{} фото",
     "other": "{} фото"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "Додано до щоденника. Не враховується в серію.",
   "day_form_confirmation_save": "Зберегти й завершити",
   "day_resume_bottom_sheet_empty_subtitle": "Немає запису за цей день.",
+  "day_delete_cta": "Видалити цей день",
+  "day_delete_title": "Видалити цей день?",
+  "day_delete_body": "Твої відповіді, текст і фото за цей день буде видалено. Цю дію не можна скасувати.",
+  "day_delete_confirm": "Видалити",
+  "day_delete_cancel": "Залишити",
   "start_tracking": "Поміркувати про цей день",
   "pro_unlock_cta": "Відкрити з Pro",
   "pro_history_locked_body": "Безкоштовна версія зберігає твої останні {days} днів. З Pro перечитуй кожен прожитий день.",

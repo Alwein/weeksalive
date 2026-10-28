@@ -281,6 +281,14 @@ class AnalyticsEvent {
     'seconds': seconds,
   });
 
+  factory AnalyticsEvent.dayDeleted({
+    required int dayOffset,
+    required int photosCount,
+  }) => AnalyticsEvent._('day_deleted', {
+    'day_offset': dayOffset,
+    'photos_count': photosCount,
+  });
+
   factory AnalyticsEvent.streakContinued({
     required int streakLength,
     required int bestEver,

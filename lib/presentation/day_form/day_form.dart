@@ -27,6 +27,7 @@ import 'package:weeksalive/presentation/redux/day/day_actions.dart';
 import 'package:weeksalive/presentation/redux/purchase/purchase_state.dart';
 import 'package:weeksalive/presentation/redux/weekly_intent/widgets/edit_weekly_intent_bottom_sheet.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
+import 'package:weeksalive/presentation/widgets/secondary_button.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
 export 'package:weeksalive/presentation/day_form/day_form_sheet.dart' show DayFormResult;
@@ -947,7 +948,13 @@ class _LeaveATraceInputState extends State<_LeaveATraceInput> {
     widget.onChanged(widget.value.copyWith(imagePaths: picked.map((f) => f.path).toList()));
   }
 
-  void _removeImage(int index) {
+  Future<void> _removeImage(int index) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => _RemovePhotoConfirmationDialog(dialogContext: dialogContext),
+    );
+    if (confirmed != true || !mounted) return;
+
     final paths = [...widget.value.imagePaths]..removeAt(index);
     widget.onChanged(widget.value.copyWith(imagePaths: paths));
   }
@@ -1024,6 +1031,41 @@ class _LeaveATraceInputState extends State<_LeaveATraceInput> {
   }
 }
 
+class _RemovePhotoConfirmationDialog extends StatelessWidget {
+  const _RemovePhotoConfirmationDialog({required this.dialogContext});
+
+  final BuildContext dialogContext;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(Dimens.radiusBase),
+        side: BorderSide(color: AppColors.strokeColor(context)),
+      ),
+      backgroundColor: AppColors.bg(context),
+      title: Texts.primaryMediumBold(Strings.leaveATraceSectionRemovePhotoTitle),
+      actions: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            PrimaryButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              text: Strings.leaveATraceSectionRemovePhotoCancel,
+            ),
+            const SizedBox(height: Margins.spacingS),
+            SecondaryButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              text: Strings.leaveATraceSectionRemovePhotoConfirm,
+              textColor: AppColors.redWarning(context),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
 class _ImageMosaic extends StatelessWidget {
   const _ImageMosaic({
     required this.images,
@@ -1064,27 +1106,27 @@ class _ImageMosaic extends StatelessWidget {
 
   Widget _buildGrid() {
     return switch (images.length) {
-      1 => _MosaicImage(path: images[0]),
+      1 => _image(0),
       2 => Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Expanded(child: _MosaicImage(path: images[0])),
+          Expanded(child: _image(0)),
           const SizedBox(width: _gap),
-          Expanded(child: _MosaicImage(path: images[1])),
+          Expanded(child: _image(1)),
         ],
       ),
       _ => Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Expanded(child: _MosaicImage(path: images[0])),
+          Expanded(child: _image(0)),
           const SizedBox(width: _gap),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(child: _MosaicImage(path: images[1])),
+                Expanded(child: _image(1)),
                 const SizedBox(height: _gap),
-                Expanded(child: _MosaicImage(path: images[2])),
+                Expanded(child: _image(2)),
               ],
             ),
           ),
@@ -1092,18 +1134,68 @@ class _ImageMosaic extends StatelessWidget {
       ),
     };
   }
+
+  Widget _image(int index) => _MosaicImage(path: images[index], onRemove: () => onRemove(index));
 }
 
 class _MosaicImage extends StatelessWidget {
-  const _MosaicImage({required this.path});
+  const _MosaicImage({required this.path, required this.onRemove});
 
   final String path;
+  final VoidCallback onRemove;
 
   @override
   Widget build(BuildContext context) {
-    return Image.file(
-      File(path),
-      fit: BoxFit.cover,
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Image.file(
+          File(path),
+          fit: BoxFit.cover,
+        ),
+        Align(
+          alignment: Alignment.topRight,
+          child: _RemovePhotoButton(onTap: onRemove),
+        ),
+      ],
+    );
+  }
+}
+
+class _RemovePhotoButton extends StatelessWidget {
+  const _RemovePhotoButton({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: Strings.leaveATraceSectionRemovePhoto,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          SensorialFeedback.selectionChanged();
+          onTap();
+        },
+        // The padding widens the tap target around the visible badge.
+        child: Padding(
+          padding: const EdgeInsets.all(Margins.spacingXs),
+          child: Container(
+            width: Dimens.iconSizeBase,
+            height: Dimens.iconSizeBase,
+            decoration: BoxDecoration(
+              color: AppColors.bg(context).withValues(alpha: 0.8),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              MingCuteIcons.mgc_close_line,
+              size: Dimens.iconSizeXs,
+              color: AppColors.content(context),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -80,6 +80,14 @@ class Strings {
       tr('leave_a_trace_section_text_hint');
   static String get leaveATraceSectionAddPhoto =>
       tr('leave_a_trace_section_add_photo');
+  static String get leaveATraceSectionRemovePhoto =>
+      tr('leave_a_trace_section_remove_photo');
+  static String get leaveATraceSectionRemovePhotoTitle =>
+      tr('leave_a_trace_section_remove_photo_title');
+  static String get leaveATraceSectionRemovePhotoConfirm =>
+      tr('leave_a_trace_section_remove_photo_confirm');
+  static String get leaveATraceSectionRemovePhotoCancel =>
+      tr('leave_a_trace_section_remove_photo_cancel');
   static String leaveATraceSectionPhotoCount(int count) =>
       plural('leave_a_trace_section_photo_count', count);
 
@@ -558,6 +566,11 @@ class Strings {
   static String get dayResumeBottomSheetEmptySubtitle =>
       tr('day_resume_bottom_sheet_empty_subtitle');
   static String get startTracking => tr('start_tracking');
+  static String get dayDeleteCta => tr('day_delete_cta');
+  static String get dayDeleteTitle => tr('day_delete_title');
+  static String get dayDeleteBody => tr('day_delete_body');
+  static String get dayDeleteConfirm => tr('day_delete_confirm');
+  static String get dayDeleteCancel => tr('day_delete_cancel');
 
   // pro gates
   static String get proUnlockCta => tr('pro_unlock_cta');

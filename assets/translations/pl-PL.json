@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "Kilka słów, by opisać swój dzień",
   "leave_a_trace_section_text_hint": "Napisz, co sprawiło, że dziś było wyjątkowo…",
   "leave_a_trace_section_add_photo": "Dodaj zdjęcia",
+  "leave_a_trace_section_remove_photo": "Usuń zdjęcie",
+  "leave_a_trace_section_remove_photo_title": "Usunąć to zdjęcie?",
+  "leave_a_trace_section_remove_photo_confirm": "Usuń",
+  "leave_a_trace_section_remove_photo_cancel": "Zachowaj",
   "leave_a_trace_section_photo_count": {
     "one": "{} zdjęcie",
     "other": "{} zdjęć"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "Dodano do dziennika. Nie liczy się do serii.",
   "day_form_confirmation_save": "Zapisz i zakończ",
   "day_resume_bottom_sheet_empty_subtitle": "Brak wpisu na ten dzień.",
+  "day_delete_cta": "Usuń ten dzień",
+  "day_delete_title": "Usunąć ten dzień?",
+  "day_delete_body": "Twoje odpowiedzi, tekst i zdjęcia z tego dnia zostaną usunięte. Tego nie można cofnąć.",
+  "day_delete_confirm": "Usuń",
+  "day_delete_cancel": "Zachowaj",
   "start_tracking": "Zastanów się nad tym dniem",
   "pro_unlock_cta": "Odblokuj z Pro",
   "pro_history_locked_body": "Wersja darmowa przechowuje Twoje ostatnie {days} dni. Z Pro możesz wrócić do każdego przeżytego dnia.",

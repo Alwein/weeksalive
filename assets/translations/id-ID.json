@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "Beberapa kata untuk menggambarkan harimu",
   "leave_a_trace_section_text_hint": "Tulis apa yang membuat hari ini istimewa…",
   "leave_a_trace_section_add_photo": "Tambah foto",
+  "leave_a_trace_section_remove_photo": "Hapus foto",
+  "leave_a_trace_section_remove_photo_title": "Hapus foto ini?",
+  "leave_a_trace_section_remove_photo_confirm": "Hapus",
+  "leave_a_trace_section_remove_photo_cancel": "Simpan saja",
   "leave_a_trace_section_photo_count": {
     "one": "{} foto",
     "other": "{} foto"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "Ditambahkan ke jurnalmu. Tidak dihitung untuk streak.",
   "day_form_confirmation_save": "Simpan dan selesai",
   "day_resume_bottom_sheet_empty_subtitle": "Tidak ada entri untuk hari ini.",
+  "day_delete_cta": "Hapus entri hari ini",
+  "day_delete_title": "Hapus entri hari ini?",
+  "day_delete_body": "Jawaban, teks, dan fotomu untuk hari ini akan dihapus. Tindakan ini tidak bisa dibatalkan.",
+  "day_delete_confirm": "Hapus",
+  "day_delete_cancel": "Simpan saja",
   "start_tracking": "Renungkan hari ini",
   "pro_unlock_cta": "Buka dengan Pro",
   "pro_history_locked_body": "Versi gratis menyimpan {days} hari terakhirmu. Dengan Pro, baca lagi setiap hari yang telah kamu jalani.",

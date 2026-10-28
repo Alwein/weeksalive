@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "Ein paar Worte, um deinen Tag zu beschreiben",
   "leave_a_trace_section_text_hint": "Schreib, was diesen Tag besonders gemacht hat…",
   "leave_a_trace_section_add_photo": "Fotos hinzufügen",
+  "leave_a_trace_section_remove_photo": "Foto entfernen",
+  "leave_a_trace_section_remove_photo_title": "Dieses Foto löschen?",
+  "leave_a_trace_section_remove_photo_confirm": "Löschen",
+  "leave_a_trace_section_remove_photo_cancel": "Behalten",
   "leave_a_trace_section_photo_count": {
     "one": "{} Foto",
     "other": "{} Fotos"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "Zum Journal hinzugefügt. Zählt nicht für deine Serie.",
   "day_form_confirmation_save": "Speichern und fertig",
   "day_resume_bottom_sheet_empty_subtitle": "Kein Eintrag für diesen Tag.",
+  "day_delete_cta": "Diesen Tag löschen",
+  "day_delete_title": "Diesen Tag löschen?",
+  "day_delete_body": "Deine Antworten, dein Text und deine Fotos von diesem Tag werden gelöscht. Das lässt sich nicht rückgängig machen.",
+  "day_delete_confirm": "Löschen",
+  "day_delete_cancel": "Behalten",
   "start_tracking": "Diesen Tag reflektieren",
   "pro_unlock_cta": "Mit Pro freischalten",
   "pro_history_locked_body": "Die Gratisversion behält deine letzten {days} Tage. Mit Pro liest du jeden Tag nach, den du gelebt hast.",

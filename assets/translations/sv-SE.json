@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "Några ord som beskriver din dag",
   "leave_a_trace_section_text_hint": "Skriv vad som gjorde dagen speciell…",
   "leave_a_trace_section_add_photo": "Lägg till foton",
+  "leave_a_trace_section_remove_photo": "Ta bort foto",
+  "leave_a_trace_section_remove_photo_title": "Radera det här fotot?",
+  "leave_a_trace_section_remove_photo_confirm": "Radera",
+  "leave_a_trace_section_remove_photo_cancel": "Behåll",
   "leave_a_trace_section_photo_count": {
     "one": "{} foto",
     "other": "{} foton"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "Tillagt i din journal. Räknas inte mot din streak.",
   "day_form_confirmation_save": "Spara och avsluta",
   "day_resume_bottom_sheet_empty_subtitle": "Inget inlägg för den här dagen.",
+  "day_delete_cta": "Radera den här dagen",
+  "day_delete_title": "Radera den här dagen?",
+  "day_delete_body": "Dina svar, din text och dina foton för den här dagen raderas. Det går inte att ångra.",
+  "day_delete_confirm": "Radera",
+  "day_delete_cancel": "Behåll",
   "start_tracking": "Reflektera över den här dagen",
   "pro_unlock_cta": "Lås upp med Pro",
   "pro_history_locked_body": "Gratisversionen sparar dina senaste {days} dagar. Med Pro kan du läsa om varje dag du har levt.",

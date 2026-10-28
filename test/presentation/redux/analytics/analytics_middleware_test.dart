@@ -516,6 +516,35 @@ void main() {
 
       expect(analytics.capturedNames, isNot(contains('check_in_abandoned')));
     });
+
+    test('deleting a day reports how old it was and its photo count', () {
+      final deleted = DateTime(today.year, today.month, today.day - 2);
+      final store = analyticsStore(
+        initialState: AppState.initial().copyWith(
+          dayState: DayState(
+            entries: {
+              deleted: DayEntry(
+                date: deleted,
+                leaveATrace: const LeaveATrace(imagePaths: ['one.jpg', 'two.jpg']),
+              ),
+            },
+          ),
+        ),
+      );
+
+      store.dispatch(DeleteDayAction(deleted));
+
+      expect(analytics.propertiesOf('day_deleted'), {
+        'day_offset': 2,
+        'photos_count': 2,
+      });
+    });
+
+    test('deleting a day with no entry reports nothing', () {
+      analyticsStore().dispatch(DeleteDayAction(today));
+
+      expect(analytics.capturedNames, isNot(contains('day_deleted')));
+    });
   });
 
   group('streaks and rewards', () {

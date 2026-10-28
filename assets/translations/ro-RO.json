@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "Câteva cuvinte ca să descrii ziua",
   "leave_a_trace_section_text_hint": "Scrie ce a făcut ziua de azi specială…",
   "leave_a_trace_section_add_photo": "Adaugă poze",
+  "leave_a_trace_section_remove_photo": "Elimină fotografia",
+  "leave_a_trace_section_remove_photo_title": "Ștergi această fotografie?",
+  "leave_a_trace_section_remove_photo_confirm": "Șterge",
+  "leave_a_trace_section_remove_photo_cancel": "Păstrează",
   "leave_a_trace_section_photo_count": {
     "one": "{} poză",
     "other": "{} poze"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "Adăugat în jurnal. Nu contează pentru serie.",
   "day_form_confirmation_save": "Salvează și termină",
   "day_resume_bottom_sheet_empty_subtitle": "Nicio intrare pentru această zi.",
+  "day_delete_cta": "Șterge această zi",
+  "day_delete_title": "Ștergi această zi?",
+  "day_delete_body": "Răspunsurile, textul și fotografiile tale din această zi vor fi șterse. Acțiunea nu poate fi anulată.",
+  "day_delete_confirm": "Șterge",
+  "day_delete_cancel": "Păstrează",
   "start_tracking": "Reflectează asupra zilei",
   "pro_unlock_cta": "Deblochează cu Pro",
   "pro_history_locked_body": "Versiunea gratuită păstrează ultimele tale {days} zile. Cu Pro, recitește fiecare zi pe care ai trăit-o.",

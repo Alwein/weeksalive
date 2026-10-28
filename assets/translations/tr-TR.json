@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "Gününü anlatmak için birkaç kelime",
   "leave_a_trace_section_text_hint": "Bugünü özel kılan şeyi yaz…",
   "leave_a_trace_section_add_photo": "Fotoğraf ekle",
+  "leave_a_trace_section_remove_photo": "Fotoğrafı kaldır",
+  "leave_a_trace_section_remove_photo_title": "Bu fotoğraf silinsin mi?",
+  "leave_a_trace_section_remove_photo_confirm": "Sil",
+  "leave_a_trace_section_remove_photo_cancel": "Kalsın",
   "leave_a_trace_section_photo_count": {
     "one": "{} fotoğraf",
     "other": "{} fotoğraf"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "Günlüğüne eklendi. Serine sayılmaz.",
   "day_form_confirmation_save": "Kaydet ve bitir",
   "day_resume_bottom_sheet_empty_subtitle": "Bu gün için kayıt yok.",
+  "day_delete_cta": "Bu günü sil",
+  "day_delete_title": "Bu gün silinsin mi?",
+  "day_delete_body": "Bu güne ait cevapların, metnin ve fotoğrafların silinecek. Bu işlem geri alınamaz.",
+  "day_delete_confirm": "Sil",
+  "day_delete_cancel": "Kalsın",
   "start_tracking": "Bu güne dön",
   "pro_unlock_cta": "Pro ile kilidi aç",
   "pro_history_locked_body": "Ücretsiz sürüm son {days} gününü saklar. Pro ile yaşadığın her günü yeniden oku.",

@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "그날을 담은 짧은 글",
   "leave_a_trace_section_text_hint": "오늘을 특별하게 만든 것을 적어 보세요…",
   "leave_a_trace_section_add_photo": "사진 추가",
+  "leave_a_trace_section_remove_photo": "사진 삭제",
+  "leave_a_trace_section_remove_photo_title": "이 사진을 삭제할까요?",
+  "leave_a_trace_section_remove_photo_confirm": "삭제",
+  "leave_a_trace_section_remove_photo_cancel": "유지하기",
   "leave_a_trace_section_photo_count": {
     "one": "사진 {}장",
     "other": "사진 {}장"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "일기에 추가되었습니다. 연속 기록에는 반영되지 않습니다.",
   "day_form_confirmation_save": "저장하고 마치기",
   "day_resume_bottom_sheet_empty_subtitle": "이 날의 기록이 없습니다.",
+  "day_delete_cta": "이 날의 기록 삭제",
+  "day_delete_title": "이 날의 기록을 삭제할까요?",
+  "day_delete_body": "이 날의 답변, 글, 사진이 삭제됩니다. 되돌릴 수 없습니다.",
+  "day_delete_confirm": "삭제",
+  "day_delete_cancel": "유지하기",
   "start_tracking": "이 날 돌아보기",
   "pro_unlock_cta": "Pro로 잠금 해제",
   "pro_history_locked_body": "무료 버전은 최근 {days}일을 보관해요. Pro로 지나온 모든 날을 다시 읽어 보세요.",

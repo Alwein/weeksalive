@@ -1,5 +1,6 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:ming_cute_icons/ming_cute_icons.dart';
 import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
@@ -82,7 +83,6 @@ class _CustomBottomSheetContent extends StatefulWidget {
 class _CustomBottomSheetContentState extends State<_CustomBottomSheetContent> with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-  double _previewHeight = 0;
 
   @override
   void initState() {
@@ -116,15 +116,12 @@ class _CustomBottomSheetContentState extends State<_CustomBottomSheetContent> wi
 
   @override
   Widget build(BuildContext context) {
-    final hasPreview = widget.previewBuilder != null;
     final bgController = AppBackgroundScaleScope.maybeOf(context);
 
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, child) {
         final t = _animation.value.clamp(0.0, 1.0);
-        const previewGap = -60.0;
-        const previewTopOffsetFallback = 92.0;
 
         final sheet = Transform.translate(
           offset: Offset(0, (1 - t) * 100),
@@ -184,20 +181,6 @@ class _CustomBottomSheetContentState extends State<_CustomBottomSheetContent> wi
           ),
         );
 
-        final preview = hasPreview
-            ? Transform.translate(
-                offset: Offset(0, (1 - t) * 100),
-                child: _MeasureSize(
-                  onChange: (size) {
-                    if (!mounted) return;
-                    if ((_previewHeight - size.height).abs() < 0.5) return;
-                    setState(() => _previewHeight = size.height);
-                  },
-                  child: widget.previewBuilder!(context),
-                ),
-              )
-            : null;
-
         Widget content = Stack(
           children: [
             if (widget.dismissible)
@@ -208,31 +191,21 @@ class _CustomBottomSheetContentState extends State<_CustomBottomSheetContent> wi
                   child: const SizedBox.expand(),
                 ),
               ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: (MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top) * 0.95,
-                ),
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  alignment: Alignment.bottomCenter,
-                  children: [
-                    sheet,
-                    if (preview != null)
-                      Positioned(
-                        top: -((_previewHeight > 0) ? (_previewHeight + previewGap) : previewTopOffsetFallback),
-                        left: 0,
-                        right: 0,
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          heightFactor: 1,
-                          child: preview,
-                        ),
-                      ),
-                  ],
-                ),
+            CustomMultiChildLayout(
+              delegate: _SheetLayoutDelegate(
+                maxSheetHeight: (MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top) * 0.95,
               ),
+              children: [
+                LayoutId(id: _SheetSlot.sheet, child: sheet),
+                if (widget.previewBuilder != null)
+                  LayoutId(
+                    id: _SheetSlot.preview,
+                    child: Transform.translate(
+                      offset: Offset(0, (1 - t) * 100),
+                      child: widget.previewBuilder!(context),
+                    ),
+                  ),
+              ],
             ),
           ],
         );
@@ -270,33 +243,37 @@ class _Handle extends StatelessWidget {
   }
 }
 
-class _MeasureSize extends SingleChildRenderObjectWidget {
-  const _MeasureSize({required this.onChange, required super.child});
+enum _SheetSlot { sheet, preview }
 
-  final ValueChanged<Size> onChange;
+/// Lays the sheet out at the bottom and the preview straddling its top edge.
+///
+/// Both live in this full-size box: a preview overflowing a sheet-sized parent
+/// would only receive taps on the part drawn over the sheet.
+class _SheetLayoutDelegate extends MultiChildLayoutDelegate {
+  _SheetLayoutDelegate({required this.maxSheetHeight});
+
+  final double maxSheetHeight;
+
+  /// How far the preview's bottom edge reaches into the sheet.
+  static const _previewOverlap = 60.0;
 
   @override
-  RenderObject createRenderObject(BuildContext context) => _RenderMeasureSize(onChange);
+  void performLayout(Size size) {
+    final sheetSize = layoutChild(
+      _SheetSlot.sheet,
+      BoxConstraints(maxWidth: size.width, maxHeight: math.min(maxSheetHeight, size.height)),
+    );
+    final sheetTop = size.height - sheetSize.height;
+    positionChild(_SheetSlot.sheet, Offset((size.width - sheetSize.width) / 2, sheetTop));
 
-  @override
-  void updateRenderObject(BuildContext context, covariant _RenderMeasureSize renderObject) {
-    renderObject.onChange = onChange;
+    if (!hasChild(_SheetSlot.preview)) return;
+    final previewSize = layoutChild(_SheetSlot.preview, BoxConstraints(maxWidth: size.width));
+    positionChild(
+      _SheetSlot.preview,
+      Offset((size.width - previewSize.width) / 2, sheetTop + _previewOverlap - previewSize.height),
+    );
   }
-}
-
-class _RenderMeasureSize extends RenderProxyBox {
-  _RenderMeasureSize(this.onChange);
-
-  ValueChanged<Size> onChange;
-  Size? _oldSize;
 
   @override
-  void performLayout() {
-    super.performLayout();
-    final newSize = child?.size;
-    if (newSize == null) return;
-    if (_oldSize == newSize) return;
-    _oldSize = newSize;
-    WidgetsBinding.instance.addPostFrameCallback((_) => onChange(newSize));
-  }
+  bool shouldRelayout(_SheetLayoutDelegate oldDelegate) => oldDelegate.maxSheetHeight != maxSheetHeight;
 }

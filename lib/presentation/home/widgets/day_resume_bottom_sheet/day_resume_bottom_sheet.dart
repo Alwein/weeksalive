@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -22,10 +23,12 @@ import 'package:weeksalive/presentation/onboarding/widgets/onboarding_small_divi
 import 'package:weeksalive/presentation/onboarding/widgets/parallax_rive.dart';
 import 'package:weeksalive/presentation/paywall/show_in_app_paywall.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
+import 'package:weeksalive/presentation/redux/day/day_actions.dart';
 import 'package:weeksalive/presentation/redux/user/user_state.dart';
 import 'package:weeksalive/presentation/widgets/circle.dart';
 import 'package:weeksalive/presentation/widgets/image_carousel_page.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
+import 'package:weeksalive/presentation/widgets/secondary_button.dart';
 import 'package:weeksalive/presentation/widgets/show_custom_bottom_sheet.dart';
 import 'package:weeksalive/presentation/widgets/texts.dart';
 
@@ -179,7 +182,7 @@ class _FilledDayContent extends StatelessWidget {
             const SizedBox(height: Margins.spacingM),
           ],
           _CardEntry(viewModel: viewModel),
-          const SizedBox(height: Margins.spacingM),
+          const SizedBox(height: Margins.spacingS),
           PrimaryButton(
             text: Strings.edit,
             onPressed: () {
@@ -191,9 +194,69 @@ class _FilledDayContent extends StatelessWidget {
               );
             },
           ),
+          const SizedBox(height: Margins.spacingS),
+          SecondaryButton(
+            text: Strings.dayDeleteCta,
+            icon: MingCuteIcons.mgc_delete_2_line,
+            onPressed: () => _delete(context),
+          ),
           const SizedBox(height: Margins.spacingM),
         ],
       ),
+    );
+  }
+
+  Future<void> _delete(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => _DeleteDayConfirmationDialog(dialogContext: dialogContext),
+    );
+    if (confirmed != true || !context.mounted) return;
+
+    final store = StoreProvider.of<AppState>(context, listen: false);
+    final date = viewModel.entry.date;
+    // Deleted once the sheet is gone, so it does not turn into the empty day
+    // while it slides away.
+    ModalRoute.of(context)!.completed.then((_) => store.dispatch(DeleteDayAction(date)));
+    Navigator.of(context).pop();
+  }
+}
+
+class _DeleteDayConfirmationDialog extends StatelessWidget {
+  const _DeleteDayConfirmationDialog({required this.dialogContext});
+
+  final BuildContext dialogContext;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(Dimens.radiusBase),
+        side: BorderSide(color: AppColors.strokeColor(context)),
+      ),
+      backgroundColor: AppColors.bg(context),
+      title: Texts.primaryMediumBold(Strings.dayDeleteTitle),
+      content: Texts.primaryRegularMedium(
+        Strings.dayDeleteBody,
+        color: AppColors.contentSoft(context),
+      ),
+      actions: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            PrimaryButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              text: Strings.dayDeleteCancel,
+            ),
+            const SizedBox(height: Margins.spacingS),
+            SecondaryButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              text: Strings.dayDeleteConfirm,
+              textColor: AppColors.redWarning(context),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
@@ -683,7 +746,10 @@ class _ImagesPreview extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    // Full width: the photos are spread wider than any one of them, and a Stack
+    // sized to its widest photo would not take taps on the outer ones' edges.
     return SizedBox(
+      width: double.infinity,
       height: 200,
       child: _AnimatedImagesStack(
         imagePaths: imagePaths,
@@ -712,7 +778,8 @@ class _AnimatedImagesStack extends StatefulWidget {
 class _AnimatedImagesStackState extends State<_AnimatedImagesStack> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
-  static const _rotations = [-0.12, 0.00, 0.12];
+  static const _maxRotation = 0.12;
+  static const _rotations = [-_maxRotation, 0.00, _maxRotation];
 
   @override
   void initState() {
@@ -750,6 +817,9 @@ class _AnimatedImagesStackState extends State<_AnimatedImagesStack> with SingleT
       builder: (context, constraints) {
         final rise = constraints.maxHeight * 0.5;
         final photoWidth = constraints.maxWidth * 0.35;
+        // A tilted photo reaches below its bottom edge by up to half its width
+        // times the sine of the tilt; the preview clips at its bounds.
+        final tiltOverhang = photoWidth / 2 * math.sin(_maxRotation);
         final count = widget.imagePaths.length;
 
         // Spread images evenly across the available width.
@@ -760,20 +830,23 @@ class _AnimatedImagesStackState extends State<_AnimatedImagesStack> with SingleT
           return -((constraints.maxWidth * 0.7 - photoWidth) / 2) + i * step;
         }
 
-        return Stack(
-          clipBehavior: Clip.none,
-          alignment: Alignment.bottomCenter,
-          children: [
-            for (int i = 0; i < count; i++)
-              _buildPhoto(
-                index: i,
-                path: widget.imagePaths[i],
-                rise: rise,
-                photoWidth: photoWidth,
-                dx: dx(i),
-                onTap: () => widget.onImageTap(i),
-              ),
-          ],
+        return Padding(
+          padding: EdgeInsets.only(bottom: tiltOverhang),
+          child: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.bottomCenter,
+            children: [
+              for (int i = 0; i < count; i++)
+                _buildPhoto(
+                  index: i,
+                  path: widget.imagePaths[i],
+                  rise: rise,
+                  photoWidth: photoWidth,
+                  dx: dx(i),
+                  onTap: () => widget.onImageTap(i),
+                ),
+            ],
+          ),
         );
       },
     );

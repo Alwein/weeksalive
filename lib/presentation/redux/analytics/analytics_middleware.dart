@@ -78,6 +78,7 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
     final previousStreak = store.state.streakState.count;
     final previouslyUnlocked = store.state.rewardsState.unlocked;
     final previousUser = store.state.userState.userOrNull;
+    final previousDays = store.state.dayState;
 
     next(action);
 
@@ -148,6 +149,9 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
 
       case SaveDayAction():
         _onDaySaved(action);
+
+      case DeleteDayAction():
+        _onDayDeleted(previousDays.entryFor(action.date));
 
       case StreakRecalculatedAction():
         _onStreakRecalculated(action, previousStreak: previousStreak);
@@ -473,6 +477,16 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
       ),
     );
     _clearCheckIn();
+  }
+
+  void _onDayDeleted(DayEntry? entry) {
+    if (entry == null) return;
+    analyticsRepository.capture(
+      AnalyticsEvent.dayDeleted(
+        dayOffset: normalizeDay(_now()).difference(entry.date).inDays,
+        photosCount: entry.leaveATrace.imagePaths.length,
+      ),
+    );
   }
 
   void _onStreakRecalculated(

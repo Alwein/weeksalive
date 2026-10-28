@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "Quelques mots pour décrire ta journée",
   "leave_a_trace_section_text_hint": "Écris ce qui a rendu ce jour spécial…",
   "leave_a_trace_section_add_photo": "Ajouter des photos",
+  "leave_a_trace_section_remove_photo": "Retirer la photo",
+  "leave_a_trace_section_remove_photo_title": "Supprimer cette photo ?",
+  "leave_a_trace_section_remove_photo_confirm": "Supprimer",
+  "leave_a_trace_section_remove_photo_cancel": "Garder",
   "leave_a_trace_section_photo_count": {
     "one": "{} photo",
     "other": "{} photos"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "Ajouté à ton journal. Ne compte pas pour ta série.",
   "day_form_confirmation_save": "Enregistrer et terminer",
   "day_resume_bottom_sheet_empty_subtitle": "Aucune entrée pour ce jour.",
+  "day_delete_cta": "Supprimer cette journée",
+  "day_delete_title": "Supprimer cette journée ?",
+  "day_delete_body": "Tes réponses, ton texte et tes photos de ce jour seront supprimés. Impossible de revenir en arrière.",
+  "day_delete_confirm": "Supprimer",
+  "day_delete_cancel": "Garder",
   "start_tracking": "Réfléchir à ce jour",
   "pro_unlock_cta": "Débloquer avec Pro",
   "pro_history_locked_body": "La version gratuite garde tes {days} derniers jours. Avec Pro, relis chaque jour que tu as vécu.",

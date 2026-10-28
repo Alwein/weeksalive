@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "その日を表す短い言葉を",
   "leave_a_trace_section_text_hint": "今日を特別にしたことを書いてみましょう…",
   "leave_a_trace_section_add_photo": "写真を追加",
+  "leave_a_trace_section_remove_photo": "写真を削除",
+  "leave_a_trace_section_remove_photo_title": "この写真を削除しますか？",
+  "leave_a_trace_section_remove_photo_confirm": "削除",
+  "leave_a_trace_section_remove_photo_cancel": "残す",
   "leave_a_trace_section_photo_count": {
     "one": "{}枚の写真",
     "other": "{}枚の写真"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "ジャーナルに追加されました。連続記録には含まれません。",
   "day_form_confirmation_save": "保存して終了",
   "day_resume_bottom_sheet_empty_subtitle": "この日の記録はありません。",
+  "day_delete_cta": "この日の記録を削除",
+  "day_delete_title": "この日の記録を削除しますか？",
+  "day_delete_body": "この日の回答、テキスト、写真が削除されます。元に戻すことはできません。",
+  "day_delete_confirm": "削除",
+  "day_delete_cancel": "残す",
   "start_tracking": "この日を振り返る",
   "pro_unlock_cta": "Proでロック解除",
   "pro_history_locked_body": "無料プランでは直近{days}日分を振り返れます。Proなら、これまで過ごしたすべての日を読み返せます。",

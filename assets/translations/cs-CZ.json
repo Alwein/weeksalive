@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "Pár slov, které popíšou tvůj den",
   "leave_a_trace_section_text_hint": "Napiš, co dnes udělalo den výjimečným…",
   "leave_a_trace_section_add_photo": "Přidat fotky",
+  "leave_a_trace_section_remove_photo": "Odebrat fotku",
+  "leave_a_trace_section_remove_photo_title": "Smazat tuto fotku?",
+  "leave_a_trace_section_remove_photo_confirm": "Smazat",
+  "leave_a_trace_section_remove_photo_cancel": "Ponechat",
   "leave_a_trace_section_photo_count": {
     "one": "{} fotka",
     "other": "{} fotek"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "Přidáno do deníku. Nezapočítává se do série.",
   "day_form_confirmation_save": "Uložit a dokončit",
   "day_resume_bottom_sheet_empty_subtitle": "Pro tento den není žádný záznam.",
+  "day_delete_cta": "Smazat tento den",
+  "day_delete_title": "Smazat tento den?",
+  "day_delete_body": "Tvé odpovědi, text a fotky z tohoto dne budou smazány. Tuto akci nelze vrátit.",
+  "day_delete_confirm": "Smazat",
+  "day_delete_cancel": "Ponechat",
   "start_tracking": "Zamyslet se nad tímto dnem",
   "pro_unlock_cta": "Odemknout s Pro",
   "pro_history_locked_body": "Bezplatná verze uchovává tvých posledních {days} dní. S Pro si můžeš znovu přečíst každý prožitý den.",

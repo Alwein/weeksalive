@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "Λίγα λόγια για να περιγράψεις τη μέρα σου",
   "leave_a_trace_section_text_hint": "Γράψε τι έκανε τη σημερινή μέρα ξεχωριστή…",
   "leave_a_trace_section_add_photo": "Προσθήκη φωτογραφιών",
+  "leave_a_trace_section_remove_photo": "Αφαίρεση φωτογραφίας",
+  "leave_a_trace_section_remove_photo_title": "Διαγραφή αυτής της φωτογραφίας;",
+  "leave_a_trace_section_remove_photo_confirm": "Διαγραφή",
+  "leave_a_trace_section_remove_photo_cancel": "Κράτησέ τη",
   "leave_a_trace_section_photo_count": {
     "one": "{} φωτογραφία",
     "other": "{} φωτογραφίες"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "Προστέθηκε στο ημερολόγιό σου. Δεν μετράει στο σερί σου.",
   "day_form_confirmation_save": "Αποθήκευση και ολοκλήρωση",
   "day_resume_bottom_sheet_empty_subtitle": "Καμία καταχώρηση για αυτή την ημέρα.",
+  "day_delete_cta": "Διαγραφή αυτής της ημέρας",
+  "day_delete_title": "Διαγραφή αυτής της ημέρας;",
+  "day_delete_body": "Οι απαντήσεις, το κείμενο και οι φωτογραφίες σου για αυτή την ημέρα θα διαγραφούν. Αυτό δεν αναιρείται.",
+  "day_delete_confirm": "Διαγραφή",
+  "day_delete_cancel": "Κράτησέ τη",
   "start_tracking": "Σκέψου αυτή τη μέρα",
   "pro_unlock_cta": "Ξεκλείδωμα με Pro",
   "pro_history_locked_body": "Η δωρεάν έκδοση κρατά τις τελευταίες {days} ημέρες σου. Με το Pro, ξαναδιάβασε κάθε μέρα που έζησες.",

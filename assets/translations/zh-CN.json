@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "用几句话描述这一天",
   "leave_a_trace_section_text_hint": "写下今天特别的地方…",
   "leave_a_trace_section_add_photo": "添加照片",
+  "leave_a_trace_section_remove_photo": "移除照片",
+  "leave_a_trace_section_remove_photo_title": "删除这张照片？",
+  "leave_a_trace_section_remove_photo_confirm": "删除",
+  "leave_a_trace_section_remove_photo_cancel": "保留",
   "leave_a_trace_section_photo_count": {
     "one": "{} 张照片",
     "other": "{} 张照片"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "已加入日记。不计入连续天数。",
   "day_form_confirmation_save": "保存并完成",
   "day_resume_bottom_sheet_empty_subtitle": "这一天还没有记录。",
+  "day_delete_cta": "删除这一天",
+  "day_delete_title": "删除这一天的记录？",
+  "day_delete_body": "这一天的回答、文字和照片都将被删除，且无法恢复。",
+  "day_delete_confirm": "删除",
+  "day_delete_cancel": "保留",
   "start_tracking": "回顾这一天",
   "pro_unlock_cta": "用 Pro 解锁",
   "pro_history_locked_body": "免费版保留你最近 {days} 天的记录。使用 Pro，可以重温你度过的每一天。",

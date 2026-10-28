@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "เขียนสั้นๆ เพื่อบรรยายวันของคุณ",
   "leave_a_trace_section_text_hint": "เขียนสิ่งที่ทำให้วันนี้พิเศษ…",
   "leave_a_trace_section_add_photo": "เพิ่มรูปภาพ",
+  "leave_a_trace_section_remove_photo": "นำรูปภาพออก",
+  "leave_a_trace_section_remove_photo_title": "ลบรูปภาพนี้?",
+  "leave_a_trace_section_remove_photo_confirm": "ลบ",
+  "leave_a_trace_section_remove_photo_cancel": "เก็บไว้",
   "leave_a_trace_section_photo_count": {
     "one": "{} รูป",
     "other": "{} รูป"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "เพิ่มลงในบันทึกแล้ว ไม่นับเข้าสตรีค",
   "day_form_confirmation_save": "บันทึกและเสร็จสิ้น",
   "day_resume_bottom_sheet_empty_subtitle": "ยังไม่มีบันทึกสำหรับวันนี้",
+  "day_delete_cta": "ลบบันทึกของวันนี้",
+  "day_delete_title": "ลบบันทึกของวันนี้?",
+  "day_delete_body": "คำตอบ ข้อความ และรูปภาพของวันนี้จะถูกลบ และไม่สามารถกู้คืนได้",
+  "day_delete_confirm": "ลบ",
+  "day_delete_cancel": "เก็บไว้",
   "start_tracking": "ใคร่ครวญวันนี้",
   "pro_unlock_cta": "ปลดล็อกด้วย Pro",
   "pro_history_locked_body": "เวอร์ชันฟรีเก็บ {days} วันล่าสุดของคุณ ด้วย Pro คุณจะอ่านย้อนได้ทุกวันที่ผ่านมา",

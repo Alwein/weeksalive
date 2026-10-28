@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "Algumas palavras para descrever seu dia",
   "leave_a_trace_section_text_hint": "Escreva o que tornou o dia especial…",
   "leave_a_trace_section_add_photo": "Adicionar fotos",
+  "leave_a_trace_section_remove_photo": "Remover foto",
+  "leave_a_trace_section_remove_photo_title": "Excluir esta foto?",
+  "leave_a_trace_section_remove_photo_confirm": "Excluir",
+  "leave_a_trace_section_remove_photo_cancel": "Manter",
   "leave_a_trace_section_photo_count": {
     "one": "{} foto",
     "other": "{} fotos"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "Adicionado ao seu diário. Não conta para a sequência.",
   "day_form_confirmation_save": "Salvar e concluir",
   "day_resume_bottom_sheet_empty_subtitle": "Nenhum registro para este dia.",
+  "day_delete_cta": "Excluir este dia",
+  "day_delete_title": "Excluir este dia?",
+  "day_delete_body": "Suas respostas, seu texto e suas fotos deste dia serão excluídos. Não dá para desfazer.",
+  "day_delete_confirm": "Excluir",
+  "day_delete_cancel": "Manter",
   "start_tracking": "Refletir sobre este dia",
   "pro_unlock_cta": "Desbloquear com Pro",
   "pro_history_locked_body": "A versão gratuita guarda seus últimos {days} dias. Com o Pro, releia cada dia que você viveu.",

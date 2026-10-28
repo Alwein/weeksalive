@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "Vài lời để mô tả ngày của bạn",
   "leave_a_trace_section_text_hint": "Viết điều gì đã làm hôm nay đặc biệt…",
   "leave_a_trace_section_add_photo": "Thêm ảnh",
+  "leave_a_trace_section_remove_photo": "Xóa ảnh",
+  "leave_a_trace_section_remove_photo_title": "Xóa ảnh này?",
+  "leave_a_trace_section_remove_photo_confirm": "Xóa",
+  "leave_a_trace_section_remove_photo_cancel": "Giữ lại",
   "leave_a_trace_section_photo_count": {
     "one": "{} ảnh",
     "other": "{} ảnh"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "Đã thêm vào nhật ký. Không tính vào chuỗi của bạn.",
   "day_form_confirmation_save": "Lưu và hoàn tất",
   "day_resume_bottom_sheet_empty_subtitle": "Chưa có nhật ký cho ngày này.",
+  "day_delete_cta": "Xóa ngày này",
+  "day_delete_title": "Xóa ngày này?",
+  "day_delete_body": "Câu trả lời, nội dung và ảnh của bạn trong ngày này sẽ bị xóa. Không thể hoàn tác.",
+  "day_delete_confirm": "Xóa",
+  "day_delete_cancel": "Giữ lại",
   "start_tracking": "Suy ngẫm về ngày này",
   "pro_unlock_cta": "Mở khóa với Pro",
   "pro_history_locked_body": "Bản miễn phí lưu {days} ngày gần nhất của bạn. Với Pro, hãy đọc lại mọi ngày bạn đã sống.",

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
+import 'package:path/path.dart' as p;
 import 'package:weeksalive/data/day/app_database.dart';
 import 'package:weeksalive/data/day/image_storage.dart';
 import 'package:weeksalive/domain/day/day.dart';
@@ -20,47 +21,61 @@ class DayRepository {
   }
 
   Future<DayEntry?> getByDate(DateTime date) async {
-    final normalized = normalizeDay(date);
-    final query = _db.select(_db.days)..where((t) => t.date.equals(normalized));
-    final row = await query.getSingleOrNull();
+    final row = await _findRow(date);
     return row == null ? null : _toEntry(row);
   }
 
+  /// Also deletes the files of the photos the entry no longer has.
   Future<void> upsert(DayEntry entry) async {
-    final existing = await getByDate(entry.date);
-    final savedFileNames = await _saveNewImages(entry.leaveATrace.imagePaths);
+    final existing = await _findRow(entry.date);
+    final fileNames = await Future.wait(entry.leaveATrace.imagePaths.map(_storedFileName));
     final updatedEntry = entry.copyWith(
       savedAt: existing?.savedAt ?? entry.savedAt,
-      leaveATrace: entry.leaveATrace.copyWith(imagePaths: savedFileNames),
+      leaveATrace: entry.leaveATrace.copyWith(imagePaths: fileNames),
     );
     await _db.into(_db.days).insertOnConflictUpdate(_toCompanion(updatedEntry));
+    if (existing != null) {
+      await _deleteImages(_storedImages(existing).toSet().difference(fileNames.toSet()));
+    }
   }
 
+  /// Also deletes the day's photo files.
   Future<void> delete(DateTime date) async {
-    final normalized = normalizeDay(date);
-    await (_db.delete(_db.days)..where((t) => t.date.equals(normalized))).go();
+    final existing = await _findRow(date);
+    if (existing == null) return;
+    await (_db.delete(_db.days)..where((t) => t.date.equals(existing.date))).go();
+    await _deleteImages(_storedImages(existing));
   }
 
-  /// Saves any new images (absolute paths) and returns the stable file name list.
-  /// Already-saved file names (no path separator) are kept as-is.
-  Future<List<String>> _saveNewImages(List<String> paths) async {
-    return Future.wait(
-      paths.map((path) async {
-        if (_isFileName(path)) return path;
-        return _imageStorage.save(path);
-      }),
-    );
+  Future<Day?> _findRow(DateTime date) {
+    final normalized = normalizeDay(date);
+    return (_db.select(_db.days)..where((t) => t.date.equals(normalized))).getSingleOrNull();
   }
+
+  /// The stable file name to store for [path]: an image picked from outside
+  /// the app is saved first, while a saved one is kept as it is (entries read
+  /// back hold it resolved to its absolute path).
+  Future<String> _storedFileName(String path) async {
+    if (_isFileName(path)) return path;
+    final fileName = p.basename(path);
+    if (await _imageStorage.resolve(fileName) == path) return fileName;
+    return _imageStorage.save(path);
+  }
+
+  List<String> _storedImages(Day row) =>
+      (jsonDecode(row.leaveATraceImagePaths) as List<dynamic>).map((e) => e as String).toList();
+
+  /// Only bare file names point into the app's own storage; an absolute path
+  /// stored by an older version may point anywhere and is left alone.
+  Future<void> _deleteImages(Iterable<String> stored) =>
+      Future.wait(stored.where(_isFileName).map(_imageStorage.delete));
 
   /// A stored value is a bare file name (no directory separator).
   bool _isFileName(String value) => !value.contains('/');
 
   Future<DayEntry> _toEntry(Day row) async {
-    final fileNames =
-        (jsonDecode(row.leaveATraceImagePaths) as List<dynamic>).map((e) => e as String).toList();
-
     final resolvedPaths = await Future.wait(
-      fileNames.map((name) async {
+      _storedImages(row).map((name) async {
         if (_isFileName(name)) return _imageStorage.resolve(name);
         return name;
       }),

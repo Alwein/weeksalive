@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "A few words to describe your day",
   "leave_a_trace_section_text_hint": "Write what made today special…",
   "leave_a_trace_section_add_photo": "Add photos",
+  "leave_a_trace_section_remove_photo": "Remove photo",
+  "leave_a_trace_section_remove_photo_title": "Delete this photo?",
+  "leave_a_trace_section_remove_photo_confirm": "Delete",
+  "leave_a_trace_section_remove_photo_cancel": "Keep it",
   "leave_a_trace_section_photo_count": {
     "one": "{} photo",
     "other": "{} photos"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "Added to your journal. Does not count toward your streak.",
   "day_form_confirmation_save": "Save and finish",
   "day_resume_bottom_sheet_empty_subtitle": "No entry for this day.",
+  "day_delete_cta": "Delete this day",
+  "day_delete_title": "Delete this day?",
+  "day_delete_body": "Your answers, text and photos for this day will be deleted. This can't be undone.",
+  "day_delete_confirm": "Delete",
+  "day_delete_cancel": "Keep it",
   "start_tracking": "Reflect on this day",
   "pro_unlock_cta": "Unlock with Pro",
   "pro_history_locked_body": "The free plan keeps your last {days} days. With Pro, reread every day you've lived.",

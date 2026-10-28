@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "Muutama sana kuvaamaan päivääsi",
   "leave_a_trace_section_text_hint": "Kirjoita, mikä teki tänään erityisen…",
   "leave_a_trace_section_add_photo": "Lisää kuvia",
+  "leave_a_trace_section_remove_photo": "Poista kuva",
+  "leave_a_trace_section_remove_photo_title": "Poistetaanko tämä kuva?",
+  "leave_a_trace_section_remove_photo_confirm": "Poista",
+  "leave_a_trace_section_remove_photo_cancel": "Säilytä",
   "leave_a_trace_section_photo_count": {
     "one": "{} kuva",
     "other": "{} kuvaa"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "Lisätty päiväkirjaasi. Ei lasketa putkeen.",
   "day_form_confirmation_save": "Tallenna ja lopeta",
   "day_resume_bottom_sheet_empty_subtitle": "Ei merkintää tälle päivälle.",
+  "day_delete_cta": "Poista tämä päivä",
+  "day_delete_title": "Poistetaanko tämä päivä?",
+  "day_delete_body": "Tämän päivän vastauksesi, tekstisi ja kuvasi poistetaan. Tätä ei voi perua.",
+  "day_delete_confirm": "Poista",
+  "day_delete_cancel": "Säilytä",
   "start_tracking": "Pohdi tätä päivää",
   "pro_unlock_cta": "Avaa Prolla",
   "pro_history_locked_body": "Ilmaisversio säilyttää viimeiset {days} päivääsi. Prolla voit lukea uudelleen jokaisen elämäsi päivän.",

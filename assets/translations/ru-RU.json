@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "Несколько слов, чтобы описать свой день",
   "leave_a_trace_section_text_hint": "Напиши, что сделало этот день особенным…",
   "leave_a_trace_section_add_photo": "Добавить фото",
+  "leave_a_trace_section_remove_photo": "Убрать фото",
+  "leave_a_trace_section_remove_photo_title": "Удалить это фото?",
+  "leave_a_trace_section_remove_photo_confirm": "Удалить",
+  "leave_a_trace_section_remove_photo_cancel": "Оставить",
   "leave_a_trace_section_photo_count": {
     "one": "{} фото",
     "other": "{} фото"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "Добавлено в журнал. Не засчитывается в серию.",
   "day_form_confirmation_save": "Сохранить и завершить",
   "day_resume_bottom_sheet_empty_subtitle": "Записи за этот день нет.",
+  "day_delete_cta": "Удалить этот день",
+  "day_delete_title": "Удалить этот день?",
+  "day_delete_body": "Твои ответы, текст и фото за этот день будут удалены. Это действие нельзя отменить.",
+  "day_delete_confirm": "Удалить",
+  "day_delete_cancel": "Оставить",
   "start_tracking": "Осмыслить этот день",
   "pro_unlock_cta": "Открыть с Pro",
   "pro_history_locked_body": "Бесплатная версия хранит твои последние {days} дней. С Pro перечитывай каждый прожитый день.",

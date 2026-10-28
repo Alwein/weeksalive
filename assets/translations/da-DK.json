@@ -48,6 +48,10 @@
   "leave_a_trace_section_subtitle_text_only": "Et par ord, der beskriver din dag",
   "leave_a_trace_section_text_hint": "Skriv hvad der gjorde dagen særlig…",
   "leave_a_trace_section_add_photo": "Tilføj fotos",
+  "leave_a_trace_section_remove_photo": "Fjern billede",
+  "leave_a_trace_section_remove_photo_title": "Slet dette billede?",
+  "leave_a_trace_section_remove_photo_confirm": "Slet",
+  "leave_a_trace_section_remove_photo_cancel": "Behold",
   "leave_a_trace_section_photo_count": {
     "one": "{} foto",
     "other": "{} fotos"
@@ -330,6 +334,11 @@
   "day_form_confirmation_journal_only_hint": "Tilføjet til din journal. Tæller ikke med i din streak.",
   "day_form_confirmation_save": "Gem og afslut",
   "day_resume_bottom_sheet_empty_subtitle": "Intet indlæg for denne dag.",
+  "day_delete_cta": "Slet denne dag",
+  "day_delete_title": "Slet denne dag?",
+  "day_delete_body": "Dine svar, din tekst og dine billeder for denne dag bliver slettet. Det kan ikke fortrydes.",
+  "day_delete_confirm": "Slet",
+  "day_delete_cancel": "Behold",
   "start_tracking": "Reflekter over denne dag",
   "pro_unlock_cta": "Lås op med Pro",
   "pro_history_locked_body": "Gratisversionen gemmer dine seneste {days} dage. Med Pro kan du genlæse hver dag, du har levet.",
