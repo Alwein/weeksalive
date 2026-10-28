@@ -42,7 +42,7 @@ class _Device {
         .into(database.days)
         .insert(
           DaysCompanion.insert(
-            date: date,
+            date: dayKey(date),
             averageFeeling: const Value('good'),
             leaveATraceText: Value(text),
             leaveATraceImagePaths: Value(jsonEncode(images)),
@@ -110,7 +110,7 @@ void main() {
       expect(manifest.imageCount, 2);
 
       final days = await target.days();
-      expect(days.map((d) => d.date), [
+      expect(days.map((d) => dayFromKey(d.date)), [
         DateTime(2026, 9, 1),
         DateTime(2026, 9, 2),
       ]);
@@ -149,7 +149,7 @@ void main() {
     await target.service.importArchive(archive);
 
     final days = await target.days();
-    expect(days.map((d) => (d.date.day, d.leaveATraceText)), [
+    expect(days.map((d) => (dayFromKey(d.date).day, d.leaveATraceText)), [
       (1, 'from backup'),
       (2, 'recorded here'),
       (5, 'recorded here'),
@@ -165,7 +165,7 @@ void main() {
         .into(source.database.days)
         .insert(
           DaysCompanion.insert(
-            date: DateTime(2026, 1, 1),
+            date: dayKey(DateTime(2026, 1, 1)),
             leaveATraceImagePaths: Value(
               jsonEncode(['/var/mobile/Containers/Data/X/Documents/old.jpeg']),
             ),
@@ -178,6 +178,16 @@ void main() {
     expect(snapshot.images.map((f) => p.basename(f.path)), ['old.jpeg']);
     final day = (snapshot.data['days'] as List).single as Map<String, dynamic>;
     expect(day['leaveATraceImages'], ['old.jpeg']);
+  });
+
+  test('a backup names each day by its calendar date', () async {
+    final source = await device('source');
+    await source.addDay(DateTime(2026, 10, 25));
+
+    final snapshot = await source.service.createSnapshot();
+
+    final day = (snapshot.data['days'] as List).single as Map<String, dynamic>;
+    expect(day['date'], '2026-10-25');
   });
 
   test('a file that is not a backup is rejected', () async {

@@ -1,6 +1,7 @@
 import 'package:redux/redux.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
+import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/domain/notifications/notification_slots.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/backup/backup_actions.dart';
@@ -46,6 +47,14 @@ class PushNotificationMiddleware extends MiddlewareClass<AppState> {
           store.dispatch(PushNotificationEnabledLoadedAction(granted));
         }
         await _reschedule(store);
+      }
+    }
+
+    if (action is RefreshTimeZoneAction) {
+      // Notifications follow once the days are reloaded in the new zone
+      // (DaysLoadedAction).
+      if (await pushNotificationRepository.setupTimezones()) {
+        store.dispatch(const TimeZoneChangedAction());
       }
     }
 
@@ -99,7 +108,7 @@ class PushNotificationMiddleware extends MiddlewareClass<AppState> {
 
   bool _shouldRescheduleForDayChange(Object action) {
     final today = normalizeDay(DateTime.now());
-    final yesterday = today.subtract(const Duration(days: 1));
+    final yesterday = addCalendarDays(today, -1);
     return switch (action) {
       DaysLoadedAction() => true,
       SaveDayAction(:final entry) =>

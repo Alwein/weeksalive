@@ -1,3 +1,5 @@
+import 'package:weeksalive/domain/gregorian_calendar.dart';
+
 /// Calendar-week utilities anchored on a user-defined [weekStartDay]
 /// (ISO weekday: 1 = Monday … 7 = Sunday).
 abstract final class WeeklyCalendar {
@@ -13,12 +15,12 @@ abstract final class WeeklyCalendar {
 
   static List<DateTime> weekDays(DateTime date, int weekStartDay) {
     final start = weekStartDate(date, weekStartDay);
-    return List.generate(7, (i) => start.add(Duration(days: i)));
+    return List.generate(7, (i) => addCalendarDays(start, i));
   }
 
   static List<DateTime> previousWeekDays(DateTime date, int weekStartDay) {
-    final start = weekStartDate(date, weekStartDay).subtract(const Duration(days: 7));
-    return List.generate(7, (i) => start.add(Duration(days: i)));
+    final start = addCalendarDays(weekStartDate(date, weekStartDay), -7);
+    return List.generate(7, (i) => addCalendarDays(start, i));
   }
 
   static String weekKey(DateTime date, int weekStartDay) {

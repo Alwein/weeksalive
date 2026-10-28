@@ -4,7 +4,7 @@ import 'package:weeksalive/core/styles/app_colors.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
-import 'package:weeksalive/domain/day/day_entry.dart';
+import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/presentation/home/widgets/day_resume_bottom_sheet/day_resume_bottom_sheet.dart';
 import 'package:weeksalive/presentation/widgets/primary_button.dart';
 import 'package:weeksalive/presentation/widgets/secondary_button.dart';
@@ -17,7 +17,7 @@ class StreakGraceReminderSheet extends StatelessWidget {
   final DateTime yesterday;
 
   static Future<void> show(BuildContext context) {
-    final yesterday = normalizeDay(DateTime.now()).subtract(const Duration(days: 1));
+    final yesterday = addCalendarDays(DateTime.now(), -1);
     return showCustomBottomSheet<void>(
       context,
       (context) => StreakGraceReminderSheet(yesterday: yesterday),

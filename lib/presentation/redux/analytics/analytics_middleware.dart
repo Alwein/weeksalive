@@ -6,6 +6,7 @@ import 'package:weeksalive/data/install/install_repository.dart';
 import 'package:weeksalive/data/purchases/offering_trial.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
+import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/domain/rewards/reward_id.dart';
 import 'package:weeksalive/domain/user/user.dart';
 import 'package:weeksalive/presentation/onboarding/onboarding_steps.dart';
@@ -455,9 +456,7 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
   void _onDaySaved(SaveDayAction action) {
     final entry = action.entry;
     final startedAt = _checkInStartedAt;
-    final dayOffset = normalizeDay(
-      _now(),
-    ).difference(normalizeDay(entry.date)).inDays;
+    final dayOffset = calendarDaysBetween(entry.date, _now());
 
     analyticsRepository.capture(
       AnalyticsEvent.checkInCompleted(
@@ -483,7 +482,7 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
     if (entry == null) return;
     analyticsRepository.capture(
       AnalyticsEvent.dayDeleted(
-        dayOffset: normalizeDay(_now()).difference(entry.date).inDays,
+        dayOffset: calendarDaysBetween(entry.date, _now()),
         photosCount: entry.leaveATrace.imagePaths.length,
       ),
     );
@@ -614,7 +613,7 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
       start == null ? 0 : _now().difference(start).inSeconds;
 
   int _daysRecordedLastWeek(Store<AppState> store) {
-    final firstDay = normalizeDay(_now()).subtract(const Duration(days: 6));
+    final firstDay = addCalendarDays(_now(), -6);
     return store.state.dayState.entries.keys
         .where((date) => !date.isBefore(firstDay))
         .length;

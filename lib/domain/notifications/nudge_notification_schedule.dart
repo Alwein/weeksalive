@@ -1,4 +1,5 @@
 import 'package:weeksalive/domain/day/day_entry.dart';
+import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/domain/notifications/daily_reminder_schedule.dart';
 
 /// When to fire the same-day follow-up and the next-morning streak save.
@@ -26,7 +27,7 @@ abstract final class NudgeNotificationSchedule {
 
     var routine = DateTime(now.year, now.month, now.day, slotHour, slotMinute);
     if (routine.isBefore(now)) {
-      routine = routine.add(const Duration(days: 1));
+      routine = DateTime(now.year, now.month, now.day + 1, slotHour, slotMinute);
     }
     routine = DailyReminderSchedule.deferWhenTodayLogged(
       scheduledDate: routine,
@@ -58,7 +59,7 @@ abstract final class NudgeNotificationSchedule {
     if (streakCount <= 0) return null;
 
     final today = normalizeDay(now);
-    final tomorrow = today.add(const Duration(days: 1));
+    final tomorrow = addCalendarDays(today, 1);
 
     if (isYesterdayGracePeriod) {
       final todaySave = _atStreakSaveTime(today);

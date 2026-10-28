@@ -48,8 +48,7 @@ class DayRepository {
   }
 
   Future<Day?> _findRow(DateTime date) {
-    final normalized = normalizeDay(date);
-    return (_db.select(_db.days)..where((t) => t.date.equals(normalized))).getSingleOrNull();
+    return (_db.select(_db.days)..where((t) => t.date.equals(dayKey(date)))).getSingleOrNull();
   }
 
   /// The stable file name to store for [path]: an image picked from outside
@@ -82,7 +81,7 @@ class DayRepository {
     );
 
     return DayEntry(
-      date: row.date,
+      date: dayFromKey(row.date),
       savedAt: row.savedAt,
       averageFeeling: _enumByName(AverageFeeling.values, row.averageFeeling),
       meaningScore: _enumByName(MeaningScore.values, row.meaningScore),
@@ -99,7 +98,7 @@ class DayRepository {
 
   DaysCompanion _toCompanion(DayEntry entry) {
     return DaysCompanion(
-      date: Value(entry.date),
+      date: Value(dayKey(entry.date)),
       averageFeeling: Value(entry.averageFeeling?.name),
       meaningScore: Value(entry.meaningScore?.name),
       hasNewExperience: Value(entry.hasNewExperience),

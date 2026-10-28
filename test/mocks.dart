@@ -91,6 +91,7 @@ class MockPushNotificationRepository extends Mock
         weekStartDay: DateTime.monday,
       ),
     );
+    when(() => setupTimezones()).thenAnswer((_) async => false);
     when(() => areNotificationsEnabled()).thenAnswer((_) async => false);
     when(() => requestNotificationPermission()).thenAnswer((_) async => true);
     when(

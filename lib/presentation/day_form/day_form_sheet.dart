@@ -8,6 +8,7 @@ import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/core/styles/margins.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
+import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/domain/pro/free_plan.dart';
 import 'package:weeksalive/presentation/day_form/day_form.dart';
 import 'package:weeksalive/presentation/day_form/day_form_confirmation_page.dart';
@@ -131,7 +132,7 @@ class _DayFormSheetRootState extends State<_DayFormSheetRoot> {
       _store?.dispatch(
         CheckInStartedAction(
           source: widget.source,
-          dayOffset: normalizeDay(DateTime.now()).difference(normalizeDay(widget.date)).inDays,
+          dayOffset: calendarDaysBetween(widget.date, DateTime.now()),
         ),
       );
     });

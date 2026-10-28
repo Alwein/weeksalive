@@ -18,6 +18,7 @@ import 'package:weeksalive/presentation/bootstrap/bootstrap_page.dart';
 import 'package:weeksalive/presentation/push_notifications/push_notification_navigation_handler.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/backup/backup_actions.dart';
+import 'package:weeksalive/presentation/redux/bootstrap/bootstrap_actions.dart';
 import 'package:weeksalive/presentation/redux/home_widget/home_widget_actions.dart';
 import 'package:weeksalive/presentation/redux/wallpaper/wallpaper_actions.dart';
 import 'package:weeksalive/presentation/widgets/app_background_scale.dart';
@@ -71,6 +72,9 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         state == AppLifecycleState.paused) {
       widget.store.dispatch(const RefreshHomeWidgetsAction());
       widget.store.dispatch(const RefreshWallpaperAction());
+    }
+    if (state == AppLifecycleState.resumed) {
+      widget.store.dispatch(const RefreshTimeZoneAction());
     }
     // Leaving the app is when the day's changes are complete; the backup is a
     // no-op when nothing changed since the last one.

@@ -25,3 +25,20 @@ DateTime dateForDayOfYear(int year, int index) {
   // DateTime normalizes day overflow into the right month/year.
   return DateTime(year, 1, 1 + index);
 }
+
+/// Local midnight of the calendar day [days] after [date] (before it when
+/// negative).
+///
+/// Never add `Duration(days: n)` to a day instead: a day lasts 23 or 25 hours
+/// when the clocks change, so 24 hours after a midnight can still be the same
+/// day at 23:00, or the next one at 01:00.
+DateTime addCalendarDays(DateTime date, int days) {
+  // DateTime normalizes day overflow into the right month/year.
+  return DateTime(date.year, date.month, date.day + days);
+}
+
+/// Whole calendar days from [from] to [to], ignoring the time of day and
+/// daylight-saving transitions.
+int calendarDaysBetween(DateTime from, DateTime to) {
+  return _epochDayNumber(to.year, to.month, to.day) - _epochDayNumber(from.year, from.month, from.day);
+}

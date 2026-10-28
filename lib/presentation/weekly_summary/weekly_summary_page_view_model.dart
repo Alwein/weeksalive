@@ -3,6 +3,7 @@ import 'package:redux/redux.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/domain/day/day.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
+import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/domain/life_week_grid.dart';
 import 'package:weeksalive/domain/user/user.dart';
 import 'package:weeksalive/domain/weekly_calendar.dart';
@@ -50,7 +51,7 @@ abstract class WeeklySummaryPageViewModel with _$WeeklySummaryPageViewModel {
     final weekEntries = _entriesForDays(store, previousWeekDays);
     final weekStart = previousWeekDays.first;
     final weekEnd = previousWeekDays.last;
-    final weekBeforeDays = [for (final day in previousWeekDays) day.subtract(const Duration(days: 7))];
+    final weekBeforeDays = [for (final day in previousWeekDays) addCalendarDays(day, -7)];
     final weekBeforeEntries = _entriesForDays(store, weekBeforeDays);
 
     return WeeklySummaryPageViewModel(

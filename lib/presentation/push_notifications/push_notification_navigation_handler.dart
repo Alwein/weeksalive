@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:weeksalive/data/push_notifications/push_notification_repository.dart';
-import 'package:weeksalive/domain/day/day_entry.dart';
+import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/domain/notifications/notification_payloads.dart';
 import 'package:weeksalive/presentation/day_form/day_form.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
@@ -77,7 +77,7 @@ class _PushNotificationNavigationHandlerState extends State<PushNotificationNavi
           store.dispatch(const TryReviewPromptAction(source: 'notification_followup'));
         }
       case PendingNotificationTarget.yesterdayDayForm:
-        final yesterday = normalizeDay(DateTime.now()).subtract(const Duration(days: 1));
+        final yesterday = addCalendarDays(DateTime.now(), -1);
         await DayForm.showBottomSheet(navigatorContext, yesterday, source: 'notification_streak_save');
       case PendingNotificationTarget.weeklySummary:
         _showWeeklySummary(store, navigatorContext);

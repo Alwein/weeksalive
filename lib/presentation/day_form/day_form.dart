@@ -14,7 +14,7 @@ import 'package:weeksalive/core/styles/text_styles.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/domain/day/day.dart';
-import 'package:weeksalive/domain/day/day_entry.dart';
+import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/domain/weekly_intent/weekly_intent.dart';
 import 'package:weeksalive/presentation/day_form/day_form_controller.dart';
 import 'package:weeksalive/presentation/day_form/day_form_sheet.dart';
@@ -132,8 +132,7 @@ class DayFormContentState extends State<DayFormContent> {
 
   /// Yesterday is asked about as yesterday: the onboarding check-in and the
   /// streak grace window both open the form on it.
-  bool get _isYesterday =>
-      normalizeDay(widget.date) == normalizeDay(DateTime.now()).subtract(const Duration(days: 1));
+  bool get _isYesterday => calendarDaysBetween(widget.date, DateTime.now()) == 1;
 
   double get _circleSize {
     final feelingContribution = _controller.averageFeeling != null

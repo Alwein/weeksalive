@@ -1,3 +1,5 @@
+import 'package:weeksalive/domain/gregorian_calendar.dart';
+
 class LifeWeekGrid {
   const LifeWeekGrid({required this.totalWeeks, required this.livedWeeks});
 
@@ -64,7 +66,7 @@ int totalWeeksFromBirthToAgeAnniversary({
   required int ageYears,
 }) {
   final end = addCalendarYears(dateOfBirth, ageYears);
-  return end.difference(dateOfBirth).inDays ~/ 7;
+  return calendarDaysBetween(dateOfBirth, end) ~/ 7;
 }
 
 /// Counts the number of completed life-weeks at [at], where each week boundary
@@ -85,9 +87,9 @@ int weeksSinceBirth({
   final daysToFirstBoundary = ((weekStartDay - birth.weekday) % 7 == 0)
       ? 7
       : (weekStartDay - birth.weekday) % 7;
-  final firstBoundary = birth.add(Duration(days: daysToFirstBoundary));
+  final firstBoundary = addCalendarDays(birth, daysToFirstBoundary);
   if (today.isBefore(firstBoundary)) return 0;
-  return today.difference(firstBoundary).inDays ~/ 7 + 1;
+  return calendarDaysBetween(firstBoundary, today) ~/ 7 + 1;
 }
 
 DateTime addCalendarYears(DateTime d, int years) {
@@ -174,7 +176,7 @@ List<int> _seasonalColumnOffsets({
 }) {
   final offsets = <int>[];
   for (var w = 0; w < columns; w++) {
-    final date = dateOfBirth.add(Duration(days: w * 7));
+    final date = addCalendarDays(dateOfBirth, w * 7);
     if (predicate(date)) offsets.add(w);
   }
   return offsets;

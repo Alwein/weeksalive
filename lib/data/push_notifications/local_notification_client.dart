@@ -15,10 +15,14 @@ class LocalNotificationClient {
 
   final FlutterLocalNotificationsPlugin _plugin;
 
-  Future<void> setupTimezones() async {
-    tz.initializeTimeZones();
+  /// Points `tz.local`, which notifications are scheduled in, at the device
+  /// time zone. Returns whether it changed.
+  Future<bool> setupTimezones() async {
+    if (!tz.timeZoneDatabase.isInitialized) tz.initializeTimeZones();
     final timezoneName = await FlutterTimezone.getLocalTimezone();
+    if (tz.local.name == timezoneName) return false;
     tz.setLocalLocation(tz.getLocation(timezoneName));
+    return true;
   }
 
   Future<void> initialize({NotificationTapCallback? onNotificationTap}) async {

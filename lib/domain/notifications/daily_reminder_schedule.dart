@@ -9,7 +9,16 @@ abstract final class DailyReminderSchedule {
     required DateTime now,
   }) {
     if (hasTodayEntry && normalizeDay(scheduledDate) == normalizeDay(now)) {
-      return scheduledDate.add(const Duration(days: 1));
+      // Same wall-clock time tomorrow, which is not 24 hours away when the
+      // clocks change tonight.
+      return DateTime(
+        scheduledDate.year,
+        scheduledDate.month,
+        scheduledDate.day + 1,
+        scheduledDate.hour,
+        scheduledDate.minute,
+        scheduledDate.second,
+      );
     }
     return scheduledDate;
   }

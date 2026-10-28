@@ -15,7 +15,7 @@ class DayMiddleware extends MiddlewareClass<AppState> {
   @override
   void call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
-    if (action is BootstrapAction || action is DataRestoredAction) {
+    if (action is BootstrapAction || action is DataRestoredAction || action is TimeZoneChangedAction) {
       final entries = await dayRepository.getAll();
       try {
         store.dispatch(DaysLoadedAction(entries));

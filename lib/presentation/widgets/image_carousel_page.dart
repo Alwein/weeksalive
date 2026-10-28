@@ -64,8 +64,11 @@ class _ImageCarouselPageState extends State<ImageCarouselPage> {
             itemCount: widget.imagePaths.length,
             onPageChanged: (index) => setState(() => _currentIndex = index),
             itemBuilder: (context, index) {
-              return Center(
-                child: InteractiveViewer(
+              // The viewer fills the whole page and the image is laid out to
+              // that size, so zooming isn't clipped to the image's own bounds.
+              return InteractiveViewer(
+                maxScale: 5,
+                child: SizedBox.expand(
                   child: Image.file(
                     File(widget.imagePaths[index]),
                     fit: BoxFit.contain,

@@ -78,7 +78,6 @@ class LocalNotificationScheduler {
         // A repeating trigger ignores the date on iOS (it matches hour/minute
         // only) and would still fire today, so schedule the next days one by one.
         for (var d = 0; d < LocalNotificationConfig.deferredDailyDays; d++) {
-          final day = scheduledDate.add(Duration(days: d));
           await _client.scheduleDailyOnce(
             id:
                 LocalNotificationConfig.deferredDailyNotificationIdStart +
@@ -88,7 +87,13 @@ class LocalNotificationScheduler {
             body: body,
             payload: payload,
             scheduledDate: _toTz(
-              DateTime(day.year, day.month, day.day, time.hour, time.minute),
+              DateTime(
+                scheduledDate.year,
+                scheduledDate.month,
+                scheduledDate.day + d,
+                time.hour,
+                time.minute,
+              ),
             ),
           );
         }

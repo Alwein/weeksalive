@@ -84,6 +84,14 @@ void main() {
       expect(stored, isNotNull);
     });
 
+    test('keys a day by its calendar date, not by an instant of the device time zone', () async {
+      await repository.upsert(DayEntry(date: DateTime(2026, 10, 27, 21)));
+
+      final row = await database.select(database.days).getSingle();
+      expect(row.date.isAtSameMomentAs(DateTime.utc(2026, 10, 27)), isTrue);
+      expect((await repository.getAll()).single.date, DateTime(2026, 10, 27));
+    });
+
     test('keeps photos already saved instead of saving them again', () async {
       await repository.upsert(
         DayEntry(
@@ -136,7 +144,7 @@ void main() {
           .into(database.days)
           .insert(
             DaysCompanion.insert(
-              date: DateTime(2026, 6, 1),
+              date: dayKey(DateTime(2026, 6, 1)),
               savedAt: DateTime(2026, 6, 1, 9),
               leaveATraceImagePaths: const Value('["/legacy/a.png"]'),
             ),

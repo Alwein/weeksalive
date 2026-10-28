@@ -291,7 +291,7 @@ class BackupService {
   }
 
   Map<String, dynamic> _dayToJson(Day row, List<String> imageFileNames) => {
-    'date': _formatDay(row.date),
+    'date': _formatDay(dayFromKey(row.date)),
     'averageFeeling': row.averageFeeling,
     'meaningScore': row.meaningScore,
     'hasNewExperience': row.hasNewExperience,
@@ -304,7 +304,7 @@ class BackupService {
 
   DaysCompanion _dayFromJson(Map<String, dynamic> json) {
     return DaysCompanion.insert(
-      date: _parseDay(json['date'] as String),
+      date: dayKey(_parseDay(json['date'] as String)),
       averageFeeling: Value(json['averageFeeling'] as String?),
       meaningScore: Value(json['meaningScore'] as String?),
       hasNewExperience: Value(json['hasNewExperience'] as bool?),
@@ -320,8 +320,8 @@ class BackupService {
     );
   }
 
-  /// Days are keyed by their local midnight; a calendar date survives a
-  /// restore on a device set to another time zone, a timestamp would not.
+  /// A backup names each day by its calendar date, which survives a restore on
+  /// a device set to another time zone where a timestamp would not.
   static String _formatDay(DateTime date) =>
       '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
 

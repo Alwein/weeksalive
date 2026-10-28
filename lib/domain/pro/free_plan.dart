@@ -1,4 +1,5 @@
 import 'package:weeksalive/domain/day/day_entry.dart';
+import 'package:weeksalive/domain/gregorian_calendar.dart';
 
 /// What a free user can do with their days. Pro lifts every limit here.
 ///
@@ -12,7 +13,7 @@ abstract final class FreePlan {
 
   /// Whether a free user can read the entry recorded for [date].
   static bool canReadDay(DateTime date, DateTime now) {
-    final daysAgo = _calendarDaysBetween(date, now);
+    final daysAgo = calendarDaysBetween(date, now);
     return daysAgo < historyDays;
   }
 
@@ -27,12 +28,5 @@ abstract final class FreePlan {
   }) {
     if (isWithinStreakGraceWindow(date, now)) return true;
     return hasEntry && canReadDay(date, now);
-  }
-
-  /// Whole calendar days from [from] to [to], immune to DST shifts.
-  static int _calendarDaysBetween(DateTime from, DateTime to) {
-    final start = DateTime.utc(from.year, from.month, from.day);
-    final end = DateTime.utc(to.year, to.month, to.day);
-    return end.difference(start).inDays;
   }
 }

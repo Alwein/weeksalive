@@ -20,7 +20,8 @@ class PushNotificationRepository {
   final LocalNotificationClient _client;
   late final LocalNotificationScheduler _scheduler;
 
-  Future<void> setupTimezones() => _client.setupTimezones();
+  /// Returns whether the device time zone changed since the last call.
+  Future<bool> setupTimezones() => _client.setupTimezones();
 
   Future<void> initialize({void Function(String payload)? onNotificationTap}) =>
       _client.initialize(onNotificationTap: onNotificationTap);

@@ -388,6 +388,54 @@ void main() {
     });
   });
 
+  group('RefreshTimeZoneAction', () {
+    late MockPushNotificationRepository pushRepo;
+    late MockDayRepository dayRepo;
+    late TestStoreFactory factory;
+
+    setUp(() {
+      pushRepo = MockPushNotificationRepository();
+      dayRepo = MockDayRepository();
+      factory = TestStoreFactory()
+        ..pushNotificationRepository = pushRepo
+        ..dayRepository = dayRepo;
+    });
+
+    test('reloads the days and reschedules when the device moved to another time zone', () async {
+      final today = normalizeDay(DateTime.now());
+      when(() => pushRepo.setupTimezones()).thenAnswer((_) async => true);
+      when(() => dayRepo.getAll()).thenAnswer((_) async => [DayEntry(date: today)]);
+
+      final store = factory.initializeReduxStore(initialAppState());
+      await store.dispatch(const RefreshTimeZoneAction());
+      await _dispatchBootstrapAndWaitForMiddleware();
+
+      expect(store.state.dayState.entries.keys, [today]);
+      verify(
+        () => pushRepo.scheduleAllNotifications(
+          dailyTimes: any(named: 'dailyTimes'),
+          weeklySummary: any(named: 'weeklySummary'),
+          hasTodayEntry: true,
+          streakCount: any(named: 'streakCount'),
+          isYesterdayGracePeriod: any(named: 'isYesterdayGracePeriod'),
+        ),
+      ).called(1);
+
+      store.teardown();
+    });
+
+    test('leaves the days alone when the time zone did not change', () async {
+      final store = factory.initializeReduxStore(initialAppState());
+      await store.dispatch(const RefreshTimeZoneAction());
+      await _dispatchBootstrapAndWaitForMiddleware();
+
+      verify(() => pushRepo.setupTimezones()).called(1);
+      verifyNever(() => dayRepo.getAll());
+
+      store.teardown();
+    });
+  });
+
   group('DaysLoadedAction', () {
     late StoreTester storeTester;
     late MockPushNotificationRepository pushRepo;

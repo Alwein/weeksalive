@@ -1,4 +1,5 @@
 import 'package:weeksalive/domain/day/day.dart';
+import 'package:weeksalive/domain/gregorian_calendar.dart';
 
 class DayEntry {
   DayEntry({
@@ -126,8 +127,7 @@ int dayScoreLevel({
 /// A day can be logged from [day] 00:00 through the end of the following
 /// calendar day (24h grace).
 DateTime streakEligibilityWindowEnd(DateTime day) {
-  final normalized = normalizeDay(day);
-  final nextDay = normalized.add(const Duration(days: 1));
+  final nextDay = addCalendarDays(day, 1);
   return DateTime(nextDay.year, nextDay.month, nextDay.day, 23, 59, 59, 999);
 }
 
@@ -157,11 +157,11 @@ bool isYesterdayGracePeriod({
 }) {
   if (recordedDays.isEmpty) return false;
 
-  final yesterday = normalizeDay(now).subtract(const Duration(days: 1));
+  final yesterday = addCalendarDays(now, -1);
   if (recordedDays.contains(yesterday)) return false;
   if (!isWithinStreakGraceWindow(yesterday, now)) return false;
 
-  final dayBeforeYesterday = yesterday.subtract(const Duration(days: 1));
+  final dayBeforeYesterday = addCalendarDays(yesterday, -1);
   return recordedDays.contains(dayBeforeYesterday);
 }
 
@@ -181,9 +181,9 @@ int computeStreak(Iterable<DayEntry> entries, DateTime now) {
   while (true) {
     if (eligibleDates.contains(cursor)) {
       count++;
-      cursor = cursor.subtract(const Duration(days: 1));
+      cursor = addCalendarDays(cursor, -1);
     } else if (isWithinStreakGraceWindow(cursor, now)) {
-      cursor = cursor.subtract(const Duration(days: 1));
+      cursor = addCalendarDays(cursor, -1);
     } else {
       break;
     }
@@ -210,7 +210,7 @@ int computeBestStreak(Iterable<DayEntry> entries) {
   var current = 1;
 
   for (var i = 1; i < sorted.length; i++) {
-    if (sorted[i].difference(sorted[i - 1]).inDays == 1) {
+    if (calendarDaysBetween(sorted[i - 1], sorted[i]) == 1) {
       current++;
       if (current > best) best = current;
     } else {

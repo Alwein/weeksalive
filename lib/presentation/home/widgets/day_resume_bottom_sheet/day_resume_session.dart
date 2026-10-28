@@ -2,6 +2,7 @@ import 'package:flutter/physics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:weeksalive/core/utils/sensorial_feedback.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
+import 'package:weeksalive/domain/gregorian_calendar.dart';
 
 /// Horizontal pager state for the day resume sheet.
 ///
@@ -197,16 +198,10 @@ class DayResumeSession extends ChangeNotifier {
     final limit = forward ? normalizeDay(_now()) : earliestDate;
     if (limit == null) return _maxSettlePages;
     final days = forward
-        ? _daysBetween(date, limit)
-        : _daysBetween(limit, date);
+        ? calendarDaysBetween(date, limit)
+        : calendarDaysBetween(limit, date);
     return days.clamp(0, _maxSettlePages);
   }
-
-  static int _daysBetween(DateTime from, DateTime to) => DateTime.utc(
-    to.year,
-    to.month,
-    to.day,
-  ).difference(DateTime.utc(from.year, from.month, from.day)).inDays;
 
   void _beginSettle(double target, double velocity) {
     _settleTarget = target;

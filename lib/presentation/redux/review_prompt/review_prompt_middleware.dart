@@ -3,7 +3,7 @@ import 'package:redux/redux.dart';
 import 'package:weeksalive/data/analytics/analytics_events.dart';
 import 'package:weeksalive/data/review/review_prompt_repository.dart';
 import 'package:weeksalive/data/review/review_prompt_store.dart';
-import 'package:weeksalive/domain/day/day_entry.dart';
+import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/presentation/redux/analytics/analytics_actions.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
 import 'package:weeksalive/presentation/redux/day/day_actions.dart';
@@ -47,7 +47,7 @@ class ReviewPromptMiddleware extends MiddlewareClass<AppState> {
   Future<void> _recordCheckIn(SaveDayAction action) async {
     if (_reviewPromptStore.hasRequested) return;
 
-    final dayOffset = normalizeDay(DateTime.now()).difference(normalizeDay(action.entry.date)).inDays;
+    final dayOffset = calendarDaysBetween(action.entry.date, DateTime.now());
     if (dayOffset != 0) return;
 
     await _reviewPromptStore.incrementCheckInCount();

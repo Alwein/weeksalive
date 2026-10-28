@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weeksalive/core/styles/dimens.dart';
 import 'package:weeksalive/domain/day/day_entry.dart';
+import 'package:weeksalive/domain/gregorian_calendar.dart';
 import 'package:weeksalive/domain/life_week_grid.dart';
 import 'package:weeksalive/domain/notifications/notification_slots.dart';
 import 'package:weeksalive/domain/user/user.dart';
@@ -50,9 +51,7 @@ class OnboardingFormController extends ChangeNotifier {
   int get currentAgeInWeeks {
     final dob = _dateOfBirth;
     if (dob == null) return 0;
-    final now = DateTime.now();
-    final diff = now.difference(dob);
-    return diff.inDays ~/ 7;
+    return calendarDaysBetween(dob, DateTime.now()) ~/ 7;
   }
 
   int get remainingVisits {
@@ -62,9 +61,7 @@ class OnboardingFormController extends ChangeNotifier {
   int get totalDaysLived {
     final dob = _dateOfBirth;
     if (dob == null) return 0;
-    final now = DateTime.now();
-    final diff = now.difference(dob);
-    return diff.inDays;
+    return calendarDaysBetween(dob, DateTime.now());
   }
 
   LifeWeekGrid get lifeWeekGrid => LifeWeekGrid.fromProfile(
@@ -111,7 +108,7 @@ class OnboardingFormController extends ChangeNotifier {
     final minutesNow = now.hour * 60 + now.minute;
     final minutesReminder = reminder.hour * 60 + reminder.minute;
     if (minutesNow < minutesReminder) {
-      return today.subtract(const Duration(days: 1));
+      return addCalendarDays(today, -1);
     }
     return today;
   }

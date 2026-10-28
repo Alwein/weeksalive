@@ -63,6 +63,31 @@ void main() {
     });
   });
 
+  group('addCalendarDays', () {
+    test('returns the midnight of the shifted day', () {
+      expect(addCalendarDays(DateTime(2026, 10, 25, 18, 30), 1), DateTime(2026, 10, 26));
+    });
+
+    test('rolls over months and years in both directions', () {
+      expect(addCalendarDays(DateTime(2026, 12, 31), 1), DateTime(2027, 1, 1));
+      expect(addCalendarDays(DateTime(2026, 3, 1), -1), DateTime(2026, 2, 28));
+    });
+  });
+
+  group('calendarDaysBetween', () {
+    test('ignores the time of day', () {
+      expect(calendarDaysBetween(DateTime(2026, 10, 24, 23, 59), DateTime(2026, 10, 25, 0, 1)), 1);
+    });
+
+    test('is negative when going back', () {
+      expect(calendarDaysBetween(DateTime(2026, 10, 27), DateTime(2026, 10, 20)), -7);
+    });
+
+    test('counts across a year boundary', () {
+      expect(calendarDaysBetween(DateTime(2026, 12, 30), DateTime(2027, 1, 2)), 3);
+    });
+  });
+
   group('round-trip dayOfYearIndex <-> dateForDayOfYear', () {
     test('is consistent for every day of a common year', () {
       const year = 2026;
