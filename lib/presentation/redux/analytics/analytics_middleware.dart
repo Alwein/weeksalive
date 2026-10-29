@@ -341,7 +341,7 @@ class AnalyticsMiddleware extends MiddlewareClass<AppState> {
       price: product.price,
       currency: product.currencyCode,
       plan: package.packageType.name,
-      trialDays: store.state.purchaseState.offerings.trialDaysOf(package),
+      trialDays: product.trialDays,
     );
     _pendingPurchase = pending;
     analyticsRepository.capture(

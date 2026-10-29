@@ -26,10 +26,9 @@ void main() {
   });
 
   group('PaywallPlanData.fromOffering', () {
-    test('exposes metadata trial length on the plan', () {
+    test('exposes the store trial length on the plan', () {
       final offering = offeringFixture(
-        id: 'trial_14d',
-        trialDays: 14,
+        id: 'trial_30d',
         introPrice: introPriceFixture(
           period: 'P1M',
           periodUnit: 'MONTH',
@@ -38,9 +37,9 @@ void main() {
       );
 
       final plan = PaywallPlanData.fromOffering(offering);
-      expect(plan?.trialDays, 14);
-      expect(plan?.trialWeeks, 2);
-      expect(plan?.offeringId, 'trial_14d');
+      expect(plan?.trialDays, 30);
+      expect(plan?.trialWeeks, 4);
+      expect(plan?.offeringId, 'trial_30d');
     });
   });
 

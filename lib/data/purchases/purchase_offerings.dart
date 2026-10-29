@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:purchases_flutter/purchases_flutter.dart' hide Store;
-import 'package:weeksalive/data/purchases/offering_trial.dart';
 
 part 'purchase_offerings.freezed.dart';
 
@@ -22,16 +21,4 @@ abstract class PurchaseOfferings with _$PurchaseOfferings {
   }) = _PurchaseOfferings;
 
   static const none = PurchaseOfferings();
-
-  /// Free-trial length [package] is sold with. The offering metadata only
-  /// describes its annual package, so any other package falls back to the
-  /// store.
-  int? trialDaysOf(Package package) {
-    final offeringId = package.presentedOfferingContext.offeringIdentifier;
-    for (final offering in [current, alternate, plans]) {
-      if (offering == null || offering.identifier != offeringId) continue;
-      if (offering.annual == package) return offering.trialDays;
-    }
-    return package.storeProduct.trialDays;
-  }
 }

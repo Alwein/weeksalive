@@ -5,6 +5,7 @@ import 'package:purchases_flutter/purchases_flutter.dart' hide Store;
 import 'package:redux/redux.dart';
 import 'package:weeksalive/core/texts/strings.dart';
 import 'package:weeksalive/core/utils/logger.dart';
+import 'package:weeksalive/data/purchases/offering_trial.dart';
 import 'package:weeksalive/data/purchases/purchase_offerings.dart';
 import 'package:weeksalive/data/purchases/purchase_repository.dart';
 import 'package:weeksalive/data/tiktok_events/tiktok_events_repository.dart';
@@ -143,7 +144,7 @@ class PurchaseMiddleware extends MiddlewareClass<AppState> {
         await _trackPurchaseForTikTok(
           package,
           isTrial: isTrial,
-          trialDays: store.state.purchaseState.offerings.trialDaysOf(package),
+          trialDays: package.storeProduct.trialDays,
         );
       }
       store.dispatch(PurchaseSucceededAction(isPro: isPro, isTrial: isTrial));

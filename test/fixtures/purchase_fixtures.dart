@@ -81,29 +81,35 @@ Package packageFixture({
   });
 }
 
+/// Offering whose annual product has a free trial of [trialDays], or none when
+/// [trialDays] is null. [introPrice] replaces that intro offer.
 Offering offeringFixture({
   String id = 'default',
   String productId = 'yearly',
-  int trialDays = 14,
+  int? trialDays = 14,
   Map<String, dynamic>? introPrice,
   bool includeAnnual = true,
-  bool includeTrialMetadata = true,
 }) {
-  final metadata = includeTrialMetadata
-      ? {'trial_days': trialDays}
-      : <String, Object>{};
   if (!includeAnnual) {
-    return Offering(id, 'Standard offering', metadata, const []);
+    return Offering(id, 'Standard offering', const {}, const []);
   }
   final package = packageFixture(
     offeringId: id,
     productId: productId,
-    introPrice: introPrice,
+    introPrice:
+        introPrice ??
+        (trialDays == null
+            ? null
+            : introPriceFixture(
+                period: 'P${trialDays}D',
+                periodUnit: 'DAY',
+                periodNumberOfUnits: trialDays,
+              )),
   );
   return Offering(
     id,
     'Standard offering',
-    metadata,
+    const {},
     [package],
     annual: package,
   );

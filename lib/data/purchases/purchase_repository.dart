@@ -36,8 +36,7 @@ class PurchaseRepository {
   /// Another trial length, offered as an alternate on the onboarding paywall.
   /// The plans offering also has an annual package, so it has to be excluded
   /// here or dismissing the trial would still be able to start one. Any other
-  /// offering qualifies only if it has a trial, from its metadata or its
-  /// store intro offer.
+  /// offering qualifies only if its annual product has a store intro offer.
   Offering? alternateOffering(Offerings offerings, Offering? current) {
     if (current == null) return null;
     for (final offering in offerings.all.values) {
@@ -68,9 +67,9 @@ class PurchaseRepository {
   }
 
   /// Whether the entitlement is currently served by a free trial rather than a
-  /// paid period. The store, not the offering metadata, is the authority here:
-  /// a user who already burned the introductory offer is charged immediately
-  /// and must not be reported to TikTok as a trial start.
+  /// paid period. The product's intro offer is not enough here: a user who
+  /// already burned the introductory offer is charged immediately and must
+  /// not be reported to TikTok as a trial start.
   bool isInTrial(CustomerInfo customerInfo) {
     return customerInfo.entitlements.active[_entitlementId]?.periodType ==
         PeriodType.trial;

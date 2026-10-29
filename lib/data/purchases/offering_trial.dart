@@ -1,14 +1,10 @@
 import 'package:purchases_flutter/purchases_flutter.dart' hide Store;
 
 extension OfferingTrialX on Offering {
-  /// Free-trial length of the annual package, in days.
-  ///
-  /// The `trial_days` metadata wins over the store: StoreKit can report the
-  /// same intro period for every offer of a subscription group, so the store
-  /// is only a fallback.
-  int? get trialDays =>
-      trialDaysFromMetadata(metadata['trial_days']) ??
-      annual?.storeProduct.trialDays;
+  /// Free-trial length of the annual package, in days, as the store sells it.
+  /// Changing the intro offer in App Store Connect or the Play Console is
+  /// enough to change what the paywall shows.
+  int? get trialDays => annual?.storeProduct.trialDays;
 }
 
 extension StoreProductTrialX on StoreProduct {
@@ -30,13 +26,6 @@ extension StoreProductTrialX on StoreProduct {
     };
   }
 }
-
-int? trialDaysFromMetadata(Object? raw) => switch (raw) {
-  final int days => days,
-  final double days => days.toInt(),
-  final String days => int.tryParse(days),
-  _ => null,
-};
 
 int? trialDaysFromIsoPeriod(String? period) {
   if (period == null || period.isEmpty) return null;

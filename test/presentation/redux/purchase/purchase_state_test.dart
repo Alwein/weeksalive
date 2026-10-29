@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:purchases_flutter/purchases_flutter.dart' hide Store;
 import 'package:redux/redux.dart';
+import 'package:weeksalive/data/purchases/offering_trial.dart';
 import 'package:weeksalive/data/purchases/purchase_offerings.dart';
 import 'package:weeksalive/presentation/redux/app_reducer.dart';
 import 'package:weeksalive/presentation/redux/app_state.dart';
@@ -184,7 +185,7 @@ void main() {
       await pumpEventQueue();
 
       expect(store.state.purchaseState.offering?.identifier, 'trial_14d');
-      expect(store.state.purchaseState.offering?.metadata['trial_days'], 14);
+      expect(store.state.purchaseState.offering?.trialDays, 14);
     });
 
     test('loads the alternate offering alongside the current one', () async {
@@ -301,7 +302,7 @@ void main() {
           (s) => s.purchaseState,
           isA<PurchaseStateSuccess>()
               .where((s) => s.offering?.identifier, 'trial_30d')
-              .where((s) => s.offering?.metadata['trial_days'], 30),
+              .where((s) => s.offering?.trialDays, 30),
         ),
       ]);
     });
@@ -507,48 +508,6 @@ void main() {
           contentName: any(named: 'contentName'),
         ),
       );
-    });
-
-    test('takes the trial length from the offering metadata', () async {
-      when(() => purchaseRepo.isInTrial(any())).thenReturn(true);
-      // StoreKit reports the whole subscription group's intro as one month.
-      final offering = offeringFixture(
-        id: 'trial_14d',
-        trialDays: 14,
-        introPrice: introPriceFixture(
-          period: 'P1M',
-          periodUnit: 'MONTH',
-          periodNumberOfUnits: 1,
-        ),
-      );
-
-      final store = Store<AppState>(
-        appReducer,
-        initialState: initialAppState().copyWith(
-          purchaseState: PurchaseState.success(
-            offerings: PurchaseOfferings(current: offering),
-            isPro: false,
-          ),
-        ),
-        middleware: [
-          PurchaseMiddleware(
-            purchaseRepository: purchaseRepo,
-            tikTokEventsRepository: tikTokRepo,
-          ).call,
-        ],
-      );
-      await store.dispatch(PurchasePackageAction(offering.annual!));
-      await pumpEventQueue();
-
-      verify(
-        () => tikTokRepo.logStartTrial(
-          value: any(named: 'value'),
-          currency: any(named: 'currency'),
-          contentId: any(named: 'contentId'),
-          contentName: any(named: 'contentName'),
-          trialDays: 14,
-        ),
-      ).called(1);
     });
 
     test('reports lifetime as a Purchase, never as a Subscribe', () async {

@@ -32,10 +32,7 @@ void main() {
 
     test('does not treat the plans offering as an alternate trial', () {
       final current = offeringFixture(id: 'trial_14d');
-      final plans = offeringFixture(
-        id: 'no_trial',
-        includeTrialMetadata: false,
-      );
+      final plans = offeringFixture(id: 'no_trial');
       final offerings = Offerings({
         'trial_14d': current,
         'no_trial': plans,
@@ -45,31 +42,9 @@ void main() {
       expect(repository.plansOffering(offerings)?.identifier, 'no_trial');
     });
 
-    test('accepts an alternate whose trial comes from the store only', () {
-      final current = offeringFixture(id: 'trial_14d');
-      final storeTrial = offeringFixture(
-        id: 'trial_7d',
-        includeTrialMetadata: false,
-        introPrice: introPriceFixture(
-          period: 'P1W',
-          periodUnit: 'WEEK',
-          periodNumberOfUnits: 1,
-        ),
-      );
-      final offerings = Offerings({
-        'trial_14d': current,
-        'trial_7d': storeTrial,
-      }, current: current);
-
-      expect(
-        repository.alternateOffering(offerings, current)?.identifier,
-        'trial_7d',
-      );
-    });
-
     test('skips an offering with no trial at all', () {
       final current = offeringFixture(id: 'trial_14d');
-      final paid = offeringFixture(id: 'paid', includeTrialMetadata: false);
+      final paid = offeringFixture(id: 'paid', trialDays: null);
       final offerings = Offerings({
         'trial_14d': current,
         'paid': paid,
